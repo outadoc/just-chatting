@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -201,16 +202,26 @@ internal class TwitchRepositoryImpl(
 
                     combine(
                         localUsersApi.getFollowedChannels(),
-                        localStreamsApi.getPastStreams(
-                            notBefore = notBefore,
-                            notAfter = notAfter,
-                        ),
-                        localStreamsApi.getLiveStreams(),
-                        localStreamsApi.getFutureStreams(
-                            notBefore = notBefore,
-                            notAfter = notAfter,
-                        ),
+                        localStreamsApi
+                            .getPastStreams(
+                                notBefore = notBefore,
+                                notAfter = notAfter,
+                            )
+                            .onStart { emit(emptyList()) },
+                        localStreamsApi
+                            .getLiveStreams()
+                            .onStart { emit(emptyList()) },
+                        localStreamsApi
+                            .getFutureStreams(
+                                notBefore = notBefore,
+                                notAfter = notAfter,
+                            )
+                            .onStart { emit(emptyList()) },
                     ) { followed, past, live, future ->
+                        logDebug<TwitchRepositoryImpl> {
+                            "Followed: ${followed.size}, Past: ${past.size}, Live: ${live.size}, Future: ${future.size}"
+                        }
+
                         val groupedPast = past.groupBy { segment ->
                             segment.startTime.toLocalDateTime(timeZone).date
                         }
@@ -291,13 +302,17 @@ internal class TwitchRepositoryImpl(
     ) = withContext(DispatchersProvider.io) {
         streamSyncLock.withLock {
             val userIdsToSync: List<String> =
-                localStreamsApi.getUserIdsToSync().first()
+                localStreamsApi
+                    .getUserIdsToSync()
+                    .first()
 
             val followedUsers: List<User> =
                 getFollowedChannels()
                     .first()
                     .map { follow -> follow.user }
                     .filter { user -> user.id in userIdsToSync }
+
+            logDebug<TwitchRepositoryImpl> { "Starting full sync for ${followedUsers.size} users" }
 
             awaitAll(
                 async {

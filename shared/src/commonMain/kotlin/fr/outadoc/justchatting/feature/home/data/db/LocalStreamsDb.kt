@@ -67,6 +67,7 @@ internal class LocalStreamsDb(
                     )
                 }
             }
+            .flowOn(DispatchersProvider.io)
     }
 
     override fun getLiveStreams(): Flow<List<Stream>> {
@@ -94,6 +95,7 @@ internal class LocalStreamsDb(
                     )
                 }
             }
+            .flowOn(DispatchersProvider.io)
     }
 
     override fun getFutureStreams(
@@ -138,6 +140,7 @@ internal class LocalStreamsDb(
                     )
                 }
             }
+            .flowOn(DispatchersProvider.io)
     }
 
     override suspend fun savePastStreams(

@@ -11,6 +11,9 @@ internal sealed interface Screen {
     data object Epg : Screen
 
     @Serializable
+    data object Search : Screen
+
+    @Serializable
     sealed interface Settings : Screen {
 
         @Serializable

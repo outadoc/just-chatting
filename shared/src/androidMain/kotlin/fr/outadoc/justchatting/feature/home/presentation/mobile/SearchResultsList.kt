@@ -12,16 +12,12 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
-import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
 import fr.outadoc.justchatting.utils.presentation.plus
 import kotlinx.collections.immutable.toImmutableList
 
@@ -30,17 +26,14 @@ import kotlinx.collections.immutable.toImmutableList
 internal fun SearchResultsList(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
-    viewModel: ChannelSearchViewModel,
+    searchResults: LazyPagingItems<ChannelSearchResult>,
     onItemClick: (ChannelSearchResult) -> Unit,
 ) {
-    val items: LazyPagingItems<ChannelSearchResult> = viewModel.pagingData.collectAsLazyPagingItems()
-    val state by viewModel.state.collectAsState()
-
-    val isRefreshing = items.loadState.refresh is LoadState.Loading
+    val isRefreshing = searchResults.loadState.refresh is LoadState.Loading
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
-        onRefresh = { items.refresh() },
+        onRefresh = { searchResults.refresh() },
     )
 
     Box(
@@ -54,21 +47,21 @@ internal fun SearchResultsList(
             contentPadding = insets + PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            if (state.query.isNotEmpty() && items.itemCount == 0) {
-                if (!isRefreshing) {
-                    item(key = "_noContent") {
-                        NoContent(modifier = Modifier.fillParentMaxSize())
-                    }
-                } else {
+            if (searchResults.itemCount == 0) {
+                if (isRefreshing) {
                     items(50) {
                         UserItemCardPlaceholder(
                             modifier = Modifier.fillMaxWidth(),
                         )
                     }
+                } else {
+                    item(key = "_noContent") {
+                        NoContent(modifier = Modifier.fillParentMaxSize())
+                    }
                 }
             } else {
-                items(items.itemCount) { index ->
-                    val item: ChannelSearchResult? = items[index]
+                items(searchResults.itemCount) { index ->
+                    val item: ChannelSearchResult? = searchResults[index]
                     if (item != null) {
                         UserItemCard(
                             modifier = Modifier.fillMaxWidth(),

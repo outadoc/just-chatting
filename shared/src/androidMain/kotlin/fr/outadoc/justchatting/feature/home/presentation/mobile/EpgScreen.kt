@@ -25,6 +25,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
@@ -65,6 +66,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun EpgScreen(
     modifier: Modifier = Modifier,
@@ -87,10 +89,7 @@ internal fun EpgScreen(
             Surface(
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
             ) {
-                SearchBar(
-                    onChannelClick = onChannelClick,
-                    sizeClass = sizeClass,
-                )
+                TopAppBar(title = { Text(stringResource(MR.strings.epg_title)) })
             }
         },
         content = { insets ->

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -99,6 +100,17 @@ internal fun CompactNavigation(
                 )
 
                 NavigationBarItem(
+                    selected = selectedScreen == Screen.Search,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = null,
+                        )
+                    },
+                    onClick = { onSelectedTabChange(Screen.Search) },
+                )
+
+                NavigationBarItem(
                     selected = selectedScreen == Screen.Followed,
                     icon = {
                         Icon(
@@ -156,6 +168,22 @@ internal fun MediumNavigation(
                         )
                     },
                     onClick = { onSelectedTabChange(Screen.Epg) },
+                )
+
+                NavigationRailItem(
+                    selected = selectedScreen == Screen.Search,
+                    label = {
+                        AnimatedVisibility(visible = selectedScreen == Screen.Search) {
+                            Text(stringResource(MR.strings.search))
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = null,
+                        )
+                    },
+                    onClick = { onSelectedTabChange(Screen.Search) },
                 )
 
                 NavigationRailItem(
@@ -231,6 +259,19 @@ internal fun ExpandedNavigation(
                         )
                     },
                     onClick = { onSelectedTabChange(Screen.Epg) },
+                )
+
+                NavigationDrawerItem(
+                    modifier = Modifier.padding(4.dp),
+                    selected = selectedScreen == Screen.Search,
+                    label = { Text(stringResource(MR.strings.search)) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = null,
+                        )
+                    },
+                    onClick = { onSelectedTabChange(Screen.Search) },
                 )
 
                 NavigationDrawerItem(

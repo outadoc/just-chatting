@@ -5,7 +5,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DockedSearchBar
@@ -16,43 +16,56 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.HapticIconButton
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SearchScreenBar(
     modifier: Modifier = Modifier,
-    onChannelClick: (userId: String) -> Unit,
     sizeClass: WindowSizeClass,
+    searchResults: LazyPagingItems<ChannelSearchResult>,
+    query: String,
+    isActive: Boolean,
+    onChannelClick: (userId: String) -> Unit,
+    onQueryChange: (String) -> Unit,
+    onSearchActiveChange: (Boolean) -> Unit,
+    onClear: () -> Unit,
+    onDismiss: () -> Unit,
 ) {
-    val viewModel = koinViewModel<ChannelSearchViewModel>()
-    val state by viewModel.state.collectAsState()
-
     when (sizeClass.heightSizeClass) {
         WindowHeightSizeClass.Compact,
         WindowHeightSizeClass.Medium,
         -> {
             FullHeightSearchBar(
-                state = state,
                 modifier = modifier,
-                viewModel = viewModel,
+                searchResults = searchResults,
+                query = query,
+                isActive = isActive,
                 onChannelClick = onChannelClick,
+                onQueryChange = onQueryChange,
+                onSearchActiveChange = onSearchActiveChange,
+                onClear = onClear,
+                onDismiss = onDismiss,
             )
         }
 
         WindowHeightSizeClass.Expanded -> {
             CompactSearchBar(
                 modifier = modifier,
-                state = state,
-                viewModel = viewModel,
+                searchResults = searchResults,
+                query = query,
+                isActive = isActive,
                 onChannelClick = onChannelClick,
+                onQueryChange = onQueryChange,
+                onSearchActiveChange = onSearchActiveChange,
+                onClear = onClear,
+                onDismiss = onDismiss,
             )
         }
     }
@@ -62,30 +75,35 @@ internal fun SearchScreenBar(
 @OptIn(ExperimentalMaterial3Api::class)
 private fun CompactSearchBar(
     modifier: Modifier,
-    state: ChannelSearchViewModel.State,
-    viewModel: ChannelSearchViewModel,
+    query: String,
+    isActive: Boolean,
+    searchResults: LazyPagingItems<ChannelSearchResult>,
     onChannelClick: (userId: String) -> Unit,
+    onQueryChange: (String) -> Unit,
+    onSearchActiveChange: (Boolean) -> Unit,
+    onClear: () -> Unit,
+    onDismiss: () -> Unit,
 ) {
     DockedSearchBar(
         modifier = modifier.padding(16.dp),
-        query = state.query,
-        onQueryChange = viewModel::onQueryChange,
+        query = query,
+        onQueryChange = onQueryChange,
         onSearch = {},
-        active = state.isActive,
-        onActiveChange = viewModel::onSearchActiveChange,
+        active = isActive,
+        onActiveChange = onSearchActiveChange,
         placeholder = { Text(stringResource(MR.strings.search_hint)) },
         leadingIcon = {
             Crossfade(
-                targetState = state.isActive,
+                targetState = isActive,
                 label = "search leading icon",
             ) { isActive ->
                 HapticIconButton(
-                    onClick = viewModel::onDismiss,
+                    onClick = onDismiss,
                     enabled = isActive,
                 ) {
                     if (isActive) {
                         Icon(
-                            Icons.Filled.ArrowBack,
+                            Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(MR.strings.all_goBack),
                         )
                     } else {
@@ -98,8 +116,8 @@ private fun CompactSearchBar(
             }
         },
         trailingIcon = {
-            AnimatedVisibility(visible = state.query.isNotEmpty()) {
-                HapticIconButton(onClick = viewModel::onClear) {
+            AnimatedVisibility(visible = query.isNotEmpty()) {
+                HapticIconButton(onClick = onClear) {
                     Icon(
                         Icons.Filled.Cancel,
                         contentDescription = stringResource(MR.strings.search_clear_cd),
@@ -112,7 +130,7 @@ private fun CompactSearchBar(
                 onItemClick = { stream ->
                     onChannelClick(stream.user.id)
                 },
-                viewModel = viewModel,
+                searchResults = searchResults,
             )
         },
     )
@@ -121,36 +139,41 @@ private fun CompactSearchBar(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun FullHeightSearchBar(
-    state: ChannelSearchViewModel.State,
     modifier: Modifier,
-    viewModel: ChannelSearchViewModel,
+    query: String,
+    isActive: Boolean,
+    searchResults: LazyPagingItems<ChannelSearchResult>,
     onChannelClick: (userId: String) -> Unit,
+    onQueryChange: (String) -> Unit,
+    onSearchActiveChange: (Boolean) -> Unit,
+    onClear: () -> Unit,
+    onDismiss: () -> Unit,
 ) {
     val padding by animateDpAsState(
-        targetValue = if (state.isActive) 0.dp else 16.dp,
+        targetValue = if (isActive) 0.dp else 16.dp,
         label = "inner padding",
     )
 
     SearchBar(
         modifier = modifier.padding(padding),
-        query = state.query,
-        onQueryChange = viewModel::onQueryChange,
+        query = query,
+        onQueryChange = onQueryChange,
         onSearch = {},
-        active = state.isActive,
-        onActiveChange = viewModel::onSearchActiveChange,
+        active = isActive,
+        onActiveChange = onSearchActiveChange,
         placeholder = { Text(stringResource(MR.strings.search_hint)) },
         leadingIcon = {
             Crossfade(
-                targetState = state.isActive,
+                targetState = isActive,
                 label = "search leading icon",
             ) { isActive ->
                 HapticIconButton(
-                    onClick = viewModel::onDismiss,
+                    onClick = onDismiss,
                     enabled = isActive,
                 ) {
                     if (isActive) {
                         Icon(
-                            Icons.Filled.ArrowBack,
+                            Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(MR.strings.all_goBack),
                         )
                     } else {
@@ -163,8 +186,8 @@ private fun FullHeightSearchBar(
             }
         },
         trailingIcon = {
-            AnimatedVisibility(visible = state.query.isNotEmpty()) {
-                HapticIconButton(onClick = viewModel::onClear) {
+            AnimatedVisibility(visible = query.isNotEmpty()) {
+                HapticIconButton(onClick = onClear) {
                     Icon(
                         Icons.Filled.Cancel,
                         contentDescription = stringResource(MR.strings.search_clear_cd),
@@ -177,7 +200,7 @@ private fun FullHeightSearchBar(
                 onItemClick = { stream ->
                     onChannelClick(stream.user.id)
                 },
-                viewModel = viewModel,
+                searchResults = searchResults
             )
         },
     )

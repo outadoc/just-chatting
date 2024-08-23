@@ -35,8 +35,8 @@ internal fun SearchScreenBar(
     onChannelClick: (userId: String) -> Unit,
     onQueryChange: (String) -> Unit,
     onSearchActiveChange: (Boolean) -> Unit,
-    onClear: () -> Unit,
-    onDismiss: () -> Unit,
+    onClearSearchBar: () -> Unit,
+    onDismissSearchBar: () -> Unit,
 ) {
     when (sizeClass.heightSizeClass) {
         WindowHeightSizeClass.Compact,
@@ -50,8 +50,8 @@ internal fun SearchScreenBar(
                 onChannelClick = onChannelClick,
                 onQueryChange = onQueryChange,
                 onSearchActiveChange = onSearchActiveChange,
-                onClear = onClear,
-                onDismiss = onDismiss,
+                onClearSearchBar = onClearSearchBar,
+                onDismissSearchBar = onDismissSearchBar,
             )
         }
 
@@ -64,8 +64,8 @@ internal fun SearchScreenBar(
                 onChannelClick = onChannelClick,
                 onQueryChange = onQueryChange,
                 onSearchActiveChange = onSearchActiveChange,
-                onClear = onClear,
-                onDismiss = onDismiss,
+                onClearSearchBar = onClearSearchBar,
+                onDismissSearchBar = onDismissSearchBar,
             )
         }
     }
@@ -81,8 +81,8 @@ private fun CompactSearchBar(
     onChannelClick: (userId: String) -> Unit,
     onQueryChange: (String) -> Unit,
     onSearchActiveChange: (Boolean) -> Unit,
-    onClear: () -> Unit,
-    onDismiss: () -> Unit,
+    onClearSearchBar: () -> Unit,
+    onDismissSearchBar: () -> Unit,
 ) {
     DockedSearchBar(
         modifier = modifier.padding(16.dp),
@@ -98,7 +98,7 @@ private fun CompactSearchBar(
                 label = "search leading icon",
             ) { isActive ->
                 HapticIconButton(
-                    onClick = onDismiss,
+                    onClick = onDismissSearchBar,
                     enabled = isActive,
                 ) {
                     if (isActive) {
@@ -117,7 +117,7 @@ private fun CompactSearchBar(
         },
         trailingIcon = {
             AnimatedVisibility(visible = query.isNotEmpty()) {
-                HapticIconButton(onClick = onClear) {
+                HapticIconButton(onClick = onClearSearchBar) {
                     Icon(
                         Icons.Filled.Cancel,
                         contentDescription = stringResource(MR.strings.search_clear_cd),
@@ -146,8 +146,8 @@ private fun FullHeightSearchBar(
     onChannelClick: (userId: String) -> Unit,
     onQueryChange: (String) -> Unit,
     onSearchActiveChange: (Boolean) -> Unit,
-    onClear: () -> Unit,
-    onDismiss: () -> Unit,
+    onClearSearchBar: () -> Unit,
+    onDismissSearchBar: () -> Unit,
 ) {
     val padding by animateDpAsState(
         targetValue = if (isActive) 0.dp else 16.dp,
@@ -168,7 +168,7 @@ private fun FullHeightSearchBar(
                 label = "search leading icon",
             ) { isActive ->
                 HapticIconButton(
-                    onClick = onDismiss,
+                    onClick = onDismissSearchBar,
                     enabled = isActive,
                 ) {
                     if (isActive) {
@@ -187,7 +187,7 @@ private fun FullHeightSearchBar(
         },
         trailingIcon = {
             AnimatedVisibility(visible = query.isNotEmpty()) {
-                HapticIconButton(onClick = onClear) {
+                HapticIconButton(onClick = onClearSearchBar) {
                     Icon(
                         Icons.Filled.Cancel,
                         contentDescription = stringResource(MR.strings.search_clear_cd),

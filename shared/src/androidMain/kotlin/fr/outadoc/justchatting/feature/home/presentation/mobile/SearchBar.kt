@@ -45,8 +45,8 @@ internal fun SearchBar(
             onChannelClick = onChannelClick,
             onQueryChange = onQueryChange,
             onSearchActiveChange = onSearchActiveChange,
-            onClear = onClear,
-            onDismiss = onDismiss,
+            onClearSearchBar = onClear,
+            onDismissSearchBar = onDismiss,
         )
     }
 }

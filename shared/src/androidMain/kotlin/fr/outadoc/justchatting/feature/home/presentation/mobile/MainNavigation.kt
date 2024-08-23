@@ -100,17 +100,6 @@ internal fun CompactNavigation(
                 )
 
                 NavigationBarItem(
-                    selected = selectedScreen == Screen.Search,
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = null,
-                        )
-                    },
-                    onClick = { onSelectedTabChange(Screen.Search) },
-                )
-
-                NavigationBarItem(
                     selected = selectedScreen == Screen.Followed,
                     icon = {
                         Icon(
@@ -119,6 +108,17 @@ internal fun CompactNavigation(
                         )
                     },
                     onClick = { onSelectedTabChange(Screen.Followed) },
+                )
+
+                NavigationBarItem(
+                    selected = selectedScreen == Screen.Search,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = null,
+                        )
+                    },
+                    onClick = { onSelectedTabChange(Screen.Search) },
                 )
 
                 NavigationBarItem(
@@ -171,22 +171,6 @@ internal fun MediumNavigation(
                 )
 
                 NavigationRailItem(
-                    selected = selectedScreen == Screen.Search,
-                    label = {
-                        AnimatedVisibility(visible = selectedScreen == Screen.Search) {
-                            Text(stringResource(MR.strings.search))
-                        }
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = null,
-                        )
-                    },
-                    onClick = { onSelectedTabChange(Screen.Search) },
-                )
-
-                NavigationRailItem(
                     selected = selectedScreen == Screen.Followed,
                     label = {
                         AnimatedVisibility(visible = selectedScreen == Screen.Followed) {
@@ -200,6 +184,22 @@ internal fun MediumNavigation(
                         )
                     },
                     onClick = { onSelectedTabChange(Screen.Followed) },
+                )
+
+                NavigationRailItem(
+                    selected = selectedScreen == Screen.Search,
+                    label = {
+                        AnimatedVisibility(visible = selectedScreen == Screen.Search) {
+                            Text(stringResource(MR.strings.search))
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = null,
+                        )
+                    },
+                    onClick = { onSelectedTabChange(Screen.Search) },
                 )
 
                 NavigationRailItem(
@@ -263,19 +263,6 @@ internal fun ExpandedNavigation(
 
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
-                    selected = selectedScreen == Screen.Search,
-                    label = { Text(stringResource(MR.strings.search)) },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = null,
-                        )
-                    },
-                    onClick = { onSelectedTabChange(Screen.Search) },
-                )
-
-                NavigationDrawerItem(
-                    modifier = Modifier.padding(4.dp),
                     selected = selectedScreen == Screen.Followed,
                     label = { Text(stringResource(MR.strings.channels)) },
                     icon = {
@@ -285,6 +272,19 @@ internal fun ExpandedNavigation(
                         )
                     },
                     onClick = { onSelectedTabChange(Screen.Followed) },
+                )
+
+                NavigationDrawerItem(
+                    modifier = Modifier.padding(4.dp),
+                    selected = selectedScreen == Screen.Search,
+                    label = { Text(stringResource(MR.strings.search)) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = null,
+                        )
+                    },
+                    onClick = { onSelectedTabChange(Screen.Search) },
                 )
 
                 NavigationDrawerItem(

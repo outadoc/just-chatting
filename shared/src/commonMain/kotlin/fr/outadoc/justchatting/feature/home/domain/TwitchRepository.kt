@@ -29,7 +29,7 @@ internal interface TwitchRepository {
 
     suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>>
 
-    suspend fun getRecentChannels(): Flow<List<ChannelSearchResult>?>
+    suspend fun getRecentChannels(): Flow<List<User>>
 
     suspend fun markChannelAsVisited(channel: User, visitedAt: Instant)
 

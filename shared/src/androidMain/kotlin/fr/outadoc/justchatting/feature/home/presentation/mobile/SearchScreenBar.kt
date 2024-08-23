@@ -200,7 +200,7 @@ private fun FullHeightSearchBar(
                 onItemClick = { stream ->
                     onChannelClick(stream.user.id)
                 },
-                searchResults = searchResults
+                searchResults = searchResults,
             )
         },
     )

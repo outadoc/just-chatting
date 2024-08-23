@@ -54,7 +54,7 @@ internal class ChannelSearchViewModel(
                                 append = LoadState.NotLoading(endOfPaginationReached = true),
                                 refresh = LoadState.NotLoading(endOfPaginationReached = true),
                             ),
-                        )
+                        ),
                     )
                 }
             }
@@ -67,7 +67,7 @@ internal class ChannelSearchViewModel(
                 .collect { users ->
                     _state.update { state ->
                         state.copy(
-                            recentChannels = users.toPersistentList()
+                            recentChannels = users.toPersistentList(),
                         )
                     }
                 }

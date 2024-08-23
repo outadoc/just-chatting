@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.CalendarViewDay
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -92,7 +92,7 @@ internal fun CompactNavigation(
                     selected = selectedScreen == Screen.Epg,
                     icon = {
                         Icon(
-                            imageVector = Icons.Filled.CalendarToday,
+                            imageVector = Icons.Filled.CalendarViewDay,
                             contentDescription = null,
                         )
                     },
@@ -163,7 +163,7 @@ internal fun MediumNavigation(
                     },
                     icon = {
                         Icon(
-                            imageVector = Icons.Filled.CalendarToday,
+                            imageVector = Icons.Filled.CalendarViewDay,
                             contentDescription = null,
                         )
                     },
@@ -254,7 +254,7 @@ internal fun ExpandedNavigation(
                     label = { Text(stringResource(MR.strings.epg_title)) },
                     icon = {
                         Icon(
-                            imageVector = Icons.Filled.CalendarToday,
+                            imageVector = Icons.Filled.CalendarViewDay,
                             contentDescription = null,
                         )
                     },

@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -125,7 +125,7 @@ internal fun CompactNavigation(
                     selected = selectedScreen == Screen.Settings.Root,
                     icon = {
                         Icon(
-                            imageVector = Icons.Default.Settings,
+                            imageVector = Icons.Default.AccountCircle,
                             contentDescription = null,
                         )
                     },
@@ -211,7 +211,7 @@ internal fun MediumNavigation(
                     },
                     icon = {
                         Icon(
-                            imageVector = Icons.Default.Settings,
+                            imageVector = Icons.Default.AccountCircle,
                             contentDescription = null,
                         )
                     },
@@ -293,7 +293,7 @@ internal fun ExpandedNavigation(
                     label = { Text(stringResource(MR.strings.settings)) },
                     icon = {
                         Icon(
-                            imageVector = Icons.Default.Settings,
+                            imageVector = Icons.Default.AccountCircle,
                             contentDescription = null,
                         )
                     },

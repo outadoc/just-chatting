@@ -33,6 +33,8 @@ internal interface TwitchRepository {
 
     suspend fun markChannelAsVisited(channel: User, visitedAt: Instant)
 
+    suspend fun syncFollowedChannelsSchedule(today: LocalDate, timeZone: TimeZone)
+
     suspend fun getFollowedChannelsSchedule(
         today: LocalDate,
         timeZone: TimeZone,

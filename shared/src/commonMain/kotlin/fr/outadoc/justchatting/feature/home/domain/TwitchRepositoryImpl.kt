@@ -17,11 +17,13 @@ import fr.outadoc.justchatting.feature.recent.domain.LocalUsersApi
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
+import fr.outadoc.justchatting.utils.logging.logWarning
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -175,85 +177,102 @@ internal class TwitchRepositoryImpl(
         }
     }
 
+    override suspend fun syncFollowedChannelsSchedule(
+        today: LocalDate,
+        timeZone: TimeZone,
+    ) {
+        val prefs = preferencesRepository.currentPreferences.first()
+        when (prefs.appUser) {
+            is AppUser.LoggedIn -> {
+                val notBefore = (today - EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
+                val notAfter = (today + EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
+
+                if (localUsersApi.isFollowedUsersCacheExpired()) {
+                    syncLocalFollows(appUserId = prefs.appUser.userId)
+                }
+
+                syncLocalUserInfo()
+
+                syncFullSchedule(
+                    notBefore = notBefore,
+                    notAfter = notAfter,
+                    appUserId = prefs.appUser.userId,
+                )
+            }
+
+            else -> {
+                logWarning<TwitchRepositoryImpl> { "No user logged in, skipping sync" }
+            }
+        }
+    }
+
     override suspend fun getFollowedChannelsSchedule(
         today: LocalDate,
         timeZone: TimeZone,
     ): Flow<FullSchedule> =
         withContext(DispatchersProvider.io) {
-            val prefs = preferencesRepository.currentPreferences.first()
-            when (prefs.appUser) {
-                is AppUser.LoggedIn -> {
-                    val notBefore = (today - EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
-                    val notAfter = (today + EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
+            val notBefore = (today - EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
+            val notAfter = (today + EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
 
-                    launch {
-                        if (localUsersApi.isFollowedUsersCacheExpired()) {
-                            syncLocalFollows(appUserId = prefs.appUser.userId)
-                        }
-
-                        syncLocalUserInfo()
-
-                        syncFullSchedule(
-                            notBefore = notBefore,
-                            notAfter = notAfter,
-                            appUserId = prefs.appUser.userId,
-                        )
-                    }
-
-                    combine(
-                        localUsersApi.getFollowedChannels(),
-                        localStreamsApi
-                            .getPastStreams(
-                                notBefore = notBefore,
-                                notAfter = notAfter,
-                            )
-                            .onStart { emit(emptyList()) },
-                        localStreamsApi
-                            .getLiveStreams()
-                            .onStart { emit(emptyList()) },
-                        localStreamsApi
-                            .getFutureStreams(
-                                notBefore = notBefore,
-                                notAfter = notAfter,
-                            )
-                            .onStart { emit(emptyList()) },
-                    ) { followed, past, live, future ->
-                        logDebug<TwitchRepositoryImpl> {
-                            "Followed: ${followed.size}, Past: ${past.size}, Live: ${live.size}, Future: ${future.size}"
-                        }
-
-                        val groupedPast = past.groupBy { segment ->
-                            segment.startTime.toLocalDateTime(timeZone).date
-                        }
-
-                        val groupedFuture = future.groupBy { segment ->
-                            segment.startTime.toLocalDateTime(timeZone).date
-                        }
-
-                        FullSchedule(
-                            past = groupedPast,
-                            live = live
-                                .mapNotNull { stream ->
-                                    followed
-                                        .firstOrNull { follow -> follow.user.id == stream.userId }
-                                        ?.let { follow ->
-                                            UserStream(
-                                                stream = stream,
-                                                user = follow.user,
-                                            )
-                                        }
-                                },
-                            future = groupedFuture,
-                            // We want to scroll to "today", so skip the number of past segments
-                            // + the number of days, used as headers
-                            todayListIndex = past.size + groupedPast.keys.size,
-                        )
-                    }
+            combine(
+                localUsersApi.getFollowedChannels(),
+                localStreamsApi
+                    .getPastStreams(
+                        notBefore = notBefore,
+                        notAfter = notAfter,
+                    )
+                    .onStart {
+                        emit(emptyList())
+                    },
+                localStreamsApi
+                    .getLiveStreams()
+                    .onStart {
+                        emit(emptyList())
+                    },
+                localStreamsApi
+                    .getFutureStreams(
+                        notBefore = notBefore,
+                        notAfter = notAfter,
+                    )
+                    .onStart {
+                        emit(emptyList())
+                    },
+            ) { followed, past, live, future ->
+                logDebug<TwitchRepositoryImpl> {
+                    "Followed: ${followed.size}, Past: ${past.size}, Live: ${live.size}, Future: ${future.size}"
                 }
 
-                else -> {
-                    emptyFlow()
-                }
+                val groupedPast = past
+                    .groupBy { segment ->
+                        segment.startTime.toLocalDateTime(timeZone).date
+                    }
+                    .toPersistentMap()
+
+                val groupedFuture = future
+                    .groupBy { segment ->
+                        segment.startTime.toLocalDateTime(timeZone).date
+                    }
+                    .toPersistentMap()
+
+                FullSchedule(
+                    past = groupedPast,
+                    live = live
+                        .mapNotNull { stream ->
+                            followed
+                                .firstOrNull { follow -> follow.user.id == stream.userId }
+                                ?.let { follow ->
+                                    UserStream(
+                                        stream = stream,
+                                        user = follow.user,
+                                    )
+                                }
+                        }
+                        .toPersistentList(),
+                    future = groupedFuture,
+                    // We want to scroll to "today", so skip the number of past segments
+                    // + the number of days, used as headers
+                    todayListIndex = past.size + groupedPast.keys.size,
+                )
             }
         }
 

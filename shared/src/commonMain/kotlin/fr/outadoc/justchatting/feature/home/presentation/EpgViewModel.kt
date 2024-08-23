@@ -6,6 +6,7 @@ import fr.outadoc.justchatting.utils.presentation.ViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -16,15 +17,13 @@ internal class EpgViewModel(
     private val clock: Clock,
 ) : ViewModel() {
 
-    sealed class State {
-        data object Loading : State()
-        data class Loaded(
-            val schedule: FullSchedule,
-            val timeZone: TimeZone,
-        ) : State()
-    }
+    data class State(
+        val isLoading: Boolean = false,
+        val schedule: FullSchedule = FullSchedule(),
+        val timeZone: TimeZone = TimeZone.currentSystemDefault(),
+    )
 
-    private val _state = MutableStateFlow<State>(State.Loading)
+    private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
 
     private var job: Job? = null
@@ -32,11 +31,24 @@ internal class EpgViewModel(
     fun load() {
         job?.cancel()
         job = viewModelScope.launch {
-            _state.value = State.Loading
+            _state.update { state ->
+                state.copy(isLoading = true)
+            }
 
             val now = clock.now()
-            val tz = TimeZone.currentSystemDefault()
+            val tz = _state.value.timeZone
             val today = now.toLocalDateTime(tz).date
+
+            launch {
+                twitchRepository.syncFollowedChannelsSchedule(
+                    today = today,
+                    timeZone = tz,
+                )
+
+                _state.update { state ->
+                    state.copy(isLoading = false)
+                }
+            }
 
             twitchRepository
                 .getFollowedChannelsSchedule(
@@ -44,10 +56,9 @@ internal class EpgViewModel(
                     timeZone = tz,
                 )
                 .collect { schedule ->
-                    _state.value = State.Loaded(
-                        schedule = schedule,
-                        timeZone = tz,
-                    )
+                    _state.update { state ->
+                        state.copy(schedule = schedule)
+                    }
                 }
         }
     }

@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.home.presentation.mobile
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarToday
@@ -61,7 +59,6 @@ import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatDate
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
-import fr.outadoc.justchatting.utils.presentation.plus
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -97,43 +94,17 @@ internal fun EpgScreen(
             }
         },
         content = { insets ->
-            Crossfade(
-                targetState = state,
-                label = "epg state crossfade",
-            ) { state ->
-                when (val currentState = state) {
-                    is EpgViewModel.State.Loading -> {
-                        LazyColumn(
-                            modifier = modifier.fillMaxWidth(),
-                            contentPadding = insets + PaddingValues(
-                                start = 16.dp,
-                                end = 16.dp,
-                                bottom = 16.dp,
-                            ),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            items(50) {
-                                UserItemCardPlaceholder(
-                                    modifier = Modifier.fillMaxWidth(),
-                                )
-                            }
-                        }
-                    }
-
-                    is EpgViewModel.State.Loaded -> {
-                        EpgContent(
-                            modifier = modifier,
-                            schedule = currentState.schedule,
-                            insets = insets,
-                            onChannelClick = onChannelClick,
-                        )
-                    }
-                }
-            }
+            EpgContent(
+                modifier = modifier,
+                schedule = state.schedule,
+                insets = insets,
+                onChannelClick = onChannelClick,
+            )
         },
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun EpgContent(
     modifier: Modifier = Modifier,
@@ -141,32 +112,16 @@ private fun EpgContent(
     insets: PaddingValues = PaddingValues(),
     onChannelClick: (userId: String) -> Unit,
 ) {
-    val listState = rememberLazyListState(
-        initialFirstVisibleItemIndex = schedule.todayListIndex,
-    )
+    val listState = remember(schedule.todayListIndex) {
+        LazyListState(
+            firstVisibleItemIndex = schedule.todayListIndex,
+        )
+    }
 
     LaunchedEffect(listState) {
         logDebug<Screen.Epg> { "sharedListState: $listState" }
     }
 
-    EpgVerticalContent(
-        modifier = modifier.fillMaxWidth(),
-        schedule = schedule,
-        onChannelClick = onChannelClick,
-        listState = listState,
-        insets = insets,
-    )
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun EpgVerticalContent(
-    modifier: Modifier = Modifier,
-    schedule: FullSchedule,
-    listState: LazyListState = rememberLazyListState(),
-    insets: PaddingValues = PaddingValues(),
-    onChannelClick: (userId: String) -> Unit,
-) {
     LazyColumn(
         modifier = modifier
             .fillMaxWidth()

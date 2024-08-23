@@ -1,5 +1,7 @@
 package fr.outadoc.justchatting.feature.home.presentation
 
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
@@ -45,7 +47,15 @@ internal class ChannelSearchViewModel(
                 if (query.isNotEmpty()) {
                     twitchRepository.searchChannels(query)
                 } else {
-                    flowOf(PagingData.empty())
+                    flowOf(
+                        PagingData.empty(
+                            sourceLoadStates = LoadStates(
+                                prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                                append = LoadState.NotLoading(endOfPaginationReached = true),
+                                refresh = LoadState.NotLoading(endOfPaginationReached = true),
+                            ),
+                        )
+                    )
                 }
             }
             .cachedIn(viewModelScope)

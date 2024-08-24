@@ -86,7 +86,7 @@ android {
     defaultConfig {
         applicationId = "fr.outadoc.justchatting"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = (findProperty("externalVersionCode") as String?)?.toInt() ?: 99
         versionName = (findProperty("externalVersionName") as String?) ?: "SNAPSHOT"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

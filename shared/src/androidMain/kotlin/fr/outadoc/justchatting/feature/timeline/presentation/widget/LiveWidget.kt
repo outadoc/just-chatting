@@ -74,17 +74,22 @@ internal class LiveWidget : GlanceAppWidget() {
                 ) {
                     LazyColumn {
                         items(state.schedule.live) { userStream ->
-                            GlanceCard(
-                                modifier = GlanceModifier
-                                    .padding(bottom = 8.dp)
-                                    .clickable(
-                                        ChatActivity.createGlanceAction(userStream.user.id),
-                                    ),
-                            ) {
-                                LiveStream(
-                                    modifier = GlanceModifier.fillMaxWidth(),
-                                    user = userStream.user,
-                                    stream = userStream.stream,
+                            Column {
+                                GlanceCard(
+                                    modifier = GlanceModifier
+                                        .clickable(
+                                            ChatActivity.createGlanceAction(userStream.user.id),
+                                        ),
+                                ) {
+                                    LiveStream(
+                                        modifier = GlanceModifier.fillMaxWidth(),
+                                        user = userStream.user,
+                                        stream = userStream.stream,
+                                    )
+                                }
+
+                                Spacer(
+                                    modifier = GlanceModifier.height(8.dp),
                                 )
                             }
                         }

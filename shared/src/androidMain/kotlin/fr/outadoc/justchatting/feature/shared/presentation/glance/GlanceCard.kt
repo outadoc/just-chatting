@@ -20,7 +20,7 @@ internal fun GlanceCard(
             modifier = modifier
                 .padding(
                     horizontal = 12.dp,
-                    vertical = 6.dp,
+                    vertical = 8.dp,
                 )
                 .appCornerRadius()
                 .background(GlanceTheme.colors.surfaceVariant),

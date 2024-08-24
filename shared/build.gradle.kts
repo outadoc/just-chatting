@@ -93,6 +93,8 @@ kotlin {
             implementation(libs.androidx.browser)
             implementation(libs.androidx.datastore.preferences)
             implementation(libs.androidx.emoji2.core)
+            implementation(libs.androidx.glance.appwidget)
+            implementation(libs.androidx.glance.material3)
             implementation(libs.androidx.palette)
             implementation(libs.androidx.paging.runtime.android)
             implementation(libs.androidx.splashscreen)

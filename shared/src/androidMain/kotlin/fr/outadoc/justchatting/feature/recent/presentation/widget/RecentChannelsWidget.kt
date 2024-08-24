@@ -6,7 +6,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
@@ -17,9 +16,9 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.ImageProvider
+import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.components.TitleBar
-import androidx.glance.appwidget.lazy.GridCells
 import androidx.glance.appwidget.lazy.LazyVerticalGrid
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
@@ -37,10 +36,13 @@ import fr.outadoc.justchatting.feature.chat.presentation.UserProfileImageContent
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
 import fr.outadoc.justchatting.feature.recent.presentation.RecentChannelsViewModel
 import fr.outadoc.justchatting.feature.shared.domain.model.User
+import fr.outadoc.justchatting.feature.shared.presentation.glance.adaptiveGridCellsCompat
 import fr.outadoc.justchatting.shared.R
 import org.koin.compose.koinInject
 
 internal class RecentChannelsWidget : GlanceAppWidget() {
+
+    override val sizeMode = SizeMode.Exact
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
@@ -73,8 +75,7 @@ internal class RecentChannelsWidget : GlanceAppWidget() {
 
                         is RecentChannelsViewModel.State.Content -> {
                             LazyVerticalGrid(
-                                // TODO make it dynamic
-                                gridCells = GridCells.Fixed(4),
+                                gridCells = adaptiveGridCellsCompat(minSize = 64.dp),
                             ) {
                                 items(currentState.data) { user ->
                                     Column {

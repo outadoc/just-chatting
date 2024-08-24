@@ -139,6 +139,7 @@ internal class LiveWidget : GlanceAppWidget() {
                         color = GlanceTheme.colors.onSurfaceVariant,
                         fontWeight = FontWeight.Bold,
                     ),
+                    maxLines = 1,
                 )
 
                 if (stream.category != null) {
@@ -154,6 +155,7 @@ internal class LiveWidget : GlanceAppWidget() {
                         style = TextDefaults.defaultTextStyle.copy(
                             color = GlanceTheme.colors.onSurfaceVariant,
                         ),
+                        maxLines = 1,
                     )
                 }
             }

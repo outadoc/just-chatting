@@ -34,8 +34,8 @@ public class ChatActivity : AppCompatActivity() {
         fun createGlanceAction(userId: String): Action {
             return actionStartActivity<ChatActivity>(
                 actionParametersOf(
-                    ActionParameters.Key<String>(CHANNEL_USER_ID) to userId
-                )
+                    ActionParameters.Key<String>(CHANNEL_USER_ID) to userId,
+                ),
             )
         }
     }

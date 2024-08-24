@@ -41,7 +41,7 @@ internal class FollowedChannelsWidget : GlanceAppWidget() {
                             startIcon = ImageProvider(R.drawable.ic_notif),
                             title = LocalContext.current.getString(R.string.channels),
                         )
-                    }
+                    },
                 ) {
                     val state by viewModel.state.collectAsState()
                     when (val currentState = state) {
@@ -49,7 +49,7 @@ internal class FollowedChannelsWidget : GlanceAppWidget() {
                             Column(
                                 modifier = GlanceModifier.fillMaxSize(),
                                 horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 CircularProgressIndicator()
                             }

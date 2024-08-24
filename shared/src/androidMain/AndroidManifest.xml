@@ -41,6 +41,11 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_live" />
+
+            <meta-data
+                android:name="com.samsung.android.appwidget.provider"
+                android:resource="@xml/widget_samsung_info" />
+
         </receiver>
 
         <receiver
@@ -54,6 +59,11 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_followed" />
+
+            <meta-data
+                android:name="com.samsung.android.appwidget.provider"
+                android:resource="@xml/widget_samsung_info" />
+
         </receiver>
 
         <receiver
@@ -67,6 +77,11 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_recent" />
+
+            <meta-data
+                android:name="com.samsung.android.appwidget.provider"
+                android:resource="@xml/widget_samsung_info" />
+
         </receiver>
 
     </application>

@@ -74,6 +74,17 @@ internal fun MainRouter(
             )
         }
 
+        composable<Screen.Search>(
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+        ) {
+            SearchScreen(
+                sizeClass = sizeClass,
+                onNavigate = { navController.navigate(it) },
+                onChannelClick = onChannelClick,
+            )
+        }
+
         composable<Screen.Settings.Root>(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },

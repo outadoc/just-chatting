@@ -16,7 +16,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Gamepad
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
@@ -25,6 +27,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
@@ -34,6 +37,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,16 +59,18 @@ import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.home.presentation.EpgViewModel
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.presentation.AppTheme
+import fr.outadoc.justchatting.utils.presentation.HapticIconButton
 import fr.outadoc.justchatting.utils.presentation.formatDate
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import kotlinx.collections.immutable.toPersistentSet
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun EpgScreen(
     modifier: Modifier = Modifier,
@@ -79,6 +85,12 @@ internal fun EpgScreen(
         viewModel.load()
     }
 
+    val listState = remember(state.schedule.todayListIndex) {
+        LazyListState(
+            firstVisibleItemIndex = state.schedule.todayListIndex,
+        )
+    }
+
     MainNavigation(
         sizeClass = sizeClass,
         selectedScreen = Screen.Epg,
@@ -87,9 +99,40 @@ internal fun EpgScreen(
             Surface(
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
             ) {
-                SearchBar(
-                    onChannelClick = onChannelClick,
-                    sizeClass = sizeClass,
+                TopAppBar(
+                    title = { Text(stringResource(MR.strings.epg_title)) },
+                    actions = {
+                        val coroutineScope = rememberCoroutineScope()
+                        HapticIconButton(
+                            onClick = {
+                                coroutineScope.launch {
+                                    listState.animateScrollToItem(
+                                        state.schedule.todayListIndex,
+                                    )
+                                }
+                            },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CalendarToday,
+                                contentDescription = stringResource(MR.strings.epg_today_action_cd),
+                            )
+                        }
+
+                        HapticIconButton(
+                            onClick = { viewModel.load() },
+                        ) {
+                            if (state.isLoading) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(20.dp),
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.Sync,
+                                    contentDescription = stringResource(MR.strings.epg_refresh_action_cd),
+                                )
+                            }
+                        }
+                    },
                 )
             }
         },
@@ -98,6 +141,7 @@ internal fun EpgScreen(
                 modifier = modifier,
                 schedule = state.schedule,
                 insets = insets,
+                listState = listState,
                 onChannelClick = onChannelClick,
             )
         },
@@ -110,18 +154,9 @@ private fun EpgContent(
     modifier: Modifier = Modifier,
     schedule: FullSchedule,
     insets: PaddingValues = PaddingValues(),
+    listState: LazyListState,
     onChannelClick: (userId: String) -> Unit,
 ) {
-    val listState = remember(schedule.todayListIndex) {
-        LazyListState(
-            firstVisibleItemIndex = schedule.todayListIndex,
-        )
-    }
-
-    LaunchedEffect(listState) {
-        logDebug<Screen.Epg> { "sharedListState: $listState" }
-    }
-
     LazyColumn(
         modifier = modifier
             .fillMaxWidth()

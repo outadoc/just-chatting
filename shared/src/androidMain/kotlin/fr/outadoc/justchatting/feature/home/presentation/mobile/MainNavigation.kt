@@ -10,9 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.CalendarViewDay
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -91,7 +92,7 @@ internal fun CompactNavigation(
                     selected = selectedScreen == Screen.Epg,
                     icon = {
                         Icon(
-                            imageVector = Icons.Filled.CalendarToday,
+                            imageVector = Icons.Filled.CalendarViewDay,
                             contentDescription = null,
                         )
                     },
@@ -110,10 +111,21 @@ internal fun CompactNavigation(
                 )
 
                 NavigationBarItem(
+                    selected = selectedScreen == Screen.Search,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = null,
+                        )
+                    },
+                    onClick = { onSelectedTabChange(Screen.Search) },
+                )
+
+                NavigationBarItem(
                     selected = selectedScreen == Screen.Settings.Root,
                     icon = {
                         Icon(
-                            imageVector = Icons.Default.Settings,
+                            imageVector = Icons.Default.AccountCircle,
                             contentDescription = null,
                         )
                     },
@@ -151,7 +163,7 @@ internal fun MediumNavigation(
                     },
                     icon = {
                         Icon(
-                            imageVector = Icons.Filled.CalendarToday,
+                            imageVector = Icons.Filled.CalendarViewDay,
                             contentDescription = null,
                         )
                     },
@@ -175,6 +187,22 @@ internal fun MediumNavigation(
                 )
 
                 NavigationRailItem(
+                    selected = selectedScreen == Screen.Search,
+                    label = {
+                        AnimatedVisibility(visible = selectedScreen == Screen.Search) {
+                            Text(stringResource(MR.strings.search))
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = null,
+                        )
+                    },
+                    onClick = { onSelectedTabChange(Screen.Search) },
+                )
+
+                NavigationRailItem(
                     selected = selectedScreen == Screen.Settings.Root,
                     label = {
                         AnimatedVisibility(visible = selectedScreen == Screen.Settings.Root) {
@@ -183,7 +211,7 @@ internal fun MediumNavigation(
                     },
                     icon = {
                         Icon(
-                            imageVector = Icons.Default.Settings,
+                            imageVector = Icons.Default.AccountCircle,
                             contentDescription = null,
                         )
                     },
@@ -226,7 +254,7 @@ internal fun ExpandedNavigation(
                     label = { Text(stringResource(MR.strings.epg_title)) },
                     icon = {
                         Icon(
-                            imageVector = Icons.Filled.CalendarToday,
+                            imageVector = Icons.Filled.CalendarViewDay,
                             contentDescription = null,
                         )
                     },
@@ -248,11 +276,24 @@ internal fun ExpandedNavigation(
 
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
+                    selected = selectedScreen == Screen.Search,
+                    label = { Text(stringResource(MR.strings.search)) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = null,
+                        )
+                    },
+                    onClick = { onSelectedTabChange(Screen.Search) },
+                )
+
+                NavigationDrawerItem(
+                    modifier = Modifier.padding(4.dp),
                     selected = selectedScreen == Screen.Settings.Root,
                     label = { Text(stringResource(MR.strings.settings)) },
                     icon = {
                         Icon(
-                            imageVector = Icons.Default.Settings,
+                            imageVector = Icons.Default.AccountCircle,
                             contentDescription = null,
                         )
                     },

@@ -6,7 +6,11 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
+import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.utils.presentation.ViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -15,8 +19,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 internal class ChannelSearchViewModel(
@@ -26,6 +32,7 @@ internal class ChannelSearchViewModel(
     data class State(
         val query: String = "",
         val isActive: Boolean = false,
+        val recentChannels: ImmutableList<User> = persistentListOf(),
     )
 
     private val _state = MutableStateFlow(State())
@@ -37,30 +44,34 @@ internal class ChannelSearchViewModel(
             .distinctUntilChanged()
             .debounce(0.3.seconds)
             .flatMapLatest { query ->
-                if (query.isEmpty()) {
-                    loadRecentChannels()
+                if (query.isNotEmpty()) {
+                    twitchRepository.searchChannels(query)
                 } else {
-                    loadSearchResults(query)
+                    flowOf(
+                        PagingData.empty(
+                            sourceLoadStates = LoadStates(
+                                prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                                append = LoadState.NotLoading(endOfPaginationReached = true),
+                                refresh = LoadState.NotLoading(endOfPaginationReached = true),
+                            ),
+                        ),
+                    )
                 }
             }
             .cachedIn(viewModelScope)
 
-    private suspend fun loadSearchResults(query: String): Flow<PagingData<ChannelSearchResult>> {
-        return twitchRepository.searchChannels(query)
-    }
-
-    private suspend fun loadRecentChannels(): Flow<PagingData<ChannelSearchResult>> {
-        return twitchRepository.getRecentChannels()
-            .mapNotNull { channels ->
-                PagingData.from(
-                    channels.orEmpty(),
-                    LoadStates(
-                        prepend = LoadState.NotLoading(endOfPaginationReached = true),
-                        append = LoadState.NotLoading(endOfPaginationReached = true),
-                        refresh = LoadState.NotLoading(endOfPaginationReached = true),
-                    ),
-                )
-            }
+    fun onStart() {
+        viewModelScope.launch {
+            twitchRepository
+                .getRecentChannels()
+                .collect { users ->
+                    _state.update { state ->
+                        state.copy(
+                            recentChannels = users.toPersistentList(),
+                        )
+                    }
+                }
+        }
     }
 
     fun onQueryChange(query: String) {
@@ -78,11 +89,13 @@ internal class ChannelSearchViewModel(
         }
     }
 
-    fun onDismiss() {
-        _state.value = State()
+    fun onDismissSearchBar() {
+        _state.update { state ->
+            state.copy(isActive = false)
+        }
     }
 
-    fun onClear() {
+    fun onClearSearchBar() {
         _state.update { state ->
             state.copy(query = "")
         }

@@ -1,0 +1,96 @@
+package fr.outadoc.justchatting.feature.home.presentation.mobile
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.paging.compose.collectAsLazyPagingItems
+import fr.outadoc.justchatting.feature.home.domain.model.User
+import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
+import fr.outadoc.justchatting.utils.presentation.plus
+import kotlinx.collections.immutable.ImmutableList
+import org.koin.androidx.compose.koinViewModel
+
+@Composable
+internal fun SearchScreen(
+    modifier: Modifier = Modifier,
+    sizeClass: WindowSizeClass,
+    onNavigate: (Screen) -> Unit,
+    onChannelClick: (userId: String) -> Unit,
+) {
+    val viewModel: ChannelSearchViewModel = koinViewModel()
+    val state by viewModel.state.collectAsState()
+    val searchResults = viewModel.pagingData.collectAsLazyPagingItems()
+
+    LaunchedEffect(Unit) {
+        viewModel.onStart()
+    }
+
+    MainNavigation(
+        sizeClass = sizeClass,
+        selectedScreen = Screen.Search,
+        onSelectedTabChange = onNavigate,
+        topBar = {
+            Surface(
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+            ) {
+                SearchBar(
+                    onChannelClick = onChannelClick,
+                    sizeClass = sizeClass,
+                    searchResults = searchResults,
+                    query = state.query,
+                    isActive = state.isActive,
+                    onQueryChange = viewModel::onQueryChange,
+                    onSearchActiveChange = viewModel::onSearchActiveChange,
+                    onClear = viewModel::onClearSearchBar,
+                    onDismiss = viewModel::onDismissSearchBar,
+                )
+            }
+        },
+        content = { insets ->
+            RecentUsersList(
+                modifier = modifier,
+                insets = insets,
+                users = state.recentChannels,
+                onChannelClick = onChannelClick,
+            )
+        },
+    )
+}
+
+@Composable
+private fun RecentUsersList(
+    modifier: Modifier,
+    insets: PaddingValues,
+    users: ImmutableList<User>,
+    onChannelClick: (userId: String) -> Unit,
+) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = insets + PaddingValues(
+            start = 16.dp,
+            end = 16.dp,
+            bottom = 16.dp,
+        ),
+    ) {
+        items(users) { user ->
+            UserItemCard(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { onChannelClick(user.id) },
+                displayName = user.displayName,
+                profileImageUrl = user.profileImageUrl,
+            )
+        }
+    }
+}

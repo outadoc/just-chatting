@@ -146,26 +146,9 @@ internal class TwitchRepositoryImpl(
             twitchApi.getEmotesFromSet(setIds = setIds)
         }
 
-    override suspend fun getRecentChannels(): Flow<List<ChannelSearchResult>?> =
+    override suspend fun getRecentChannels(): Flow<List<User>> =
         withContext(DispatchersProvider.io) {
-            localUsersApi
-                .getRecentChannels()
-                .map { users ->
-                    users.map { user ->
-                        ChannelSearchResult(
-                            title = user.displayName,
-                            user = User(
-                                id = user.id,
-                                login = user.login,
-                                displayName = user.displayName,
-                                description = user.description,
-                                profileImageUrl = user.profileImageUrl,
-                                createdAt = user.createdAt,
-                                usedAt = user.usedAt,
-                            ),
-                        )
-                    }
-                }
+            localUsersApi.getRecentChannels()
         }
 
     override suspend fun markChannelAsVisited(channel: User, visitedAt: Instant) {

@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.followed.presentation.widget
+package fr.outadoc.justchatting.feature.recent.presentation.widget
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -19,33 +19,32 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.ImageProvider
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.components.TitleBar
-import androidx.glance.appwidget.lazy.LazyColumn
+import androidx.glance.appwidget.lazy.GridCells
+import androidx.glance.appwidget.lazy.LazyVerticalGrid
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
 import androidx.glance.layout.Column
-import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.size
-import androidx.glance.layout.width
 import androidx.glance.text.Text
 import androidx.glance.text.TextDefaults
 import fr.outadoc.justchatting.feature.chat.presentation.UserProfileImageContentProvider
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
-import fr.outadoc.justchatting.feature.followed.presentation.FollowedChannelsViewModel
+import fr.outadoc.justchatting.feature.recent.presentation.RecentChannelsViewModel
 import fr.outadoc.justchatting.feature.shared.domain.model.User
-import fr.outadoc.justchatting.feature.shared.presentation.glance.GlanceCard
 import fr.outadoc.justchatting.shared.R
 import org.koin.compose.koinInject
 
-internal class FollowedChannelsWidget : GlanceAppWidget() {
+internal class RecentChannelsWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
-            val viewModel: FollowedChannelsViewModel = koinInject()
+            val viewModel: RecentChannelsViewModel = koinInject()
 
             LaunchedEffect(Unit) {
                 viewModel.refresh()
@@ -56,13 +55,13 @@ internal class FollowedChannelsWidget : GlanceAppWidget() {
                     titleBar = {
                         TitleBar(
                             startIcon = ImageProvider(R.drawable.ic_notif),
-                            title = LocalContext.current.getString(R.string.channels),
+                            title = LocalContext.current.getString(R.string.chat_header_recent),
                         )
                     },
                 ) {
                     val state by viewModel.state.collectAsState()
                     when (val currentState = state) {
-                        FollowedChannelsViewModel.State.Loading -> {
+                        RecentChannelsViewModel.State.Loading -> {
                             Column(
                                 modifier = GlanceModifier.fillMaxSize(),
                                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -72,19 +71,22 @@ internal class FollowedChannelsWidget : GlanceAppWidget() {
                             }
                         }
 
-                        is FollowedChannelsViewModel.State.Content -> {
-                            LazyColumn {
-                                items(currentState.data) { follow ->
+                        is RecentChannelsViewModel.State.Content -> {
+                            LazyVerticalGrid(
+                                // TODO make it dynamic
+                                gridCells = GridCells.Fixed(4),
+                            ) {
+                                items(currentState.data) { user ->
                                     Column {
-                                        GlanceCard(
+                                        Box(
                                             modifier = GlanceModifier
                                                 .clickable(
-                                                    ChatActivity.createGlanceAction(follow.user.id),
+                                                    ChatActivity.createGlanceAction(user.id),
                                                 ),
                                         ) {
                                             UserItem(
                                                 modifier = GlanceModifier.fillMaxWidth(),
-                                                user = follow.user,
+                                                user = user,
                                             )
                                         }
 
@@ -108,34 +110,31 @@ internal class FollowedChannelsWidget : GlanceAppWidget() {
     ) {
         Column(
             modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Image(
-                    modifier = GlanceModifier.size(32.dp),
-                    provider = ImageProvider(
-                        UserProfileImageContentProvider.createForUser(
-                            context = LocalContext.current,
-                            userId = user.id,
-                        ),
+            Image(
+                modifier = GlanceModifier.size(48.dp),
+                provider = ImageProvider(
+                    UserProfileImageContentProvider.createForUser(
+                        context = LocalContext.current,
+                        userId = user.id,
                     ),
-                    contentDescription = null,
-                )
+                ),
+                contentDescription = null,
+            )
 
-                Spacer(
-                    modifier = GlanceModifier.width(8.dp),
-                )
+            Spacer(
+                modifier = GlanceModifier.height(8.dp),
+            )
 
-                Text(
-                    text = user.displayName,
-                    style = TextDefaults.defaultTextStyle.copy(
-                        color = GlanceTheme.colors.onSurfaceVariant,
-                        fontSize = 16.sp,
-                    ),
-                    maxLines = 1,
-                )
-            }
+            Text(
+                text = user.displayName,
+                style = TextDefaults.defaultTextStyle.copy(
+                    color = GlanceTheme.colors.onSurfaceVariant,
+                ),
+                maxLines = 1,
+            )
         }
     }
 }

@@ -1,8 +1,8 @@
 package fr.outadoc.justchatting.feature.emotes.data.bttv.model
 
-import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
+import fr.outadoc.justchatting.feature.shared.data.ApiEndpoints
 
 private val zeroWidthEmotes = setOf(
     "SoSnowy",

@@ -1,9 +1,9 @@
 package fr.outadoc.justchatting.feature.emotes.data.stv.model
 
 import com.eygraber.uri.Uri
-import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
+import fr.outadoc.justchatting.feature.shared.data.ApiEndpoints
 
 private const val FLAG_IS_ZERO_WIDTH = 1 shl 8
 

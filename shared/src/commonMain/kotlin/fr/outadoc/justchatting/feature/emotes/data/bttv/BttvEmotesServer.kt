@@ -1,11 +1,11 @@
 package fr.outadoc.justchatting.feature.emotes.data.bttv
 
-import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.emotes.data.bttv.model.BttvChannelResponse
 import fr.outadoc.justchatting.feature.emotes.data.bttv.model.BttvEmote
 import fr.outadoc.justchatting.feature.emotes.data.bttv.model.FfzEmote
 import fr.outadoc.justchatting.feature.emotes.data.bttv.model.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
+import fr.outadoc.justchatting.feature.shared.data.ApiEndpoints
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.defaultRequest

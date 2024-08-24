@@ -36,12 +36,12 @@ import fr.outadoc.justchatting.feature.emotes.data.twitch.ChannelTwitchEmotesSou
 import fr.outadoc.justchatting.feature.emotes.data.twitch.DelegateTwitchEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.twitch.GlobalTwitchEmotesSource
 import fr.outadoc.justchatting.feature.emotes.domain.EmoteListSourcesProvider
+import fr.outadoc.justchatting.feature.emotes.domain.GetRecentEmotesUseCase
+import fr.outadoc.justchatting.feature.emotes.domain.InsertRecentEmotesUseCase
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsApi
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsClient
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsApi
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
-import fr.outadoc.justchatting.feature.recent.domain.GetRecentEmotesUseCase
-import fr.outadoc.justchatting.feature.recent.domain.InsertRecentEmotesUseCase
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module

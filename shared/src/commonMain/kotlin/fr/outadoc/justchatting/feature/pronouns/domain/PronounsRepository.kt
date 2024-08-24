@@ -2,8 +2,6 @@ package fr.outadoc.justchatting.feature.pronouns.domain
 
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsApi
-import fr.outadoc.justchatting.feature.pronouns.data.db.LocalPronounsApi
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logError
@@ -37,7 +35,7 @@ internal class PronounsRepository(
                                 localPronounsApi.saveAndReplacePronouns(pronouns)
                             },
                             onFailure = { e ->
-                                logError<AlejoPronounsApi>(e) { "Error while fetching pronouns from Alejo API" }
+                                logError<PronounsRepository>(e) { "Error while fetching pronouns from Alejo API" }
                             },
                         )
                 }
@@ -64,7 +62,7 @@ internal class PronounsRepository(
                                             .firstOrNull()
                                     },
                                     onFailure = { e ->
-                                        logError<AlejoPronounsApi>(e) { "Error while fetching pronouns for user ${chatter.id}" }
+                                        logError<PronounsRepository>(e) { "Error while fetching pronouns for user ${chatter.id}" }
                                         null
                                     },
                                 )

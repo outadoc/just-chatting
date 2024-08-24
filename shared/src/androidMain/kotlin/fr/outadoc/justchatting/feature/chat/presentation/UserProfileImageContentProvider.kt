@@ -13,7 +13,7 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import coil.request.ImageResult
 import coil.transform.CircleCropTransformation
-import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
+import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logDebug
 import kotlinx.coroutines.flow.firstOrNull

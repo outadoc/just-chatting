@@ -1,10 +1,11 @@
 package fr.outadoc.justchatting.util.chat
 
+import fr.outadoc.justchatting.feature.chat.data.http.map
 import fr.outadoc.justchatting.feature.chat.data.irc.TwitchIrcCommandParser
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEmote
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
-import fr.outadoc.justchatting.feature.home.data.map
+import fr.outadoc.justchatting.feature.emotes.data.twitch.map
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import org.junit.Assert

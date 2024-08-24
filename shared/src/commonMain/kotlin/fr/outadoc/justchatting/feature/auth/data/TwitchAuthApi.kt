@@ -1,11 +1,11 @@
 package fr.outadoc.justchatting.feature.auth.data
 
 import com.eygraber.uri.Uri
-import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.auth.data.model.TwitchAuthValidationResponse
 import fr.outadoc.justchatting.feature.auth.domain.AuthApi
 import fr.outadoc.justchatting.feature.auth.domain.model.AuthValidationResponse
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
+import fr.outadoc.justchatting.feature.shared.data.ApiEndpoints
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.defaultRequest

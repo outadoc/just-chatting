@@ -9,11 +9,11 @@ import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesApi
 import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesServer
 import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesApi
 import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesServer
-import fr.outadoc.justchatting.feature.home.data.TwitchApiImpl
-import fr.outadoc.justchatting.feature.home.data.TwitchClient
-import fr.outadoc.justchatting.feature.home.domain.TwitchApi
-import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
-import fr.outadoc.justchatting.feature.home.domain.TwitchRepositoryImpl
+import fr.outadoc.justchatting.feature.shared.data.TwitchApiImpl
+import fr.outadoc.justchatting.feature.shared.data.TwitchClient
+import fr.outadoc.justchatting.feature.shared.domain.TwitchApi
+import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
+import fr.outadoc.justchatting.feature.shared.domain.TwitchRepositoryImpl
 import fr.outadoc.justchatting.utils.core.DefaultJson
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module

@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.feature.chat.domain.model
 import androidx.compose.runtime.Immutable
 import dev.icerock.moko.resources.desc.StringDesc
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
-import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
+import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant

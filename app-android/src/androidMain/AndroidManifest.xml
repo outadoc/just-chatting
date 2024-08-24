@@ -20,7 +20,7 @@
         tools:targetApi="tiramisu">
 
         <activity
-            android:name=".feature.home.presentation.mobile.MainActivity"
+            android:name=".feature.shared.presentation.mobile.MainActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:exported="true"
             android:launchMode="singleTask"

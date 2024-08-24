@@ -1,9 +1,9 @@
 package fr.outadoc.justchatting.feature.emotes.data.stv
 
-import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.emotes.data.stv.model.StvEmoteResponse
 import fr.outadoc.justchatting.feature.emotes.data.stv.model.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
+import fr.outadoc.justchatting.feature.shared.data.ApiEndpoints
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.defaultRequest

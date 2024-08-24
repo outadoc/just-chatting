@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.irc.recent
 
-import fr.outadoc.justchatting.data.ApiEndpoints
+import fr.outadoc.justchatting.feature.shared.data.ApiEndpoints
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.defaultRequest

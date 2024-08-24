@@ -16,9 +16,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.feature.home.presentation.mobile.MainNavigation
-import fr.outadoc.justchatting.feature.home.presentation.mobile.Screen
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
+import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainNavigation
+import fr.outadoc.justchatting.feature.shared.presentation.mobile.Screen
 import fr.outadoc.justchatting.shared.MR
 import org.koin.androidx.compose.koinViewModel
 

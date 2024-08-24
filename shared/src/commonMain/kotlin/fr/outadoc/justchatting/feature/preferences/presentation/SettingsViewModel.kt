@@ -1,11 +1,11 @@
 package fr.outadoc.justchatting.feature.preferences.presentation
 
 import fr.outadoc.justchatting.feature.auth.domain.AuthRepository
-import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
-import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
+import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
+import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.presentation.ViewModel

@@ -39,7 +39,7 @@ internal class LiveWidget : GlanceAppWidget() {
                     titleBar = {
                         TitleBar(
                             startIcon = ImageProvider(R.drawable.ic_notif),
-                            title = LocalContext.current.getString(R.string.app_name),
+                            title = LocalContext.current.getString(R.string.epg_title),
                         )
                     }
                 ) {

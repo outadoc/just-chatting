@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.widget
+package fr.outadoc.justchatting.feature.followed.presentation.widget
 
 import android.content.Context
 import androidx.compose.runtime.LaunchedEffect

@@ -1,6 +1,7 @@
-package fr.outadoc.justchatting.feature.widget
+package fr.outadoc.justchatting.feature.timeline.presentation.widget
 
 import android.content.Context
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -10,6 +11,7 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.Scaffold
@@ -18,8 +20,14 @@ import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Column
+import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import androidx.glance.text.Text
+import androidx.glance.text.TextDefaults
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
+import fr.outadoc.justchatting.feature.shared.domain.model.User
+import fr.outadoc.justchatting.feature.shared.presentation.glance.GlanceCard
+import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.feature.timeline.presentation.EpgViewModel
 import fr.outadoc.justchatting.shared.R
 import org.koin.compose.koinInject
@@ -56,14 +64,47 @@ internal class LiveWidget : GlanceAppWidget() {
                 ) {
                     LazyColumn {
                         items(state.schedule.live) { userStream ->
-                            Column {
-                                Text(text = userStream.stream.title)
-                                Text(text = userStream.user.displayName)
+                            GlanceCard(
+                                modifier = GlanceModifier
+                                    .padding(bottom = 8.dp)
+                                    .clickable(
+                                        ChatActivity.createGlanceAction(userStream.user.id)
+                                    ),
+                            ) {
+                                LiveStream(
+                                    modifier = GlanceModifier.fillMaxWidth(),
+                                    user = userStream.user,
+                                    stream = userStream.stream
+                                )
                             }
                         }
                     }
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun LiveStream(
+        modifier: GlanceModifier = GlanceModifier,
+        user: User,
+        stream: Stream
+    ) {
+        Column(
+            modifier = modifier
+        ) {
+            Text(
+                text = stream.title,
+                style = TextDefaults.defaultTextStyle.copy(
+                    color = GlanceTheme.colors.onSurfaceVariant
+                )
+            )
+            Text(
+                text = user.displayName,
+                style = TextDefaults.defaultTextStyle.copy(
+                    color = GlanceTheme.colors.onSurfaceVariant
+                )
+            )
         }
     }
 }

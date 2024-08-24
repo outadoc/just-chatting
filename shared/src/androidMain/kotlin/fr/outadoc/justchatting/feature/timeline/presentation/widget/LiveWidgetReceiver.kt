@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.widget
+package fr.outadoc.justchatting.feature.timeline.presentation.widget
 
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver

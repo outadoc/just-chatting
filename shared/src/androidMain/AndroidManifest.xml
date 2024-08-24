@@ -31,7 +31,7 @@
         </provider>
 
         <receiver
-            android:name="fr.outadoc.justchatting.feature.widget.LiveWidgetReceiver"
+            android:name="fr.outadoc.justchatting.feature.timeline.presentation.widget.LiveWidgetReceiver"
             android:exported="true">
 
             <intent-filter>
@@ -44,7 +44,7 @@
         </receiver>
 
         <receiver
-            android:name="fr.outadoc.justchatting.feature.widget.FollowedChannelsWidgetReceiver"
+            android:name="fr.outadoc.justchatting.feature.followed.presentation.widget.FollowedChannelsWidgetReceiver"
             android:exported="true">
 
             <intent-filter>

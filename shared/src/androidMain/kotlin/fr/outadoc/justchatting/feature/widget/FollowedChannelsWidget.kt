@@ -24,7 +24,7 @@ import fr.outadoc.justchatting.feature.followed.presentation.FollowedChannelsVie
 import fr.outadoc.justchatting.shared.R
 import org.koin.compose.koinInject
 
-internal class LiveWidget : GlanceAppWidget() {
+internal class FollowedChannelsWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {

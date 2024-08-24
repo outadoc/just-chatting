@@ -37,7 +37,7 @@ internal class FollowedChannelsViewModel(
                     .getFollowedChannels()
                     .map { channels ->
                         State.Content(channels.toPersistentList())
-                    }
+                    },
             )
         }
     }

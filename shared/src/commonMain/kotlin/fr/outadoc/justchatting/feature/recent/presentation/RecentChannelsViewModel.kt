@@ -36,7 +36,7 @@ internal class RecentChannelsViewModel(
                     .getRecentChannels()
                     .map { channels ->
                         State.Content(channels.toPersistentList())
-                    }
+                    },
             )
         }
     }

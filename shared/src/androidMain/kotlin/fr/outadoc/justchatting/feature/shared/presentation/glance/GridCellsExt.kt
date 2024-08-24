@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.shared.presentation.glance
 
-import android.annotation.SuppressLint
 import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
@@ -10,7 +9,7 @@ import kotlin.math.floor
 
 @Composable
 internal fun adaptiveGridCellsCompat(
-    minSize: Dp
+    minSize: Dp,
 ): GridCells {
     return if (Build.VERSION.SDK_INT >= 31) {
         GridCells.Adaptive(minSize = minSize)

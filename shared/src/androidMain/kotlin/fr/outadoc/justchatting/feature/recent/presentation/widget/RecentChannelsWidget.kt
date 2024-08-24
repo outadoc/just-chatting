@@ -45,8 +45,8 @@ internal class RecentChannelsWidget : GlanceAppWidget() {
         setOf(
             SMALL_SQUARE,
             HORIZONTAL_RECTANGLE,
-            BIG_SQUARE
-        )
+            BIG_SQUARE,
+        ),
     )
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {

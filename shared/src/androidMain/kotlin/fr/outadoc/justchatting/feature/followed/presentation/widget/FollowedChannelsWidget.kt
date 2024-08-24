@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
@@ -22,10 +23,9 @@ import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
-import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
-import androidx.glance.layout.height
+import androidx.glance.layout.padding
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
 import fr.outadoc.justchatting.feature.followed.presentation.FollowedChannelsViewModel
 import fr.outadoc.justchatting.feature.shared.presentation.glance.GlanceUserItem
@@ -35,7 +35,19 @@ import org.koin.compose.koinInject
 
 internal class FollowedChannelsWidget : GlanceAppWidget() {
 
-    override val sizeMode = SizeMode.Exact
+    companion object {
+        private val SMALL_SQUARE = DpSize(100.dp, 100.dp)
+        private val HORIZONTAL_RECTANGLE = DpSize(250.dp, 100.dp)
+        private val BIG_SQUARE = DpSize(250.dp, 250.dp)
+    }
+
+    override val sizeMode = SizeMode.Responsive(
+        setOf(
+            SMALL_SQUARE,
+            HORIZONTAL_RECTANGLE,
+            BIG_SQUARE
+        )
+    )
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
@@ -79,14 +91,12 @@ internal class FollowedChannelsWidget : GlanceAppWidget() {
                                                 ),
                                         ) {
                                             GlanceUserItem(
-                                                modifier = GlanceModifier.fillMaxWidth(),
+                                                modifier = GlanceModifier
+                                                    .fillMaxWidth()
+                                                    .padding(8.dp),
                                                 user = follow.user,
                                             )
                                         }
-
-                                        Spacer(
-                                            modifier = GlanceModifier.height(8.dp),
-                                        )
                                     }
                                 }
                             }

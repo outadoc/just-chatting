@@ -10,15 +10,15 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
-import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.components.TitleBar
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Column
-import androidx.glance.layout.size
+import androidx.glance.layout.padding
 import androidx.glance.text.Text
 import fr.outadoc.justchatting.feature.timeline.presentation.EpgViewModel
 import fr.outadoc.justchatting.shared.R
@@ -42,11 +42,14 @@ internal class LiveWidget : GlanceAppWidget() {
                             startIcon = ImageProvider(R.drawable.ic_notif),
                             title = LocalContext.current.getString(R.string.epg_title),
                             actions = {
-                                if (state.isLoading) {
-                                    CircularProgressIndicator(
-                                        modifier = GlanceModifier.size(16.dp)
-                                    )
-                                }
+                                CircleIconButton(
+                                    modifier = GlanceModifier.padding(8.dp),
+                                    imageProvider = ImageProvider(R.drawable.ic_sync),
+                                    contentDescription = LocalContext.current.getString(R.string.epg_refresh_action_cd),
+                                    backgroundColor = null,
+                                    key = "refresh",
+                                    onClick = viewModel::load
+                                )
                             }
                         )
                     }

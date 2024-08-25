@@ -10,5 +10,5 @@ internal fun User.getProfileImageUri(context: Context): Uri =
 
 internal fun User.getProfileImageIcon(context: Context): IconCompat =
     IconCompat.createWithContentUri(
-        getProfileImageUri(context)
+        getProfileImageUri(context),
     )

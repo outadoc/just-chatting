@@ -8,6 +8,7 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.ParcelFileDescriptor
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -18,9 +19,10 @@ import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logDebug
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
+import java.io.File
 import java.io.FileNotFoundException
-import java.io.FileOutputStream
 
 public class UserProfileImageContentProvider : ContentProvider() {
 
@@ -60,35 +62,15 @@ public class UserProfileImageContentProvider : ContentProvider() {
                 val userId: String = segments.getOrNull(1)
                     ?: throw FileNotFoundException("User id was null.")
 
-                runBlocking(DispatchersProvider.io) {
-                    val profileImageUrl: String =
-                        apiRepository.getUserById(userId)
-                            .firstOrNull()
-                            ?.getOrNull()
-                            ?.profileImageUrl
-                            ?: throw FileNotFoundException("User not found: $userId")
+                val file = getFile(context, userId)
 
-                    val response: ImageResult =
-                        context.imageLoader.execute(
-                            ImageRequest.Builder(context)
-                                .data(profileImageUrl)
-                                .size(128)
-                                .transformations(CircleCropTransformation())
-                                .build(),
-                        )
-
-                    val bitmap: Bitmap = (response.drawable as? BitmapDrawable)?.bitmap
-                        ?: error("Empty bitmap received from Coil")
-
-                    // Create a socket pair, one for writing the bitmap and the other for reading it back
-                    val (inSocket, outSocket) = ParcelFileDescriptor.createSocketPair()
-
-                    // Write resulting bitmap to output stream
-                    val os = FileOutputStream(outSocket.fileDescriptor)
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 0, os)
-
-                    ParcelFileDescriptor.fromFd(inSocket.fd)
+                if (!file.exists()) {
+                    runBlocking(DispatchersProvider.io) {
+                        downloadImage(context, userId)
+                    }
                 }
+
+                ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
             }
 
             else -> {
@@ -97,7 +79,52 @@ public class UserProfileImageContentProvider : ContentProvider() {
         }
     }
 
-    override fun getType(uri: Uri): String = "image/png"
+    private fun getFile(context: Context, userId: String): File {
+        val directory: File =
+            File(context.cacheDir, "user_images").apply {
+                if (!exists()) {
+                    mkdir()
+                }
+            }
+
+        return directory.resolve("user_image_$userId.webp")
+    }
+
+    private suspend fun downloadImage(context: Context, userId: String) {
+        return withContext(DispatchersProvider.io) {
+            val profileImageUrl: String =
+                apiRepository.getUserById(userId)
+                    .firstOrNull()
+                    ?.getOrNull()
+                    ?.profileImageUrl
+                    ?: throw FileNotFoundException("User not found: $userId")
+
+            val response: ImageResult =
+                context.imageLoader.execute(
+                    ImageRequest.Builder(context)
+                        .data(profileImageUrl)
+                        .size(128)
+                        .transformations(CircleCropTransformation())
+                        .build(),
+                )
+
+            val bitmap: Bitmap = (response.drawable as? BitmapDrawable)?.bitmap
+                ?: error("Empty bitmap received from Coil")
+
+            val format = if (Build.VERSION.SDK_INT >= 30) {
+                Bitmap.CompressFormat.WEBP_LOSSLESS
+            } else {
+                @Suppress("DEPRECATION")
+                Bitmap.CompressFormat.WEBP
+            }
+
+            getFile(context, userId).outputStream().use { os ->
+                bitmap.compress(format, 70, os)
+            }
+        }
+    }
+
+    override fun getType(uri: Uri): String = "image/webp"
 
     override fun query(
         uri: Uri,

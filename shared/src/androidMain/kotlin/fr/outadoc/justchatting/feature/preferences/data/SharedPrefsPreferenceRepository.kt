@@ -80,7 +80,7 @@ internal class SharedPrefsPreferenceRepository(
         val userLogin = this[USER_LOGIN]
         val token = this[USER_TOKEN]
 
-        return if (token != null) {
+        return if (!token.isNullOrEmpty()) {
             if (!userId.isNullOrEmpty() && !userLogin.isNullOrEmpty()) {
                 AppUser.LoggedIn(
                     userId = userId,

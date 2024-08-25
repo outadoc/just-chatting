@@ -14,7 +14,7 @@ import androidx.glance.layout.height
 import androidx.glance.layout.size
 import androidx.glance.text.Text
 import androidx.glance.text.TextDefaults
-import fr.outadoc.justchatting.feature.chat.presentation.UserProfileImageContentProvider
+import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageUri
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 
 @Composable
@@ -30,10 +30,7 @@ internal fun GlanceUserItem(
         Image(
             modifier = GlanceModifier.size(48.dp),
             provider = ImageProvider(
-                UserProfileImageContentProvider.createForUser(
-                    context = LocalContext.current,
-                    userId = user.id,
-                ),
+                user.getProfileImageUri(LocalContext.current),
             ),
             contentDescription = null,
         )

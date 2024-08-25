@@ -33,7 +33,7 @@ import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextDefaults
-import fr.outadoc.justchatting.feature.chat.presentation.UserProfileImageContentProvider
+import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageUri
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.glance.GlanceCard
@@ -126,10 +126,7 @@ internal class LiveWidget : GlanceAppWidget() {
                 Image(
                     modifier = GlanceModifier.size(20.dp),
                     provider = ImageProvider(
-                        UserProfileImageContentProvider.createForUser(
-                            context = LocalContext.current,
-                            userId = user.id,
-                        ),
+                        user.getProfileImageUri(LocalContext.current),
                     ),
                     contentDescription = null,
                 )

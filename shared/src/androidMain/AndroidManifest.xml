@@ -32,6 +32,7 @@
 
         <receiver
             android:name="fr.outadoc.justchatting.feature.timeline.presentation.widget.LiveWidgetReceiver"
+            android:label="@string/live"
             android:exported="true">
 
             <intent-filter>
@@ -50,6 +51,7 @@
 
         <receiver
             android:name="fr.outadoc.justchatting.feature.followed.presentation.widget.FollowedChannelsWidgetReceiver"
+            android:label="@string/channels"
             android:exported="true">
 
             <intent-filter>
@@ -68,6 +70,7 @@
 
         <receiver
             android:name="fr.outadoc.justchatting.feature.recent.presentation.widget.RecentChannelsWidgetReceiver"
+            android:label="@string/chat_header_recent"
             android:exported="true">
 
             <intent-filter>

@@ -183,7 +183,7 @@ private fun EpgContent(
 
             items(
                 items = schedule.past[date].orEmpty(),
-                key = { segment -> segment.id },
+                key = { segment -> "past-${segment.id}" },
                 contentType = { "segment" },
             ) { segment ->
                 EpgSegment(
@@ -206,7 +206,7 @@ private fun EpgContent(
 
         items(
             schedule.live,
-            key = { userStream -> userStream.stream.id },
+            key = { userStream -> "live-${userStream.stream.id}" },
             contentType = { "stream" },
         ) { userStream ->
             LiveStreamCard(
@@ -234,7 +234,7 @@ private fun EpgContent(
 
             items(
                 items = schedule.future[date].orEmpty(),
-                key = { segment -> segment.id },
+                key = { segment -> "future-${segment.id}" },
                 contentType = { "segment" },
             ) { segment ->
                 EpgSegment(

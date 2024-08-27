@@ -335,12 +335,11 @@ internal class TwitchRepositoryImpl(
                         notAfter = notAfter,
                     )
                 },
-                async {
-                    localStreamsApi.cleanup(
-                        notBefore = notBefore,
-                        notAfter = notAfter,
-                    )
-                },
+            )
+
+            localStreamsApi.cleanup(
+                notBefore = notBefore,
+                notAfter = notAfter,
             )
         }
     }

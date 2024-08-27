@@ -166,9 +166,8 @@ internal class LocalStreamsDb(
                     streamQueries.addPastStream(
                         id = video.id,
                         user_id = video.userId,
-                        // TODO check that this is correct
-                        start_time = (video.createdAt - video.duration).toEpochMilliseconds(),
-                        end_time = video.createdAt.toEpochMilliseconds(),
+                        start_time = video.createdAt.toEpochMilliseconds(),
+                        end_time = (video.createdAt + video.duration).toEpochMilliseconds(),
                         title = video.title,
                         category_id = null,
                     )

@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.shared.data
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
+import app.cash.sqldelight.coroutines.mapToOneOrNull
 import fr.outadoc.justchatting.data.db.StreamQueries
 import fr.outadoc.justchatting.feature.shared.domain.LocalStreamsApi
 import fr.outadoc.justchatting.feature.shared.domain.model.User
@@ -66,6 +67,17 @@ internal class LocalStreamsDb(
                         },
                     )
                 }
+            }
+            .flowOn(DispatchersProvider.io)
+    }
+
+    override fun getMostRecentPastStream(user: User): Flow<Instant?> {
+        return streamQueries
+            .getMostRecentPastStream(user.id)
+            .asFlow()
+            .mapToOneOrNull(DispatchersProvider.io)
+            .map { endTime: Long? ->
+                endTime?.let { Instant.fromEpochMilliseconds(it) }
             }
             .flowOn(DispatchersProvider.io)
     }

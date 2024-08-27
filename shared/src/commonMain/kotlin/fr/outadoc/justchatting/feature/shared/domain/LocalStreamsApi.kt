@@ -14,6 +14,8 @@ internal interface LocalStreamsApi {
         notAfter: Instant,
     ): Flow<List<ChannelScheduleSegment>>
 
+    fun getMostRecentPastStream(user: User): Flow<Instant?>
+
     fun getLiveStreams(): Flow<List<Stream>>
 
     fun getFutureStreams(

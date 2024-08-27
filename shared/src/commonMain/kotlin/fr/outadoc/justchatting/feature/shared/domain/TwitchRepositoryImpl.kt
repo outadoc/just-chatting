@@ -24,6 +24,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
@@ -358,10 +359,18 @@ internal class TwitchRepositoryImpl(
                         "Loading past channel videos for ${user.displayName}"
                     }
 
+                    // Don't load any videos that are older than the most recent known past stream.
+                    // We should already know about them.
+                    val mostRecentPastStream: Instant? =
+                        localStreamsApi
+                            .getMostRecentPastStream(user)
+                            .firstOrNull()
+                            ?.takeUnless { it < notBefore }
+
                     twitchApi
                         .getChannelVideos(
                             channelId = user.id,
-                            notBefore = notBefore,
+                            notBefore = mostRecentPastStream ?: notBefore,
                         )
                         .onSuccess { videos ->
                             logDebug<TwitchRepositoryImpl> {

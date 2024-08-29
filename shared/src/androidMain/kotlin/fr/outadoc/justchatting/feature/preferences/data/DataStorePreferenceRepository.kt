@@ -35,7 +35,7 @@ internal class DataStorePreferenceRepository(
             .shareIn(
                 scope = scope,
                 started = SharingStarted.Lazily,
-                replay = 1
+                replay = 1,
             )
 
     override suspend fun updatePreferences(update: (AppPreferences) -> AppPreferences) {

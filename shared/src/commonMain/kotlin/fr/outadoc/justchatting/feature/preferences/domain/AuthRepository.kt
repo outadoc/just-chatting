@@ -6,6 +6,7 @@ import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logError
+import fr.outadoc.justchatting.utils.logging.logInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.withContext
 
@@ -61,9 +63,13 @@ internal class AuthRepository(
                 }
             }
             .distinctUntilChanged()
+            .onEach { user ->
+                logInfo<AuthRepository> { "User is now $user" }
+            }
             .shareIn(
                 scope = scope,
                 started = SharingStarted.Lazily,
+                replay = 1,
             )
 
     suspend fun saveToken(token: String) {

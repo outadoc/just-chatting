@@ -72,26 +72,29 @@ internal class AuthRepository(
         }
     }
 
-    suspend fun logout() = withContext(DispatchersProvider.io) {
-        val token = preferenceRepository.currentPreferences.first().apiToken
+    suspend fun logout() {
+        withContext(DispatchersProvider.io) {
+            val token = preferenceRepository.currentPreferences.first().apiToken
 
-        if (token == null) {
-            logError<AuthRepository> { "User is already logged out" }
-            return@withContext
-        }
-
-        authApi.revokeToken(
-            clientId = oAuthAppCredentials.clientId,
-            token = token,
-        )
-            .onFailure { exception ->
-                logError<AuthRepository>(exception) { "Failed to revoke token" }
+            if (token == null) {
+                logError<AuthRepository> { "User is already logged out" }
+                return@withContext
             }
 
-        preferenceRepository.updatePreferences { prefs ->
-            prefs.copy(
-                apiToken = null,
-            )
+            authApi
+                .revokeToken(
+                    clientId = oAuthAppCredentials.clientId,
+                    token = token,
+                )
+                .onFailure { exception ->
+                    logError<AuthRepository>(exception) { "Failed to revoke token" }
+                }
+
+            preferenceRepository.updatePreferences { prefs ->
+                prefs.copy(
+                    apiToken = null,
+                )
+            }
         }
     }
 

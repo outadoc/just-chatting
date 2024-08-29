@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.component.preferences.domain
 
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
-import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.logging.logInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +44,8 @@ internal class UserDefaultsPreferenceRepository : PreferenceRepository {
                 ?: defaultPreferences.enablePronouns,
             enableNotifications = boolForKeyOrNull(ENABLE_NOTIFICATIONS)
                 ?: defaultPreferences.enableNotifications,
-            appUser = this.parseUser(),
+            apiToken = stringForKey(USER_TOKEN)
+                ?: defaultPreferences.apiToken,
         )
     }
 
@@ -66,25 +66,7 @@ internal class UserDefaultsPreferenceRepository : PreferenceRepository {
             "Writing preferences to NSUserDefaults: ${this@writeToDefaults}"
         }
 
-        when (val user = appUser) {
-            is AppUser.LoggedIn -> {
-                setObject(user.userId, forKey = USER_ID)
-                setObject(user.userLogin, forKey = USER_LOGIN)
-                setObject(user.token, forKey = USER_TOKEN)
-            }
-
-            AppUser.NotLoggedIn -> {
-                setObject("", forKey = USER_ID)
-                setObject("", forKey = USER_LOGIN)
-                setObject("", forKey = USER_TOKEN)
-            }
-
-            is AppUser.NotValidated -> {
-                setObject("", forKey = USER_ID)
-                setObject("", forKey = USER_LOGIN)
-                setObject(user.token, forKey = USER_TOKEN)
-            }
-        }
+        setObject(apiToken, forKey = USER_TOKEN)
 
         setObject(showTimestamps, forKey = CHAT_ACCESSIBILITY_TIMESTAMPS)
 
@@ -97,31 +79,7 @@ internal class UserDefaultsPreferenceRepository : PreferenceRepository {
         setObject(enablePronouns, forKey = THIRDPARTY_ENABLE_PRONOUNS)
     }
 
-    private fun NSUserDefaults.parseUser(): AppUser {
-        val userId = stringForKey(USER_ID)
-        val userLogin = stringForKey(USER_LOGIN)
-        val token = stringForKey(USER_TOKEN)
-
-        return if (token != null) {
-            if (!userId.isNullOrEmpty() && !userLogin.isNullOrEmpty()) {
-                AppUser.LoggedIn(
-                    userId = userId,
-                    userLogin = userLogin,
-                    token = token,
-                )
-            } else {
-                AppUser.NotValidated(
-                    token = token,
-                )
-            }
-        } else {
-            AppUser.NotLoggedIn
-        }
-    }
-
     private companion object {
-        const val USER_ID = "user_id"
-        const val USER_LOGIN = "username"
         const val USER_TOKEN = "token"
 
         const val CHAT_ACCESSIBILITY_TIMESTAMPS = "chat_timestamps"

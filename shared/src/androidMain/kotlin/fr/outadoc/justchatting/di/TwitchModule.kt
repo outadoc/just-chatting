@@ -34,7 +34,7 @@ public val twitchModule: Module = module {
     single<TwitchApi> { TwitchApiImpl(get()) }
     single { TwitchClient(get(named("twitch"))) }
 
-    single<AuthApi> { TwitchAuthApi(get(named("twitch"))) }
+    single<AuthApi> { TwitchAuthApi(get()) }
     single<BttvEmotesApi> { BttvEmotesServer(get()) }
     single<StvEmotesApi> { StvEmotesServer(get()) }
     single<RecentMessagesApi> { RecentMessagesServer(get()) }

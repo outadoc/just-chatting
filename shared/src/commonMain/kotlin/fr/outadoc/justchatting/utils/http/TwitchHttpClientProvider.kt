@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.utils.http
 
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
+import fr.outadoc.justchatting.utils.logging.logInfo
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
@@ -25,36 +25,31 @@ internal class TwitchHttpClientProvider(
             install(Auth) {
                 bearer {
                     loadTokens {
-                        val appUser = preferenceRepository
-                            .currentPreferences.first()
-                            .appUser
-
-                        when (appUser) {
-                            is AppUser.LoggedIn -> {
+                        logInfo<TwitchHttpClientProvider> { "Loading bearer token" }
+                        preferenceRepository.currentPreferences.first().apiToken
+                            .also { token ->
+                                logInfo<TwitchHttpClientProvider> { "Most fresh token is $token" }
+                            }
+                            ?.let { token ->
                                 BearerTokens(
-                                    accessToken = appUser.token,
+                                    accessToken = token,
                                     refreshToken = "",
                                 )
                             }
-
-                            is AppUser.NotValidated -> {
-                                BearerTokens(
-                                    accessToken = appUser.token,
-                                    refreshToken = "",
-                                )
-                            }
-
-                            is AppUser.NotLoggedIn -> null
-                        }
                     }
 
                     refreshTokens {
-                        preferenceRepository.updatePreferences { current ->
-                            current.copy(
-                                appUser = AppUser.NotLoggedIn,
-                            )
-                        }
-                        null
+                        logInfo<TwitchHttpClientProvider> { "Refreshing bearer token" }
+                        preferenceRepository.currentPreferences.first().apiToken
+                            .also { token ->
+                                logInfo<TwitchHttpClientProvider> { "Most fresh token is $token" }
+                            }
+                            ?.let { token ->
+                                BearerTokens(
+                                    accessToken = token,
+                                    refreshToken = "",
+                                )
+                            }
                     }
                 }
             }

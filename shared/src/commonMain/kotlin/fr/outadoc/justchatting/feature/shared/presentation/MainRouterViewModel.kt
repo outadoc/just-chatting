@@ -1,10 +1,8 @@
 package fr.outadoc.justchatting.feature.shared.presentation
 
-import fr.outadoc.justchatting.feature.auth.domain.AuthRepository
-import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.deeplink.Deeplink
 import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
-import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logInfo
@@ -21,12 +19,8 @@ import kotlin.time.Duration.Companion.seconds
 
 internal class MainRouterViewModel(
     private val authRepository: AuthRepository,
-    private val preferencesRepository: PreferenceRepository,
     private val deeplinkParser: DeeplinkParser,
-    private val oAuthAppCredentials: OAuthAppCredentials,
 ) : ViewModel() {
-
-    private class InvalidClientIdException : Exception()
 
     sealed class State {
         data object Loading : State()
@@ -42,12 +36,11 @@ internal class MainRouterViewModel(
     }
 
     val state: StateFlow<State> =
-        preferencesRepository.currentPreferences
-            .map { prefs ->
-                when (val appUser = prefs.appUser) {
+        authRepository.currentUser
+            .map { appUser ->
+                when (appUser) {
                     is AppUser.LoggedIn -> State.LoggedIn(appUser = appUser)
                     is AppUser.NotLoggedIn -> State.LoggedOut
-                    is AppUser.NotValidated -> State.Loading
                 }
             }
             .stateIn(
@@ -60,38 +53,6 @@ internal class MainRouterViewModel(
     val events = _events.asSharedFlow()
 
     fun onStart() {
-        viewModelScope.launch {
-            preferencesRepository.currentPreferences.collect { prefs ->
-                if (prefs.appUser is AppUser.NotValidated) {
-                    val appUser = authRepository
-                        .validate(prefs.appUser.token)
-                        .mapCatching { userInfo ->
-                            val validatedUser = AppUser.LoggedIn(
-                                userId = userInfo.userId,
-                                userLogin = userInfo.login,
-                                token = prefs.appUser.token,
-                            )
-
-                            if (userInfo.clientId != oAuthAppCredentials.clientId) {
-                                throw InvalidClientIdException()
-                            }
-
-                            validatedUser
-                        }
-                        .fold(
-                            onSuccess = { it },
-                            onFailure = { exception ->
-                                logError<MainRouterViewModel>(exception) { "Failed to validate token" }
-                                AppUser.NotLoggedIn
-                            },
-                        )
-
-                    preferencesRepository.updatePreferences { current ->
-                        current.copy(appUser = appUser)
-                    }
-                }
-            }
-        }
     }
 
     fun onLoginClick() = viewModelScope.launch {
@@ -109,13 +70,7 @@ internal class MainRouterViewModel(
 
         when (deeplink) {
             is Deeplink.Authenticated -> {
-                preferencesRepository.updatePreferences { prefs ->
-                    prefs.copy(
-                        appUser = AppUser.NotValidated(
-                            token = deeplink.token,
-                        ),
-                    )
-                }
+                authRepository.saveToken(deeplink.token)
 
                 // Artificial delay to ensure Ktor has time to get the memo about the new token
                 delay(1.seconds)

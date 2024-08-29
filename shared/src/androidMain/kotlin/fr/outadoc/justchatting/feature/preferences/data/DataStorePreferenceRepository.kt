@@ -8,9 +8,14 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
-import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
+import fr.outadoc.justchatting.utils.logging.logInfo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.shareIn
 
 internal class DataStorePreferenceRepository(
     applicationContext: Context,
@@ -19,8 +24,19 @@ internal class DataStorePreferenceRepository(
     private val dataStore = applicationContext.dataStore
     private val defaultPreferences = AppPreferences()
 
-    override val currentPreferences: Flow<AppPreferences>
-        get() = dataStore.data.map { prefs -> prefs.read() }
+    private val scope = CoroutineScope(SupervisorJob())
+
+    override val currentPreferences: Flow<AppPreferences> =
+        dataStore.data
+            .map { prefs -> prefs.read() }
+            .onEach { prefs ->
+                logInfo<DataStorePreferenceRepository> { "Current prefs: $prefs" }
+            }
+            .shareIn(
+                scope = scope,
+                started = SharingStarted.Lazily,
+                replay = 1,
+            )
 
     override suspend fun updatePreferences(update: (AppPreferences) -> AppPreferences) {
         dataStore.edit { currentPreferences ->
@@ -34,35 +50,22 @@ internal class DataStorePreferenceRepository(
                 ?: defaultPreferences.showTimestamps,
             enableRecentMessages = this[THIRDPARTY_ENABLE_RECENT]
                 ?: defaultPreferences.enableRecentMessages,
-            enableBttvEmotes = this[THIRDPARTY_ENABLE_BTTV] ?: defaultPreferences.enableBttvEmotes,
-            enableFfzEmotes = this[THIRDPARTY_ENABLE_FFZ] ?: defaultPreferences.enableFfzEmotes,
-            enableStvEmotes = this[THIRDPARTY_ENABLE_STV] ?: defaultPreferences.enableStvEmotes,
-            enablePronouns = this[THIRDPARTY_ENABLE_PRONOUNS] ?: defaultPreferences.enablePronouns,
-            enableNotifications = this[ENABLE_NOTIFICATIONS] ?: defaultPreferences.enableNotifications,
-            appUser = this.parseUser(),
+            enableBttvEmotes = this[THIRDPARTY_ENABLE_BTTV]
+                ?: defaultPreferences.enableBttvEmotes,
+            enableFfzEmotes = this[THIRDPARTY_ENABLE_FFZ]
+                ?: defaultPreferences.enableFfzEmotes,
+            enableStvEmotes = this[THIRDPARTY_ENABLE_STV]
+                ?: defaultPreferences.enableStvEmotes,
+            enablePronouns = this[THIRDPARTY_ENABLE_PRONOUNS]
+                ?: defaultPreferences.enablePronouns,
+            enableNotifications = this[ENABLE_NOTIFICATIONS]
+                ?: defaultPreferences.enableNotifications,
+            apiToken = this[USER_TOKEN]?.takeUnless { it.isBlank() },
         )
     }
 
     private fun AppPreferences.writeTo(prefs: MutablePreferences) {
-        when (val user = appUser) {
-            is AppUser.LoggedIn -> {
-                prefs[USER_ID] = user.userId
-                prefs[USER_LOGIN] = user.userLogin
-                prefs[USER_TOKEN] = user.token
-            }
-
-            AppUser.NotLoggedIn -> {
-                prefs[USER_ID] = ""
-                prefs[USER_LOGIN] = ""
-                prefs[USER_TOKEN] = ""
-            }
-
-            is AppUser.NotValidated -> {
-                prefs[USER_ID] = ""
-                prefs[USER_LOGIN] = ""
-                prefs[USER_TOKEN] = user.token
-            }
-        }
+        prefs[USER_TOKEN] = apiToken.orEmpty()
 
         prefs[CHAT_ACCESSIBILITY_TIMESTAMPS] = showTimestamps
 
@@ -75,31 +78,7 @@ internal class DataStorePreferenceRepository(
         prefs[THIRDPARTY_ENABLE_PRONOUNS] = enablePronouns
     }
 
-    private fun Preferences.parseUser(): AppUser {
-        val userId = this[USER_ID]
-        val userLogin = this[USER_LOGIN]
-        val token = this[USER_TOKEN]
-
-        return if (!token.isNullOrEmpty()) {
-            if (!userId.isNullOrEmpty() && !userLogin.isNullOrEmpty()) {
-                AppUser.LoggedIn(
-                    userId = userId,
-                    userLogin = userLogin,
-                    token = token,
-                )
-            } else {
-                AppUser.NotValidated(
-                    token = token,
-                )
-            }
-        } else {
-            AppUser.NotLoggedIn
-        }
-    }
-
     private companion object {
-        val USER_ID = stringPreferencesKey("user_id")
-        val USER_LOGIN = stringPreferencesKey("username")
         val USER_TOKEN = stringPreferencesKey("token")
 
         val CHAT_ACCESSIBILITY_TIMESTAMPS = booleanPreferencesKey("chat_timestamps")

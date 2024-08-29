@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.preferences.domain.model
 
 internal data class AppPreferences(
-    val appUser: AppUser = AppUser.NotLoggedIn,
+    val apiToken: String? = null,
     val showTimestamps: Boolean = true,
     val enableRecentMessages: Boolean = true,
     val enableFfzEmotes: Boolean = true,

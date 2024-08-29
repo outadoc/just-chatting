@@ -36,6 +36,7 @@ internal class TwitchAuthApi(httpClient: HttpClient) : AuthApi {
                 clientId = response.clientId,
                 login = response.login,
                 userId = response.userId,
+                scopes = response.scopes.toSet(),
             )
         }
 
@@ -51,20 +52,17 @@ internal class TwitchAuthApi(httpClient: HttpClient) : AuthApi {
         }
     }
 
-    override fun getExternalAuthorizeUrl(oAuthAppCredentials: OAuthAppCredentials): Uri {
-        val oauthScopes = listOf(
-            "chat:read",
-            "chat:edit",
-            "user:read:follows",
-        )
-
+    override fun getExternalAuthorizeUrl(
+        oAuthAppCredentials: OAuthAppCredentials,
+        scopes: Set<String>,
+    ): Uri {
         return Uri.parse(ApiEndpoints.TWITCH_AUTH_AUTHORIZE)
             .buildUpon()
             .appendQueryParameter("response_type", "token")
             .appendQueryParameter("client_id", oAuthAppCredentials.clientId)
             .appendQueryParameter("redirect_uri", oAuthAppCredentials.redirectUri)
             .appendQueryParameter("force_verify", "true")
-            .appendQueryParameter("scope", oauthScopes.joinToString(" "))
+            .appendQueryParameter("scope", scopes.joinToString(" "))
             .build()
     }
 }

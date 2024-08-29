@@ -5,7 +5,7 @@ import androidx.paging.flatMap
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.shared.domain.model.User
@@ -44,7 +44,7 @@ import kotlinx.datetime.toLocalDateTime
 
 internal class TwitchRepositoryImpl(
     private val twitchApi: TwitchApi,
-    private val preferencesRepository: PreferenceRepository,
+    private val authRepository: AuthRepository,
     private val localUsersApi: LocalUsersApi,
     private val localStreamsApi: LocalStreamsApi,
 ) : TwitchRepository {
@@ -78,12 +78,11 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun getFollowedChannels(): Flow<List<ChannelFollow>> =
         withContext(DispatchersProvider.io) {
-            val prefs = preferencesRepository.currentPreferences.first()
-            when (prefs.appUser) {
+            when (val appUser = authRepository.currentUser.first()) {
                 is AppUser.LoggedIn -> {
                     launch {
                         if (localUsersApi.isFollowedUsersCacheExpired()) {
-                            syncLocalFollows(appUserId = prefs.appUser.userId)
+                            syncLocalFollows(appUserId = appUser.userId)
                         }
 
                         syncLocalUserInfo()
@@ -164,14 +163,13 @@ internal class TwitchRepositoryImpl(
         today: LocalDate,
         timeZone: TimeZone,
     ) {
-        val prefs = preferencesRepository.currentPreferences.first()
-        when (prefs.appUser) {
+        when (val appUser = authRepository.currentUser.first()) {
             is AppUser.LoggedIn -> {
                 val notBefore = (today - EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
                 val notAfter = (today + EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
 
                 if (localUsersApi.isFollowedUsersCacheExpired()) {
-                    syncLocalFollows(appUserId = prefs.appUser.userId)
+                    syncLocalFollows(appUserId = appUser.userId)
                 }
 
                 syncLocalUserInfo()
@@ -179,7 +177,7 @@ internal class TwitchRepositoryImpl(
                 syncFullSchedule(
                     notBefore = notBefore,
                     notAfter = notAfter,
-                    appUserId = prefs.appUser.userId,
+                    appUserId = appUser.userId,
                 )
             }
 

@@ -8,9 +8,5 @@ internal sealed class AppUser {
         val token: String,
     ) : AppUser()
 
-    data class NotValidated(
-        val token: String,
-    ) : AppUser()
-
     data object NotLoggedIn : AppUser()
 }

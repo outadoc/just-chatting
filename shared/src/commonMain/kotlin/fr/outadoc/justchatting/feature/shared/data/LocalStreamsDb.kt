@@ -170,6 +170,7 @@ internal class LocalStreamsDb(
                         end_time = (video.createdAt + video.duration).toEpochMilliseconds(),
                         title = video.title,
                         category_id = null,
+                        stream_id = video.streamId,
                     )
                 }
 

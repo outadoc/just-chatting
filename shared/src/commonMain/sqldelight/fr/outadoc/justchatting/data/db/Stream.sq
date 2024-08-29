@@ -12,6 +12,7 @@ CREATE TABLE PastStream (
     `start_time` INTEGER NOT NULL,
     `end_time` INTEGER NOT NULL,
     `category_id` TEXT,
+    `stream_id` TEXT,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES User(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`category_id`) REFERENCES Category(`id`) ON DELETE SET NULL
@@ -60,6 +61,7 @@ JOIN User ON PastStream.user_id = User.id
 JOIN UserInfo ON PastStream.user_id = UserInfo.id
 WHERE start_time >= :notBefore AND start_time <= :notAfter
 AND user_id IN (SELECT id FROM User WHERE followed_at > 0)
+AND stream_id NOT IN (SELECT id FROM LiveStream)
 ORDER BY start_time;
 
 getMostRecentPastStream:
@@ -89,8 +91,8 @@ AND user_id IN (SELECT id FROM User WHERE followed_at > 0)
 ORDER BY start_time;
 
 addPastStream:
-INSERT OR REPLACE INTO PastStream (id, title, user_id, start_time, end_time, category_id)
-VALUES (?, ?, ?, ?, ?, ?);
+INSERT OR REPLACE INTO PastStream (id, title, user_id, start_time, end_time, category_id, stream_id)
+VALUES (?, ?, ?, ?, ?, ?, ?);
 
 addLiveStream:
 INSERT OR REPLACE INTO LiveStream (id, title, user_id, start_time, category_id, tags, viewer_count)

@@ -12,7 +12,7 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-internal class SharedPrefsPreferenceRepository(
+internal class DataStorePreferenceRepository(
     applicationContext: Context,
 ) : PreferenceRepository {
 

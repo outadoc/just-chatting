@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.di
 
-import fr.outadoc.justchatting.feature.preferences.data.SharedPrefsPreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.data.DataStorePreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.AndroidLogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.DefaultReadExternalDependenciesList
@@ -15,5 +15,5 @@ public val settingsModule: Module = module {
     viewModel { SettingsViewModel(get(), get(), get(), get()) }
     single<LogRepository> { AndroidLogRepository(get()) }
     single<ReadExternalDependenciesList> { DefaultReadExternalDependenciesList(get()) }
-    single<PreferenceRepository> { SharedPrefsPreferenceRepository(get()) }
+    single<PreferenceRepository> { DataStorePreferenceRepository(get()) }
 }

@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFac
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
-import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
@@ -52,7 +52,7 @@ internal class LoggedInChatWebSocket(
     private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
     private val httpClient: HttpClient,
-    private val preferencesRepository: PreferenceRepository,
+    private val authRepository: AuthRepository,
     private val channelLogin: String,
 ) : ChatEventHandler {
 
@@ -142,9 +142,7 @@ internal class LoggedInChatWebSocket(
         httpClient.webSocket(ENDPOINT) {
             logDebug<LoggedInChatWebSocket> { "Socket open, logging in" }
 
-            val appUser = preferencesRepository
-                .currentPreferences.first()
-                .appUser
+            val appUser = authRepository.currentUser.first()
 
             if (appUser !is AppUser.LoggedIn) return@webSocket
 
@@ -253,7 +251,7 @@ internal class LoggedInChatWebSocket(
         private val clock: Clock,
         private val networkStateObserver: NetworkStateObserver,
         private val parser: TwitchIrcCommandParser,
-        private val preferencesRepository: PreferenceRepository,
+        private val authRepository: AuthRepository,
         private val httpClient: HttpClient,
     ) : ChatCommandHandlerFactory {
 
@@ -267,7 +265,7 @@ internal class LoggedInChatWebSocket(
             clock = clock,
             parser = parser,
             httpClient = httpClient,
-            preferencesRepository = preferencesRepository,
+            authRepository = authRepository,
             channelLogin = channelLogin,
         )
     }

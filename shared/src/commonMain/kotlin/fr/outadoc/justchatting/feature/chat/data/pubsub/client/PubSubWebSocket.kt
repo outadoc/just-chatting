@@ -9,7 +9,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPluginsProvider
-import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
@@ -46,7 +46,7 @@ internal class PubSubWebSocket(
     private val networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
     private val httpClient: HttpClient,
-    private val preferencesRepository: PreferenceRepository,
+    private val authRepository: AuthRepository,
     private val pubSubPluginsProvider: PubSubPluginsProvider,
     private val channelId: String,
 ) : ChatEventHandler {
@@ -119,9 +119,7 @@ internal class PubSubWebSocket(
 
     private suspend fun listen() {
         httpClient.webSocket(ENDPOINT) {
-            val appUser = preferencesRepository
-                .currentPreferences.first()
-                .appUser
+            val appUser = authRepository.currentUser.first()
 
             if (appUser !is AppUser.LoggedIn) return@webSocket
 
@@ -205,7 +203,7 @@ internal class PubSubWebSocket(
     class Factory(
         private val networkStateObserver: NetworkStateObserver,
         private val httpClient: HttpClient,
-        private val preferencesRepository: PreferenceRepository,
+        private val authRepository: AuthRepository,
         private val pubSubPluginsProvider: PubSubPluginsProvider,
     ) : ChatCommandHandlerFactory {
 
@@ -217,7 +215,7 @@ internal class PubSubWebSocket(
             networkStateObserver = networkStateObserver,
             scope = scope,
             httpClient = httpClient,
-            preferencesRepository = preferencesRepository,
+            authRepository = authRepository,
             pubSubPluginsProvider = pubSubPluginsProvider,
             channelId = channelId,
         )

@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.preferences.presentation
 
-import fr.outadoc.justchatting.feature.auth.domain.AuthRepository
+import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -24,9 +25,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class SettingsViewModel(
     private val preferenceRepository: PreferenceRepository,
-    private val authRepository: AuthRepository,
     private val logRepository: LogRepository,
     private val twitchRepository: TwitchRepository,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
 
     sealed class Event {
@@ -42,28 +43,37 @@ internal class SettingsViewModel(
     val events: SharedFlow<Event> = _events.asSharedFlow()
 
     val state: StateFlow<State> =
-        preferenceRepository
-            .currentPreferences
-            .flatMapLatest { prefs ->
-                when (prefs.appUser) {
-                    is AppUser.LoggedIn -> {
-                        twitchRepository
-                            .getUserById(prefs.appUser.userId)
-                            .map { user ->
-                                State(
-                                    appPreferences = prefs,
-                                    user = user.getOrNull(),
-                                )
-                            }
-                    }
+        combine(
+            preferenceRepository.currentPreferences,
+            authRepository
+                .currentUser
+                .flatMapLatest { appUser ->
+                    when (appUser) {
+                        is AppUser.LoggedIn -> {
+                            twitchRepository
+                                .getUserById(appUser.userId)
+                                .map { result ->
+                                    result.fold(
+                                        onSuccess = { user -> user },
+                                        onFailure = { exception ->
+                                            logError<SettingsViewModel>(exception) { "Failed to fetch user" }
+                                            null
+                                        },
+                                    )
+                                }
+                        }
 
-                    else -> {
-                        flowOf(
-                            State(appPreferences = prefs),
-                        )
+                        AppUser.NotLoggedIn -> {
+                            flowOf(null)
+                        }
                     }
-                }
-            }
+                },
+        ) { prefs, user ->
+            State(
+                appPreferences = prefs,
+                user = user,
+            )
+        }
             .stateIn(
                 viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
@@ -78,15 +88,7 @@ internal class SettingsViewModel(
 
     fun logout() {
         viewModelScope.launch(DispatchersProvider.io) {
-            preferenceRepository.updatePreferences { current ->
-                current.copy(appUser = AppUser.NotLoggedIn)
-            }
-
-            authRepository
-                .revokeToken()
-                .onFailure { exception ->
-                    logError<SettingsViewModel>(exception) { "Failed to revoke token" }
-                }
+            authRepository.logout()
         }
     }
 

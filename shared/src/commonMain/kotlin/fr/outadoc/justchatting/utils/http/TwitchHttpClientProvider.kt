@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.utils.http
 
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
-import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.Auth
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.first
 
 internal class TwitchHttpClientProvider(
     private val baseHttpClientProvider: BaseHttpClientProvider,
-    private val preferenceRepository: PreferenceRepository,
+    private val authRepository: AuthRepository,
     private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
     fun get(): HttpClient {
@@ -25,19 +25,8 @@ internal class TwitchHttpClientProvider(
             install(Auth) {
                 bearer {
                     loadTokens {
-                        val appUser = preferenceRepository
-                            .currentPreferences.first()
-                            .appUser
-
-                        when (appUser) {
+                        when (val appUser = authRepository.currentUser.first()) {
                             is AppUser.LoggedIn -> {
-                                BearerTokens(
-                                    accessToken = appUser.token,
-                                    refreshToken = "",
-                                )
-                            }
-
-                            is AppUser.NotValidated -> {
                                 BearerTokens(
                                     accessToken = appUser.token,
                                     refreshToken = "",
@@ -49,11 +38,7 @@ internal class TwitchHttpClientProvider(
                     }
 
                     refreshTokens {
-                        preferenceRepository.updatePreferences { current ->
-                            current.copy(
-                                appUser = AppUser.NotLoggedIn,
-                            )
-                        }
+                        authRepository.logout()
                         null
                     }
                 }

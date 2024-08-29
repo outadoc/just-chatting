@@ -6,5 +6,5 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 public val mainNavigationModule: Module = module {
-    viewModel { MainRouterViewModel(get(), get(), get(), get()) }
+    viewModel { MainRouterViewModel(get(), get()) }
 }

@@ -3,8 +3,8 @@ package fr.outadoc.justchatting.di
 import android.content.Context
 import android.net.ConnectivityManager
 import androidx.core.content.getSystemService
-import fr.outadoc.justchatting.feature.auth.domain.AuthRepository
 import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
+import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.utils.core.AndroidNetworkStateObserver
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.http.AndroidHttpClientProvider
@@ -19,7 +19,7 @@ public val mainModule: Module = module {
     single<Clock> { Clock.System }
     single<ConnectivityManager> { get<Context>().getSystemService()!! }
     single<NetworkStateObserver> { AndroidNetworkStateObserver(get()) }
-    single { AuthRepository(get(), get(), get()) }
+    single<AuthRepository> { AuthRepository(get(), get(), get(), get()) }
     single { DeeplinkParser(get()) }
 
     single<BaseHttpClientProvider> { AndroidHttpClientProvider(get(), get()) }

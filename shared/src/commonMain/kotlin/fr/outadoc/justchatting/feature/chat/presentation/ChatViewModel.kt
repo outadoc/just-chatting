@@ -18,7 +18,7 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteSetItem
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.emotes.domain.model.RecentEmote
-import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
@@ -90,7 +90,7 @@ internal class ChatViewModel(
     private val getRecentEmotes: GetRecentEmotesUseCase,
     private val insertRecentEmotes: InsertRecentEmotesUseCase,
     private val chatRepository: ChatRepository,
-    private val preferencesRepository: PreferenceRepository,
+    private val authRepository: AuthRepository,
     private val emoteListSourcesProvider: EmoteListSourcesProvider,
     private val filterAutocompleteItemsUseCase: FilterAutocompleteItemsUseCase,
     private val pronounsRepository: PronounsRepository,
@@ -575,11 +575,11 @@ internal class ChatViewModel(
     private suspend fun Action.LoadChat.reduce(state: State): State {
         if (state is State.Chatting && state.user.id == userId) return state
 
-        val prefs = preferencesRepository.currentPreferences.first()
+        val appUser = authRepository.currentUser.first()
 
         return State.Loading(
             userId = userId,
-            appUser = prefs.appUser as AppUser.LoggedIn,
+            appUser = appUser as AppUser.LoggedIn,
             maxAdapterCount = AppPreferences.Defaults.ChatBufferLimit,
         )
     }

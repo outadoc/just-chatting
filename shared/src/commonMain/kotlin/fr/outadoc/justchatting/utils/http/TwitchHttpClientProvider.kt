@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.utils.http
 
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.utils.logging.logInfo
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
@@ -24,8 +25,12 @@ internal class TwitchHttpClientProvider(
             install(Auth) {
                 bearer {
                     loadTokens {
-                        preferenceRepository.currentPreferences.first()
-                            .apiToken?.let { token ->
+                        logInfo<TwitchHttpClientProvider> { "Loading bearer token" }
+                        preferenceRepository.currentPreferences.first().apiToken
+                            .also { token ->
+                                logInfo<TwitchHttpClientProvider> { "Most fresh token is $token" }
+                            }
+                            ?.let { token ->
                                 BearerTokens(
                                     accessToken = token,
                                     refreshToken = "",
@@ -34,10 +39,17 @@ internal class TwitchHttpClientProvider(
                     }
 
                     refreshTokens {
-                        preferenceRepository.updatePreferences { prefs ->
-                            prefs.copy(apiToken = null)
-                        }
-                        null
+                        logInfo<TwitchHttpClientProvider> { "Refreshing bearer token" }
+                        preferenceRepository.currentPreferences.first().apiToken
+                            .also { token ->
+                                logInfo<TwitchHttpClientProvider> { "Most fresh token is $token" }
+                            }
+                            ?.let { token ->
+                                BearerTokens(
+                                    accessToken = token,
+                                    refreshToken = "",
+                                )
+                            }
                     }
                 }
             }

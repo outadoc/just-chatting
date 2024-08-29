@@ -45,14 +45,28 @@ internal fun Instant.formatHourMinute(): String? {
 @Composable
 internal fun Instant.formatDate(
     tz: TimeZone = TimeZone.currentSystemDefault(),
+    clock: Clock = Clock.System,
 ): String {
-    return toLocalDateTime(tz).date.formatDate()
+    var now by remember { mutableStateOf(clock.now()) }
+    val today = remember(now) { now.toLocalDateTime(tz).date }
+
+    LaunchedEffect(clock) {
+        now = clock.now()
+        delay(1.minutes)
+    }
+
+    return toLocalDateTime(tz).date
+        .formatDate(
+            today = today,
+            isFuture = this > now,
+        )
 }
 
 @Composable
 internal fun LocalDate.formatDate(
     tz: TimeZone = TimeZone.currentSystemDefault(),
     clock: Clock = Clock.System,
+    isFuture: Boolean,
 ): String {
     var today by remember { mutableStateOf(clock.now().toLocalDateTime(tz).date) }
 
@@ -61,7 +75,10 @@ internal fun LocalDate.formatDate(
         delay(1.minutes)
     }
 
-    return formatDate(today)
+    return formatDate(
+        today = today,
+        isFuture = isFuture,
+    )
 }
 
 /**
@@ -73,7 +90,10 @@ internal fun LocalDate.formatDate(
  * Otherwise, return the full date.
  */
 @Composable
-private fun LocalDate.formatDate(today: LocalDate): String {
+private fun LocalDate.formatDate(
+    today: LocalDate,
+    isFuture: Boolean,
+): String {
     val isToday = this == today
     val isYesterday = this == (today - DatePeriod(days = 1))
     val isTomorrow = this == (today + DatePeriod(days = 1))
@@ -84,8 +104,12 @@ private fun LocalDate.formatDate(today: LocalDate): String {
             stringResource(MR.strings.date_yesterday)
         }
 
-        isToday -> {
-            stringResource(MR.strings.date_today)
+        isToday && !isFuture -> {
+            stringResource(MR.strings.date_today_earlier)
+        }
+
+        isToday && isFuture -> {
+            stringResource(MR.strings.date_today_later)
         }
 
         isTomorrow -> {

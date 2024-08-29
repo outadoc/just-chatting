@@ -68,8 +68,6 @@ import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -177,7 +175,7 @@ private fun EpgContent(
                 contentType = "header",
             ) {
                 SectionHeader(
-                    title = { Text(date.formatDate()) },
+                    title = { Text(date.formatDate(isFuture = false)) },
                 )
             }
 
@@ -228,7 +226,7 @@ private fun EpgContent(
                 contentType = "header",
             ) {
                 SectionHeader(
-                    title = { Text(date.formatDate()) },
+                    title = { Text(date.formatDate(isFuture = true)) },
                 )
             }
 
@@ -409,7 +407,6 @@ private fun EpgSegmentContent(
 private fun EpgSegmentDetails(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
-    tz: TimeZone = TimeZone.currentSystemDefault(),
 ) {
     Column(
         modifier = modifier,
@@ -435,7 +432,7 @@ private fun EpgSegmentDetails(
                 }
 
                 val date: String =
-                    segment.startTime.toLocalDateTime(tz).date.formatDate()
+                    segment.startTime.formatDate()
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(

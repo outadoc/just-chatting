@@ -266,7 +266,8 @@
     <string name="app_repo_name">outadoc/just-chatting</string>
     <string name="app_repo_url">https://github.com/outadoc/just-chatting</string>
     <string name="all_goBack">Retour</string>
-    <string name="date_today">Aujourd'hui</string>
+    <string name="date_today_earlier">Plus tôt aujourd'hui</string>
+    <string name="date_today_later">Plus tard aujourd'hui</string>
     <string name="date_tomorrow">Demain</string>
     <string name="date_yesterday">Hier</string>
     <string name="epg_refresh_action_cd">Rafraîchir les données</string>

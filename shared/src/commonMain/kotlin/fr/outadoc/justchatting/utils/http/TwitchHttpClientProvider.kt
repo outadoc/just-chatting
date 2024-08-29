@@ -1,8 +1,7 @@
 package fr.outadoc.justchatting.utils.http
 
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
-import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
-import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
+import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
@@ -13,7 +12,7 @@ import kotlinx.coroutines.flow.first
 
 internal class TwitchHttpClientProvider(
     private val baseHttpClientProvider: BaseHttpClientProvider,
-    private val authRepository: AuthRepository,
+    private val preferenceRepository: PreferenceRepository,
     private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
     fun get(): HttpClient {
@@ -25,20 +24,19 @@ internal class TwitchHttpClientProvider(
             install(Auth) {
                 bearer {
                     loadTokens {
-                        when (val appUser = authRepository.currentUser.first()) {
-                            is AppUser.LoggedIn -> {
+                        preferenceRepository.currentPreferences.first()
+                            .apiToken?.let { token ->
                                 BearerTokens(
-                                    accessToken = appUser.token,
+                                    accessToken = token,
                                     refreshToken = "",
                                 )
                             }
-
-                            is AppUser.NotLoggedIn -> null
-                        }
                     }
 
                     refreshTokens {
-                        authRepository.logout()
+                        preferenceRepository.updatePreferences { prefs ->
+                            prefs.copy(apiToken = null)
+                        }
                         null
                     }
                 }

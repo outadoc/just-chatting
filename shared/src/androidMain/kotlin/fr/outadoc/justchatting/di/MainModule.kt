@@ -19,7 +19,7 @@ public val mainModule: Module = module {
     single<Clock> { Clock.System }
     single<ConnectivityManager> { get<Context>().getSystemService()!! }
     single<NetworkStateObserver> { AndroidNetworkStateObserver(get()) }
-    single<AuthRepository> { AuthRepository(get(), get(), get(), get()) }
+    single<AuthRepository> { AuthRepository(get(), get(), get()) }
     single { DeeplinkParser(get()) }
 
     single<BaseHttpClientProvider> { AndroidHttpClientProvider(get(), get()) }

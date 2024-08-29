@@ -19,7 +19,6 @@ import kotlinx.coroutines.withContext
 internal class AuthRepository(
     private val preferenceRepository: PreferenceRepository,
     private val authApi: AuthApi,
-    private val preferencesRepository: PreferenceRepository,
     private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
     private val scope = CoroutineScope(SupervisorJob())
@@ -75,9 +74,7 @@ internal class AuthRepository(
     }
 
     suspend fun logout() = withContext(DispatchersProvider.io) {
-        val token = preferencesRepository
-            .currentPreferences.first()
-            .apiToken
+        val token = preferenceRepository.currentPreferences.first().apiToken
 
         if (token == null) {
             logError<AuthRepository> { "User is already logged out" }

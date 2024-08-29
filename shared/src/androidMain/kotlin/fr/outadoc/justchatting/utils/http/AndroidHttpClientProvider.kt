@@ -1,10 +1,13 @@
 package fr.outadoc.justchatting.utils.http
 
+import android.content.Context
+import fr.outadoc.justchatting.feature.preferences.presentation.mobile.applicationVersionName
 import fr.outadoc.justchatting.utils.logging.logDebug
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
@@ -18,6 +21,7 @@ import kotlin.time.Duration.Companion.seconds
 
 internal class AndroidHttpClientProvider(
     private val json: Json,
+    private val context: Context,
 ) : BaseHttpClientProvider {
 
     override fun get(block: HttpClientConfig<*>.() -> Unit): HttpClient {
@@ -31,6 +35,10 @@ internal class AndroidHttpClientProvider(
 
             install(ContentNegotiation) {
                 json(json)
+            }
+
+            install(UserAgent) {
+                agent = "JustChatting-fr.outadoc.justchatting/${context.applicationVersionName.orEmpty()}"
             }
 
             install(Logging) {

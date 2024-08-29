@@ -22,7 +22,7 @@ public val mainModule: Module = module {
     single { AuthRepository(get(), get(), get()) }
     single { DeeplinkParser(get()) }
 
-    single<BaseHttpClientProvider> { AndroidHttpClientProvider(get()) }
+    single<BaseHttpClientProvider> { AndroidHttpClientProvider(get(), get()) }
     single<TwitchHttpClientProvider> { TwitchHttpClientProvider(get(), get(), get()) }
     single { get<BaseHttpClientProvider>().get() }
     single(named("twitch")) { get<TwitchHttpClientProvider>().get() }

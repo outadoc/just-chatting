@@ -36,10 +36,12 @@ internal class AuthRepository(
                         authApi.validateToken(token)
                             .mapCatching { response ->
                                 if (response.clientId != oAuthAppCredentials.clientId) {
-                                    throw InvalidClientIdException()
+                                    throw InvalidClientIdException("Invalid client ID: ${response.clientId}")
                                 }
 
-                                // TODO validate scopes
+                                if (!response.scopes.containsAll(REQUIRED_SCOPES)) {
+                                    throw MissingScopesException("Missing scopes: ${REQUIRED_SCOPES - response.scopes}")
+                                }
 
                                 response
                             }
@@ -100,14 +102,15 @@ internal class AuthRepository(
     fun getExternalAuthorizeUrl(): Uri {
         return authApi.getExternalAuthorizeUrl(
             oAuthAppCredentials = oAuthAppCredentials,
-            scopes = SCOPES,
+            scopes = REQUIRED_SCOPES,
         )
     }
 
-    private class InvalidClientIdException : Exception()
+    private class InvalidClientIdException(message: String) : Exception(message)
+    private class MissingScopesException(message: String) : Exception(message)
 
     private companion object {
-        val SCOPES = setOf(
+        val REQUIRED_SCOPES = setOf(
             "chat:read",
             "chat:edit",
             "user:read:follows",

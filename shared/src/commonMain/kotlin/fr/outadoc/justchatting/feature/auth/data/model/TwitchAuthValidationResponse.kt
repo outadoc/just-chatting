@@ -11,4 +11,6 @@ internal class TwitchAuthValidationResponse(
     val login: String,
     @SerialName("user_id")
     val userId: String,
+    @SerialName("scopes")
+    val scopes: List<String>,
 )

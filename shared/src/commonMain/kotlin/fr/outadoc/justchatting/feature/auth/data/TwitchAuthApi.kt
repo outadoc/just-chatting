@@ -36,6 +36,7 @@ internal class TwitchAuthApi(httpClient: HttpClient) : AuthApi {
                 clientId = response.clientId,
                 login = response.login,
                 userId = response.userId,
+                scopes = response.scopes.toSet(),
             )
         }
 

@@ -8,12 +8,12 @@ import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.withContext
 
 internal class AuthRepository(
@@ -23,7 +23,7 @@ internal class AuthRepository(
 ) {
     private val scope = CoroutineScope(SupervisorJob())
 
-    val currentUser: StateFlow<AppUser> =
+    val currentUser: Flow<AppUser> =
         preferenceRepository
             .currentPreferences
             .map { prefs -> prefs.apiToken }
@@ -61,9 +61,8 @@ internal class AuthRepository(
                 }
             }
             .distinctUntilChanged()
-            .stateIn(
-                scope,
-                initialValue = AppUser.NotLoggedIn,
+            .shareIn(
+                scope = scope,
                 started = SharingStarted.Lazily,
             )
 

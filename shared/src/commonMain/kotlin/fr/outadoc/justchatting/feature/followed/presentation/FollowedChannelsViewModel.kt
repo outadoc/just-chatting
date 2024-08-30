@@ -1,44 +1,60 @@
 package fr.outadoc.justchatting.feature.followed.presentation
 
+import androidx.compose.runtime.Immutable
 import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.recent.presentation.RecentChannelsViewModel.State
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.presentation.ViewModel
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal class FollowedChannelsViewModel(
     private val repository: TwitchRepository,
 ) : ViewModel() {
 
-    sealed class State {
-        data object Loading : State()
-        data class Content(
-            val data: ImmutableList<ChannelFollow>,
-        ) : State()
-    }
+    @Immutable
+    data class State(
+        val data: ImmutableList<ChannelFollow> = persistentListOf(),
+        val isLoading: Boolean = true,
+    )
 
-    private val _state = MutableStateFlow<State>(State.Loading)
+    private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
 
-    private var job: Job? = null
+    private var syncJob: Job? = null
 
-    fun refresh() {
-        job?.cancel()
-        job = viewModelScope.launch {
-            _state.emitAll(
-                repository
-                    .getFollowedChannels()
-                    .map { channels ->
-                        State.Content(channels.toPersistentList())
-                    },
-            )
+    init {
+        viewModelScope.launch {
+            repository
+                .getFollowedChannels()
+                .collect { channels ->
+                    _state.update { state ->
+                        state.copy(
+                            data = channels.toPersistentList(),
+                        )
+                    }
+                }
+        }
+    }
+
+    fun synchronize() {
+        syncJob?.cancel()
+        syncJob = viewModelScope.launch(DispatchersProvider.io) {
+            _state.update { state ->
+                state.copy(isLoading = true)
+            }
+
+            repository.syncFollowedChannels()
+
+            _state.update { state ->
+                state.copy(isLoading = false)
+            }
         }
     }
 }

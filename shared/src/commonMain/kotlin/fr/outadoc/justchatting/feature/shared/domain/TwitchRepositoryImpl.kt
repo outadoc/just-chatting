@@ -28,7 +28,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -78,26 +77,21 @@ internal class TwitchRepositoryImpl(
                 }
         }
 
-    override suspend fun getFollowedChannels(): Flow<List<ChannelFollow>> =
+    override suspend fun syncFollowedChannels() {
         withContext(DispatchersProvider.io) {
-            when (val appUser = authRepository.currentUser.first()) {
-                is AppUser.LoggedIn -> {
-                    launch {
-                        if (localUsersApi.isFollowedUsersCacheExpired()) {
-                            syncLocalFollows(appUserId = appUser.userId)
-                        }
-
-                        syncLocalUserInfo()
-                    }
-
-                    localUsersApi.getFollowedChannels()
+            val appUser = authRepository.currentUser.first()
+            if (appUser is AppUser.LoggedIn) {
+                if (localUsersApi.isFollowedUsersCacheExpired()) {
+                    syncLocalFollows(appUserId = appUser.userId)
                 }
 
-                else -> {
-                    flowOf(emptyList())
-                }
+                syncLocalUserInfo()
             }
         }
+    }
+
+    override suspend fun getFollowedChannels(): Flow<List<ChannelFollow>> =
+        localUsersApi.getFollowedChannels()
 
     override suspend fun getStreamByUserId(userId: String): Flow<Result<Stream>> =
         flow {

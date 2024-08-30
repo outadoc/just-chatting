@@ -86,6 +86,5 @@ internal class TimelineViewModel(
                 state.copy(isLoading = false)
             }
         }
-
     }
 }

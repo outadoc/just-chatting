@@ -1,18 +1,18 @@
 package fr.outadoc.justchatting.feature.followed.presentation.mobile
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -35,6 +34,7 @@ import fr.outadoc.justchatting.feature.shared.presentation.mobile.Screen
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.UserItemCard
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.UserItemCardPlaceholder
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.utils.presentation.HapticIconButton
 import fr.outadoc.justchatting.utils.presentation.plus
 import org.koin.androidx.compose.koinViewModel
 
@@ -48,17 +48,11 @@ internal fun FollowedChannelsList(
 ) {
     val viewModel: FollowedChannelsViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
-    val isRefreshing = state is FollowedChannelsViewModel.State.Loading
-
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing,
-        onRefresh = viewModel::refresh,
-    )
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
     LaunchedEffect(Unit) {
-        viewModel.refresh()
+        viewModel.synchronize()
     }
 
     MainNavigation(
@@ -70,32 +64,34 @@ internal fun FollowedChannelsList(
             TopAppBar(
                 title = { Text(stringResource(MR.strings.channels)) },
                 scrollBehavior = scrollBehavior,
+                actions = {
+                    HapticIconButton(
+                        onClick = { viewModel.synchronize() },
+                    ) {
+                        if (state.isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.Sync,
+                                contentDescription = stringResource(MR.strings.timeline_refresh_action_cd),
+                            )
+                        }
+                    }
+                },
             )
         },
         content = { insets ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .pullRefresh(pullRefreshState),
-                contentAlignment = Alignment.TopCenter,
-            ) {
-                InnerFollowedChannelsList(
-                    modifier = Modifier.fillMaxSize(),
-                    insets = insets,
-                    items = (state as? FollowedChannelsViewModel.State.Content)?.data.orEmpty(),
-                    isRefreshing = isRefreshing,
-                    onItemClick = { channel ->
-                        onItemClick(channel.user.id)
-                    },
-                )
-
-                PullRefreshIndicator(
-                    modifier = Modifier.padding(insets),
-                    refreshing = isRefreshing,
-                    state = pullRefreshState,
-                    scale = true,
-                )
-            }
+            InnerFollowedChannelsList(
+                modifier = Modifier.fillMaxSize(),
+                insets = insets,
+                items = state.data,
+                isRefreshing = state.isLoading,
+                onItemClick = { channel ->
+                    onItemClick(channel.user.id)
+                },
+            )
         },
     )
 }

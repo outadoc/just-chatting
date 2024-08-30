@@ -12,18 +12,16 @@ import androidx.glance.GlanceTheme
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.action.clickable
-import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.SizeMode
+import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.components.TitleBar
 import androidx.glance.appwidget.lazy.LazyVerticalGrid
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
-import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
-import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
@@ -54,7 +52,7 @@ internal class FollowedChannelsWidget : GlanceAppWidget() {
             val viewModel: FollowedChannelsViewModel = koinInject()
 
             LaunchedEffect(Unit) {
-                viewModel.refresh()
+                viewModel.synchronize()
             }
 
             GlanceTheme(colors = GlanceTheme.colors) {
@@ -63,41 +61,37 @@ internal class FollowedChannelsWidget : GlanceAppWidget() {
                         TitleBar(
                             startIcon = ImageProvider(R.drawable.ic_notif),
                             title = LocalContext.current.getString(R.string.channels),
+                            actions = {
+                                CircleIconButton(
+                                    modifier = GlanceModifier.padding(8.dp),
+                                    imageProvider = ImageProvider(R.drawable.ic_sync),
+                                    contentDescription = LocalContext.current.getString(R.string.timeline_refresh_action_cd),
+                                    backgroundColor = null,
+                                    key = "refresh",
+                                    onClick = viewModel::synchronize,
+                                )
+                            },
                         )
                     },
                 ) {
                     val state by viewModel.state.collectAsState()
-                    when (val currentState = state) {
-                        FollowedChannelsViewModel.State.Loading -> {
-                            Column(
-                                modifier = GlanceModifier.fillMaxSize(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                CircularProgressIndicator()
-                            }
-                        }
-
-                        is FollowedChannelsViewModel.State.Content -> {
-                            LazyVerticalGrid(
-                                gridCells = adaptiveGridCellsCompat(minSize = 64.dp),
-                            ) {
-                                items(currentState.data) { follow ->
-                                    Column {
-                                        Box(
-                                            modifier = GlanceModifier
-                                                .clickable(
-                                                    ChatActivity.createGlanceAction(follow.user.id),
-                                                ),
-                                        ) {
-                                            GlanceUserItem(
-                                                modifier = GlanceModifier
-                                                    .fillMaxWidth()
-                                                    .padding(8.dp),
-                                                user = follow.user,
-                                            )
-                                        }
-                                    }
+                    LazyVerticalGrid(
+                        gridCells = adaptiveGridCellsCompat(minSize = 64.dp),
+                    ) {
+                        items(state.data) { follow ->
+                            Column {
+                                Box(
+                                    modifier = GlanceModifier
+                                        .clickable(
+                                            ChatActivity.createGlanceAction(follow.user.id),
+                                        ),
+                                ) {
+                                    GlanceUserItem(
+                                        modifier = GlanceModifier
+                                            .fillMaxWidth()
+                                            .padding(8.dp),
+                                        user = follow.user,
+                                    )
                                 }
                             }
                         }

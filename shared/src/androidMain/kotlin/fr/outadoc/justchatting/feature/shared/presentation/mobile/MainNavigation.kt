@@ -89,14 +89,14 @@ internal fun CompactNavigation(
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(
-                    selected = selectedScreen == Screen.Epg,
+                    selected = selectedScreen == Screen.Timeline,
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.CalendarViewDay,
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Screen.Epg) },
+                    onClick = { onSelectedTabChange(Screen.Timeline) },
                 )
 
                 NavigationBarItem(
@@ -155,10 +155,10 @@ internal fun MediumNavigation(
                 ),
             ) {
                 NavigationRailItem(
-                    selected = selectedScreen == Screen.Epg,
+                    selected = selectedScreen == Screen.Timeline,
                     label = {
                         AnimatedVisibility(visible = selectedScreen == Screen.Followed) {
-                            Text(stringResource(MR.strings.epg_title))
+                            Text(stringResource(MR.strings.timeline_title))
                         }
                     },
                     icon = {
@@ -167,7 +167,7 @@ internal fun MediumNavigation(
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Screen.Epg) },
+                    onClick = { onSelectedTabChange(Screen.Timeline) },
                 )
 
                 NavigationRailItem(
@@ -250,15 +250,15 @@ internal fun ExpandedNavigation(
             ) {
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
-                    selected = selectedScreen == Screen.Epg,
-                    label = { Text(stringResource(MR.strings.epg_title)) },
+                    selected = selectedScreen == Screen.Timeline,
+                    label = { Text(stringResource(MR.strings.timeline_title)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.CalendarViewDay,
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Screen.Epg) },
+                    onClick = { onSelectedTabChange(Screen.Timeline) },
                 )
 
                 NavigationDrawerItem(

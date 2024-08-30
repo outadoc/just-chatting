@@ -10,7 +10,7 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.shared.domain.model.MessageNotSentException
 import fr.outadoc.justchatting.feature.shared.domain.model.User
-import fr.outadoc.justchatting.feature.timeline.domain.EpgConfig
+import fr.outadoc.justchatting.feature.timeline.domain.TimelineConfig
 import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
@@ -167,8 +167,8 @@ internal class TwitchRepositoryImpl(
     ) {
         when (val appUser = authRepository.currentUser.first()) {
             is AppUser.LoggedIn -> {
-                val notBefore = (today - EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
-                val notAfter = (today + EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
+                val notBefore = (today - TimelineConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
+                val notAfter = (today + TimelineConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
 
                 if (localUsersApi.isFollowedUsersCacheExpired()) {
                     syncLocalFollows(appUserId = appUser.userId)
@@ -194,8 +194,8 @@ internal class TwitchRepositoryImpl(
         timeZone: TimeZone,
     ): Flow<FullSchedule> =
         withContext(DispatchersProvider.io) {
-            val notBefore = (today - EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
-            val notAfter = (today + EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
+            val notBefore = (today - TimelineConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
+            val notAfter = (today + TimelineConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
 
             combine(
                 localUsersApi.getFollowedChannels(),

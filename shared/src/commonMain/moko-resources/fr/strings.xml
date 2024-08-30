@@ -270,9 +270,9 @@
     <string name="date_today_later">Plus tard aujourd'hui</string>
     <string name="date_tomorrow">Demain</string>
     <string name="date_yesterday">Hier</string>
-    <string name="epg_refresh_action_cd">Rafraîchir les données</string>
-    <string name="epg_title">Timeline</string>
-    <string name="epg_today_action_cd">Sauter au contenu en direct</string>
+    <string name="timeline_refresh_action_cd">Rafraîchir les données</string>
+    <string name="timeline_title">Timeline</string>
+    <string name="timeline_today_action_cd">Sauter au contenu en direct</string>
     <string name="logout_msg">Vous êtes actuellement connecté·e en tant que %s.</string>
     <string name="logout_title">Se déconnecter ?</string>
     <string name="message_limit">Limite de messages</string>

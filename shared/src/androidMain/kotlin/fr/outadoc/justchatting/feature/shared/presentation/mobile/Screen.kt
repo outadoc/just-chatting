@@ -8,7 +8,7 @@ internal sealed interface Screen {
     data object Followed : Screen
 
     @Serializable
-    data object Epg : Screen
+    data object Timeline : Screen
 
     @Serializable
     data object Search : Screen
@@ -36,4 +36,4 @@ internal sealed interface Screen {
     }
 }
 
-internal val DefaultScreen = Screen.Epg
+internal val DefaultScreen = Screen.Timeline

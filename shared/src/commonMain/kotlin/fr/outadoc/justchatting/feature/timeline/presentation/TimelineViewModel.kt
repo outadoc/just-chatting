@@ -12,7 +12,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-internal class EpgViewModel(
+internal class TimelineViewModel(
     private val twitchRepository: TwitchRepository,
     private val clock: Clock,
 ) : ViewModel() {

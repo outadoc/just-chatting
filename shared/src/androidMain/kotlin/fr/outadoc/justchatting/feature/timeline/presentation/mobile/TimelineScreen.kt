@@ -59,7 +59,7 @@ import fr.outadoc.justchatting.feature.shared.presentation.mobile.Screen
 import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
-import fr.outadoc.justchatting.feature.timeline.presentation.EpgViewModel
+import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.HapticIconButton
@@ -72,13 +72,13 @@ import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun EpgScreen(
+internal fun TimelineScreen(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
     onNavigate: (Screen) -> Unit,
     onChannelClick: (userId: String) -> Unit,
 ) {
-    val viewModel: EpgViewModel = koinViewModel()
+    val viewModel: TimelineViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -93,14 +93,14 @@ internal fun EpgScreen(
 
     MainNavigation(
         sizeClass = sizeClass,
-        selectedScreen = Screen.Epg,
+        selectedScreen = Screen.Timeline,
         onSelectedTabChange = onNavigate,
         topBar = {
             Surface(
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
             ) {
                 TopAppBar(
-                    title = { Text(stringResource(MR.strings.epg_title)) },
+                    title = { Text(stringResource(MR.strings.timeline_title)) },
                     actions = {
                         val coroutineScope = rememberCoroutineScope()
                         HapticIconButton(
@@ -114,7 +114,7 @@ internal fun EpgScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.CalendarToday,
-                                contentDescription = stringResource(MR.strings.epg_today_action_cd),
+                                contentDescription = stringResource(MR.strings.timeline_today_action_cd),
                             )
                         }
 
@@ -128,7 +128,7 @@ internal fun EpgScreen(
                             } else {
                                 Icon(
                                     imageVector = Icons.Default.Sync,
-                                    contentDescription = stringResource(MR.strings.epg_refresh_action_cd),
+                                    contentDescription = stringResource(MR.strings.timeline_refresh_action_cd),
                                 )
                             }
                         }
@@ -137,7 +137,7 @@ internal fun EpgScreen(
             }
         },
         content = { insets ->
-            EpgContent(
+            TimelineContent(
                 modifier = modifier,
                 schedule = state.schedule,
                 insets = insets,
@@ -150,7 +150,7 @@ internal fun EpgScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun EpgContent(
+private fun TimelineContent(
     modifier: Modifier = Modifier,
     schedule: FullSchedule,
     insets: PaddingValues = PaddingValues(),
@@ -184,7 +184,7 @@ private fun EpgContent(
                 key = { segment -> "past-${segment.id}" },
                 contentType = { "segment" },
             ) { segment ->
-                EpgSegment(
+                TimelineSegment(
                     modifier = Modifier.fillMaxWidth(),
                     segment = segment,
                 )
@@ -235,7 +235,7 @@ private fun EpgContent(
                 key = { segment -> "future-${segment.id}" },
                 contentType = { "segment" },
             ) { segment ->
-                EpgSegment(
+                TimelineSegment(
                     modifier = Modifier.fillMaxWidth(),
                     segment = segment,
                 )
@@ -270,7 +270,7 @@ private fun SectionHeader(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun EpgSegment(
+internal fun TimelineSegment(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
 ) {
@@ -283,7 +283,7 @@ internal fun EpgSegment(
             Card(
                 onClick = { isExpanded = true },
             ) {
-                EpgSegmentContent(
+                TimelineSegmentContent(
                     modifier = Modifier.padding(8.dp),
                     title = segment.title,
                     userName = segment.user.displayName,
@@ -323,7 +323,7 @@ internal fun EpgSegment(
             onDismissRequest = { isExpanded = false },
             sheetState = sheetState,
         ) {
-            EpgSegmentDetails(
+            TimelineSegmentDetails(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
@@ -334,7 +334,7 @@ internal fun EpgSegment(
 }
 
 @Composable
-private fun EpgSegmentContent(
+private fun TimelineSegmentContent(
     modifier: Modifier = Modifier,
     title: String,
     userName: String,
@@ -404,7 +404,7 @@ private fun EpgSegmentContent(
 }
 
 @Composable
-private fun EpgSegmentDetails(
+private fun TimelineSegmentDetails(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
 ) {
@@ -487,11 +487,11 @@ private fun EpgSegmentDetails(
 
 @Preview
 @Composable
-private fun EpgSegmentDetailsPreview(
+private fun TimelineSegmentDetailsPreview(
     @PreviewParameter(LoremIpsum::class) lorem: String,
 ) {
     AppTheme {
-        EpgSegmentDetails(
+        TimelineSegmentDetails(
             segment = ChannelScheduleSegment(
                 id = "1",
                 user = User(
@@ -517,11 +517,11 @@ private fun EpgSegmentDetailsPreview(
 
 @Preview
 @Composable
-private fun EpgSegmentPreview(
+private fun TimelineSegmentPreview(
     @PreviewParameter(LoremIpsum::class) lorem: String,
 ) {
     AppTheme {
-        EpgSegment(
+        TimelineSegment(
             segment = ChannelScheduleSegment(
                 id = "1",
                 user = User(

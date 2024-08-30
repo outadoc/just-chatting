@@ -17,7 +17,7 @@ import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsS
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionNotifications
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionThirdParties
 import fr.outadoc.justchatting.feature.search.presentation.mobile.SearchScreen
-import fr.outadoc.justchatting.feature.timeline.presentation.mobile.EpgScreen
+import fr.outadoc.justchatting.feature.timeline.presentation.mobile.TimelineScreen
 
 @Composable
 internal fun MainRouter(
@@ -66,11 +66,11 @@ internal fun MainRouter(
             )
         }
 
-        composable<Screen.Epg>(
+        composable<Screen.Timeline>(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            EpgScreen(
+            TimelineScreen(
                 sizeClass = sizeClass,
                 onNavigate = { navController.navigate(it) },
                 onChannelClick = onChannelClick,

@@ -38,7 +38,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.glance.GlanceCard
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
-import fr.outadoc.justchatting.feature.timeline.presentation.EpgViewModel
+import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
 import fr.outadoc.justchatting.shared.R
 import org.koin.compose.koinInject
 
@@ -46,7 +46,7 @@ internal class LiveWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
-            val viewModel: EpgViewModel = koinInject()
+            val viewModel: TimelineViewModel = koinInject()
             val state by viewModel.state.collectAsState()
 
             LaunchedEffect(Unit) {
@@ -63,7 +63,7 @@ internal class LiveWidget : GlanceAppWidget() {
                                 CircleIconButton(
                                     modifier = GlanceModifier.padding(8.dp),
                                     imageProvider = ImageProvider(R.drawable.ic_sync),
-                                    contentDescription = LocalContext.current.getString(R.string.epg_refresh_action_cd),
+                                    contentDescription = LocalContext.current.getString(R.string.timeline_refresh_action_cd),
                                     backgroundColor = null,
                                     key = "refresh",
                                     onClick = viewModel::load,

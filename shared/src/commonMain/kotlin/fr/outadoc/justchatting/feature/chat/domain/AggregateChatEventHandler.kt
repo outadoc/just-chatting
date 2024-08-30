@@ -54,7 +54,6 @@ internal class AggregateChatEventHandler(
             statuses.reduce { acc, status ->
                 ConnectionStatus(
                     isAlive = acc.isAlive && status.isAlive,
-                    preventSendingMessages = acc.preventSendingMessages || status.preventSendingMessages,
                     registeredListeners = acc.registeredListeners + status.registeredListeners,
                 )
             }

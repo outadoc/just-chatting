@@ -51,7 +51,6 @@ internal class MockChatWebSocket private constructor(
         MutableStateFlow(
             ConnectionStatus(
                 isAlive = false,
-                preventSendingMessages = false,
                 registeredListeners = 0,
             ),
         )
@@ -78,10 +77,7 @@ internal class MockChatWebSocket private constructor(
                 if (isNetworkAvailable) {
                     logDebug<LoggedInChatWebSocket> { "Network is available, listening" }
                     _connectionStatus.update { status ->
-                        status.copy(
-                            isAlive = true,
-                            preventSendingMessages = false,
-                        )
+                        status.copy(isAlive = true)
                     }
 
                     try {
@@ -92,10 +88,7 @@ internal class MockChatWebSocket private constructor(
                 } else {
                     logDebug<LoggedInChatWebSocket> { "Network is out, delay and retry" }
                     _connectionStatus.update { status ->
-                        status.copy(
-                            isAlive = false,
-                            preventSendingMessages = true,
-                        )
+                        status.copy(isAlive = false)
                     }
                 }
 

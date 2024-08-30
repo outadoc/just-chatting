@@ -160,7 +160,7 @@ internal fun ChannelChatScreenContent(
                             )
                             .fillMaxWidth(),
                         isSubmitVisible = state is ChatViewModel.State.Chatting,
-                        isSubmitEnabled = state is ChatViewModel.State.Chatting && !state.connectionStatus.preventSendingMessages,
+                        isSubmitEnabled = state is ChatViewModel.State.Chatting,
                         message = TextFieldValue(
                             text = inputState.message,
                             selection = TextRange(

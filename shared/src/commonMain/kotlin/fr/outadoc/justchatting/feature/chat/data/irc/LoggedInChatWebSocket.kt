@@ -59,7 +59,6 @@ internal class LoggedInChatWebSocket(
         MutableStateFlow(
             ConnectionStatus(
                 isAlive = false,
-                preventSendingMessages = true,
                 registeredListeners = 0,
             ),
         )
@@ -87,10 +86,7 @@ internal class LoggedInChatWebSocket(
                 if (isNetworkAvailable) {
                     logDebug<LoggedInChatWebSocket> { "Network is available, listening" }
                     _connectionStatus.update { status ->
-                        status.copy(
-                            isAlive = true,
-                            preventSendingMessages = false,
-                        )
+                        status.copy(isAlive = true)
                     }
 
                     try {
@@ -101,10 +97,7 @@ internal class LoggedInChatWebSocket(
                 } else {
                     logDebug<LoggedInChatWebSocket> { "Network is out, delay and retry" }
                     _connectionStatus.update { status ->
-                        status.copy(
-                            isAlive = false,
-                            preventSendingMessages = true,
-                        )
+                        status.copy(isAlive = false)
                     }
                 }
 

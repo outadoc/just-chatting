@@ -50,7 +50,6 @@ internal fun ChannelChatScreen(userId: String) {
     }
 
     OnLifecycleEvent(
-        onResume = viewModel::onResume,
         onPause = {
             if (user != null) {
                 notifier.notify(

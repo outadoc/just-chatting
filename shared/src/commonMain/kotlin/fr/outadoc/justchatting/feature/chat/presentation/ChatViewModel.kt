@@ -389,8 +389,6 @@ internal class ChatViewModel(
                     .map { status -> Action.ChangeConnectionStatus(status) }
                     .onEach { action -> actions.emit(action) }
                     .launchIn(defaultScope)
-
-                chatRepository.start(user.id, user.login)
             }
             .launchIn(defaultScope)
 
@@ -467,12 +465,6 @@ internal class ChatViewModel(
                 )
             }
             .launchIn(viewModelScope)
-    }
-
-    fun onResume() {
-        (state.value as? State.Chatting)?.user?.let { user ->
-            chatRepository.start(user.id, user.login)
-        }
     }
 
     fun loadChat(userId: String) {

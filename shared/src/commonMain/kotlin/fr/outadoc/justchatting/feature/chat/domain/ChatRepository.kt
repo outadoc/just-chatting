@@ -10,7 +10,4 @@ internal interface ChatRepository {
 
     fun getChatEventFlow(channelId: String, channelLogin: String): Flow<ChatEvent>
     fun getConnectionStatusFlow(channelId: String, channelLogin: String): Flow<ConnectionStatus>
-    fun start(channelId: String, channelLogin: String)
-    fun stop(channelId: String)
-    fun dispose()
 }

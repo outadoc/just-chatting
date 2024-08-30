@@ -53,26 +53,12 @@ internal class DefaultChatRepository(
                 channelId = channelId,
                 channelLogin = channelLogin,
                 coroutineScope = coroutineScope,
-            ).also { thread ->
-                thread.start()
-            }
+            )
 
         handlers.update { current ->
             current + (channelId to handler)
         }
 
         return handler
-    }
-
-    override fun start(channelId: String, channelLogin: String) {
-        getOrCreateEventHandler(channelId, channelLogin).start()
-    }
-
-    override fun stop(channelId: String) {
-        handlers.value[channelId]?.disconnect()
-    }
-
-    override fun dispose() {
-        handlers.value.forEach { (_, handler) -> handler.disconnect() }
     }
 }

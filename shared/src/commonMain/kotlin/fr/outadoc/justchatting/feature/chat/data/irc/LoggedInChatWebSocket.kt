@@ -1,13 +1,11 @@
 package fr.outadoc.justchatting.feature.chat.data.irc
 
-import fr.outadoc.justchatting.feature.chat.data.Defaults
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
-import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
 import fr.outadoc.justchatting.utils.logging.logDebug
@@ -21,14 +19,14 @@ import io.ktor.websocket.readText
 import io.ktor.websocket.send
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -57,12 +55,6 @@ internal class LoggedInChatWebSocket(
         private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
     }
 
-    private val _eventFlow = MutableSharedFlow<ChatEvent>(
-        replay = Defaults.EventBufferSize,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST,
-    )
-    override val eventFlow: Flow<ChatEvent> = _eventFlow
-
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
         MutableStateFlow(
             ConnectionStatus(
@@ -85,17 +77,13 @@ internal class LoggedInChatWebSocket(
         }
     }
 
-    override fun start() {
-        if (socketJob?.isActive == true) {
-            return
-        }
-
-        socketJob = scope.launch(DispatchersProvider.io + SupervisorJob()) {
+    override val eventFlow: Flow<ChatEvent> =
+        flow {
             logDebug<LoggedInChatWebSocket> { "Starting job" }
 
             _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
 
-            while (isActive) {
+            while (true) {
                 if (isNetworkAvailable) {
                     logDebug<LoggedInChatWebSocket> { "Network is available, listening" }
                     _connectionStatus.update { status ->
@@ -120,14 +108,13 @@ internal class LoggedInChatWebSocket(
                     }
                 }
 
-                if (isActive) {
-                    delayWithJitter(1.seconds, maxJitter = 3.seconds)
-                }
+                delayWithJitter(1.seconds, maxJitter = 3.seconds)
             }
+        }.onCompletion {
+            _connectionStatus.update { status -> status.copy(registeredListeners = 0) }
         }
-    }
 
-    private suspend fun listen() {
+    private suspend fun FlowCollector<ChatEvent>.listen() {
         httpClient.webSocket(ENDPOINT) {
             logDebug<LoggedInChatWebSocket> { "Socket open, logging in" }
 
@@ -147,7 +134,12 @@ internal class LoggedInChatWebSocket(
                         received.readText()
                             .lines()
                             .filter { it.isNotBlank() }
-                            .forEach { line -> handleMessage(line) }
+                            .forEach { line ->
+                                handleMessage(
+                                    session = this,
+                                    received = line
+                                )
+                            }
                     }
 
                     else -> {}
@@ -156,36 +148,27 @@ internal class LoggedInChatWebSocket(
         }
     }
 
-    private suspend fun DefaultWebSocketSession.handleMessage(received: String) {
+    private suspend fun FlowCollector<ChatEvent>.handleMessage(
+        session: DefaultWebSocketSession,
+        received: String
+    ) {
         logInfo<LoggedInChatWebSocket> { "received: $received" }
 
         when (val command = parser.parse(received)) {
             is ChatEvent.Message.Notice -> {
-                _eventFlow.emit(command)
+                emit(command)
             }
 
             is ChatEvent.Command.UserState -> {
-                _eventFlow.emit(command)
+                emit(command)
             }
 
             is ChatEvent.Command.Ping -> {
-                send("PONG :tmi.twitch.tv")
+                session.send("PONG :tmi.twitch.tv")
             }
 
             else -> {}
         }
-    }
-
-    override fun disconnect() {
-        scope.launch {
-            _connectionStatus.update { status -> status.copy(registeredListeners = 0) }
-            doDisconnect()
-        }
-    }
-
-    private fun doDisconnect() {
-        logDebug<LoggedInChatWebSocket> { "Disconnecting logged in chat socket" }
-        socketJob?.cancel()
     }
 
     class Factory(

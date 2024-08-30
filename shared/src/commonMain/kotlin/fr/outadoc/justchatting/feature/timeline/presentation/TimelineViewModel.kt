@@ -2,15 +2,19 @@ package fr.outadoc.justchatting.feature.timeline.presentation
 
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.presentation.ViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Duration.Companion.minutes
 
 internal class TimelineViewModel(
     private val twitchRepository: TwitchRepository,
@@ -26,29 +30,13 @@ internal class TimelineViewModel(
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
 
-    private var job: Job? = null
+    private var periodicSyncJob: Job? = null
+    private var syncJob: Job? = null
 
-    fun load() {
-        job?.cancel()
-        job = viewModelScope.launch {
-            _state.update { state ->
-                state.copy(isLoading = true)
-            }
-
-            val now = clock.now()
+    init {
+        viewModelScope.launch {
             val tz = _state.value.timeZone
-            val today = now.toLocalDateTime(tz).date
-
-            launch {
-                twitchRepository.syncFollowedChannelsSchedule(
-                    today = today,
-                    timeZone = tz,
-                )
-
-                _state.update { state ->
-                    state.copy(isLoading = false)
-                }
-            }
+            val today = clock.now().toLocalDateTime(tz).date
 
             twitchRepository
                 .getFollowedChannelsSchedule(
@@ -61,5 +49,43 @@ internal class TimelineViewModel(
                     }
                 }
         }
+    }
+
+    fun syncPeriodically() {
+        if (periodicSyncJob?.isActive == true) {
+            return
+        }
+
+        periodicSyncJob = viewModelScope.launch(DispatchersProvider.default) {
+            while (isActive) {
+                if (syncJob?.isActive != true) {
+                    synchronize()
+                }
+
+                delay(1.minutes)
+            }
+        }
+    }
+
+    fun synchronize() {
+        syncJob?.cancel()
+        syncJob = viewModelScope.launch(DispatchersProvider.io) {
+            _state.update { state ->
+                state.copy(isLoading = true)
+            }
+
+            val tz = _state.value.timeZone
+            val today = clock.now().toLocalDateTime(tz).date
+
+            twitchRepository.syncFollowedChannelsSchedule(
+                today = today,
+                timeZone = tz,
+            )
+
+            _state.update { state ->
+                state.copy(isLoading = false)
+            }
+        }
+
     }
 }

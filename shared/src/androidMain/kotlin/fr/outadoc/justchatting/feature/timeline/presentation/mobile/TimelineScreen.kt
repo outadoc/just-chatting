@@ -82,7 +82,7 @@ internal fun TimelineScreen(
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.load()
+        viewModel.syncPeriodically()
     }
 
     val listState = remember(state.schedule.todayListIndex) {
@@ -119,7 +119,7 @@ internal fun TimelineScreen(
                         }
 
                         HapticIconButton(
-                            onClick = { viewModel.load() },
+                            onClick = { viewModel.synchronize() },
                         ) {
                             if (state.isLoading) {
                                 CircularProgressIndicator(

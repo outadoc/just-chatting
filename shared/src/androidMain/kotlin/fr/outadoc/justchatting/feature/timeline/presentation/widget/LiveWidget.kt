@@ -50,7 +50,7 @@ internal class LiveWidget : GlanceAppWidget() {
             val state by viewModel.state.collectAsState()
 
             LaunchedEffect(Unit) {
-                viewModel.load()
+                viewModel.synchronize()
             }
 
             GlanceTheme(colors = GlanceTheme.colors) {
@@ -66,7 +66,7 @@ internal class LiveWidget : GlanceAppWidget() {
                                     contentDescription = LocalContext.current.getString(R.string.timeline_refresh_action_cd),
                                     backgroundColor = null,
                                     key = "refresh",
-                                    onClick = viewModel::load,
+                                    onClick = viewModel::synchronize,
                                 )
                             },
                         )

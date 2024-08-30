@@ -13,6 +13,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.shared.MR
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
@@ -51,8 +52,10 @@ internal fun Instant.formatDate(
     val today = remember(now) { now.toLocalDateTime(tz).date }
 
     LaunchedEffect(clock) {
-        now = clock.now()
-        delay(1.minutes)
+        while (isActive) {
+            now = clock.now()
+            delay(1.minutes)
+        }
     }
 
     return toLocalDateTime(tz).date
@@ -71,8 +74,10 @@ internal fun LocalDate.formatDate(
     var today by remember { mutableStateOf(clock.now().toLocalDateTime(tz).date) }
 
     LaunchedEffect(clock) {
-        today = clock.now().toLocalDateTime(tz).date
-        delay(1.minutes)
+        while (isActive) {
+            today = clock.now().toLocalDateTime(tz).date
+            delay(1.minutes)
+        }
     }
 
     return formatDate(

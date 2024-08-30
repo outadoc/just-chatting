@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.shared.data
 
 import fr.outadoc.justchatting.feature.chat.data.http.CheerEmotesResponse
+import fr.outadoc.justchatting.feature.chat.data.http.SendMessageResponse
 import fr.outadoc.justchatting.feature.chat.data.http.TwitchBadgesResponse
 import fr.outadoc.justchatting.feature.emotes.data.twitch.model.EmoteSetResponse
 import fr.outadoc.justchatting.feature.followed.data.model.FollowResponse
@@ -14,6 +15,7 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
 import io.ktor.http.path
 import kotlinx.datetime.Instant
 
@@ -200,6 +202,26 @@ internal class TwitchClient(httpClient: HttpClient) {
                     parameter("period", "month")
                     after?.let { parameter("after", after) }
                     before?.let { parameter("before", before) }
+                }
+            }.body()
+        }
+
+    suspend fun sendChatMessage(
+        channelUserId: String,
+        senderUserId: String,
+        message: String,
+        inReplyToMessageId: String?,
+    ): Result<SendMessageResponse> =
+        runCatching {
+            client.post {
+                url {
+                    path("chat/messages")
+                    parameter("broadcaster_id", channelUserId)
+                    parameter("sender_id", senderUserId)
+                    parameter("message", message)
+                    inReplyToMessageId?.let { id ->
+                        parameter("reply_to", id)
+                    }
                 }
             }.body()
         }

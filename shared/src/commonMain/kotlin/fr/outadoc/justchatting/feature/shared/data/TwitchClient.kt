@@ -220,7 +220,7 @@ internal class TwitchClient(httpClient: HttpClient) {
                     parameter("sender_id", senderUserId)
                     parameter("message", message)
                     inReplyToMessageId?.let { id ->
-                        parameter("reply_to", id)
+                        parameter("reply_parent_message_id", id)
                     }
                 }
             }.body()

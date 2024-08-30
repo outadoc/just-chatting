@@ -72,10 +72,6 @@ internal class DefaultChatRepository(
         handlers.value[channelId]?.disconnect()
     }
 
-    override fun sendMessage(channelId: String, message: CharSequence, inReplyToId: String?) {
-        handlers.value[channelId]?.send(message, inReplyToId)
-    }
-
     override fun dispose() {
         handlers.value.forEach { (_, handler) -> handler.disconnect() }
     }

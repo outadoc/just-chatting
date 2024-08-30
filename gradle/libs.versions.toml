@@ -52,6 +52,7 @@ androidx-glance-material3 = { module = "androidx.glance:glance-material3", versi
 androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common-java8", version.ref = "lifecycle" }
 androidx-lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle" }
+androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 androidx-paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging-multiplatform" }
 androidx-paging-compose-common = { module = "app.cash.paging:paging-compose-common", version.ref = "paging-multiplatform" }

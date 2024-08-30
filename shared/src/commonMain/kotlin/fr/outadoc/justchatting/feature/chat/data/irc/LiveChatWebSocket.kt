@@ -203,8 +203,6 @@ internal class LiveChatWebSocket private constructor(
         socketJob?.cancel()
     }
 
-    override fun send(message: CharSequence, inReplyToId: String?) {}
-
     private suspend fun loadRecentMessages() {
         val prefs = preferencesRepository.currentPreferences.first()
         if (!prefs.enableRecentMessages) return

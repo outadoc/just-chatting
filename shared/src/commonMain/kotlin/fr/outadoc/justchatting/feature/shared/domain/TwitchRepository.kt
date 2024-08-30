@@ -48,5 +48,5 @@ internal interface TwitchRepository {
         channelUserId: String,
         message: String,
         inReplyToMessageId: String?,
-    ): Result<Unit>
+    ): Result<String>
 }

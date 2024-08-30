@@ -910,11 +910,12 @@ internal class ChatViewModel(
         defaultScope.launch {
             val currentTime = clock.now()
 
-            chatRepository.sendMessage(
-                channelId = state.user.id,
-                message = inputState.message,
-                inReplyToId = inputState.replyingTo?.body?.messageId,
-            )
+            twitchRepository
+                .sendChatMessage(
+                    channelUserId = state.user.id,
+                    message = inputState.message,
+                    inReplyToMessageId = inputState.replyingTo?.body?.messageId,
+                )
 
             val usedEmotes: List<RecentEmote> =
                 inputState.message

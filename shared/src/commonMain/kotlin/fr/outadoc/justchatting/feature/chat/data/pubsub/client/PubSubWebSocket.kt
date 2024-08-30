@@ -198,8 +198,6 @@ internal class PubSubWebSocket(
         socketJob?.cancel()
     }
 
-    override fun send(message: CharSequence, inReplyToId: String?) {}
-
     class Factory(
         private val networkStateObserver: NetworkStateObserver,
         private val httpClient: HttpClient,

@@ -434,7 +434,7 @@ internal class TwitchApiImpl(
         senderUserId: String,
         message: String,
         inReplyToMessageId: String?,
-    ): Result<Unit> {
+    ): Result<String> {
         return twitchClient
             .sendChatMessage(
                 channelUserId = channelUserId,
@@ -457,6 +457,8 @@ internal class TwitchApiImpl(
                 if (!response.isSent) {
                     throw MessageNotSentException("Message was not sent")
                 }
+
+                response.messageId
             }
     }
 

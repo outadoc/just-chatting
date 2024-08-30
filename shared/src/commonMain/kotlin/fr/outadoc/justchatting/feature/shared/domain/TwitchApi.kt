@@ -52,5 +52,5 @@ internal interface TwitchApi {
         senderUserId: String,
         message: String,
         inReplyToMessageId: String?,
-    ): Result<Unit>
+    ): Result<String>
 }

@@ -910,11 +910,28 @@ internal class ChatViewModel(
         defaultScope.launch {
             val currentTime = clock.now()
 
-            chatRepository.sendMessage(
-                channelId = state.user.id,
-                message = inputState.message,
-                inReplyToId = inputState.replyingTo?.body?.messageId,
-            )
+            twitchRepository
+                .sendChatMessage(
+                    channelUserId = state.user.id,
+                    message = inputState.message,
+                    inReplyToMessageId = inputState.replyingTo?.body?.messageId,
+                )
+                .onFailure { _ ->
+                    actions.emit(
+                        Action.AddMessages(
+                            listOf(
+                                ChatListItem.Message.Highlighted(
+                                    timestamp = clock.now(),
+                                    metadata = ChatListItem.Message.Highlighted.Metadata(
+                                        title = MR.strings.chat_send_msg_error.desc(),
+                                        subtitle = null,
+                                    ),
+                                    body = null,
+                                ),
+                            ),
+                        ),
+                    )
+                }
 
             val usedEmotes: List<RecentEmote> =
                 inputState.message

@@ -43,4 +43,10 @@ internal interface TwitchRepository {
     suspend fun getGlobalBadges(): Result<List<TwitchBadge>>
 
     suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>>
+
+    suspend fun sendChatMessage(
+        channelUserId: String,
+        message: String,
+        inReplyToMessageId: String?,
+    ): Result<String>
 }

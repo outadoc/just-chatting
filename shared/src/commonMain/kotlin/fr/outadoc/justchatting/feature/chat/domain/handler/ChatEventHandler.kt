@@ -12,5 +12,4 @@ internal interface ChatEventHandler {
 
     fun start()
     fun disconnect()
-    fun send(message: CharSequence, inReplyToId: String?)
 }

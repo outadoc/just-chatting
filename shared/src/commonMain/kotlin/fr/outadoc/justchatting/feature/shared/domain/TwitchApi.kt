@@ -46,4 +46,11 @@ internal interface TwitchApi {
     suspend fun getFollowedStreams(userId: String): Result<List<Stream>>
 
     suspend fun searchChannels(query: String): Flow<PagingData<List<ChannelSearchResult>>>
+
+    suspend fun sendChatMessage(
+        channelUserId: String,
+        senderUserId: String,
+        message: String,
+        inReplyToMessageId: String?,
+    ): Result<String>
 }

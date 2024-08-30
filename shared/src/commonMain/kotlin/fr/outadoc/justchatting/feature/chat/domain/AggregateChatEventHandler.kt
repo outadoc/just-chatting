@@ -66,10 +66,6 @@ internal class AggregateChatEventHandler(
                 initialValue = ConnectionStatus(),
             )
 
-    override fun send(message: CharSequence, inReplyToId: String?) {
-        handlers.forEach { handler -> handler.send(message, inReplyToId) }
-    }
-
     override fun start() {
         handlers.forEach { handler -> handler.start() }
     }

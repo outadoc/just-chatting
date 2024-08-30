@@ -8,6 +8,7 @@ import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
+import fr.outadoc.justchatting.feature.shared.domain.model.MessageNotSentException
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.EpgConfig
 import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
@@ -16,6 +17,7 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
+import fr.outadoc.justchatting.utils.logging.logInfo
 import fr.outadoc.justchatting.utils.logging.logWarning
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
@@ -450,4 +452,35 @@ internal class TwitchRepositoryImpl(
             }
             .awaitAll()
     }
+
+    override suspend fun sendChatMessage(
+        channelUserId: String,
+        message: String,
+        inReplyToMessageId: String?,
+    ): Result<String> =
+        withContext(DispatchersProvider.io) {
+            logInfo<TwitchRepositoryImpl> { "Sending message (to $channelUserId, in reply to $inReplyToMessageId): $message" }
+
+            when (val appUser = authRepository.currentUser.firstOrNull()) {
+                is AppUser.LoggedIn -> {
+                    twitchApi
+                        .sendChatMessage(
+                            channelUserId = channelUserId,
+                            senderUserId = appUser.userId,
+                            message = message,
+                            inReplyToMessageId = inReplyToMessageId,
+                        )
+                        .onSuccess { messageId ->
+                            logInfo<TwitchRepositoryImpl> { "Message sent: $messageId" }
+                        }
+                        .onFailure { exception ->
+                            logError<TwitchRepositoryImpl>(exception) { "Error while sending message" }
+                        }
+                }
+
+                else -> Result.failure(
+                    MessageNotSentException("User is not logged in"),
+                )
+            }
+        }
 }

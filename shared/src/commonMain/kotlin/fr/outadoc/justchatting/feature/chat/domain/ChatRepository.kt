@@ -12,6 +12,5 @@ internal interface ChatRepository {
     fun getConnectionStatusFlow(channelId: String, channelLogin: String): Flow<ConnectionStatus>
     fun start(channelId: String, channelLogin: String)
     fun stop(channelId: String)
-    fun sendMessage(channelId: String, message: CharSequence, inReplyToId: String? = null)
     fun dispose()
 }

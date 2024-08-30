@@ -12,6 +12,7 @@ import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.search.data.SearchChannelsDataSource
 import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.shared.domain.TwitchApi
+import fr.outadoc.justchatting.feature.shared.domain.model.MessageNotSentException
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
@@ -427,6 +428,39 @@ internal class TwitchApiImpl(
                 )
             }
         }
+
+    override suspend fun sendChatMessage(
+        channelUserId: String,
+        senderUserId: String,
+        message: String,
+        inReplyToMessageId: String?,
+    ): Result<String> {
+        return twitchClient
+            .sendChatMessage(
+                channelUserId = channelUserId,
+                senderUserId = senderUserId,
+                message = message,
+                inReplyToMessageId = inReplyToMessageId,
+            )
+            .map { response -> response.data.firstOrNull() }
+            .mapCatching { response ->
+                if (response == null) {
+                    throw MessageNotSentException("Response was empty")
+                }
+
+                if (response.dropReason != null) {
+                    throw MessageNotSentException(
+                        "Message was not sent: ${response.dropReason.message} (${response.dropReason.code})",
+                    )
+                }
+
+                if (!response.isSent) {
+                    throw MessageNotSentException("Message was not sent")
+                }
+
+                response.messageId
+            }
+    }
 
     private companion object {
         const val MAX_PAGE_SIZE_DEFAULT = 100

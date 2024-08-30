@@ -28,14 +28,11 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -65,14 +62,6 @@ internal class LoggedInChatWebSocket(
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
     override val eventFlow: Flow<ChatEvent> = _eventFlow
-
-    private data class QueuedMessage(
-        val authoringTime: Instant,
-        val rawMessage: String,
-    )
-
-    private val messageToSend: MutableStateFlow<QueuedMessage?> = MutableStateFlow(null)
-    private val messageMaxRetryTimeout: Duration = 10.seconds
 
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
         MutableStateFlow(
@@ -151,38 +140,6 @@ internal class LoggedInChatWebSocket(
             send("CAP REQ :twitch.tv/tags twitch.tv/commands")
             send("JOIN #$channelLogin")
 
-            launch {
-                messageToSend
-                    .filterNotNull()
-                    .collect { message ->
-                        if (isActive) {
-                            val shouldAttemptToSend: Boolean =
-                                clock.now() < message.authoringTime + messageMaxRetryTimeout
-
-                            if (shouldAttemptToSend) {
-                                logDebug<LoggedInChatWebSocket> { "Sending PRIVMSG: ${message.rawMessage}" }
-
-                                // Try sending message
-                                send(message.rawMessage)
-
-                                logDebug<LoggedInChatWebSocket> { "Sent message" }
-                            } else {
-                                // We've been trying to send this message for a while now, give up
-                                logError<LoggedInChatWebSocket> { "Timeout while trying to send message: $message" }
-
-                                _eventFlow.emit(
-                                    ChatEvent.Message.SendError(
-                                        timestamp = clock.now(),
-                                    ),
-                                )
-                            }
-
-                            // Remove message from the queue, if we sent it successfully or cleared it from the queue
-                            this@LoggedInChatWebSocket.messageToSend.value = null
-                        }
-                    }
-            }
-
             // Receive messages
             while (isActive) {
                 when (val received = incoming.receive()) {
@@ -229,22 +186,6 @@ internal class LoggedInChatWebSocket(
     private fun doDisconnect() {
         logDebug<LoggedInChatWebSocket> { "Disconnecting logged in chat socket" }
         socketJob?.cancel()
-    }
-
-    override fun send(message: CharSequence, inReplyToId: String?) {
-        scope.launch {
-            val inReplyToPrefix = inReplyToId?.let { id -> "@reply-parent-msg-id=$id " } ?: ""
-            val privMsg = "${inReplyToPrefix}PRIVMSG #$channelLogin :$message"
-
-            logDebug<LoggedInChatWebSocket> { "Queuing message to #$channelLogin, in reply to $inReplyToId: $message" }
-
-            messageToSend.emit(
-                QueuedMessage(
-                    authoringTime = clock.now(),
-                    rawMessage = privMsg,
-                ),
-            )
-        }
     }
 
     class Factory(

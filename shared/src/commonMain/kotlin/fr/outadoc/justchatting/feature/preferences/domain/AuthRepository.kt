@@ -119,6 +119,7 @@ internal class AuthRepository(
             "chat:read",
             "chat:edit",
             "user:read:follows",
+            "user:write:chat",
         )
     }
 }

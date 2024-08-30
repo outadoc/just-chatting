@@ -3,11 +3,14 @@ package fr.outadoc.justchatting.feature.search.presentation.mobile
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -17,8 +20,10 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
@@ -116,12 +121,22 @@ private fun CompactSearchBar(
             }
         },
         trailingIcon = {
-            AnimatedVisibility(visible = query.isNotEmpty()) {
-                HapticIconButton(onClick = onClearSearchBar) {
-                    Icon(
-                        Icons.Filled.Cancel,
-                        contentDescription = stringResource(MR.strings.search_clear_cd),
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                if (searchResults.loadState.refresh is LoadState.Loading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
                     )
+                }
+
+                AnimatedVisibility(visible = query.isNotEmpty()) {
+                    HapticIconButton(onClick = onClearSearchBar) {
+                        Icon(
+                            Icons.Filled.Cancel,
+                            contentDescription = stringResource(MR.strings.search_clear_cd),
+                        )
+                    }
                 }
             }
         },

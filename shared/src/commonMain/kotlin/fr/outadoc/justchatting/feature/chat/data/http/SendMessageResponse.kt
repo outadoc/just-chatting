@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class SendMessageResponse(
     @SerialName("data")
-    val data: MessageStatus,
+    val data: List<MessageStatus>,
 ) {
     @Serializable
     data class MessageStatus(

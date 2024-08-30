@@ -916,6 +916,22 @@ internal class ChatViewModel(
                     message = inputState.message,
                     inReplyToMessageId = inputState.replyingTo?.body?.messageId,
                 )
+                .onFailure { _ ->
+                    actions.emit(
+                        Action.AddMessages(
+                            listOf(
+                                ChatListItem.Message.Highlighted(
+                                    timestamp = clock.now(),
+                                    metadata = ChatListItem.Message.Highlighted.Metadata(
+                                        title = MR.strings.chat_send_msg_error.desc(),
+                                        subtitle = null,
+                                    ),
+                                    body = null,
+                                ),
+                            ),
+                        ),
+                    )
+                }
 
             val usedEmotes: List<RecentEmote> =
                 inputState.message

@@ -8,6 +8,7 @@ import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
+import fr.outadoc.justchatting.feature.shared.domain.model.MessageNotSentException
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.EpgConfig
 import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
@@ -450,4 +451,26 @@ internal class TwitchRepositoryImpl(
             }
             .awaitAll()
     }
+
+    override suspend fun sendChatMessage(
+        channelUserId: String,
+        message: String,
+        inReplyToMessageId: String?,
+    ): Result<Unit> =
+        withContext(DispatchersProvider.io) {
+            when (val appUser = authRepository.currentUser.firstOrNull()) {
+                is AppUser.LoggedIn -> {
+                    twitchApi.sendChatMessage(
+                        channelUserId = channelUserId,
+                        senderUserId = appUser.userId,
+                        message = message,
+                        inReplyToMessageId = inReplyToMessageId,
+                    )
+                }
+
+                else -> Result.failure(
+                    MessageNotSentException("User is not logged in"),
+                )
+            }
+        }
 }

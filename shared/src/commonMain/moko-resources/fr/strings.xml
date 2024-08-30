@@ -290,9 +290,7 @@
     <string name="settings_appearance_header">Apparence</string>
     <string name="settings_appearance_timestamps_title">Horodatage des messages</string>
     <string name="settings_dependencies_cd">Voir le site web</string>
-    <string name="settings_dependencies_header">Dépendences libres</string>
     <string name="settings_dependencies_header">Logiciels libres</string>
-    <string name="settings_dependencies_title">Dépendances libres</string>
     <string name="settings_logs_subtitle">Exporter et partager vos logs récents à des fins de débogage.</string>
     <string name="settings_logs_title">Partager les logs</string>
     <string name="settings_notifications_enable_subtitle">Si activé, les sessions de tchat resteront ouvertes en arrière-plan, et seront accessibles depuis des bulles sur les appareils compatibles.</string>

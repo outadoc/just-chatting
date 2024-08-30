@@ -229,7 +229,7 @@ internal fun SettingsList(
                     )
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_dependencies_title))
+                    Text(stringResource(MR.strings.settings_dependencies_header))
                 },
             )
         }

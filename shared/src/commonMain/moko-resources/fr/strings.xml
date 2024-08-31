@@ -227,7 +227,6 @@
     <string name="irc_notice_whisper_restricted">Vos paramètres vous empêchent d\'envoyer ce chuchotement.</string>
     <string name="irc_notice_whisper_restricted_recipient">Les paramètres de cet·te utilisateur·rice l\'empêchent de recevoir ce chuchotement.</string>
     <string name="live">En direct</string>
-    <string name="live_tag">🔴 Direct</string>
     <string name="logout_msg">Vous êtes actuellement connecté·e en tant que %s.</string>
     <string name="logout_title">Se déconnecter ?</string>
     <string name="menu_item_openInBubble">Ouvrir dans une bulle</string>

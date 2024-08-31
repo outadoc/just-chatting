@@ -227,7 +227,6 @@
     <string name="irc_notice_whisper_restricted">Your settings prevent you from sending this whisper.</string>
     <string name="irc_notice_whisper_restricted_recipient">That user’s settings prevent them from receiving this whisper.</string>
     <string name="live">Live</string>
-    <string name="live_tag">🔴 Live</string>
     <string name="logout_msg">You are currently logged in as %s.</string>
     <string name="logout_title">Log out?</string>
     <string name="menu_item_openInBubble">Open in bubble</string>

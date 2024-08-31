@@ -2,12 +2,14 @@ package fr.outadoc.justchatting.feature.timeline.presentation.mobile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -19,11 +21,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.TagList
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
-import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
@@ -117,8 +117,7 @@ internal fun LiveStreamCard(
                         top = 4.dp,
                         bottom = 8.dp,
                     ),
-                    tags = persistentSetOf(stringResource(MR.strings.live_tag))
-                        .addAll(tags),
+                    tags = tags,
                 )
             }
         }
@@ -177,6 +176,15 @@ private fun LiveStream(
                     }
 
                     viewerCount?.let { viewerCount ->
+                        Box(
+                            modifier = Modifier
+                                .padding(end = 4.dp)
+                                .align(Alignment.CenterVertically)
+                                .size(6.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.error),
+                        ) {}
+
                         Text(
                             modifier = Modifier.alignByBaseline(),
                             text = viewerCount.toInt().formatNumber(),

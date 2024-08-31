@@ -10,7 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -213,12 +216,23 @@ private fun LiveStream(
                     startedAt
                         ?.formatTimeSince(showSeconds = false)
                         ?.let { streamDuration ->
-                            Text(
-                                modifier = Modifier.alignByBaseline(),
-                                text = streamDuration,
-                                maxLines = 1,
-                                style = MaterialTheme.typography.labelMedium,
-                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            ) {
+                                Icon(
+                                    modifier = Modifier.size(12.dp),
+                                    imageVector = Icons.Default.Timelapse,
+                                    contentDescription = null,
+                                )
+
+                                Text(
+                                    modifier = Modifier.alignByBaseline(),
+                                    text = streamDuration,
+                                    maxLines = 1,
+                                    style = MaterialTheme.typography.labelMedium,
+                                )
+                            }
                         }
                 }
             }

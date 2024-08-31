@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Gamepad
 import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material.icons.filled.Today
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -64,6 +65,7 @@ import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.HapticIconButton
+import fr.outadoc.justchatting.utils.presentation.format
 import fr.outadoc.justchatting.utils.presentation.formatDate
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import kotlinx.collections.immutable.toPersistentSet
@@ -294,23 +296,47 @@ internal fun TimelineSegment(
             }
 
             Row(
-                modifier = Modifier.padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Icon(
-                    modifier = Modifier.size(16.dp),
-                    imageVector = Icons.Default.AccessTime,
-                    contentDescription = null,
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    Icon(
+                        modifier = Modifier.size(16.dp),
+                        imageVector = Icons.Default.AccessTime,
+                        contentDescription = null,
+                    )
 
-                Text(
-                    buildAnnotatedString {
-                        append(segment.startTime.formatHourMinute())
-                        append(" - ")
-                        append(segment.endTime.formatHourMinute())
-                    },
-                )
+                    Text(
+                        buildAnnotatedString {
+                            append(segment.startTime.formatHourMinute())
+                            append(" - ")
+                            append(segment.endTime.formatHourMinute())
+                        },
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    Icon(
+                        modifier = Modifier.size(16.dp),
+                        imageVector = Icons.Default.Timelapse,
+                        contentDescription = null,
+                    )
+
+                    val duration = segment.endTime - segment.startTime
+                    Text(
+                        text = duration.format(showSeconds = false),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
             }
         }
     }

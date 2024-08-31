@@ -135,7 +135,33 @@ private fun LocalDate.formatDate(
     }
 }
 
-internal fun Duration.format(context: Context): String =
+@Composable
+internal fun Instant.formatTimeSince(
+    clock: Clock = Clock.System,
+    showSeconds: Boolean,
+): String {
+    val context = LocalContext.current
+
+    var now by remember { mutableStateOf(clock.now()) }
+    val duration = remember(now) { now - this }
+
+    LaunchedEffect(clock) {
+        while (isActive) {
+            now = clock.now()
+            delay(1.minutes)
+        }
+    }
+
+    return duration.format(
+        context = context,
+        showSeconds = showSeconds,
+    )
+}
+
+internal fun Duration.format(
+    context: Context,
+    showSeconds: Boolean = true,
+): String =
     sequence {
         toComponents { days, hours, minutes, seconds, _ ->
             days.takeIf { it > 0 }?.let {
@@ -150,8 +176,10 @@ internal fun Duration.format(context: Context): String =
                 yield(MR.strings.duration_minutes.format(it).toString(context))
             }
 
-            seconds.takeIf { it > 0 }?.let {
-                yield(MR.strings.duration_seconds.format(it).toString(context))
+            if (showSeconds) {
+                seconds.takeIf { it > 0 }?.let {
+                    yield(MR.strings.duration_seconds.format(it).toString(context))
+                }
             }
         }
     }.joinToString(" ")

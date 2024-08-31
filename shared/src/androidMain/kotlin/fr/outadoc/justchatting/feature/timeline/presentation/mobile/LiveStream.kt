@@ -26,8 +26,9 @@ import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
-import fr.outadoc.justchatting.utils.presentation.formatHourMinute
+import fr.outadoc.justchatting.utils.presentation.customColors
 import fr.outadoc.justchatting.utils.presentation.formatNumber
+import fr.outadoc.justchatting.utils.presentation.formatTimeSince
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.datetime.Instant
@@ -182,7 +183,7 @@ private fun LiveStream(
                                 .align(Alignment.CenterVertically)
                                 .size(6.dp)
                                 .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.error),
+                                .background(MaterialTheme.customColors.live),
                         ) {}
 
                         Text(
@@ -210,11 +211,11 @@ private fun LiveStream(
                     }
 
                     startedAt
-                        ?.formatHourMinute()
-                        ?.let { startedAt ->
+                        ?.formatTimeSince(showSeconds = false)
+                        ?.let { streamDuration ->
                             Text(
                                 modifier = Modifier.alignByBaseline(),
-                                text = startedAt,
+                                text = streamDuration,
                                 maxLines = 1,
                                 style = MaterialTheme.typography.labelMedium,
                             )

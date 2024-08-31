@@ -9,6 +9,7 @@ private val darkColors = CustomColorScheme(
     onSuccess = Color(0xFFFFFFFF),
     successContainer = Color(0xFFB2F655),
     onSuccessContainer = Color(0xFF112000),
+    live = Color(0xFFD93A3A),
 )
 
 private val lightColors = CustomColorScheme(
@@ -16,6 +17,7 @@ private val lightColors = CustomColorScheme(
     onSuccess = Color(0xFF203600),
     successContainer = Color(0xFF314F00),
     onSuccessContainer = Color(0xFFB2F655),
+    live = Color(0xFFD93A3A),
 )
 
 internal data class CustomColorScheme(
@@ -23,6 +25,7 @@ internal data class CustomColorScheme(
     val successContainer: Color,
     val onSuccess: Color,
     val onSuccessContainer: Color,
+    val live: Color,
 )
 
 internal val MaterialTheme.customColors: CustomColorScheme

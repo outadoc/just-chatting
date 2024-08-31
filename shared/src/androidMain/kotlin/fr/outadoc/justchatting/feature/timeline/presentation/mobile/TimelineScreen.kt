@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Gamepad
 import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.filled.Today
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -113,7 +114,7 @@ internal fun TimelineScreen(
                             },
                         ) {
                             Icon(
-                                imageVector = Icons.Default.CalendarToday,
+                                imageVector = Icons.Default.Today,
                                 contentDescription = stringResource(MR.strings.timeline_today_action_cd),
                             )
                         }

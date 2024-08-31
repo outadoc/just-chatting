@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -299,44 +300,41 @@ internal fun TimelineSegment(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    Icon(
-                        modifier = Modifier.size(16.dp),
-                        imageVector = Icons.Default.AccessTime,
-                        contentDescription = null,
-                    )
+                Icon(
+                    modifier = Modifier.size(16.dp),
+                    imageVector = Icons.Default.AccessTime,
+                    contentDescription = null,
+                )
 
-                    Text(
-                        buildAnnotatedString {
-                            append(segment.startTime.formatHourMinute())
-                            append(" - ")
-                            append(segment.endTime.formatHourMinute())
-                        },
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                }
+                Text(
+                    modifier = Modifier.alignByBaseline(),
+                    text = buildAnnotatedString {
+                        append(segment.startTime.formatHourMinute())
+                        append(" - ")
+                        append(segment.endTime.formatHourMinute())
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                )
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    Icon(
-                        modifier = Modifier.size(16.dp),
-                        imageVector = Icons.Default.Timelapse,
-                        contentDescription = null,
-                    )
+                Spacer(
+                    modifier = Modifier.weight(1f, fill = true),
+                )
 
-                    val duration = segment.endTime - segment.startTime
-                    Text(
-                        text = duration.format(showSeconds = false),
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                }
+                Icon(
+                    modifier = Modifier.size(16.dp),
+                    imageVector = Icons.Default.Timelapse,
+                    contentDescription = null,
+                )
+
+                val duration = segment.endTime - segment.startTime
+                Text(
+                    modifier = Modifier.alignByBaseline(),
+                    text = duration.format(showSeconds = false),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
             }
         }
     }

@@ -166,6 +166,7 @@ private fun LiveStream(
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     userName?.let { userName ->
@@ -175,6 +176,7 @@ private fun LiveStream(
                                 .alignByBaseline(),
                             text = userName,
                             maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     }
@@ -183,7 +185,6 @@ private fun LiveStream(
                         Box(
                             modifier = Modifier
                                 .padding(end = 4.dp)
-                                .align(Alignment.CenterVertically)
                                 .size(6.dp)
                                 .clip(CircleShape)
                                 .background(MaterialTheme.customColors.live),
@@ -200,7 +201,7 @@ private fun LiveStream(
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     category?.let { category ->
                         Text(
@@ -209,6 +210,7 @@ private fun LiveStream(
                                 .alignByBaseline(),
                             text = category.name,
                             maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     }
@@ -216,23 +218,20 @@ private fun LiveStream(
                     startedAt
                         ?.formatTimeSince(showSeconds = false)
                         ?.let { streamDuration ->
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            ) {
-                                Icon(
-                                    modifier = Modifier.size(12.dp),
-                                    imageVector = Icons.Default.Timelapse,
-                                    contentDescription = null,
-                                )
+                            Icon(
+                                modifier = Modifier
+                                    .size(12.dp)
+                                    .align(Alignment.CenterVertically),
+                                imageVector = Icons.Default.Timelapse,
+                                contentDescription = null,
+                            )
 
-                                Text(
-                                    modifier = Modifier.alignByBaseline(),
-                                    text = streamDuration,
-                                    maxLines = 1,
-                                    style = MaterialTheme.typography.labelMedium,
-                                )
-                            }
+                            Text(
+                                modifier = Modifier.alignByBaseline(),
+                                text = streamDuration,
+                                maxLines = 1,
+                                style = MaterialTheme.typography.labelMedium,
+                            )
                         }
                 }
             }

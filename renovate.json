@@ -8,7 +8,7 @@
         "^androidx.compose.compiler",
         "^com.google.devtools.ksp",
         "^org.jetbrains.compose",
-        "^org.jetbrains.kotlin"
+        "^org.jetbrains.kotlin[^x]"
       ]
     },
     {

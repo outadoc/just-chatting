@@ -40,7 +40,6 @@ internal fun SearchScreen(
     }
 
     MainNavigation(
-        sizeClass = sizeClass,
         selectedScreen = Screen.Search,
         onSelectedTabChange = onNavigate,
         topBar = {

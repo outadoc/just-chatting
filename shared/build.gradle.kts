@@ -82,6 +82,7 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.uiTooling)
+            implementation(libs.compose.material.adaptiveNavigationSuite)
             implementation(libs.compose.material.windowSizeClass)
             implementation(libs.compose.navigation)
 

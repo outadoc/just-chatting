@@ -261,7 +261,7 @@ internal fun ChatTextField(
         placeholder = {
             Text(text = stringResource(MR.strings.chat_input_hint))
         },
-        colors = TextFieldDefaults.textFieldColors(
+        colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
         ),

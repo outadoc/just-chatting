@@ -60,7 +60,6 @@ internal fun MainRouter(
             exitTransition = { ExitTransition.None },
         ) {
             FollowedChannelsList(
-                sizeClass = sizeClass,
                 onNavigate = { navController.navigate(it) },
                 onItemClick = onChannelClick,
             )
@@ -93,7 +92,6 @@ internal fun MainRouter(
             exitTransition = { ExitTransition.None },
         ) {
             SettingsContent(
-                sizeClass = sizeClass,
                 onNavigate = { navController.navigate(it) },
             )
         }

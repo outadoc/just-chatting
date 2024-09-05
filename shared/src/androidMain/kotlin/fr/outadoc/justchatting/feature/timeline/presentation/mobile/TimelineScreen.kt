@@ -96,7 +96,6 @@ internal fun TimelineScreen(
     }
 
     MainNavigation(
-        sizeClass = sizeClass,
         selectedScreen = Screen.Timeline,
         onSelectedTabChange = onNavigate,
         topBar = {

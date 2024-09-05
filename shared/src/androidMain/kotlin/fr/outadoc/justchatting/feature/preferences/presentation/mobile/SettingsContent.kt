@@ -6,7 +6,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -26,7 +25,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 internal fun SettingsContent(
     modifier: Modifier = Modifier,
-    sizeClass: WindowSizeClass,
     onNavigate: (Screen) -> Unit,
 ) {
     val viewModel: SettingsViewModel = koinViewModel()
@@ -56,7 +54,6 @@ internal fun SettingsContent(
 
     MainNavigation(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        sizeClass = sizeClass,
         selectedScreen = Screen.Settings.Root,
         onSelectedTabChange = onNavigate,
         topBar = {

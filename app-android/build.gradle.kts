@@ -52,7 +52,6 @@ kotlin {
             implementation(libs.androidx.paging.compose.common)
             implementation(libs.androidx.palette)
             implementation(libs.androidx.splashscreen)
-            implementation(libs.coil.compose)
             implementation(libs.coil.core)
             implementation(libs.coil.gif)
             implementation(libs.compose.material.windowSizeClass)

@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.isSpecified
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.core.PlaceholderDefaults
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.core.PlaceholderHighlight
+import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.core.placeholder
 
 /**
  * Returns the value used as the the `color` parameter value on [Modifier.placeholder].

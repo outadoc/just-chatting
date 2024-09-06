@@ -14,7 +14,7 @@ internal actual fun Instant.formatHourMinute(): String? {
 @Composable
 internal actual fun Instant.formatDate(
     tz: TimeZone,
-    clock: Clock
+    clock: Clock,
 ): String {
     TODO("not implemented")
 }
@@ -23,7 +23,7 @@ internal actual fun Instant.formatDate(
 internal actual fun LocalDate.formatDate(
     tz: TimeZone,
     clock: Clock,
-    isFuture: Boolean
+    isFuture: Boolean,
 ): String {
     TODO("not implemented")
 }

@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.material3
 
-
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.Transition
 import androidx.compose.animation.core.spring

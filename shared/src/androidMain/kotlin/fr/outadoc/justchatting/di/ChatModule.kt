@@ -71,7 +71,7 @@ public val chatModule: Module = module {
     single<CreateShortcutForChannelUseCase> { MobileCreateShortcutForChannelUseCase(get()) }
 
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get()) }
-    single { LoggedInChatWebSocket.Factory(get(), get(), get(), get(), get()) }
+    single { LoggedInChatWebSocket.Factory(get(), get(), get(), get()) }
     single { MockChatWebSocket.Factory(get(), get(), get(), get()) }
     single { PubSubWebSocket.Factory(get(), get(), get(), get()) }
 

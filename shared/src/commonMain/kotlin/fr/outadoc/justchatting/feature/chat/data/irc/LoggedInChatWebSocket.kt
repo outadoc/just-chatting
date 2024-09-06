@@ -32,7 +32,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -46,7 +45,6 @@ import kotlin.time.Duration.Companion.seconds
 internal class LoggedInChatWebSocket(
     networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
-    private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
     private val httpClient: HttpClient,
     private val authRepository: AuthRepository,
@@ -189,7 +187,6 @@ internal class LoggedInChatWebSocket(
     }
 
     class Factory(
-        private val clock: Clock,
         private val networkStateObserver: NetworkStateObserver,
         private val parser: TwitchIrcCommandParser,
         private val authRepository: AuthRepository,
@@ -203,7 +200,6 @@ internal class LoggedInChatWebSocket(
         ): LoggedInChatWebSocket = LoggedInChatWebSocket(
             networkStateObserver = networkStateObserver,
             scope = scope,
-            clock = clock,
             parser = parser,
             httpClient = httpClient,
             authRepository = authRepository,

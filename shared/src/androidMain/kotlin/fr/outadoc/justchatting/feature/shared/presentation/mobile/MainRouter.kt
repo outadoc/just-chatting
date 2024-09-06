@@ -70,7 +70,6 @@ internal fun MainRouter(
             exitTransition = { ExitTransition.None },
         ) {
             TimelineScreen(
-                sizeClass = sizeClass,
                 onNavigate = { navController.navigate(it) },
                 onChannelClick = onChannelClick,
             )

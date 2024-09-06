@@ -70,10 +70,13 @@ internal fun ChatSlowModeProgress(
         }
     }
 
-    val progressVisibility = animateFloatAsState(targetValue = if (progress.isRunning) 1f else 0f)
+    val progressVisibility = animateFloatAsState(
+        targetValue = if (progress.isRunning) 1f else 0f,
+        label = "Slow mode progress countdown",
+    )
 
     LinearProgressIndicator(
+        progress = { progress.value },
         modifier = modifier.alpha(progressVisibility.value),
-        progress = progress.value,
     )
 }

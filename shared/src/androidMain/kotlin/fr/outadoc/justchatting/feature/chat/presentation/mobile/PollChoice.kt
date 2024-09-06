@@ -41,6 +41,7 @@ internal fun PollChoice(
 
     Box(modifier = modifier.height(32.dp)) {
         LinearProgressIndicator(
+            progress = { ratio },
             modifier = Modifier
                 .fillMaxSize()
                 .clip(MaterialTheme.shapes.medium),
@@ -50,7 +51,6 @@ internal fun PollChoice(
                 MaterialTheme.colorScheme.primaryContainer
             },
             trackColor = MaterialTheme.colorScheme.outlineVariant,
-            progress = ratio,
         )
 
         Row(

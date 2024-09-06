@@ -21,16 +21,11 @@ import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.formatDate
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
 
 @Composable
 internal fun UserInfo(
     modifier: Modifier = Modifier,
     user: User,
-    tz: TimeZone = TimeZone.currentSystemDefault(),
-    now: Instant = Clock.System.now(),
 ) {
     Column(
         modifier = modifier,

@@ -6,8 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Reply
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.automirrored.filled.Reply
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismissBox
@@ -24,7 +23,6 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SwipeToReply(
     modifier: Modifier = Modifier,
@@ -70,7 +68,7 @@ internal fun SwipeToReply(
                 contentAlignment = Alignment.CenterStart,
             ) {
                 Icon(
-                    Icons.Default.Reply,
+                    Icons.AutoMirrored.Filled.Reply,
                     contentDescription = "Reply",
                     modifier = Modifier.scale(scale),
                 )

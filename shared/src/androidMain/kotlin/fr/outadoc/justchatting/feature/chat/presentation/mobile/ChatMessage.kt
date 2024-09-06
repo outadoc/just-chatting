@@ -1,3 +1,4 @@
+
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.compose.foundation.background
@@ -26,10 +27,8 @@ import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
-import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentHashMap
 
 @ThemePreviews
@@ -61,7 +60,6 @@ internal fun ChatMessage(
     message: ChatListItem.Message,
     inlineContent: ImmutableMap<String, InlineTextContent> = persistentMapOf(),
     removedContent: ImmutableList<ChatListItem.RemoveContent> = persistentListOf(),
-    knownChatters: PersistentSet<Chatter> = persistentSetOf(),
     pronouns: ImmutableMap<Chatter, Pronoun> = persistentMapOf(),
     richEmbed: ChatListItem.RichEmbed? = null,
     showTimestamps: Boolean,

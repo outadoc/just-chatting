@@ -29,10 +29,6 @@ VALUES (?, ?, ?, ?);
 getPronouns:
 SELECT * FROM Pronoun;
 
-getPronoun:
-SELECT * FROM Pronoun
-WHERE id = ?;
-
 clearPronouns:
 DELETE FROM Pronoun;
 

@@ -38,7 +38,6 @@ import fr.outadoc.justchatting.utils.core.isOdd
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentMap
-import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.datetime.Clock
 
@@ -51,7 +50,6 @@ internal fun ChatList(
     cheerEmotes: ImmutableMap<String, Emote>,
     badges: ImmutableList<TwitchBadge>,
     removedContent: ImmutableList<ChatListItem.RemoveContent>,
-    knownChatters: PersistentSet<Chatter>,
     pronouns: ImmutableMap<Chatter, Pronoun>,
     richEmbeds: ImmutableMap<String, ChatListItem.RichEmbed>,
     showTimestamps: Boolean,
@@ -135,7 +133,6 @@ internal fun ChatList(
                 clock = clock,
                 inlineContent = inlineContent,
                 removedContent = removedContent,
-                knownChatters = knownChatters,
                 appUser = appUser,
                 badges = badges,
             )
@@ -187,7 +184,6 @@ internal fun ChatList(
                     message = item,
                     inlineContent = inlineContent,
                     removedContent = removedContent,
-                    knownChatters = knownChatters,
                     pronouns = pronouns,
                     richEmbed = item.body?.messageId?.let { messageId -> richEmbeds[messageId] },
                     showTimestamps = showTimestamps,

@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Reply
+import androidx.compose.material.icons.automirrored.filled.Reply
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -46,7 +46,7 @@ internal fun InReplyToMessage(
                     .size(16.dp)
                     .alignByBaseline()
                     .padding(end = 4.dp, top = 1.dp),
-                imageVector = Icons.Default.Reply,
+                imageVector = Icons.AutoMirrored.Filled.Reply,
                 contentDescription = stringResource(MR.strings.chat_replyingTo),
             )
 

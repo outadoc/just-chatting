@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
-import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Poll
 import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
@@ -31,7 +30,6 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentMap
-import kotlinx.collections.immutable.PersistentSet
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.minutes
@@ -46,7 +44,6 @@ internal fun ChatEvents(
     clock: Clock,
     inlineContent: PersistentMap<String, InlineTextContent>,
     removedContent: ImmutableList<ChatListItem.RemoveContent>,
-    knownChatters: PersistentSet<Chatter>,
     appUser: AppUser.LoggedIn,
     badges: ImmutableList<TwitchBadge>,
 ) {
@@ -95,10 +92,9 @@ internal fun ChatEvents(
                 PinnedMessageCard(
                     modifier = Modifier.fillMaxWidth(),
                     message = pinnedMessage.message,
+                    appUser = appUser,
                     inlineContent = inlineContent,
                     removedContent = removedContent,
-                    knownChatters = knownChatters,
-                    appUser = appUser,
                 )
             }
         }

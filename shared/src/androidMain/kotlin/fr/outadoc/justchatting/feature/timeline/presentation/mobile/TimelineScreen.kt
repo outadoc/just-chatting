@@ -32,7 +32,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -78,7 +77,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 internal fun TimelineScreen(
     modifier: Modifier = Modifier,
-    sizeClass: WindowSizeClass,
     onNavigate: (Screen) -> Unit,
     onChannelClick: (userId: String) -> Unit,
 ) {

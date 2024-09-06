@@ -11,7 +11,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 
-private val emoteSizeFloat = 1.8
+private const val emoteSizeFloat = 1.8
 internal val emoteSize = emoteSizeFloat.em
 
 private val emotePlaceholder = Placeholder(

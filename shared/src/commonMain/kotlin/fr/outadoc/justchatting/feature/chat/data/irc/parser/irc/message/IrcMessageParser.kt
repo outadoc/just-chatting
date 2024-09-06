@@ -46,7 +46,7 @@ internal object IrcMessageParser : IIrcMessageParser {
             return IrcMessage(tags, prefix, command)
         }
 
-        val (parameters, _) = parseParameters(line, endOfCommand) ?: return null
+        val (parameters, _) = parseParameters(line, endOfCommand)
 
         return IrcMessage(tags, prefix, command, parameters)
     }
@@ -146,7 +146,7 @@ internal object IrcMessageParser : IIrcMessageParser {
         return Pair(command, position)
     }
 
-    private fun parseParameters(line: String, fromPosition: Int): Pair<List<String>, Int>? {
+    private fun parseParameters(line: String, fromPosition: Int): Pair<List<String>, Int> {
         var position = fromPosition
         val parameters = mutableListOf<String>()
 
@@ -196,9 +196,7 @@ internal object ParseHelper {
             val nextEquals = findNext(chunk, 0, keyValueSeparator)
             if (nextEquals != null) {
                 val key = chunk.substring(0, nextEquals)
-                val value: String?
-
-                value = if (nextEquals + 1 >= chunk.length) {
+                val value: String = if (nextEquals + 1 >= chunk.length) {
                     // key but no value
                     ""
                 } else {
@@ -210,9 +208,9 @@ internal object ParseHelper {
                     }
                 }
 
-                keyValues.put(key, value)
+                keyValues[key] = value
             } else {
-                keyValues.put(chunk, null)
+                keyValues[chunk] = null
             }
         }
 

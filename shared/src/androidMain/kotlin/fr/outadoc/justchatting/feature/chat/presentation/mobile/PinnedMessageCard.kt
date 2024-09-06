@@ -10,7 +10,6 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -25,7 +24,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
-import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatMessagePreviewProvider
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
@@ -33,12 +31,9 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
-import kotlinx.collections.immutable.persistentSetOf
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PinnedMessageCard(
     modifier: Modifier = Modifier,
@@ -47,7 +42,6 @@ internal fun PinnedMessageCard(
     color: Color = MaterialTheme.colorScheme.secondaryContainer,
     inlineContent: ImmutableMap<String, InlineTextContent> = persistentMapOf(),
     removedContent: ImmutableList<ChatListItem.RemoveContent> = persistentListOf(),
-    knownChatters: PersistentSet<Chatter> = persistentSetOf(),
 ) {
     var isExpanded: Boolean by remember { mutableStateOf(false) }
     val maxLines by animateIntAsState(
@@ -74,11 +68,10 @@ internal fun PinnedMessageCard(
                 message = message,
                 inlineContent = inlineContent,
                 removedContent = removedContent,
-                knownChatters = knownChatters,
+                showTimestamps = false,
                 background = color,
                 appUser = appUser,
                 maxLines = maxLines,
-                showTimestamps = false,
             )
 
             if (isExpanded) {

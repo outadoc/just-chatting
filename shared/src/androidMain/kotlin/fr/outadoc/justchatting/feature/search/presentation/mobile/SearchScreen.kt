@@ -51,9 +51,9 @@ internal fun SearchScreen(
                     sizeClass = sizeClass,
                     searchResults = searchResults,
                     query = state.query,
-                    isActive = state.isActive,
+                    isSearchExpanded = state.isSearchExpanded,
                     onQueryChange = viewModel::onQueryChange,
-                    onSearchActiveChange = viewModel::onSearchActiveChange,
+                    onSearchActiveChange = viewModel::onSearchExpandedChange,
                     onClear = viewModel::onClearSearchBar,
                     onDismiss = viewModel::onDismissSearchBar,
                 )

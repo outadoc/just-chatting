@@ -15,6 +15,7 @@ import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -36,7 +37,7 @@ internal fun SearchScreenBar(
     sizeClass: WindowSizeClass,
     searchResults: LazyPagingItems<ChannelSearchResult>,
     query: String,
-    isActive: Boolean,
+    isSearchExpanded: Boolean,
     onChannelClick: (userId: String) -> Unit,
     onQueryChange: (String) -> Unit,
     onSearchActiveChange: (Boolean) -> Unit,
@@ -51,10 +52,10 @@ internal fun SearchScreenBar(
                 modifier = modifier,
                 searchResults = searchResults,
                 query = query,
-                isActive = isActive,
+                isSearchExpanded = isSearchExpanded,
                 onChannelClick = onChannelClick,
                 onQueryChange = onQueryChange,
-                onSearchActiveChange = onSearchActiveChange,
+                onSearchExpandedChange = onSearchActiveChange,
                 onClearSearchBar = onClearSearchBar,
                 onDismissSearchBar = onDismissSearchBar,
             )
@@ -65,10 +66,10 @@ internal fun SearchScreenBar(
                 modifier = modifier,
                 searchResults = searchResults,
                 query = query,
-                isActive = isActive,
+                isSearchExpanded = isSearchExpanded,
                 onChannelClick = onChannelClick,
                 onQueryChange = onQueryChange,
-                onSearchActiveChange = onSearchActiveChange,
+                onSearchExpandedChange = onSearchActiveChange,
                 onClearSearchBar = onClearSearchBar,
                 onDismissSearchBar = onDismissSearchBar,
             )
@@ -81,65 +82,71 @@ internal fun SearchScreenBar(
 private fun CompactSearchBar(
     modifier: Modifier,
     query: String,
-    isActive: Boolean,
+    isSearchExpanded: Boolean,
     searchResults: LazyPagingItems<ChannelSearchResult>,
     onChannelClick: (userId: String) -> Unit,
     onQueryChange: (String) -> Unit,
-    onSearchActiveChange: (Boolean) -> Unit,
+    onSearchExpandedChange: (Boolean) -> Unit,
     onClearSearchBar: () -> Unit,
     onDismissSearchBar: () -> Unit,
 ) {
     DockedSearchBar(
-        modifier = modifier.padding(16.dp),
-        query = query,
-        onQueryChange = onQueryChange,
-        onSearch = {},
-        active = isActive,
-        onActiveChange = onSearchActiveChange,
-        placeholder = { Text(stringResource(MR.strings.search_hint)) },
-        leadingIcon = {
-            Crossfade(
-                targetState = isActive,
-                label = "search leading icon",
-            ) { isActive ->
-                HapticIconButton(
-                    onClick = onDismissSearchBar,
-                    enabled = isActive,
-                ) {
-                    if (isActive) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(MR.strings.all_goBack),
-                        )
-                    } else {
-                        Icon(
-                            Icons.Filled.Search,
-                            contentDescription = null,
-                        )
+        inputField = {
+            SearchBarDefaults.InputField(
+                query = query,
+                onQueryChange = onQueryChange,
+                onSearch = {},
+                expanded = isSearchExpanded,
+                onExpandedChange = onSearchExpandedChange,
+                placeholder = { Text(stringResource(MR.strings.search_hint)) },
+                leadingIcon = {
+                    Crossfade(
+                        targetState = isSearchExpanded,
+                        label = "search leading icon",
+                    ) { isActive ->
+                        HapticIconButton(
+                            onClick = onDismissSearchBar,
+                            enabled = isActive,
+                        ) {
+                            if (isActive) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = stringResource(MR.strings.all_goBack),
+                                )
+                            } else {
+                                Icon(
+                                    Icons.Filled.Search,
+                                    contentDescription = null,
+                                )
+                            }
+                        }
                     }
-                }
-            }
-        },
-        trailingIcon = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                if (searchResults.loadState.refresh is LoadState.Loading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                    )
-                }
+                },
+                trailingIcon = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        if (searchResults.loadState.refresh is LoadState.Loading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(24.dp),
+                            )
+                        }
 
-                AnimatedVisibility(visible = query.isNotEmpty()) {
-                    HapticIconButton(onClick = onClearSearchBar) {
-                        Icon(
-                            Icons.Filled.Cancel,
-                            contentDescription = stringResource(MR.strings.search_clear_cd),
-                        )
+                        AnimatedVisibility(visible = query.isNotEmpty()) {
+                            HapticIconButton(onClick = onClearSearchBar) {
+                                Icon(
+                                    Icons.Filled.Cancel,
+                                    contentDescription = stringResource(MR.strings.search_clear_cd),
+                                )
+                            }
+                        }
                     }
-                }
-            }
+                },
+            )
         },
+        expanded = isSearchExpanded,
+        onExpandedChange = onSearchExpandedChange,
+        modifier = modifier.padding(16.dp),
         content = {
             SearchResultsList(
                 onItemClick = { stream ->
@@ -156,60 +163,66 @@ private fun CompactSearchBar(
 private fun FullHeightSearchBar(
     modifier: Modifier,
     query: String,
-    isActive: Boolean,
+    isSearchExpanded: Boolean,
     searchResults: LazyPagingItems<ChannelSearchResult>,
     onChannelClick: (userId: String) -> Unit,
     onQueryChange: (String) -> Unit,
-    onSearchActiveChange: (Boolean) -> Unit,
+    onSearchExpandedChange: (Boolean) -> Unit,
     onClearSearchBar: () -> Unit,
     onDismissSearchBar: () -> Unit,
 ) {
     val padding by animateDpAsState(
-        targetValue = if (isActive) 0.dp else 16.dp,
+        targetValue = if (isSearchExpanded) 0.dp else 16.dp,
         label = "inner padding",
     )
 
     SearchBar(
-        modifier = modifier.padding(padding),
-        query = query,
-        onQueryChange = onQueryChange,
-        onSearch = {},
-        active = isActive,
-        onActiveChange = onSearchActiveChange,
-        placeholder = { Text(stringResource(MR.strings.search_hint)) },
-        leadingIcon = {
-            Crossfade(
-                targetState = isActive,
-                label = "search leading icon",
-            ) { isActive ->
-                HapticIconButton(
-                    onClick = onDismissSearchBar,
-                    enabled = isActive,
-                ) {
-                    if (isActive) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(MR.strings.all_goBack),
-                        )
-                    } else {
-                        Icon(
-                            Icons.Filled.Search,
-                            contentDescription = null,
-                        )
+        inputField = {
+            SearchBarDefaults.InputField(
+                query = query,
+                onQueryChange = onQueryChange,
+                onSearch = {},
+                expanded = isSearchExpanded,
+                onExpandedChange = onSearchExpandedChange,
+                placeholder = { Text(stringResource(MR.strings.search_hint)) },
+                leadingIcon = {
+                    Crossfade(
+                        targetState = isSearchExpanded,
+                        label = "search leading icon",
+                    ) { isActive ->
+                        HapticIconButton(
+                            onClick = onDismissSearchBar,
+                            enabled = isActive,
+                        ) {
+                            if (isActive) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = stringResource(MR.strings.all_goBack),
+                                )
+                            } else {
+                                Icon(
+                                    Icons.Filled.Search,
+                                    contentDescription = null,
+                                )
+                            }
+                        }
                     }
-                }
-            }
+                },
+                trailingIcon = {
+                    AnimatedVisibility(visible = query.isNotEmpty()) {
+                        HapticIconButton(onClick = onClearSearchBar) {
+                            Icon(
+                                Icons.Filled.Cancel,
+                                contentDescription = stringResource(MR.strings.search_clear_cd),
+                            )
+                        }
+                    }
+                },
+            )
         },
-        trailingIcon = {
-            AnimatedVisibility(visible = query.isNotEmpty()) {
-                HapticIconButton(onClick = onClearSearchBar) {
-                    Icon(
-                        Icons.Filled.Cancel,
-                        contentDescription = stringResource(MR.strings.search_clear_cd),
-                    )
-                }
-            }
-        },
+        expanded = isSearchExpanded,
+        onExpandedChange = onSearchExpandedChange,
+        modifier = modifier.padding(padding),
         content = {
             SearchResultsList(
                 onItemClick = { stream ->

@@ -31,7 +31,7 @@ internal class ChannelSearchViewModel(
 
     data class State(
         val query: String = "",
-        val isActive: Boolean = false,
+        val isSearchExpanded: Boolean = false,
         val recentChannels: ImmutableList<User> = persistentListOf(),
     )
 
@@ -80,18 +80,18 @@ internal class ChannelSearchViewModel(
         }
     }
 
-    fun onSearchActiveChange(isActive: Boolean) {
+    fun onSearchExpandedChange(isExpanded: Boolean) {
         _state.update { state ->
             state.copy(
-                isActive = isActive,
-                query = if (isActive) state.query else "",
+                isSearchExpanded = isExpanded,
+                query = if (isExpanded) state.query else "",
             )
         }
     }
 
     fun onDismissSearchBar() {
         _state.update { state ->
-            state.copy(isActive = false)
+            state.copy(isSearchExpanded = false)
         }
     }
 

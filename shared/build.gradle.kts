@@ -55,7 +55,12 @@ kotlin {
             api(libs.ktor.client.core)
             api(libs.moko.resources.core)
 
+            implementation(compose.material)
+            implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
             implementation(compose.runtime)
+            implementation(compose.ui)
+            implementation(compose.uiTooling)
 
             implementation(libs.androidx.paging.common)
             implementation(libs.androidx.paging.compose.common)
@@ -77,11 +82,6 @@ kotlin {
         }
 
         androidMain.dependencies {
-            implementation(compose.material)
-            implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.ui)
-            implementation(compose.uiTooling)
             implementation(libs.compose.material.adaptiveNavigationSuite)
             implementation(libs.compose.material.windowSizeClass)
             implementation(libs.compose.navigation)

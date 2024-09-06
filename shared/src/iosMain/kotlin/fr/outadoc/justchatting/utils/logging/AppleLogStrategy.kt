@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.utils.logging
 
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.ptr
 import platform.darwin.OS_LOG_DEFAULT
 import platform.darwin.OS_LOG_TYPE_DEBUG
@@ -12,6 +13,7 @@ import platform.darwin._os_log_internal
 
 internal object AppleLogStrategy : LogStrategy {
 
+    @OptIn(ExperimentalForeignApi::class)
     override fun println(level: Logger.Level, tag: String?, content: String) {
         _os_log_internal(
             dso = __dso_handle.ptr,

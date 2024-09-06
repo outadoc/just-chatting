@@ -26,9 +26,9 @@ import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.domain.model.Poll
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 import kotlinx.datetime.Instant
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
@@ -173,7 +173,7 @@ private val mockPoll = Poll(
     ),
 )
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun PollCardPreview() {
     AppTheme {
@@ -183,7 +183,7 @@ internal fun PollCardPreview() {
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun PollCardPreviewCompleted() {
     AppTheme {

@@ -60,11 +60,15 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.runtime)
             implementation(compose.ui)
-            implementation(compose.uiTooling)
+            implementation(compose.components.uiToolingPreview)
 
             implementation(libs.androidx.paging.common)
             implementation(libs.androidx.paging.compose.common)
             implementation(libs.bignum)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.core)
+            implementation(libs.coil.ktor)
+            implementation(libs.compose.material.windowSizeClass)
             implementation(libs.fluid.currency)
             implementation(libs.koin.core)
             implementation(libs.kotlinx.collections.immutable)
@@ -75,6 +79,7 @@ kotlin {
             implementation(libs.ktor.contentNegociation)
             implementation(libs.ktor.logging)
             implementation(libs.ktor.serialization)
+            implementation(libs.moko.resources.compose)
             implementation(libs.sqldelight.coroutines)
             implementation(libs.stately.common)
             implementation(libs.uri.kmp)
@@ -83,11 +88,9 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.compose.material.adaptiveNavigationSuite)
-            implementation(libs.compose.material.windowSizeClass)
             implementation(libs.compose.navigation)
 
             implementation(libs.accompanist.permissions)
-            implementation(libs.accompanist.placeholder)
             implementation(libs.accompanist.systemuicontroller)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)
@@ -100,11 +103,9 @@ kotlin {
             implementation(libs.androidx.palette)
             implementation(libs.androidx.paging.runtime.android)
             implementation(libs.androidx.splashscreen)
-            implementation(libs.coil.compose)
             implementation(libs.koin.compose)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.material.core)
-            implementation(libs.moko.resources.compose)
             implementation(libs.okhttp)
 
             api(libs.sqldelight.driver.android)

@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile.preview
 
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem.Message.Highlighted.Level
 
 internal class HighlightLevelPreviewProvider : PreviewParameterProvider<Level> {

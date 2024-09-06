@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.ScreenPreviews
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@ScreenPreviews
+@Preview
 @Composable
 internal fun NoContentPreview() {
     AppTheme {

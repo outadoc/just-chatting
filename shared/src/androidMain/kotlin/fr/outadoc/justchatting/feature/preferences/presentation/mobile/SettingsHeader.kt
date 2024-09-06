@@ -10,9 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.ThemePreviews
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun SettingsHeaderPreview() {
     AppTheme {

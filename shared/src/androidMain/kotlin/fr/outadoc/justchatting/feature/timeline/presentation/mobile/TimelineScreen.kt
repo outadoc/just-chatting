@@ -47,11 +47,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.UserInfo
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
@@ -71,6 +68,8 @@ import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -509,9 +508,8 @@ private fun TimelineSegmentDetails(
 
 @Preview
 @Composable
-private fun TimelineSegmentDetailsPreview(
-    @PreviewParameter(LoremIpsum::class) lorem: String,
-) {
+private fun TimelineSegmentDetailsPreview() {
+    val lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     AppTheme {
         TimelineSegmentDetails(
             segment = ChannelScheduleSegment(
@@ -539,9 +537,8 @@ private fun TimelineSegmentDetailsPreview(
 
 @Preview
 @Composable
-private fun TimelineSegmentPreview(
-    @PreviewParameter(LoremIpsum::class) lorem: String,
-) {
+private fun TimelineSegmentPreview() {
+    val lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     AppTheme {
         TimelineSegment(
             segment = ChannelScheduleSegment(

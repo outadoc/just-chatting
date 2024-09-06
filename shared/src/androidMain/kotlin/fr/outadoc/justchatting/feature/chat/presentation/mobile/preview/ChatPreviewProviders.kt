@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile.preview
 
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import dev.icerock.moko.resources.desc.desc
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem

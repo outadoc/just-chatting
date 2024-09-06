@@ -14,15 +14,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
+import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.core.PlaceholderHighlight
+import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.material3.placeholder
+import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.material3.shimmer
 import fr.outadoc.justchatting.utils.core.isOdd
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.ThemePreviews
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.random.Random
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun ChatListPlaceholderPreview() {
     AppTheme {

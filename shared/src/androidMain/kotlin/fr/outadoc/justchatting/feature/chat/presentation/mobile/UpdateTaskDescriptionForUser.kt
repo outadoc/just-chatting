@@ -6,8 +6,9 @@ import android.graphics.drawable.BitmapDrawable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import coil.imageLoader
-import coil.request.ImageRequest
+import coil3.imageLoader
+import coil3.request.ImageRequest
+import coil3.request.allowHardware
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 
 @Composable

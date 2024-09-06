@@ -16,8 +16,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import coil.imageLoader
-import coil.request.ImageRequest
+import coil3.imageLoader
+import coil3.request.ImageRequest
+import coil3.request.allowHardware
 import com.google.android.material.color.utilities.QuantizerCelebi
 import com.google.android.material.color.utilities.Scheme
 import com.google.android.material.color.utilities.Score

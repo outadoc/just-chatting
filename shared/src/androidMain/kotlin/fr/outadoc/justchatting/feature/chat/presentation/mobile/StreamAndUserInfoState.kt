@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
-import fr.outadoc.justchatting.utils.presentation.ThemePreviews
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun StreamAndUserInfoState(
@@ -41,7 +41,7 @@ internal fun StreamAndUserInfoState(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun StreamAndUserInfoInitial() {
     StreamAndUserInfoState(

@@ -14,11 +14,11 @@ import androidx.compose.ui.res.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.shared.R
-import fr.outadoc.justchatting.utils.presentation.ThemePreviews
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 private val TwitchBrandColor = Color(0xFF7718AD)
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun SignInWithTwitchButtonPreview() {
     SignInWithTwitchButton(onClick = {})

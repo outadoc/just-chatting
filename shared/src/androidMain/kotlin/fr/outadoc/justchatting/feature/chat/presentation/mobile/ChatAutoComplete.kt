@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.ThemePreviews
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun AutoCompleteEmoteItem(
@@ -55,7 +55,7 @@ internal fun AutoCompleteUserItem(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun AutoCompleteItemPreviewSimple() {
     AppTheme {
@@ -68,7 +68,7 @@ internal fun AutoCompleteItemPreviewSimple() {
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun AutoCompleteItemPreviewIcon() {
     AppTheme {

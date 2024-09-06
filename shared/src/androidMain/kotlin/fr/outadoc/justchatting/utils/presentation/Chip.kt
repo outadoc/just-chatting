@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun LabelChip(
@@ -39,7 +40,7 @@ internal fun LabelChip(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun LabelChipPreview() {
     AppTheme {

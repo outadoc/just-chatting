@@ -47,10 +47,10 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.ScreenPreviews
 import fr.outadoc.justchatting.utils.presentation.shortToast
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@ScreenPreviews
+@Preview
 @Composable
 internal fun ChannelChatScreenLoadingPreview() {
     AppTheme {

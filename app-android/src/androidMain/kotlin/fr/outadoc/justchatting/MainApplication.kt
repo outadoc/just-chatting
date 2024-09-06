@@ -2,14 +2,14 @@ package fr.outadoc.justchatting
 
 import android.app.Application
 import android.os.Build
-import coil.ImageLoader
-import coil.ImageLoaderFactory
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
-import coil.transition.Transition
-import coil.util.DebugLogger
+import coil3.ImageLoader
+import coil3.ImageLoaderFactory
+import coil3.decode.GifDecoder
+import coil3.decode.ImageDecoderDecoder
+import coil3.disk.DiskCache
+import coil3.memory.MemoryCache
+import coil3.transition.Transition
+import coil3.util.DebugLogger
 import com.google.android.material.color.DynamicColors
 import fr.outadoc.justchatting.utils.logging.AndroidLogStrategy
 import fr.outadoc.justchatting.utils.logging.Logger

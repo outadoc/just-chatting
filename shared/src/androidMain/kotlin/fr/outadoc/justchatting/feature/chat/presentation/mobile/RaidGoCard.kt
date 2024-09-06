@@ -21,13 +21,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.ThemePreviews
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun RaidGoCard(
@@ -88,7 +88,7 @@ internal fun RaidGoCard(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun RaidGoCardPreview() {
     AppTheme {

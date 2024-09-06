@@ -6,14 +6,15 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.ParcelFileDescriptor
-import coil.imageLoader
-import coil.request.ImageRequest
-import coil.request.ImageResult
-import coil.transform.CircleCropTransformation
+import coil3.BitmapImage
+import coil3.imageLoader
+import coil3.request.ImageRequest
+import coil3.request.ImageResult
+import coil3.request.transformations
+import coil3.transform.CircleCropTransformation
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logDebug
@@ -108,7 +109,7 @@ public class UserProfileImageContentProvider : ContentProvider() {
                         .build(),
                 )
 
-            val bitmap: Bitmap = (response.drawable as? BitmapDrawable)?.bitmap
+            val bitmap: Bitmap = (response.image as? BitmapImage)?.bitmap
                 ?: error("Empty bitmap received from Coil")
 
             val format = if (Build.VERSION.SDK_INT >= 30) {

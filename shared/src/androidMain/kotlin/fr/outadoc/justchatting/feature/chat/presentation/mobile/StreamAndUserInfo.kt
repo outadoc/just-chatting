@@ -16,9 +16,9 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.datetime.Instant
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun StreamAndUserInfo(
@@ -55,7 +55,7 @@ internal fun StreamAndUserInfo(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun StreamInfoPreviewFull() {
     AppTheme {
@@ -85,7 +85,7 @@ internal fun StreamInfoPreviewFull() {
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun StreamInfoPreviewOffline() {
     AppTheme {
@@ -104,7 +104,7 @@ internal fun StreamInfoPreviewOffline() {
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun StreamInfoPreviewError() {
     AppTheme {

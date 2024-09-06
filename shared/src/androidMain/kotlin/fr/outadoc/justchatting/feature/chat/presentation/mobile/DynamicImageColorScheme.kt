@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -16,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import coil3.BitmapImage
 import coil3.imageLoader
 import coil3.request.ImageRequest
 import coil3.request.allowHardware
@@ -146,12 +146,12 @@ private suspend fun loadImageToBitmap(
             .target(
                 onSuccess = { drawable ->
                     cont.resumeWith(
-                        Result.success((drawable as? BitmapDrawable)?.bitmap),
+                        Result.success((drawable as? BitmapImage)?.bitmap),
                     )
                 },
                 onError = { drawable ->
                     cont.resumeWith(
-                        Result.success((drawable as? BitmapDrawable)?.bitmap),
+                        Result.success((drawable as? BitmapImage)?.bitmap),
                     )
                 },
             )

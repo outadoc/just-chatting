@@ -1,10 +1,11 @@
 package fr.outadoc.justchatting.feature.followed.presentation
 
 import androidx.compose.runtime.Immutable
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
-import fr.outadoc.justchatting.utils.presentation.ViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList

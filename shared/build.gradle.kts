@@ -62,6 +62,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.uiToolingPreview)
 
+            implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.paging.common)
             implementation(libs.androidx.paging.compose.common)
             implementation(libs.bignum)

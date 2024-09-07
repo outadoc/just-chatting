@@ -14,12 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.pluralStringResource
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 
@@ -61,7 +60,7 @@ internal fun StreamInfo(
 
             Text(
                 text = pluralStringResource(
-                    R.plurals.viewers,
+                    MR.plurals.viewers,
                     stream.viewerCount.toInt(),
                     stream.viewerCount.toInt().formatNumber(),
                 ),

@@ -42,7 +42,7 @@ import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsApi
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsClient
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsApi
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.compose.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
 

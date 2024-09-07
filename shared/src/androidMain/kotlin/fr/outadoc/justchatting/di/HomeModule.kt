@@ -4,7 +4,7 @@ import fr.outadoc.justchatting.feature.followed.presentation.FollowedChannelsVie
 import fr.outadoc.justchatting.feature.recent.presentation.RecentChannelsViewModel
 import fr.outadoc.justchatting.feature.search.presentation.ChannelSearchViewModel
 import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.compose.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
 

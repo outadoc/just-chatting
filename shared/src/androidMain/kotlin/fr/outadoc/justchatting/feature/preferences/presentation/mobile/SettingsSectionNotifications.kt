@@ -25,7 +25,8 @@ import com.google.accompanist.permissions.rememberPermissionState
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import fr.outadoc.justchatting.shared.MR
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +64,7 @@ internal fun SettingsSectionNotifications(
     }
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class, KoinExperimentalAPI::class)
 @Composable
 private fun SettingsSectionNotificationsContent(
     modifier: Modifier = Modifier,

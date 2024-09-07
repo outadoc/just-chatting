@@ -34,9 +34,10 @@ import fr.outadoc.justchatting.feature.shared.presentation.mobile.UserItemCardPl
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.HapticIconButton
 import fr.outadoc.justchatting.utils.presentation.plus
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, KoinExperimentalAPI::class)
 @Composable
 internal fun FollowedChannelsList(
     modifier: Modifier = Modifier,

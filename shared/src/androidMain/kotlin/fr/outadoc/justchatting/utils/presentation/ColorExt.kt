@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.utils.presentation
 
 import androidx.annotation.ColorInt
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.ColorUtils
 import kotlin.math.max
@@ -97,10 +96,7 @@ private fun colorToXyz(color: Color): DoubleArray {
 
 private fun xyzToColor(x: Double, y: Double, z: Double) = Color(ColorUtils.XYZToColor(x, y, z))
 
-internal val Color.isLight: Boolean
-    get() = luminance() > 0.5
-
-internal fun String.parseHexColor(): Color? =
+internal actual fun String.parseHexColor(): Color? =
     try {
         Color(android.graphics.Color.parseColor(this))
     } catch (e: IllegalArgumentException) {

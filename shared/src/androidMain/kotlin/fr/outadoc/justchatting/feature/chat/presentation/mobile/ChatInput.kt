@@ -47,10 +47,10 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.HapticIconButton
-import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import kotlinx.datetime.Instant
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun ChatInputPreviewBasic() {
     AppTheme {
@@ -60,7 +60,7 @@ internal fun ChatInputPreviewBasic() {
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun ChatInputPreviewLongMessage() {
     AppTheme {
@@ -72,7 +72,7 @@ internal fun ChatInputPreviewLongMessage() {
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun ChatInputPreviewEmpty() {
     AppTheme {
@@ -80,7 +80,7 @@ internal fun ChatInputPreviewEmpty() {
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun ChatInputPreviewReplying() {
     AppTheme {

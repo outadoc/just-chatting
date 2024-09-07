@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.localized
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
@@ -23,15 +22,16 @@ import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.previewB
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toPersistentHashMap
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun ChatMessagePreview(
     @PreviewParameter(ChatMessagePreviewProvider::class) message: ChatListItem.Message,

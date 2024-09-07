@@ -22,9 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.ThemePreviews
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun SettingsTextPreview() {
     AppTheme {
@@ -41,7 +41,7 @@ internal fun SettingsTextPreview() {
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun SettingsTextSubtitlePreview() {
     AppTheme {

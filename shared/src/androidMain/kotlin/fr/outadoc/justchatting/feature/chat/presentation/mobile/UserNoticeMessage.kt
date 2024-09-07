@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
@@ -22,10 +21,11 @@ import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatMess
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.previewBadges
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import kotlinx.collections.immutable.toPersistentHashMap
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun UserNoticeMessagePreview(
     @PreviewParameter(ChatMessagePreviewProvider::class) message: ChatListItem.Message,

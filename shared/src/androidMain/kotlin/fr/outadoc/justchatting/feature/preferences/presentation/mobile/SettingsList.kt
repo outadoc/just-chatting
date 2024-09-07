@@ -26,19 +26,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.UserInfo
 import fr.outadoc.justchatting.feature.shared.domain.model.User
+import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.core.PlaceholderHighlight
+import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.material3.placeholder
+import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.material3.shimmer
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import fr.outadoc.justchatting.utils.presentation.plus
 import kotlinx.datetime.Instant
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun SettingsListPreview() {
     AppTheme {

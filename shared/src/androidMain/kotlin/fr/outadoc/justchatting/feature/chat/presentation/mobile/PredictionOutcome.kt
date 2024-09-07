@@ -23,8 +23,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import fr.outadoc.justchatting.utils.presentation.formatPercent
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun PredictionOutcome(
@@ -83,7 +83,7 @@ internal fun PredictionOutcome(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun PredictionOutcomePreview() {
     AppTheme {
@@ -97,7 +97,7 @@ internal fun PredictionOutcomePreview() {
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun PredictionOutcomePreviewWinning() {
     AppTheme {

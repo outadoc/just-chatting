@@ -31,13 +31,13 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import fr.outadoc.justchatting.utils.presentation.ensureColorIsAccessible
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 import fr.outadoc.justchatting.utils.presentation.parseHexColor
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.time.Duration.Companion.minutes
 
 @Composable
@@ -195,7 +195,7 @@ private val mockPrediction = Prediction(
     ),
 )
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun PredictionCardPreview() {
     AppTheme {
@@ -205,7 +205,7 @@ internal fun PredictionCardPreview() {
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun PredictionCardPreviewCompleted() {
     AppTheme {

@@ -31,7 +31,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
 @Composable
-internal fun Instant.formatHourMinute(): String? {
+internal actual fun Instant.formatHourMinute(): String? {
     val context = LocalContext.current
     val format = remember { DateFormat.getTimeFormat(context) }
     return remember(this) {
@@ -44,9 +44,9 @@ internal fun Instant.formatHourMinute(): String? {
 }
 
 @Composable
-internal fun Instant.formatDate(
-    tz: TimeZone = TimeZone.currentSystemDefault(),
-    clock: Clock = Clock.System,
+internal actual fun Instant.formatDate(
+    tz: TimeZone,
+    clock: Clock,
 ): String {
     var now by remember { mutableStateOf(clock.now()) }
     val today = remember(now) { now.toLocalDateTime(tz).date }
@@ -66,9 +66,9 @@ internal fun Instant.formatDate(
 }
 
 @Composable
-internal fun LocalDate.formatDate(
-    tz: TimeZone = TimeZone.currentSystemDefault(),
-    clock: Clock = Clock.System,
+internal actual fun LocalDate.formatDate(
+    tz: TimeZone,
+    clock: Clock,
     isFuture: Boolean,
 ): String {
     var today by remember { mutableStateOf(clock.now().toLocalDateTime(tz).date) }

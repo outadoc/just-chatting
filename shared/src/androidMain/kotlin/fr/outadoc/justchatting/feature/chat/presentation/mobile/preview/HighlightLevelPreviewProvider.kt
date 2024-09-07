@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile.preview
 
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem.Message.Highlighted.Level
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 internal class HighlightLevelPreviewProvider : PreviewParameterProvider<Level> {
     override val values: Sequence<Level>

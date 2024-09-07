@@ -2,21 +2,25 @@ package fr.outadoc.justchatting
 
 import android.app.Application
 import android.os.Build
-import coil.ImageLoader
-import coil.ImageLoaderFactory
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
-import coil.transition.Transition
-import coil.util.DebugLogger
+import coil3.ImageLoader
+import coil3.PlatformContext
+import coil3.SingletonImageLoader
+import coil3.disk.DiskCache
+import coil3.gif.AnimatedImageDecoder
+import coil3.gif.GifDecoder
+import coil3.memory.MemoryCache
+import coil3.request.crossfade
+import coil3.request.transitionFactory
+import coil3.transition.Transition
+import coil3.util.DebugLogger
 import com.google.android.material.color.DynamicColors
 import fr.outadoc.justchatting.utils.logging.AndroidLogStrategy
 import fr.outadoc.justchatting.utils.logging.Logger
+import okio.Path.Companion.toOkioPath
 
 class MainApplication :
     Application(),
-    ImageLoaderFactory {
+    SingletonImageLoader.Factory {
 
     override fun onCreate() {
         super.onCreate()
@@ -28,24 +32,24 @@ class MainApplication :
         DynamicColors.applyToActivitiesIfAvailable(this)
     }
 
-    override fun newImageLoader(): ImageLoader =
-        ImageLoader.Builder(this)
+    override fun newImageLoader(context: PlatformContext): ImageLoader =
+        ImageLoader.Builder(context)
             .crossfade(true)
             .memoryCache {
-                MemoryCache.Builder(applicationContext)
-                    .maxSizePercent(0.25)
+                MemoryCache.Builder()
+                    .maxSizePercent(applicationContext, percent = 0.25)
                     .build()
             }
             .diskCache {
                 DiskCache.Builder()
-                    .directory(applicationContext.cacheDir.resolve("image_cache"))
+                    .directory(applicationContext.cacheDir.toOkioPath().resolve("image_cache"))
                     .maxSizePercent(0.02)
                     .build()
             }
             .transitionFactory(Transition.Factory.NONE)
             .components {
                 if (Build.VERSION.SDK_INT >= 28) {
-                    add(ImageDecoderDecoder.Factory(enforceMinimumFrameDelay = true))
+                    add(AnimatedImageDecoder.Factory(enforceMinimumFrameDelay = true))
                 } else {
                     add(GifDecoder.Factory())
                 }

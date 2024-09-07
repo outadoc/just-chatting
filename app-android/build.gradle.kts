@@ -29,6 +29,11 @@ kotlin {
         }
 
         androidMain.dependencies {
+            implementation(compose.material)
+            implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.foundation)
+
             implementation(libs.accompanist.systemuicontroller)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)
@@ -47,13 +52,8 @@ kotlin {
             implementation(libs.androidx.paging.compose.common)
             implementation(libs.androidx.palette)
             implementation(libs.androidx.splashscreen)
-            implementation(libs.coil.compose)
             implementation(libs.coil.core)
             implementation(libs.coil.gif)
-            implementation(libs.compose.foundation)
-            implementation(libs.compose.material.core2)
-            implementation(libs.compose.material.core3)
-            implementation(libs.compose.material.icons)
             implementation(libs.compose.material.windowSizeClass)
             implementation(libs.compose.runtime.livedata)
             implementation(libs.compose.ui.core)

@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.utils.presentation
+package fr.outadoc.justchatting.shared.presentation
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import fr.outadoc.justchatting.utils.presentation.AppTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun LabelChip(
@@ -39,7 +41,7 @@ internal fun LabelChip(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun LabelChipPreview() {
     AppTheme {

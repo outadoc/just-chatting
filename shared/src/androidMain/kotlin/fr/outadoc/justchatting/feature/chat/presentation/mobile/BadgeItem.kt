@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.chat.presentation.getBestUrl
 import fr.outadoc.justchatting.utils.presentation.isDark

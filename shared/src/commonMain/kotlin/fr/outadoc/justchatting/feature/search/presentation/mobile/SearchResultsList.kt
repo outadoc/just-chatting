@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
+import app.cash.paging.compose.LazyPagingItems
 import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.NoContent
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.UserItemCard

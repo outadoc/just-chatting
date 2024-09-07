@@ -3,11 +3,12 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import android.provider.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import coil.request.ImageRequest
+import coil3.request.ImageRequest
+import coil3.request.transformations
 import fr.outadoc.justchatting.feature.chat.presentation.CoilReducedAnimationTransformation
 
 @Composable
-internal fun remoteImageModel(url: String?): ImageRequest {
+internal actual fun remoteImageModel(url: String?): ImageRequest {
     val context = LocalContext.current
 
     val systemAnimationScale: Float =

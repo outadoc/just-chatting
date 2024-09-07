@@ -2,12 +2,13 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import android.app.Activity
 import android.app.ActivityManager
-import android.graphics.drawable.BitmapDrawable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import coil.imageLoader
-import coil.request.ImageRequest
+import coil3.BitmapImage
+import coil3.imageLoader
+import coil3.request.ImageRequest
+import coil3.request.allowHardware
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 
 @Composable
@@ -20,7 +21,7 @@ internal fun UpdateTaskDescriptionForUser(user: User?) {
                 .allowHardware(false)
                 .size(128)
                 .target { drawable ->
-                    val bitmap = (drawable as? BitmapDrawable)?.bitmap
+                    val bitmap = (drawable as? BitmapImage)?.bitmap
                         ?: return@target
 
                     context.setTaskDescription(

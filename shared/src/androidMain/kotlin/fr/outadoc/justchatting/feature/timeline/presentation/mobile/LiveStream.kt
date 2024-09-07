@@ -23,20 +23,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.TagList
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import fr.outadoc.justchatting.utils.presentation.customColors
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 import fr.outadoc.justchatting.utils.presentation.formatTimeSince
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.datetime.Instant
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun LiveStreamPreview() {
     AppTheme {
@@ -62,7 +62,7 @@ internal fun LiveStreamPreview() {
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 internal fun LiveStreamLongPreview() {
     AppTheme {

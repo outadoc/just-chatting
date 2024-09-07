@@ -8,7 +8,7 @@ import androidx.compose.runtime.Stable
 @Composable
 internal actual fun dynamicImageColorScheme(
     url: String?,
-    parentScheme: ColorScheme
+    parentScheme: ColorScheme,
 ): ColorScheme {
     return parentScheme
 }

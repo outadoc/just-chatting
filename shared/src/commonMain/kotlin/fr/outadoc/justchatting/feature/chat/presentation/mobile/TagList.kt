@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.feature.shared.presentation.mobile.StreamTagChip
 import kotlinx.collections.immutable.ImmutableSet
 
 @OptIn(ExperimentalLayoutApi::class)

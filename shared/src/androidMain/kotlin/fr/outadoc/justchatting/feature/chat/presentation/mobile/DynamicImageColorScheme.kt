@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
@@ -27,9 +26,9 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 
 @Stable
 @Composable
-internal fun dynamicImageColorScheme(
+internal actual fun dynamicImageColorScheme(
     url: String?,
-    parentScheme: ColorScheme = MaterialTheme.colorScheme,
+    parentScheme: ColorScheme,
 ): ColorScheme {
     val context = LocalContext.current
     var sourceColor: Color? by remember { mutableStateOf(null) }

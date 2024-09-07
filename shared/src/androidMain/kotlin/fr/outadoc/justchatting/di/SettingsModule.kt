@@ -7,7 +7,7 @@ import fr.outadoc.justchatting.feature.preferences.presentation.DefaultReadExter
 import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.compose.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
 

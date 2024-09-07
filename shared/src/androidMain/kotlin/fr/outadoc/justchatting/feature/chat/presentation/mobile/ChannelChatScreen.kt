@@ -19,9 +19,11 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.utils.core.createChannelExternalLink
 import fr.outadoc.justchatting.utils.presentation.canOpenInBubble
 import fr.outadoc.justchatting.utils.presentation.isDark
-import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 internal fun ChannelChatScreen(userId: String) {
     val viewModel: ChatViewModel = koinViewModel()

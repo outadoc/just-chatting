@@ -6,8 +6,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 internal fun StreamAndUserInfoScreen(
     modifier: Modifier = Modifier,

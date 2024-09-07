@@ -19,9 +19,10 @@ import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewMode
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainNavigation
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.Screen
 import fr.outadoc.justchatting.shared.MR
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, KoinExperimentalAPI::class)
 @Composable
 internal fun SettingsContent(
     modifier: Modifier = Modifier,

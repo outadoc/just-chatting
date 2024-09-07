@@ -21,7 +21,8 @@ import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import fr.outadoc.justchatting.shared.MR
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,6 +56,7 @@ internal fun SettingsSectionAbout(
     }
 }
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 private fun SettingsSectionAboutContent(
     modifier: Modifier = Modifier,

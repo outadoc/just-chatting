@@ -1,10 +1,10 @@
 package fr.outadoc.justchatting.feature.chat.presentation
 
-import android.content.Context
+import coil3.PlatformContext
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 
 internal interface ChatNotifier {
     val areNotificationsEnabled: Boolean
-    fun notify(context: Context, user: User)
-    fun dismissNotification(context: Context, channelId: String)
+    fun notify(context: PlatformContext, user: User)
+    fun dismissNotification(context: PlatformContext, channelId: String)
 }

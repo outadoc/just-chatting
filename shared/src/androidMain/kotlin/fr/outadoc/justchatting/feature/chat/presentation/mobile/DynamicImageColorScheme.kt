@@ -87,12 +87,12 @@ private fun Bitmap.getSourceColor(): Color {
 }
 
 @SuppressLint("RestrictedApi")
-internal fun darkSchemeFromColor(color: Color): ColorScheme {
+internal actual fun darkSchemeFromColor(color: Color): ColorScheme {
     return Scheme.dark(color.toArgb()).toComposeTheme()
 }
 
 @SuppressLint("RestrictedApi")
-internal fun lightSchemeFromColor(color: Color): ColorScheme {
+internal actual fun lightSchemeFromColor(color: Color): ColorScheme {
     return Scheme.light(color.toArgb()).toComposeTheme()
 }
 

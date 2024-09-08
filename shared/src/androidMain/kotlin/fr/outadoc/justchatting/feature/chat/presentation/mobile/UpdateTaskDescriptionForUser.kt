@@ -12,7 +12,7 @@ import coil3.request.allowHardware
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 
 @Composable
-internal fun UpdateTaskDescriptionForUser(user: User?) {
+internal actual fun UpdateTaskDescriptionForUser(user: User?) {
     val context = LocalContext.current as? Activity ?: return
     LaunchedEffect(user) {
         if (user != null) {

@@ -7,7 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 
 @Composable
-internal fun canOpenInBubble(): Boolean {
+internal actual fun canOpenInBubble(): Boolean {
     val context = LocalContext.current
     return remember {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&

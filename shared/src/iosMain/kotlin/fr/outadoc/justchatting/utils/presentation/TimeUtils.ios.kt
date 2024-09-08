@@ -5,6 +5,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlin.time.Duration
 
 @Composable
 internal actual fun Instant.formatHourMinute(): String? {
@@ -25,5 +26,10 @@ internal actual fun LocalDate.formatDate(
     clock: Clock,
     isFuture: Boolean,
 ): String {
+    TODO("not implemented")
+}
+
+@Composable
+internal actual fun Duration.format(showSeconds: Boolean): String {
     TODO("not implemented")
 }

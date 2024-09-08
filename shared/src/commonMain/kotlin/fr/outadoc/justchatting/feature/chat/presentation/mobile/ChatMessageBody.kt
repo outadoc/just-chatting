@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
-import android.util.Patterns
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -19,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.integerArrayResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
@@ -40,7 +38,8 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.shared.R
+import fr.outadoc.justchatting.utils.presentation.Patterns
+import fr.outadoc.justchatting.utils.presentation.customColors
 import fr.outadoc.justchatting.utils.presentation.ensureColorIsAccessible
 import fr.outadoc.justchatting.utils.presentation.parseHexColor
 import kotlinx.collections.immutable.ImmutableMap
@@ -164,7 +163,7 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
     mentionBackground: Color = MaterialTheme.colorScheme.onBackground,
     mentionColor: Color = MaterialTheme.colorScheme.background,
 ): AnnotatedString {
-    val randomChatColors = integerArrayResource(R.array.randomChatColors).map { Color(it) }
+    val randomChatColors = MaterialTheme.customColors.fallbackChatColors
     val pronoun: String? = pronouns[chatter]?.displayPronoun
 
     val color = remember(color) {
@@ -223,7 +222,7 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
             ?.split(' ')
             ?.forEach { word ->
                 when {
-                    word.matches(urlRegex) -> {
+                    word.matches(Patterns.WebUrlRegex) -> {
                         // This is a URL
                         appendUrl(url = word, urlColor = urlColor)
                     }
@@ -289,8 +288,6 @@ private fun AnnotatedString.Builder.appendMention(
 
 private val Badge.inlineContentId: String
     get() = "badge_${id}_$version"
-
-private val urlRegex = Patterns.WEB_URL.toRegex()
 
 private const val URL_ANNOTATION_TAG = "URL"
 private const val CHATTER_ID_ANNOTATION_TAG = "USER_ID"

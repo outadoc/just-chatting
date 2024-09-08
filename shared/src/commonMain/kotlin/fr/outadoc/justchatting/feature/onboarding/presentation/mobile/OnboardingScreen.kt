@@ -14,24 +14,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-private val AppIconSize = 80.dp
-
-@Preview
-@Composable
-internal fun OnboardingScreenPreview() {
-    AppTheme {
-        OnboardingScreen(onLoginClick = {})
-    }
-}
 
 @Composable
 internal fun OnboardingScreen(
@@ -59,7 +48,7 @@ internal fun OnboardingScreen(
                         modifier = Modifier
                             .size(AppIconSize)
                             .padding(bottom = 24.dp),
-                        painter = painterResource(R.drawable.ic_notif),
+                        painter = painterResource(MR.images.ic_notif),
                         contentDescription = null,
                     )
 
@@ -86,3 +75,13 @@ internal fun OnboardingScreen(
         }
     }
 }
+
+@Preview
+@Composable
+internal fun OnboardingScreenPreview() {
+    AppTheme {
+        OnboardingScreen(onLoginClick = {})
+    }
+}
+
+private val AppIconSize = 80.dp

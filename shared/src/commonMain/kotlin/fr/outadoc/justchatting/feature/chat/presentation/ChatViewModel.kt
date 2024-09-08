@@ -26,6 +26,7 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
+import fr.outadoc.justchatting.feature.shared.domain.model.MessageNotSentException
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
@@ -930,7 +931,7 @@ internal class ChatViewModel(
                     message = inputState.message,
                     inReplyToMessageId = inputState.replyingTo?.body?.messageId,
                 )
-                .onFailure { _ ->
+                .onFailure { exception ->
                     actions.emit(
                         Action.AddMessages(
                             listOf(
@@ -938,7 +939,8 @@ internal class ChatViewModel(
                                     timestamp = clock.now(),
                                     metadata = ChatListItem.Message.Highlighted.Metadata(
                                         title = MR.strings.chat_send_msg_error.desc(),
-                                        subtitle = null,
+                                        subtitle = (exception as? MessageNotSentException)
+                                            ?.dropReasonMessage?.desc(),
                                     ),
                                     body = null,
                                 ),

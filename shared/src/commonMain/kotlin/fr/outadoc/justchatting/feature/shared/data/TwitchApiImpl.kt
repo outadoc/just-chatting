@@ -451,6 +451,8 @@ internal class TwitchApiImpl(
                 if (response.dropReason != null) {
                     throw MessageNotSentException(
                         "Message was not sent: ${response.dropReason.message} (${response.dropReason.code})",
+                        dropReasonCode = response.dropReason.code,
+                        dropReasonMessage = response.dropReason.message,
                     )
                 }
 

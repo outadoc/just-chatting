@@ -21,7 +21,7 @@ internal data class SendMessageResponse(
     @Serializable
     data class DropReason(
         @SerialName("code")
-        val code: Int,
+        val code: String,
         @SerialName("message")
         val message: String,
     )

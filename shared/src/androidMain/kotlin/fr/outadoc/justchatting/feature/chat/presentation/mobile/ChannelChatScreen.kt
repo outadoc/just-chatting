@@ -106,6 +106,9 @@ internal fun ChannelChatScreen(userId: String) {
             onClearReplyingTo = {
                 viewModel.onReplyToMessage(null)
             },
+            onReuseLastMessageClicked = {
+                viewModel.onReuseLastMessageClicked()
+            },
             onOpenBubbleClicked = {
                 if (canOpenInBubble && user != null) {
                     notifier.notify(

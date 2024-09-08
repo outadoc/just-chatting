@@ -14,6 +14,7 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Mood
+import androidx.compose.material.icons.filled.SubdirectoryArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -63,6 +64,8 @@ internal fun ChatInput(
     onToggleEmotePicker: () -> Unit = {},
     onClearReplyingTo: () -> Unit = {},
     onTriggerAutoComplete: () -> Unit = {},
+    canReuseLastMessage: Boolean = true,
+    onReuseLastMessageClicked: () -> Unit = {},
     onSubmit: () -> Unit = {},
     isSubmitVisible: Boolean = true,
     isSubmitEnabled: Boolean = true,
@@ -138,6 +141,8 @@ internal fun ChatInput(
                     onMessageChange = onMessageChange,
                     onToggleEmotePicker = onToggleEmotePicker,
                     onTriggerAutoComplete = onTriggerAutoComplete,
+                    canReuseLastMessage = canReuseLastMessage,
+                    onReuseLastMessageClicked = onReuseLastMessageClicked,
                     onSubmit = onSubmit,
                 )
 
@@ -170,6 +175,8 @@ internal fun ChatTextField(
     onMessageChange: (TextFieldValue) -> Unit,
     onToggleEmotePicker: () -> Unit,
     onTriggerAutoComplete: () -> Unit,
+    canReuseLastMessage: Boolean,
+    onReuseLastMessageClicked: () -> Unit,
     onSubmit: () -> Unit,
 ) {
     TextField(
@@ -221,14 +228,25 @@ internal fun ChatTextField(
             }
         },
         trailingIcon = {
-            if (message.text.isNotEmpty()) {
-                HapticIconButton(
-                    onClick = { onMessageChange(TextFieldValue("")) },
-                ) {
-                    Icon(
-                        Icons.Filled.Cancel,
-                        contentDescription = stringResource(MR.strings.chat_input_clear_cd),
-                    )
+            when {
+                message.text.isNotEmpty() -> {
+                    HapticIconButton(
+                        onClick = { onMessageChange(TextFieldValue("")) },
+                    ) {
+                        Icon(
+                            Icons.Filled.Cancel,
+                            contentDescription = stringResource(MR.strings.chat_input_clear_cd),
+                        )
+                    }
+                }
+
+                canReuseLastMessage -> {
+                    HapticIconButton(onClick = onReuseLastMessageClicked) {
+                        Icon(
+                            Icons.Default.SubdirectoryArrowLeft,
+                            contentDescription = stringResource(MR.strings.chat_input_reuseLastMessage_cd),
+                        )
+                    }
                 }
             }
         },

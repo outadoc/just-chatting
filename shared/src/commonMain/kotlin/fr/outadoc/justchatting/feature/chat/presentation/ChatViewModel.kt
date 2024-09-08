@@ -215,6 +215,8 @@ internal class ChatViewModel(
             val selectionRange: IntRange,
         ) : InputAction()
 
+        data object ReplaceInputWithLastSentMessage : InputAction()
+
         data class ReplyToMessage(val chatListItem: ChatListItem.Message? = null) : InputAction()
 
         data class UpdateAutoCompleteItems(val items: List<AutoCompleteItem>) : InputAction()
@@ -230,8 +232,12 @@ internal class ChatViewModel(
         val message: String = "",
         val selectionRange: IntRange = 0..0,
         val replyingTo: ChatListItem.Message? = null,
+        val lastSentMessage: String? = null,
         val autoCompleteItems: List<AutoCompleteItem> = emptyList(),
-    )
+    ) {
+        val canReuseLastMessage: Boolean
+            get() = message.isBlank() && lastSentMessage.isNullOrBlank().not()
+    }
 
     private val actions = MutableSharedFlow<Action>(
         extraBufferCapacity = 16,
@@ -508,6 +514,12 @@ internal class ChatViewModel(
                     selectionRange = selectionRange,
                 ),
             )
+        }
+    }
+
+    fun onReuseLastMessageClicked() {
+        inputScope.launch {
+            inputActions.emit(InputAction.ReplaceInputWithLastSentMessage)
         }
     }
 
@@ -901,6 +913,7 @@ internal class ChatViewModel(
             is InputAction.ReplyToMessage -> reduce(state)
             is InputAction.Submit -> reduce(state)
             is InputAction.UpdateAutoCompleteItems -> reduce(state)
+            is InputAction.ReplaceInputWithLastSentMessage -> reduce(state)
         }
     }
 
@@ -955,6 +968,7 @@ internal class ChatViewModel(
 
         return inputState.copy(
             message = "",
+            lastSentMessage = inputState.message,
             selectionRange = 0..0,
             replyingTo = null,
         )
@@ -989,6 +1003,21 @@ internal class ChatViewModel(
 
     private fun InputAction.UpdateAutoCompleteItems.reduce(inputState: InputState): InputState {
         return inputState.copy(autoCompleteItems = items)
+    }
+
+    @Suppress("UnusedReceiverParameter")
+    private fun InputAction.ReplaceInputWithLastSentMessage.reduce(inputState: InputState): InputState {
+        if (inputState.message.isNotEmpty()) return inputState
+        val newMessage = inputState.lastSentMessage ?: return inputState
+
+        return inputState.copy(
+            message = newMessage,
+            lastSentMessage = newMessage,
+            selectionRange = IntRange(
+                start = newMessage.length,
+                endInclusive = newMessage.length,
+            ),
+        )
     }
 
     private fun appendTextToInput(

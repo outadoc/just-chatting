@@ -20,6 +20,7 @@
     <string name="chat_input_emote_cd">Ouvrir le sélecteur d\'émote</string>
     <string name="chat_input_hint">Envoyer un message</string>
     <string name="chat_input_replyClear">Ne plus répondre à ce message</string>
+    <string name="chat_input_reuseLastMessage_cd">Réutiliser le dernier message envoyé</string>
     <string name="chat_input_send_cd">Envoyer</string>
     <string name="chat_join">Connecté·e à %s</string>
     <string name="chat_massSubGift_header">offre %1$s abonnements %2$s à la communauté ! Iel a offert un total de %3$s abonnements sur cette chaîne.</string>

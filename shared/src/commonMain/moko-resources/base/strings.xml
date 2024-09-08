@@ -20,6 +20,7 @@
     <string name="chat_input_emote_cd">Open emote picker</string>
     <string name="chat_input_hint">Send a message</string>
     <string name="chat_input_replyClear">Stop replying to this message</string>
+    <string name="chat_input_reuseLastMessage_cd">Reuse the last message sent</string>
     <string name="chat_input_send_cd">Send</string>
     <string name="chat_join">Connected to %s</string>
     <string name="chat_massSubGift_header">is gifting %1$s %2$s subs to the community! They\'ve gifted a total of %3$s subs in the channel.</string>

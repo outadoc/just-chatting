@@ -82,6 +82,7 @@ internal fun ChannelChatScreenContent(
     onReplyToMessage: (ChatListItem.Message) -> Unit = {},
     onDismissUserInfo: () -> Unit = {},
     onShowInfoForUserId: (String) -> Unit = {},
+    onReuseLastMessageClicked: () -> Unit = {},
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val clipboard = LocalClipboardManager.current
@@ -182,6 +183,8 @@ internal fun ChannelChatScreenContent(
                         },
                         onTriggerAutoComplete = onTriggerAutoComplete,
                         onClearReplyingTo = onClearReplyingTo,
+                        canReuseLastMessage = inputState.canReuseLastMessage,
+                        onReuseLastMessageClicked = onReuseLastMessageClicked,
                         onSubmit = onSubmit,
                         contentPadding = 8.dp,
                     )

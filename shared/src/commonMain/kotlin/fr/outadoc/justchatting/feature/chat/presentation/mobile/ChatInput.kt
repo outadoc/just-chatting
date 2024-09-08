@@ -50,57 +50,6 @@ import fr.outadoc.justchatting.utils.presentation.HapticIconButton
 import kotlinx.datetime.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@Preview
-@Composable
-internal fun ChatInputPreviewBasic() {
-    AppTheme {
-        ChatInput(
-            message = TextFieldValue("Lorem ipsum KEKW"),
-        )
-    }
-}
-
-@Preview
-@Composable
-internal fun ChatInputPreviewLongMessage() {
-    AppTheme {
-        ChatInput(
-            message = TextFieldValue(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
-            ),
-        )
-    }
-}
-
-@Preview
-@Composable
-internal fun ChatInputPreviewEmpty() {
-    AppTheme {
-        ChatInput()
-    }
-}
-
-@Preview
-@Composable
-internal fun ChatInputPreviewReplying() {
-    AppTheme {
-        ChatInput(
-            replyingTo = ChatListItem.Message.Simple(
-                body = ChatListItem.Message.Body(
-                    message = "Lorem ipsum dolor sit amet?",
-                    messageId = "",
-                    chatter = Chatter(
-                        id = "",
-                        displayName = "AntoineDaniel",
-                        login = "",
-                    ),
-                ),
-                timestamp = Instant.parse("2022-01-01T00:00:00.00Z"),
-            ),
-        )
-    }
-}
-
 @Composable
 internal fun ChatInput(
     modifier: Modifier = Modifier,
@@ -284,4 +233,55 @@ internal fun ChatTextField(
             }
         },
     )
+}
+
+@Preview
+@Composable
+internal fun ChatInputPreviewBasic() {
+    AppTheme {
+        ChatInput(
+            message = TextFieldValue("Lorem ipsum KEKW"),
+        )
+    }
+}
+
+@Preview
+@Composable
+internal fun ChatInputPreviewLongMessage() {
+    AppTheme {
+        ChatInput(
+            message = TextFieldValue(
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
+            ),
+        )
+    }
+}
+
+@Preview
+@Composable
+internal fun ChatInputPreviewEmpty() {
+    AppTheme {
+        ChatInput()
+    }
+}
+
+@Preview
+@Composable
+internal fun ChatInputPreviewReplying() {
+    AppTheme {
+        ChatInput(
+            replyingTo = ChatListItem.Message.Simple(
+                body = ChatListItem.Message.Body(
+                    message = "Lorem ipsum dolor sit amet?",
+                    messageId = "",
+                    chatter = Chatter(
+                        id = "",
+                        displayName = "AntoineDaniel",
+                        login = "",
+                    ),
+                ),
+                timestamp = Instant.parse("2022-01-01T00:00:00.00Z"),
+            ),
+        )
+    }
 }

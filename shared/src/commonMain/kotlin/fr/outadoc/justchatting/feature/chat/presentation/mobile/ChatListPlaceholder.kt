@@ -22,16 +22,6 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.random.Random
 
-@Preview
-@Composable
-internal fun ChatListPlaceholderPreview() {
-    AppTheme {
-        Surface {
-            ChatListPlaceholder()
-        }
-    }
-}
-
 @Composable
 internal fun ChatListPlaceholder(
     modifier: Modifier = Modifier,
@@ -84,6 +74,16 @@ internal fun ChatListPlaceholder(
                         ),
                 )
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+internal fun ChatListPlaceholderPreview() {
+    AppTheme {
+        Surface {
+            ChatListPlaceholder()
         }
     }
 }

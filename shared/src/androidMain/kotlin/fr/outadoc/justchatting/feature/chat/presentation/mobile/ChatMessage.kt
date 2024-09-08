@@ -1,4 +1,3 @@
-
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.compose.foundation.background
@@ -10,6 +9,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -70,10 +70,12 @@ internal fun ChatMessage(
     onShowInfoForUserId: (String) -> Unit = {},
 ) {
     val shouldRedactContents: Boolean =
-        removedContent
-            .filter { rule -> rule.upUntil > message.timestamp }
-            .filter { rule -> rule.matchingMessageId == null || rule.matchingMessageId == message.body?.messageId }
-            .any { rule -> rule.matchingUserId == null || rule.matchingUserId == message.body?.chatter?.id }
+        remember(message, removedContent) {
+            removedContent
+                .filter { rule -> rule.upUntil > message.timestamp }
+                .filter { rule -> rule.matchingMessageId == null || rule.matchingMessageId == message.body?.messageId }
+                .any { rule -> rule.matchingUserId == null || rule.matchingUserId == message.body?.chatter?.id }
+        }
 
     Row(
         modifier = modifier

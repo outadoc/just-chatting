@@ -12,6 +12,7 @@ import kotlin.time.Duration
 @Immutable
 internal sealed interface ChatListItem {
 
+    @Immutable
     sealed class Message : ChatListItem {
 
         abstract val body: Body?

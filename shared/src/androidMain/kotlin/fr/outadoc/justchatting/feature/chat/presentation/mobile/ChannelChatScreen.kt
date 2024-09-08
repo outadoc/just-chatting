@@ -81,8 +81,8 @@ internal fun ChannelChatScreen(userId: String) {
             isEmotePickerOpen = isEmotePickerOpen,
             showTimestamps = prefs.showTimestamps,
             onWatchLiveClicked = {
-                (state as? ChatViewModel.State.Chatting)?.user?.login?.let { userLogin ->
-                    uriHandler.openUri(createChannelExternalLink(userLogin))
+                (state as? ChatViewModel.State.Chatting)?.user?.let { user ->
+                    uriHandler.openUri(createChannelExternalLink(user.login))
                 }
             },
             onMessageChange = { textFieldValue ->

@@ -10,19 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.shared.R
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-private val TwitchBrandColor = Color(0xFF7718AD)
-
-@Preview
-@Composable
-internal fun SignInWithTwitchButtonPreview() {
-    SignInWithTwitchButton(onClick = {})
-}
 
 @Composable
 internal fun SignInWithTwitchButton(
@@ -38,7 +29,7 @@ internal fun SignInWithTwitchButton(
         ),
     ) {
         Icon(
-            painterResource(R.drawable.ic_twitch),
+            painterResource(MR.images.ic_twitch),
             contentDescription = null,
             modifier = Modifier.size(ButtonDefaults.IconSize),
         )
@@ -51,3 +42,11 @@ internal fun SignInWithTwitchButton(
         )
     }
 }
+
+@Preview
+@Composable
+internal fun SignInWithTwitchButtonPreview() {
+    SignInWithTwitchButton(onClick = {})
+}
+
+private val TwitchBrandColor = Color(0xFF7718AD)

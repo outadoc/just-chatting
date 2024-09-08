@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.RoomState
 import fr.outadoc.justchatting.shared.MR
@@ -27,7 +26,7 @@ internal fun RoomStateBanner(
                         Duration.ZERO -> stringResource(MR.strings.room_followers)
                         else -> stringResource(
                             MR.strings.room_followers_min,
-                            minFollowDuration.format(LocalContext.current),
+                            minFollowDuration.format(),
                         )
                     },
                 )
@@ -41,7 +40,7 @@ internal fun RoomStateBanner(
                 Text(
                     text = stringResource(
                         MR.strings.room_slow,
-                        slowModeDuration.format(LocalContext.current),
+                        slowModeDuration.format(),
                     ),
                 )
             }

@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -25,6 +24,7 @@ import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
+import fr.outadoc.justchatting.utils.presentation.asString
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -70,10 +70,12 @@ internal fun RaidPrepareCard(
                     text = stringResource(
                         MR.strings.raid_prepare_message,
                         raid.targetDisplayName,
-                        MR.plurals.viewers.format(
-                            number = raid.viewerCount,
-                            raid.viewerCount.formatNumber(),
-                        ).toString(LocalContext.current),
+                        MR.plurals.viewers
+                            .format(
+                                number = raid.viewerCount,
+                                raid.viewerCount.formatNumber(),
+                            )
+                            .asString(),
                     ),
                     style = MaterialTheme.typography.bodyMedium,
                 )

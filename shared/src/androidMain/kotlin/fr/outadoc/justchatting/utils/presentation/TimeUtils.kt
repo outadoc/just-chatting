@@ -159,17 +159,14 @@ internal fun Instant.formatTimeSince(
 }
 
 @Composable
-internal fun Duration.format(
-    showSeconds: Boolean = true,
-): String {
-    val context = LocalContext.current
+internal actual fun Duration.format(showSeconds: Boolean): String {
     return format(
-        context = context,
+        context = LocalContext.current,
         showSeconds = showSeconds,
     )
 }
 
-internal fun Duration.format(
+private fun Duration.format(
     context: Context,
     showSeconds: Boolean = true,
 ): String =

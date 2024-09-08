@@ -5,6 +5,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlin.time.Duration
 
 @Composable
 internal expect fun Instant.formatHourMinute(): String?
@@ -21,3 +22,6 @@ internal expect fun LocalDate.formatDate(
     clock: Clock = Clock.System,
     isFuture: Boolean,
 ): String
+
+@Composable
+internal expect fun Duration.format(showSeconds: Boolean = true): String

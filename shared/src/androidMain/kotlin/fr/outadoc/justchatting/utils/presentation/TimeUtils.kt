@@ -9,7 +9,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import dev.icerock.moko.resources.compose.stringResource
-import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.shared.MR
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive

@@ -14,7 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.paging.compose.collectAsLazyPagingItems
+import app.cash.paging.compose.collectAsLazyPagingItems
 import fr.outadoc.justchatting.feature.search.presentation.ChannelSearchViewModel
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainNavigation

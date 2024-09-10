@@ -125,6 +125,7 @@ internal class MainActivity : AppCompatActivity() {
                         onOpenAccessibilityPreferences = {
                             openSettingsIntent(action = "android.settings.ACCESSIBILITY_SETTINGS")
                         },
+                        onShareLogs = ::shareLogs,
                     )
                 }
             }
@@ -136,6 +137,19 @@ internal class MainActivity : AppCompatActivity() {
         intent.data?.toString()?.let { data ->
             viewModel.onReceiveIntent(data)
         }
+    }
+
+    private fun shareLogs(uri: String) {
+        val sendIntent: Intent =
+            Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_STREAM, uri.toUri())
+                type = "application/gzip"
+            }
+
+        startActivity(
+            Intent.createChooser(sendIntent, null),
+        )
     }
 
     private fun openSettingsIntent(action: String) {

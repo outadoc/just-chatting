@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.preferences.presentation.mobile
 
-import android.content.Intent
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -12,8 +11,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.net.toUri
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainNavigation
@@ -27,27 +24,18 @@ import org.koin.core.annotation.KoinExperimentalAPI
 internal fun SettingsContent(
     modifier: Modifier = Modifier,
     onNavigate: (Screen) -> Unit,
+    onShareLogs: (uri: String) -> Unit,
 ) {
     val viewModel: SettingsViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
-    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
                 is SettingsViewModel.Event.ShareLogs -> {
-                    val sendIntent: Intent =
-                        Intent().apply {
-                            action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_STREAM, event.uri.toUri())
-                            type = "application/gzip"
-                        }
-
-                    context.startActivity(
-                        Intent.createChooser(sendIntent, null),
-                    )
+                    onShareLogs(event.uri)
                 }
             }
         }

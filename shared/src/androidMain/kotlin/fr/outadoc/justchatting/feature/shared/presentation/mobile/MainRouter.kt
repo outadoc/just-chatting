@@ -27,6 +27,7 @@ internal fun MainRouter(
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
     onOpenAccessibilityPreferences: () -> Unit,
+    onShareLogs: (uri: String) -> Unit,
 ) {
     val navController = rememberNavController()
 
@@ -92,6 +93,7 @@ internal fun MainRouter(
         ) {
             SettingsContent(
                 onNavigate = { navController.navigate(it) },
+                onShareLogs = onShareLogs,
             )
         }
 

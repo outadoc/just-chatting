@@ -69,6 +69,7 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.core)
             implementation(libs.coil.ktor)
+            implementation(libs.compose.material.adaptiveNavigationSuite)
             implementation(libs.compose.material.windowSizeClass)
             implementation(libs.fluid.currency)
             implementation(libs.koin.core)
@@ -90,7 +91,6 @@ kotlin {
         }
 
         androidMain.dependencies {
-            implementation(libs.compose.material.adaptiveNavigationSuite)
             implementation(libs.compose.navigation)
 
             implementation(libs.accompanist.permissions)

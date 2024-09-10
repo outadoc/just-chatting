@@ -14,8 +14,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
@@ -66,12 +67,13 @@ private fun SettingsSectionAboutContent(
     val uriHandler = LocalUriHandler.current
     val viewModel: SettingsViewModel = koinViewModel()
 
+    val state by viewModel.state.collectAsState()
+
     LazyColumn(
         modifier = modifier,
         contentPadding = insets,
     ) {
         item {
-            val context = LocalContext.current
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 title = { Text(text = stringResource(MR.strings.app_name)) },
@@ -79,7 +81,7 @@ private fun SettingsSectionAboutContent(
                     Text(
                         text = stringResource(
                             MR.strings.settings_about_version,
-                            context.applicationVersionName.orEmpty(),
+                            state.appVersionName.orEmpty(),
                         ),
                     )
                 },

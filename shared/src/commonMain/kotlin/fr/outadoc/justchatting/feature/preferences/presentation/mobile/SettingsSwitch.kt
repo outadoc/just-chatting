@@ -21,35 +21,6 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@Preview
-@Composable
-internal fun SettingsSwitchPreview() {
-    AppTheme {
-        Column(modifier = Modifier.width(256.dp)) {
-            SettingsSwitch(
-                modifier = Modifier.fillMaxWidth(),
-                checked = true,
-                onCheckedChange = {},
-                title = {
-                    Text("Lorem ipsum")
-                },
-                subtitle = {
-                    Text("Dolor sit amet")
-                },
-            )
-
-            SettingsSwitch(
-                modifier = Modifier.fillMaxWidth(),
-                checked = false,
-                onCheckedChange = {},
-                title = {
-                    Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.")
-                },
-            )
-        }
-    }
-}
-
 @Composable
 internal fun SettingsSwitch(
     modifier: Modifier = Modifier,
@@ -89,6 +60,35 @@ internal fun SettingsSwitch(
             Switch(
                 checked = checked,
                 onCheckedChange = onCheckedChange,
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+internal fun SettingsSwitchPreview() {
+    AppTheme {
+        Column(modifier = Modifier.width(256.dp)) {
+            SettingsSwitch(
+                modifier = Modifier.fillMaxWidth(),
+                checked = true,
+                onCheckedChange = {},
+                title = {
+                    Text("Lorem ipsum")
+                },
+                subtitle = {
+                    Text("Dolor sit amet")
+                },
+            )
+
+            SettingsSwitch(
+                modifier = Modifier.fillMaxWidth(),
+                checked = false,
+                onCheckedChange = {},
+                title = {
+                    Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.")
+                },
             )
         }
     }

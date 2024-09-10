@@ -16,6 +16,37 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+@Composable
+internal fun SettingsSlider(
+    modifier: Modifier = Modifier,
+    value: Int,
+    onValueChange: (Int) -> Unit,
+    valueRange: IntRange = 0..100,
+    steps: Int = 0,
+    valueContent: @Composable (Int) -> Unit = {},
+    title: @Composable () -> Unit,
+) {
+    CompositionLocalProvider(
+        LocalTextStyle provides MaterialTheme.typography.titleMedium,
+    ) {
+        Column(modifier = modifier) {
+            title()
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Slider(
+                    modifier = Modifier.weight(1f, fill = true),
+                    value = value.toFloat(),
+                    onValueChange = { value -> onValueChange(value.toInt()) },
+                    valueRange = valueRange.first.toFloat()..valueRange.last.toFloat(),
+                    steps = if (steps == 0) 0 else valueRange.last / steps,
+                )
+
+                valueContent(value)
+            }
+        }
+    }
+}
+
 @Preview
 @Composable
 internal fun SettingsSliderPreview() {
@@ -45,37 +76,6 @@ internal fun SettingsSliderPreview() {
                 onValueChange = {},
             ) {
                 Text("Lorem ipsum")
-            }
-        }
-    }
-}
-
-@Composable
-internal fun SettingsSlider(
-    modifier: Modifier = Modifier,
-    value: Int,
-    onValueChange: (Int) -> Unit,
-    valueRange: IntRange = 0..100,
-    steps: Int = 0,
-    valueContent: @Composable (Int) -> Unit = {},
-    title: @Composable () -> Unit,
-) {
-    CompositionLocalProvider(
-        LocalTextStyle provides MaterialTheme.typography.titleMedium,
-    ) {
-        Column(modifier = modifier) {
-            title()
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Slider(
-                    modifier = Modifier.weight(1f, fill = true),
-                    value = value.toFloat(),
-                    onValueChange = { value -> onValueChange(value.toInt()) },
-                    valueRange = valueRange.first.toFloat()..valueRange.last.toFloat(),
-                    steps = if (steps == 0) 0 else valueRange.last / steps,
-                )
-
-                valueContent(value)
             }
         }
     }

@@ -31,7 +31,7 @@ import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.HapticIconButton
-import fr.outadoc.justchatting.utils.presentation.canOpenInBubble
+import fr.outadoc.justchatting.utils.presentation.canOpenActivityInBubble
 import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,7 +104,7 @@ internal fun ChatTopAppBar(
                 )
             }
 
-            if (canOpenInBubble() && notifier.areNotificationsEnabled) {
+            if (canOpenActivityInBubble() && notifier.areNotificationsEnabled) {
                 HapticIconButton(onClick = { onOpenBubbleClicked() }) {
                     Icon(
                         imageVector = Icons.Default.PictureInPictureAlt,

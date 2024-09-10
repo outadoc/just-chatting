@@ -38,30 +38,6 @@ import fr.outadoc.justchatting.utils.presentation.plus
 import kotlinx.datetime.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@Preview
-@Composable
-internal fun SettingsListPreview() {
-    AppTheme {
-        SettingsList(
-            loggedInUser = User(
-                id = "123",
-                login = "maghla",
-                displayName = "Maghla",
-                description = "",
-                profileImageUrl = "",
-                createdAt = Instant.DISTANT_PAST,
-                usedAt = Instant.DISTANT_PAST,
-            ),
-            onLogoutClick = {},
-            onOpenDependencyCredits = {},
-            onOpenThirdPartiesSection = {},
-            onOpenAppearanceSection = {},
-            onOpenAboutSection = {},
-            onOpenNotificationSection = {},
-        )
-    }
-}
-
 @Composable
 internal fun SettingsList(
     modifier: Modifier = Modifier,
@@ -249,5 +225,29 @@ internal fun SettingsList(
                 },
             )
         }
+    }
+}
+
+@Preview
+@Composable
+internal fun SettingsListPreview() {
+    AppTheme {
+        SettingsList(
+            loggedInUser = User(
+                id = "123",
+                login = "maghla",
+                displayName = "Maghla",
+                description = "",
+                profileImageUrl = "",
+                createdAt = Instant.DISTANT_PAST,
+                usedAt = Instant.DISTANT_PAST,
+            ),
+            onLogoutClick = {},
+            onOpenDependencyCredits = {},
+            onOpenThirdPartiesSection = {},
+            onOpenAppearanceSection = {},
+            onOpenAboutSection = {},
+            onOpenNotificationSection = {},
+        )
     }
 }

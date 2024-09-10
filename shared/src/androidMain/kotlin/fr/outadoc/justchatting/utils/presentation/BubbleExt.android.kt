@@ -6,11 +6,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 
+internal actual fun areBubblesSupported(): Boolean {
+    return Build.VERSION.SDK_INT >= 29
+}
+
 @Composable
-internal actual fun canOpenInBubble(): Boolean {
+internal actual fun canOpenActivityInBubble(): Boolean {
     val context = LocalContext.current
     return remember {
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
-            (context as? Activity)?.isLaunchedFromBubbleCompat != true
+        areBubblesSupported() && (context as? Activity)?.isLaunchedFromBubbleCompat != true
     }
 }

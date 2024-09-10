@@ -12,18 +12,6 @@ import androidx.compose.ui.Modifier
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@Preview
-@Composable
-internal fun SettingsHeaderPreview() {
-    AppTheme {
-        Surface {
-            SettingsHeader {
-                Text("Lorem ipsum")
-            }
-        }
-    }
-}
-
 @Composable
 internal fun SettingsHeader(
     modifier: Modifier = Modifier,
@@ -35,6 +23,18 @@ internal fun SettingsHeader(
     ) {
         Box(modifier = modifier) {
             content()
+        }
+    }
+}
+
+@Preview
+@Composable
+internal fun SettingsHeaderPreview() {
+    AppTheme {
+        Surface {
+            SettingsHeader {
+                Text("Lorem ipsum")
+            }
         }
     }
 }

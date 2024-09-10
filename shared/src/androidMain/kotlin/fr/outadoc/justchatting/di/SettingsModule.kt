@@ -7,13 +7,16 @@ import fr.outadoc.justchatting.feature.preferences.presentation.DefaultReadExter
 import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
+import fr.outadoc.justchatting.feature.preferences.presentation.mobile.AndroidAppVersionNameProvider
+import fr.outadoc.justchatting.feature.preferences.presentation.mobile.AppVersionNameProvider
 import org.koin.compose.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
 public val settingsModule: Module = module {
-    viewModel { SettingsViewModel(get(), get(), get(), get()) }
+    viewModel { SettingsViewModel(get(), get(), get(), get(), get()) }
     single<LogRepository> { AndroidLogRepository(get()) }
     single<ReadExternalDependenciesList> { DefaultReadExternalDependenciesList(get()) }
     single<PreferenceRepository> { DataStorePreferenceRepository(get()) }
+    single<AppVersionNameProvider> { AndroidAppVersionNameProvider(get()) }
 }

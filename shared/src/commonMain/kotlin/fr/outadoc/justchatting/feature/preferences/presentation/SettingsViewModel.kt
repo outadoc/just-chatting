@@ -6,6 +6,7 @@ import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
+import fr.outadoc.justchatting.feature.preferences.presentation.mobile.AppVersionNameProvider
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
@@ -29,6 +30,7 @@ internal class SettingsViewModel(
     private val logRepository: LogRepository,
     private val twitchRepository: TwitchRepository,
     private val authRepository: AuthRepository,
+    private val appVersionNameProvider: AppVersionNameProvider,
 ) : ViewModel() {
 
     sealed class Event {
@@ -37,6 +39,7 @@ internal class SettingsViewModel(
 
     data class State(
         val appPreferences: AppPreferences = AppPreferences(),
+        val appVersionName: String? = null,
         val user: User? = null,
     )
 
@@ -73,6 +76,7 @@ internal class SettingsViewModel(
             State(
                 appPreferences = prefs,
                 user = user,
+                appVersionName = appVersionNameProvider.appVersionName,
             )
         }
             .stateIn(

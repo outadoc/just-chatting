@@ -2,8 +2,12 @@ package fr.outadoc.justchatting.utils.presentation
 
 import androidx.compose.runtime.Composable
 
+internal actual fun areBubblesSupported(): Boolean {
+    // Bubbles are not supported on iOS
+    return false
+}
+
 @Composable
-internal actual fun canOpenInBubble(): Boolean {
-    // Can't open in bubble on iOS
+internal actual fun canOpenActivityInBubble(): Boolean {
     return false
 }

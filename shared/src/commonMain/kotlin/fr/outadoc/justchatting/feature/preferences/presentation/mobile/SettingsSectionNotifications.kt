@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.preferences.presentation.mobile
 
-import android.os.Build
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,13 +17,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.utils.permissions.PermissionState
+import fr.outadoc.justchatting.utils.permissions.isGranted
+import fr.outadoc.justchatting.utils.permissions.rememberPermissionState
+import fr.outadoc.justchatting.utils.presentation.areBubblesSupported
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -64,7 +63,7 @@ internal fun SettingsSectionNotifications(
     }
 }
 
-@OptIn(ExperimentalPermissionsApi::class, KoinExperimentalAPI::class)
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 private fun SettingsSectionNotificationsContent(
     modifier: Modifier = Modifier,
@@ -119,7 +118,7 @@ private fun SettingsSectionNotificationsContent(
             )
         }
 
-        if (Build.VERSION.SDK_INT >= 29) {
+        if (areBubblesSupported()) {
             item {
                 SettingsText(
                     modifier = Modifier.padding(itemInsets),

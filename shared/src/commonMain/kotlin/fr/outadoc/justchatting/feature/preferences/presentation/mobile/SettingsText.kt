@@ -24,51 +24,6 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@Preview
-@Composable
-internal fun SettingsTextPreview() {
-    AppTheme {
-        Column(modifier = Modifier.width(256.dp)) {
-            SettingsText(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {},
-                onClickLabel = "",
-                title = {
-                    Text("Lorem ipsum")
-                },
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-internal fun SettingsTextSubtitlePreview() {
-    AppTheme {
-        Column(modifier = Modifier.width(256.dp)) {
-            SettingsText(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {},
-                onClickLabel = "",
-                title = { Text("Lorem ipsum") },
-                subtitle = { Text("Dolor sit amet") },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Favorite,
-                        contentDescription = null,
-                    )
-                },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = null,
-                    )
-                },
-            )
-        }
-    }
-}
-
 @Composable
 internal fun SettingsText(
     modifier: Modifier = Modifier,
@@ -112,6 +67,51 @@ internal fun SettingsText(
             }
 
             trailingIcon()
+        }
+    }
+}
+
+@Preview
+@Composable
+internal fun SettingsTextPreview() {
+    AppTheme {
+        Column(modifier = Modifier.width(256.dp)) {
+            SettingsText(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {},
+                onClickLabel = "",
+                title = {
+                    Text("Lorem ipsum")
+                },
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+internal fun SettingsTextSubtitlePreview() {
+    AppTheme {
+        Column(modifier = Modifier.width(256.dp)) {
+            SettingsText(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {},
+                onClickLabel = "",
+                title = { Text("Lorem ipsum") },
+                subtitle = { Text("Dolor sit amet") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Favorite,
+                        contentDescription = null,
+                    )
+                },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = null,
+                    )
+                },
+            )
         }
     }
 }

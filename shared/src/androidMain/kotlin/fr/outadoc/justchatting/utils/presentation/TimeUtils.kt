@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.utils.presentation
 
-import android.content.Context
 import android.text.format.DateFormat
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,7 +26,6 @@ import kotlinx.datetime.toLocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
 @Composable
@@ -134,60 +132,3 @@ private fun LocalDate.formatDate(
         }
     }
 }
-
-@Composable
-internal fun Instant.formatTimeSince(
-    clock: Clock = Clock.System,
-    showSeconds: Boolean,
-): String {
-    val context = LocalContext.current
-
-    var now by remember { mutableStateOf(clock.now()) }
-    val duration = remember(now) { now - this }
-
-    LaunchedEffect(clock) {
-        while (isActive) {
-            now = clock.now()
-            delay(1.minutes)
-        }
-    }
-
-    return duration.format(
-        context = context,
-        showSeconds = showSeconds,
-    )
-}
-
-@Composable
-internal actual fun Duration.format(showSeconds: Boolean): String {
-    return format(
-        context = LocalContext.current,
-        showSeconds = showSeconds,
-    )
-}
-
-private fun Duration.format(
-    context: Context,
-    showSeconds: Boolean = true,
-): String =
-    sequence {
-        toComponents { days, hours, minutes, seconds, _ ->
-            days.takeIf { it > 0 }?.let {
-                yield(MR.strings.duration_days.format(it).toString(context))
-            }
-
-            hours.takeIf { it > 0 }?.let {
-                yield(MR.strings.duration_hours.format(it).toString(context))
-            }
-
-            minutes.takeIf { it > 0 }?.let {
-                yield(MR.strings.duration_minutes.format(it).toString(context))
-            }
-
-            if (showSeconds) {
-                seconds.takeIf { it > 0 }?.let {
-                    yield(MR.strings.duration_seconds.format(it).toString(context))
-                }
-            }
-        }
-    }.joinToString(" ")

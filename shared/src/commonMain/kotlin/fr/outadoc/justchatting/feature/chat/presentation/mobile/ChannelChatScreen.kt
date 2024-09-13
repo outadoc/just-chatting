@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -9,14 +8,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
+import coil3.compose.LocalPlatformContext
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.utils.core.createChannelExternalLink
+import fr.outadoc.justchatting.utils.presentation.BackHandler
+import fr.outadoc.justchatting.utils.presentation.OnLifecycleEvent
 import fr.outadoc.justchatting.utils.presentation.canOpenActivityInBubble
 import fr.outadoc.justchatting.utils.presentation.isDark
 import org.koin.compose.koinInject
@@ -35,7 +36,7 @@ internal fun ChannelChatScreen(userId: String) {
 
     val prefs by preferencesRepository.currentPreferences.collectAsState(initial = AppPreferences())
 
-    val context = LocalContext.current
+    val context = LocalPlatformContext.current
     val density = LocalDensity.current.density
     val uriHandler = LocalUriHandler.current
 

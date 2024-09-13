@@ -1,11 +1,11 @@
-package fr.outadoc.justchatting.feature.chat.presentation.mobile
+package fr.outadoc.justchatting.utils.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
 
 @Composable
 internal fun OnLifecycleEvent(onEvent: (event: Lifecycle.Event) -> Unit) {

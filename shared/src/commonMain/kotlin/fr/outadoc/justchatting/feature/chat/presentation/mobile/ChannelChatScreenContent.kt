@@ -53,18 +53,6 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@Preview
-@Composable
-internal fun ChannelChatScreenLoadingPreview() {
-    AppTheme {
-        ChannelChatScreenContent(
-            state = ChatViewModel.State.Initial,
-            inputState = ChatViewModel.InputState(),
-            showTimestamps = true,
-        )
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ChannelChatScreenContent(
@@ -264,5 +252,17 @@ internal fun ChannelChatScreenContent(
                 userId = showInfoForUserId,
             )
         }
+    }
+}
+
+@Preview
+@Composable
+internal fun ChannelChatScreenLoadingPreview() {
+    AppTheme {
+        ChannelChatScreenContent(
+            state = ChatViewModel.State.Initial,
+            inputState = ChatViewModel.InputState(),
+            showTimestamps = true,
+        )
     }
 }

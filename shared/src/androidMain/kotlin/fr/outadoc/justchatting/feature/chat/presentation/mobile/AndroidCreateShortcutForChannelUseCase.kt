@@ -8,7 +8,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChanne
 import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageIcon
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 
-internal class MobileCreateShortcutForChannelUseCase(
+internal class AndroidCreateShortcutForChannelUseCase(
     private val context: Context,
 ) : CreateShortcutForChannelUseCase {
 

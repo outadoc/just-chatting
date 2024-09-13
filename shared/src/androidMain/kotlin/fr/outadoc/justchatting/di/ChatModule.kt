@@ -26,7 +26,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChanne
 import fr.outadoc.justchatting.feature.chat.presentation.FilterAutocompleteItemsUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.AndroidChatNotifier
-import fr.outadoc.justchatting.feature.chat.presentation.mobile.MobileCreateShortcutForChannelUseCase
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.AndroidCreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.emotes.data.bttv.ChannelBttvEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.bttv.ChannelFfzEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.bttv.GlobalBttvEmotesSource
@@ -68,7 +68,7 @@ public val chatModule: Module = module {
     single<ChatNotifier> { AndroidChatNotifier(get(), get()) }
 
     single { FilterAutocompleteItemsUseCase() }
-    single<CreateShortcutForChannelUseCase> { MobileCreateShortcutForChannelUseCase(get()) }
+    single<CreateShortcutForChannelUseCase> { AndroidCreateShortcutForChannelUseCase(get()) }
 
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get()) }
     single { LoggedInChatWebSocket.Factory(get(), get(), get(), get()) }

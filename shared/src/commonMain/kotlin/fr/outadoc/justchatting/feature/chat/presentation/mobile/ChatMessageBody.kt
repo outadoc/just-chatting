@@ -38,9 +38,9 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.presentation.Patterns
 import fr.outadoc.justchatting.utils.presentation.customColors
 import fr.outadoc.justchatting.utils.presentation.ensureColorIsAccessible
+import fr.outadoc.justchatting.utils.presentation.isValidWebUrl
 import fr.outadoc.justchatting.utils.presentation.parseHexColor
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableMap
@@ -222,7 +222,7 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
             ?.split(' ')
             ?.forEach { word ->
                 when {
-                    word.matches(Patterns.WebUrlRegex) -> {
+                    word.isValidWebUrl() -> {
                         // This is a URL
                         appendUrl(url = word, urlColor = urlColor)
                     }

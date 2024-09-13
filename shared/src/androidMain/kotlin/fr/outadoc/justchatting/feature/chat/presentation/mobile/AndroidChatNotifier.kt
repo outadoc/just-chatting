@@ -26,7 +26,7 @@ import fr.outadoc.justchatting.utils.presentation.isLaunchedFromBubbleCompat
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
-internal class DefaultChatNotifier(
+internal class AndroidChatNotifier(
     private val context: Context,
     private val preferenceRepository: PreferenceRepository,
 ) : ChatNotifier {
@@ -51,7 +51,7 @@ internal class DefaultChatNotifier(
                 }
 
                 else -> {
-                    logError<DefaultChatNotifier> {
+                    logError<AndroidChatNotifier> {
                         "Notifications permission not granted (code: $notificationsPermissionCheck)"
                     }
                     false

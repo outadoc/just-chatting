@@ -25,7 +25,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.FilterAutocompleteItemsUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
-import fr.outadoc.justchatting.feature.chat.presentation.mobile.DefaultChatNotifier
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.AndroidChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.MobileCreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.emotes.data.bttv.ChannelBttvEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.bttv.ChannelFfzEmotesSource
@@ -65,7 +65,7 @@ public val chatModule: Module = module {
     }
     viewModel { StreamAndUserInfoViewModel(get()) }
 
-    single<ChatNotifier> { DefaultChatNotifier(get(), get()) }
+    single<ChatNotifier> { AndroidChatNotifier(get(), get()) }
 
     single { FilterAutocompleteItemsUseCase() }
     single<CreateShortcutForChannelUseCase> { MobileCreateShortcutForChannelUseCase(get()) }

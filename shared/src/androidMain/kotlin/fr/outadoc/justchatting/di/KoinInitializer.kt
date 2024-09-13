@@ -20,13 +20,8 @@ public class KoinInitializer : Initializer<KoinApplication> {
             androidLogger()
             androidContext(context)
             modules(
-                mainModule,
-                chatModule,
-                dbModule,
-                homeModule,
-                settingsModule,
-                mainNavigationModule,
-                twitchModule,
+                sharedModule,
+                platformModule,
             )
         }
     }

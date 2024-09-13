@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.shared.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.deeplink.Deeplink
 import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
@@ -33,7 +34,7 @@ internal class MainRouterViewModel(
 
     sealed class Event {
         data class ViewChannel(val userId: String) : Event()
-        data class OpenInBrowser(val uri: String) : Event()
+        data class OpenInBrowser(val uri: Uri) : Event()
     }
 
     val state: StateFlow<State> =
@@ -59,12 +60,12 @@ internal class MainRouterViewModel(
     fun onLoginClick() = viewModelScope.launch {
         _events.emit(
             Event.OpenInBrowser(
-                uri = authRepository.getExternalAuthorizeUrl().toString(),
+                uri = authRepository.getExternalAuthorizeUrl(),
             ),
         )
     }
 
-    fun onReceiveIntent(uri: String) = viewModelScope.launch {
+    fun onReceiveIntent(uri: Uri) = viewModelScope.launch {
         val deeplink = deeplinkParser.parseDeeplink(uri)
 
         logInfo<MainRouterViewModel> { "Received deeplink $deeplink" }

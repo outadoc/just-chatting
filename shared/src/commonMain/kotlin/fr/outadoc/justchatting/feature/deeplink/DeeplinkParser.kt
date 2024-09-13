@@ -6,17 +6,16 @@ import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 internal data class DeeplinkParser(
     private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
-    fun parseDeeplink(uri: String): Deeplink? {
-        val parsed: Uri = Uri.parse(uri)
+    fun parseDeeplink(uri: Uri): Deeplink? {
         when {
-            parsed.isViewChannelUrl() -> {
-                parsed.pathSegments.firstOrNull()?.let { userId ->
+            uri.isViewChannelUrl() -> {
+                uri.pathSegments.firstOrNull()?.let { userId ->
                     return Deeplink.ViewChannel(userId = userId)
                 }
             }
 
-            parsed.isRedirectUrl() -> {
-                val token = parsed.parseToken()
+            uri.isRedirectUrl() -> {
+                val token = uri.parseToken()
                 if (token != null) {
                     return Deeplink.Authenticated(token = token)
                 }

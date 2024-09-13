@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.preferences.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
@@ -34,7 +35,7 @@ internal class SettingsViewModel(
 ) : ViewModel() {
 
     sealed class Event {
-        data class ShareLogs(val uri: String) : Event()
+        data class ShareLogs(val uri: Uri) : Event()
     }
 
     data class State(

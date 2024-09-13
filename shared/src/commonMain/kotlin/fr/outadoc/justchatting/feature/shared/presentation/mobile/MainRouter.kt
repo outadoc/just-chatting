@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.followed.presentation.mobile.FollowedChannelsList
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsContent
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionAbout
@@ -25,7 +26,7 @@ internal fun MainRouter(
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
     onOpenAccessibilityPreferences: () -> Unit,
-    onShareLogs: (uri: String) -> Unit,
+    onShareLogs: (Uri) -> Unit,
 ) {
     val navController = rememberNavController()
 

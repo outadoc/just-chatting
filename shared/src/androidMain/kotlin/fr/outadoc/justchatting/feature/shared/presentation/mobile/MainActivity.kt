@@ -8,11 +8,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.emoji2.text.DefaultEmojiCompatConfig
 import androidx.emoji2.text.EmojiCompat
+import com.eygraber.uri.Uri
 import com.eygraber.uri.toAndroidUri
+import com.eygraber.uri.toUri
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
 import fr.outadoc.justchatting.feature.shared.presentation.MainRouterViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -34,7 +35,7 @@ internal class MainActivity : AppCompatActivity() {
             }
 
         if (savedInstanceState == null) {
-            intent.data?.toString()?.let { data ->
+            intent.data?.toUri()?.let { data: Uri ->
                 viewModel.onReceiveIntent(data)
             }
         }
@@ -77,16 +78,16 @@ internal class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        intent.data?.toString()?.let { data ->
+        intent.data?.toUri()?.let { data: Uri ->
             viewModel.onReceiveIntent(data)
         }
     }
 
-    private fun shareLogs(uri: String) {
+    private fun shareLogs(uri: Uri) {
         val sendIntent: Intent =
             Intent().apply {
                 action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_STREAM, uri.toUri())
+                putExtra(Intent.EXTRA_STREAM, uri.toAndroidUri())
                 type = "application/gzip"
             }
 

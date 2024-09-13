@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import com.eygraber.uri.Uri
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainNavigation
@@ -24,7 +25,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 internal fun SettingsContent(
     modifier: Modifier = Modifier,
     onNavigate: (Screen) -> Unit,
-    onShareLogs: (uri: String) -> Unit,
+    onShareLogs: (Uri) -> Unit,
 ) {
     val viewModel: SettingsViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()

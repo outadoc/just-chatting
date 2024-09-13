@@ -24,8 +24,8 @@ internal fun MainScreen(
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
     onOpenAccessibilityPreferences: () -> Unit,
-    onShareLogs: (uri: String) -> Unit,
-    onOpenUri: (uri: Uri) -> Unit,
+    onShareLogs: (Uri) -> Unit,
+    onOpenUri: (Uri) -> Unit,
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -37,7 +37,7 @@ internal fun MainScreen(
                 }
 
                 is MainRouterViewModel.Event.OpenInBrowser -> {
-                    onOpenUri(Uri.parse(event.uri))
+                    onOpenUri(event.uri)
                 }
             }
         }

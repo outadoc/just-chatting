@@ -33,7 +33,7 @@ internal fun MainRouter(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = DefaultScreen,
+        startDestination = DefaultScreen.route,
         enterTransition = {
             slideIntoContainer(
                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
@@ -55,66 +55,78 @@ internal fun MainRouter(
             )
         },
     ) {
-        composable<Screen.Followed>(
+        composable(
+            route = Screen.Followed.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
             FollowedChannelsList(
-                onNavigate = { navController.navigate(it) },
+                onNavigate = { navController.navigate(it.route) },
                 onItemClick = onChannelClick,
             )
         }
 
-        composable<Screen.Timeline>(
+        composable(
+            route = Screen.Timeline.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
             TimelineScreen(
-                onNavigate = { navController.navigate(it) },
+                onNavigate = { navController.navigate(it.route) },
                 onChannelClick = onChannelClick,
             )
         }
 
-        composable<Screen.Search>(
+        composable(
+            route = Screen.Search.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
             SearchScreen(
-                onNavigate = { navController.navigate(it) },
+                onNavigate = { navController.navigate(it.route) },
                 onChannelClick = onChannelClick,
             )
         }
 
-        composable<Screen.Settings.Root>(
+        composable(
+            route = Screen.Settings.Root.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
             SettingsContent(
-                onNavigate = { navController.navigate(it) },
+                onNavigate = { navController.navigate(it.route) },
                 onShareLogs = onShareLogs,
             )
         }
 
-        composable<Screen.Settings.About> {
+        composable(
+            route = Screen.Settings.About.route,
+        ) {
             SettingsSectionAbout(
                 onNavigateUp = { navController.popBackStack() },
             )
         }
 
-        composable<Screen.Settings.Appearance> {
+        composable(
+            route = Screen.Settings.Appearance.route,
+        ) {
             SettingsSectionAppearance(
                 onNavigateUp = { navController.popBackStack() },
                 onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
             )
         }
 
-        composable<Screen.Settings.DependencyCredits> {
+        composable(
+            route = Screen.Settings.DependencyCredits.route,
+        ) {
             SettingsSectionDependencies(
                 onNavigateUp = { navController.popBackStack() },
             )
         }
 
-        composable<Screen.Settings.Notifications> {
+        composable(
+            route = Screen.Settings.Notifications.route,
+        ) {
             SettingsSectionNotifications(
                 onNavigateUp = { navController.popBackStack() },
                 onOpenNotificationPreferences = onOpenNotificationPreferences,
@@ -122,7 +134,9 @@ internal fun MainRouter(
             )
         }
 
-        composable<Screen.Settings.ThirdParties> {
+        composable(
+            route = Screen.Settings.ThirdParties.route,
+        ) {
             SettingsSectionThirdParties(
                 onNavigateUp = { navController.popBackStack() },
             )

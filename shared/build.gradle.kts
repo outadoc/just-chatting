@@ -37,12 +37,6 @@ kotlin {
             framework {
                 baseName = "JCShared"
                 isStatic = false
-
-                export(libs.kotlinx.coroutines)
-                export(libs.kotlinx.datetime)
-                export(libs.kotlinx.serialization.json)
-                export(libs.ktor.client.core)
-                export(libs.moko.resources.core)
             }
         }
     }

@@ -5,5 +5,6 @@ import platform.Foundation.NSBundle
 internal class AppleAppVersionNameProvider : AppVersionNameProvider {
 
     override val appVersionName: String?
-        get() = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleVersion") as? String
+        get() = NSBundle.mainBundle
+            .objectForInfoDictionaryKey("CFBundleShortVersionString") as? String
 }

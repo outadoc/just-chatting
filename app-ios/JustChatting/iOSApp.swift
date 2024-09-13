@@ -1,21 +1,16 @@
 import JCShared
 import SwiftUI
-import Swinject
 
 @main
 struct iOSApp: App {
     init() {
         // Perform dependency injection
-        Container.shared.setup()
-
-        #if DEBUG
-            Logger.shared.logStrategy = AppleLogStrategy()
-        #endif
+        SharedKoinKt.startSharedKoin { _ in }
     }
 
     var body: some Scene {
         WindowGroup {
-            RootNavigationView()
+            ContentView()
         }
     }
 }

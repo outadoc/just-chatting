@@ -29,22 +29,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@Preview
-@Composable
-internal fun UserItemPreview() {
-    AppTheme {
-        UserItemCard(
-            modifier = Modifier
-                .padding(8.dp)
-                .width(300.dp),
-            displayName = "Maghla",
-            followedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
-            profileImageUrl = null,
-            tags = persistentListOf("French", "ASMR"),
-        )
-    }
-}
-
 @Composable
 internal fun UserItemCard(
     modifier: Modifier = Modifier,
@@ -124,5 +108,21 @@ internal fun UserItem(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+internal fun UserItemPreview() {
+    AppTheme {
+        UserItemCard(
+            modifier = Modifier
+                .padding(8.dp)
+                .width(300.dp),
+            displayName = "Maghla",
+            followedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
+            profileImageUrl = null,
+            tags = persistentListOf("French", "ASMR"),
+        )
     }
 }

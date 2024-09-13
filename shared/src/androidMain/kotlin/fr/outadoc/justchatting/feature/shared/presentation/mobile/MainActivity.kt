@@ -13,9 +13,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,7 +35,6 @@ internal class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainRouterViewModel by viewModel()
 
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -73,9 +69,7 @@ internal class MainActivity : AppCompatActivity() {
         }
 
         setContent {
-            AppTheme {
-                App(sizeClass = calculateWindowSizeClass(this))
-            }
+            App()
         }
     }
 
@@ -85,48 +79,50 @@ internal class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    private fun App(sizeClass: WindowSizeClass) {
+    private fun App() {
         val state by viewModel.state.collectAsState()
-        Crossfade(
-            targetState = state,
-            label = "Login state animation",
-        ) { currentState ->
-            when (currentState) {
-                is MainRouterViewModel.State.Loading -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        CircularProgressIndicator()
+
+        AppTheme {
+            Crossfade(
+                targetState = state,
+                label = "Login state animation",
+            ) { currentState ->
+                when (currentState) {
+                    is MainRouterViewModel.State.Loading -> {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
-                }
 
-                is MainRouterViewModel.State.LoggedOut -> {
-                    OnboardingScreen(
-                        onLoginClick = {
-                            viewModel.onLoginClick()
-                        },
-                    )
-                }
+                    is MainRouterViewModel.State.LoggedOut -> {
+                        OnboardingScreen(
+                            onLoginClick = {
+                                viewModel.onLoginClick()
+                            },
+                        )
+                    }
 
-                is MainRouterViewModel.State.LoggedIn -> {
-                    MainRouter(
-                        sizeClass = sizeClass,
-                        onChannelClick = ::viewChannel,
-                        onOpenNotificationPreferences = {
-                            openSettingsIntent(action = "android.settings.APP_NOTIFICATION_SETTINGS")
-                        },
-                        onOpenBubblePreferences = {
-                            if (Build.VERSION.SDK_INT >= 29) {
-                                openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_BUBBLE_SETTINGS)
-                            }
-                        },
-                        onOpenAccessibilityPreferences = {
-                            openSettingsIntent(action = "android.settings.ACCESSIBILITY_SETTINGS")
-                        },
-                        onShareLogs = ::shareLogs,
-                    )
+                    is MainRouterViewModel.State.LoggedIn -> {
+                        MainRouter(
+                            onChannelClick = ::viewChannel,
+                            onOpenNotificationPreferences = {
+                                openSettingsIntent(action = "android.settings.APP_NOTIFICATION_SETTINGS")
+                            },
+                            onOpenBubblePreferences = {
+                                if (Build.VERSION.SDK_INT >= 29) {
+                                    openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_BUBBLE_SETTINGS)
+                                }
+                            },
+                            onOpenAccessibilityPreferences = {
+                                openSettingsIntent(action = "android.settings.ACCESSIBILITY_SETTINGS")
+                            },
+                            onShareLogs = ::shareLogs,
+                        )
+                    }
                 }
             }
         }

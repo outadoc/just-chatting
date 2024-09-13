@@ -17,14 +17,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
+import androidx.window.core.layout.WindowHeightSizeClass
 import app.cash.paging.compose.LazyPagingItems
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
@@ -34,7 +34,6 @@ import fr.outadoc.justchatting.utils.presentation.HapticIconButton
 @Composable
 internal fun SearchScreenBar(
     modifier: Modifier = Modifier,
-    sizeClass: WindowSizeClass,
     searchResults: LazyPagingItems<ChannelSearchResult>,
     query: String,
     isSearchExpanded: Boolean,
@@ -44,9 +43,10 @@ internal fun SearchScreenBar(
     onClearSearchBar: () -> Unit,
     onDismissSearchBar: () -> Unit,
 ) {
-    when (sizeClass.heightSizeClass) {
-        WindowHeightSizeClass.Compact,
-        WindowHeightSizeClass.Medium,
+    val sizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    when (sizeClass.windowHeightSizeClass) {
+        WindowHeightSizeClass.COMPACT,
+        WindowHeightSizeClass.MEDIUM,
         -> {
             FullHeightSearchBar(
                 modifier = modifier,
@@ -61,7 +61,7 @@ internal fun SearchScreenBar(
             )
         }
 
-        WindowHeightSizeClass.Expanded -> {
+        WindowHeightSizeClass.EXPANDED -> {
             CompactSearchBar(
                 modifier = modifier,
                 searchResults = searchResults,

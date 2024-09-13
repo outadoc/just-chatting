@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,7 +28,6 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @Composable
 internal fun SearchScreen(
     modifier: Modifier = Modifier,
-    sizeClass: WindowSizeClass,
     onNavigate: (Screen) -> Unit,
     onChannelClick: (userId: String) -> Unit,
 ) {
@@ -49,11 +47,10 @@ internal fun SearchScreen(
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
             ) {
                 SearchBar(
-                    onChannelClick = onChannelClick,
-                    sizeClass = sizeClass,
                     searchResults = searchResults,
                     query = state.query,
                     isSearchExpanded = state.isSearchExpanded,
+                    onChannelClick = onChannelClick,
                     onQueryChange = viewModel::onQueryChange,
                     onSearchActiveChange = viewModel::onSearchExpandedChange,
                     onClear = viewModel::onClearSearchBar,

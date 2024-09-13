@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.feature.shared.presentation.mobile
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
@@ -22,7 +21,6 @@ import fr.outadoc.justchatting.feature.timeline.presentation.mobile.TimelineScre
 @Composable
 internal fun MainRouter(
     modifier: Modifier = Modifier,
-    sizeClass: WindowSizeClass,
     onChannelClick: (userId: String) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
@@ -81,7 +79,6 @@ internal fun MainRouter(
             exitTransition = { ExitTransition.None },
         ) {
             SearchScreen(
-                sizeClass = sizeClass,
                 onNavigate = { navController.navigate(it) },
                 onChannelClick = onChannelClick,
             )

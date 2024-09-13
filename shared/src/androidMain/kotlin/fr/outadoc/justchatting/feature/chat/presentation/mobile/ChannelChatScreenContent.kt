@@ -19,6 +19,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -26,6 +29,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +37,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.AnnotatedString
@@ -47,7 +50,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.shortToast
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Preview
@@ -85,14 +88,12 @@ internal fun ChannelChatScreenContent(
     onReuseLastMessageClicked: () -> Unit = {},
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    val clipboard = LocalClipboardManager.current
-    val haptic = LocalHapticFeedback.current
-    val context = LocalContext.current
 
     val stream = (state as? ChatViewModel.State.Chatting)?.stream
     val user = (state as? ChatViewModel.State.Chatting)?.user
 
     val inputFocusRequester = remember { FocusRequester() }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(isEmotePickerOpen) {
         if (isEmotePickerOpen) {
@@ -122,20 +123,40 @@ internal fun ChannelChatScreenContent(
             )
         },
         content = { insets ->
+            val clipboard = LocalClipboardManager.current
+            val haptic = LocalHapticFeedback.current
+            val scope = rememberCoroutineScope()
+            val snackbarCopiedMessage = stringResource(MR.strings.chat_copiedToClipboard)
+
             ChatScreen(
                 modifier = Modifier.fillMaxSize(),
                 state = state,
                 showTimestamps = showTimestamps,
                 onMessageLongClick = { item ->
                     item.body?.message?.let { rawMessage ->
+                        // Copy to clipboard
                         clipboard.setText(AnnotatedString(rawMessage))
+
+                        // Vibrate device
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        context.shortToast(MR.strings.chat_copiedToClipboard.resourceId)
+
+                        // Show "copied to clipboard" confirmation
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = snackbarCopiedMessage,
+                                duration = SnackbarDuration.Short,
+                            )
+                        }
                     }
                 },
                 onReplyToMessage = onReplyToMessage,
                 onShowInfoForUserId = onShowInfoForUserId,
                 insets = insets,
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
             )
         },
         bottomBar = {

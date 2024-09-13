@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.shared.presentation
+package fr.outadoc.justchatting.feature.shared.presentation
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box

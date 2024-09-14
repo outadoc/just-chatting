@@ -72,6 +72,7 @@ import fr.outadoc.justchatting.feature.shared.domain.LocalUsersApi
 import fr.outadoc.justchatting.feature.shared.domain.TwitchApi
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepositoryImpl
+import fr.outadoc.justchatting.feature.shared.presentation.DeeplinkReceiver
 import fr.outadoc.justchatting.feature.shared.presentation.MainRouterViewModel
 import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
 import fr.outadoc.justchatting.utils.core.DefaultJson
@@ -93,6 +94,8 @@ public val sharedModule: Module
         single<TwitchHttpClientProvider> { TwitchHttpClientProvider(get(), get(), get()) }
         single { get<BaseHttpClientProvider>().get() }
         single(named("twitch")) { get<TwitchHttpClientProvider>().get() }
+
+        single<DeeplinkReceiver> { get<MainRouterViewModel>() }
 
         viewModel { MainRouterViewModel(get(), get()) }
         viewModel { SettingsViewModel(get(), get(), get(), get(), get()) }

@@ -22,7 +22,8 @@ import kotlin.time.Duration.Companion.seconds
 internal class MainRouterViewModel(
     private val authRepository: AuthRepository,
     private val deeplinkParser: DeeplinkParser,
-) : ViewModel() {
+) : ViewModel(),
+    DeeplinkReceiver {
 
     sealed class State {
         data object Loading : State()
@@ -65,27 +66,33 @@ internal class MainRouterViewModel(
         )
     }
 
-    fun onReceiveIntent(uri: Uri) = viewModelScope.launch {
-        val deeplink = deeplinkParser.parseDeeplink(uri)
+    override fun onReceiveIntent(uri: String) {
+        onReceiveIntent(Uri.parse(uri))
+    }
 
-        logInfo<MainRouterViewModel> { "Received deeplink $deeplink" }
+    override fun onReceiveIntent(uri: Uri) {
+        viewModelScope.launch {
+            val deeplink = deeplinkParser.parseDeeplink(uri)
 
-        when (deeplink) {
-            is Deeplink.Authenticated -> {
-                authRepository.saveToken(deeplink.token)
+            logInfo<MainRouterViewModel> { "Received deeplink $deeplink" }
 
-                // Artificial delay to ensure Ktor has time to get the memo about the new token
-                delay(1.seconds)
-            }
+            when (deeplink) {
+                is Deeplink.Authenticated -> {
+                    authRepository.saveToken(deeplink.token)
 
-            is Deeplink.ViewChannel -> {
-                _events.emit(
-                    Event.ViewChannel(userId = deeplink.userId),
-                )
-            }
+                    // Artificial delay to ensure Ktor has time to get the memo about the new token
+                    delay(1.seconds)
+                }
 
-            null -> {
-                logError<MainRouterViewModel> { "Invalid deeplink: $uri" }
+                is Deeplink.ViewChannel -> {
+                    _events.emit(
+                        Event.ViewChannel(userId = deeplink.userId),
+                    )
+                }
+
+                null -> {
+                    logError<MainRouterViewModel> { "Invalid deeplink: $uri" }
+                }
             }
         }
     }

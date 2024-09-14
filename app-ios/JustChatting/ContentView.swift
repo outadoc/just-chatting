@@ -18,9 +18,10 @@ struct ComposeView: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
 }
 
-struct ContentView: View {
+struct MainView: View {
+
     var body: some View {
         ComposeView()
-                .ignoresSafeArea(.keyboard)
+            .ignoresSafeArea(.keyboard)
     }
 }

@@ -11,7 +11,7 @@ import platform.darwin.OS_LOG_TYPE_INFO
 import platform.darwin.__dso_handle
 import platform.darwin._os_log_internal
 
-internal object AppleLogStrategy : LogStrategy {
+public object AppleLogStrategy : LogStrategy {
 
     @OptIn(ExperimentalForeignApi::class)
     override fun println(level: Logger.Level, tag: String?, content: String) {

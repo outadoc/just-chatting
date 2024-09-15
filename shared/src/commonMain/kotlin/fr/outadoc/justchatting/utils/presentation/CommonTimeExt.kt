@@ -24,8 +24,8 @@ import kotlin.time.Duration.Companion.minutes
 
 @Composable
 internal fun LocalDate.formatDate(
-    tz: TimeZone,
-    clock: Clock,
+    tz: TimeZone = TimeZone.currentSystemDefault(),
+    clock: Clock = Clock.System,
     isFuture: Boolean,
 ): String {
     var today by remember { mutableStateOf(clock.now().toLocalDateTime(tz).date) }
@@ -45,8 +45,8 @@ internal fun LocalDate.formatDate(
 
 @Composable
 internal fun Instant.formatDate(
-    tz: TimeZone,
-    clock: Clock,
+    tz: TimeZone = TimeZone.currentSystemDefault(),
+    clock: Clock = Clock.System,
 ): String {
     var now by remember { mutableStateOf(clock.now()) }
     val today = remember(now) { now.toLocalDateTime(tz).date }

@@ -11,13 +11,16 @@ internal actual fun dynamicImageColorScheme(
     url: String?,
     parentScheme: ColorScheme,
 ): ColorScheme {
+    // TODO implement for iOS
     return parentScheme
 }
 
-internal actual fun darkSchemeFromColor(color: Color): ColorScheme {
-    TODO("not implemented")
-}
-
-internal actual fun lightSchemeFromColor(color: Color): ColorScheme {
-    TODO("not implemented")
+@Composable
+@Stable
+internal actual fun singleSourceColorScheme(
+    color: Color?,
+    parentScheme: ColorScheme,
+): ColorScheme {
+    // TODO implement for iOS
+    return parentScheme
 }

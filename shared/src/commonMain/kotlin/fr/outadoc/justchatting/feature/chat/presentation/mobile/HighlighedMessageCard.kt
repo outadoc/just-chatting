@@ -9,11 +9,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -22,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem.Message.Highlighted.Level
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.HighlightLevelPreviewProvider
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.isDark
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
@@ -82,19 +79,4 @@ internal fun HighlightLevelPreview(
             )
         }
     }
-}
-
-@Stable
-@Composable
-internal fun singleSourceColorScheme(
-    color: Color?,
-    parentScheme: ColorScheme = MaterialTheme.colorScheme,
-): ColorScheme {
-    return color?.let { currentSourceColor ->
-        if (parentScheme.isDark) {
-            darkSchemeFromColor(currentSourceColor)
-        } else {
-            lightSchemeFromColor(currentSourceColor)
-        }
-    } ?: parentScheme
 }

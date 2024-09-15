@@ -55,6 +55,21 @@ internal actual fun dynamicImageColorScheme(
     } ?: parentScheme
 }
 
+@Composable
+@Stable
+internal actual fun singleSourceColorScheme(
+    color: Color?,
+    parentScheme: ColorScheme,
+): ColorScheme {
+    return color?.let { currentSourceColor ->
+        if (parentScheme.isDark) {
+            darkSchemeFromColor(currentSourceColor)
+        } else {
+            lightSchemeFromColor(currentSourceColor)
+        }
+    } ?: parentScheme
+}
+
 @SuppressLint("RestrictedApi")
 private fun Bitmap.getSourceColor(): Color {
     val width: Int = width
@@ -87,12 +102,12 @@ private fun Bitmap.getSourceColor(): Color {
 }
 
 @SuppressLint("RestrictedApi")
-internal actual fun darkSchemeFromColor(color: Color): ColorScheme {
+private fun darkSchemeFromColor(color: Color): ColorScheme {
     return Scheme.dark(color.toArgb()).toComposeTheme()
 }
 
 @SuppressLint("RestrictedApi")
-internal actual fun lightSchemeFromColor(color: Color): ColorScheme {
+private fun lightSchemeFromColor(color: Color): ColorScheme {
     return Scheme.light(color.toArgb()).toComposeTheme()
 }
 

@@ -6,13 +6,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 
-@Composable
 @Stable
+@Composable
 internal expect fun dynamicImageColorScheme(
     url: String?,
     parentScheme: ColorScheme = MaterialTheme.colorScheme,
 ): ColorScheme
 
-internal expect fun darkSchemeFromColor(color: Color): ColorScheme
-
-internal expect fun lightSchemeFromColor(color: Color): ColorScheme
+@Stable
+@Composable
+internal expect fun singleSourceColorScheme(
+    color: Color?,
+    parentScheme: ColorScheme = MaterialTheme.colorScheme,
+): ColorScheme

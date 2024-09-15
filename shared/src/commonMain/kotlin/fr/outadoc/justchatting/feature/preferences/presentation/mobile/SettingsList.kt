@@ -68,8 +68,8 @@ internal fun SettingsList(
                         displayName = "",
                         description = "",
                         profileImageUrl = "",
-                        createdAt = Instant.DISTANT_PAST,
-                        usedAt = Instant.DISTANT_PAST,
+                        createdAt = Instant.fromEpochMilliseconds(0),
+                        usedAt = Instant.fromEpochMilliseconds(0),
                     )
                 }
 

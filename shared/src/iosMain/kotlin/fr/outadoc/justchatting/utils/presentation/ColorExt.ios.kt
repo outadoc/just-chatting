@@ -21,6 +21,11 @@ internal actual fun xyzToColor(
     TODO("not implemented")
 }
 
+@OptIn(ExperimentalStdlibApi::class)
 internal actual fun String.parseHexColor(): Color? {
-    TODO("not implemented")
+    return Color(
+        this.removePrefix("#")
+            .lowercase()
+            .hexToLong()
+    )
 }

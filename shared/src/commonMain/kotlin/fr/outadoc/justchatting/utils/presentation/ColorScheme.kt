@@ -5,5 +5,3 @@ import androidx.compose.runtime.Composable
 
 @Composable
 internal expect fun getAppColorScheme(isDarkTheme: Boolean): ColorScheme
-
-internal expect val ColorScheme.isDark: Boolean

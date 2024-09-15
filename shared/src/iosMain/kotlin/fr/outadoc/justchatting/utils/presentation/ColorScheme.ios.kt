@@ -12,6 +12,3 @@ internal actual fun getAppColorScheme(isDarkTheme: Boolean): ColorScheme {
         else -> lightColorScheme()
     }
 }
-
-internal actual val ColorScheme.isDark: Boolean
-    get() = TODO("not implemented")

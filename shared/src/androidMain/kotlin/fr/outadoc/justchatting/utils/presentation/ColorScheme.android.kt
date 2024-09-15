@@ -7,7 +7,6 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 
 @Composable
@@ -25,7 +24,3 @@ internal actual fun getAppColorScheme(isDarkTheme: Boolean): ColorScheme {
         }
     }
 }
-
-@get:Composable
-internal actual val ColorScheme.isDark: Boolean
-    get() = background.luminance() < 0.5

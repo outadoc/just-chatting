@@ -60,7 +60,7 @@
         </activity>
 
         <activity
-            android:name=".feature.chat.presentation.mobile.ChatActivity"
+            android:name=".feature.chat.presentation.mobile.EmbeddedChatActivity"
             android:allowEmbedded="true"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:exported="true"

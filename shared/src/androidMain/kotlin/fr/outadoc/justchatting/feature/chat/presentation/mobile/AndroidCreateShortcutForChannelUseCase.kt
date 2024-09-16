@@ -7,13 +7,18 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageIcon
 import fr.outadoc.justchatting.feature.shared.domain.model.User
+import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainActivity
 
 internal class AndroidCreateShortcutForChannelUseCase(
     private val context: Context,
 ) : CreateShortcutForChannelUseCase {
 
     override operator fun invoke(user: User) {
-        val intent = ChatActivity.createIntent(context, user.id)
+        val intent = MainActivity.createIntent(
+            context = context,
+            userId = user.id,
+        )
+
         val person: Person =
             Person.Builder()
                 .setKey(user.id)

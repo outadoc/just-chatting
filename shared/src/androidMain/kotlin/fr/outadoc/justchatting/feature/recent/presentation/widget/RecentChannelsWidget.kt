@@ -26,10 +26,10 @@ import androidx.glance.layout.Column
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
-import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
 import fr.outadoc.justchatting.feature.recent.presentation.RecentChannelsViewModel
 import fr.outadoc.justchatting.feature.shared.presentation.glance.GlanceUserItem
 import fr.outadoc.justchatting.feature.shared.presentation.glance.adaptiveGridCellsCompat
+import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainActivity
 import fr.outadoc.justchatting.shared.R
 import org.koin.compose.koinInject
 
@@ -87,7 +87,9 @@ internal class RecentChannelsWidget : GlanceAppWidget() {
                                         Box(
                                             modifier = GlanceModifier
                                                 .clickable(
-                                                    ChatActivity.createGlanceAction(user.id),
+                                                    MainActivity.createGlanceAction(
+                                                        userId = user.id,
+                                                    ),
                                                 ),
                                         ) {
                                             GlanceUserItem(

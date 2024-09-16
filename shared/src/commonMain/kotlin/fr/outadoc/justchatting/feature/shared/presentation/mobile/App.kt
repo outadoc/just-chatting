@@ -9,6 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.eygraber.uri.Uri
@@ -16,26 +19,26 @@ import fr.outadoc.justchatting.feature.onboarding.presentation.mobile.Onboarding
 import fr.outadoc.justchatting.feature.shared.presentation.MainRouterViewModel
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.OnLifecycleEvent
-import kotlinx.coroutines.flow.collectLatest
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
 
 @Composable
-internal fun MainScreen(
-    onChannelClick: (userId: String) -> Unit,
+internal fun App(
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
     onOpenAccessibilityPreferences: () -> Unit,
     onShareLogs: (Uri) -> Unit,
     onOpenUri: (Uri) -> Unit,
 ) {
-    val viewModel: MainRouterViewModel = koinViewModel()
+    val viewModel: MainRouterViewModel = koinInject()
     val state by viewModel.state.collectAsState()
 
+    var currentUserId by remember { mutableStateOf<String?>(null) }
+
     LaunchedEffect(viewModel.events) {
-        viewModel.events.collectLatest { event ->
+        viewModel.events.collect { event ->
             when (event) {
                 is MainRouterViewModel.Event.ViewChannel -> {
-                    onChannelClick(event.userId)
+                    currentUserId = event.userId
                 }
 
                 is MainRouterViewModel.Event.OpenInBrowser -> {
@@ -75,6 +78,7 @@ internal fun MainScreen(
 
                 is MainRouterViewModel.State.LoggedIn -> {
                     MainRouter(
+                        currentUserId = currentUserId,
                         onOpenNotificationPreferences = onOpenNotificationPreferences,
                         onOpenBubblePreferences = onOpenBubblePreferences,
                         onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,

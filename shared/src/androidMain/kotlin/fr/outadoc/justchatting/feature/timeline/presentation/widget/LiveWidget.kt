@@ -34,9 +34,9 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextDefaults
 import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageUri
-import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.glance.GlanceCard
+import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainActivity
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
 import fr.outadoc.justchatting.shared.R
@@ -78,7 +78,9 @@ internal class LiveWidget : GlanceAppWidget() {
                                 GlanceCard(
                                     modifier = GlanceModifier
                                         .clickable(
-                                            ChatActivity.createGlanceAction(userStream.user.id),
+                                            MainActivity.createGlanceAction(
+                                                userId = userStream.user.id,
+                                            ),
                                         ),
                                 ) {
                                     LiveStream(

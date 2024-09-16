@@ -18,7 +18,7 @@ struct iOSApp: App {
         WindowGroup {
             MainView()
                 .onOpenURL { url in
-                    receiver.onReceiveIntent(uri: url.absoluteString)
+                    receiver.onDeeplinkReceived(uri: url.absoluteString)
                 }
         }
     }

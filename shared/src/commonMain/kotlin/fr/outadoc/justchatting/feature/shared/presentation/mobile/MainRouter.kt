@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -25,12 +26,19 @@ import fr.outadoc.justchatting.feature.timeline.presentation.mobile.TimelineScre
 @Composable
 internal fun MainRouter(
     modifier: Modifier = Modifier,
+    currentUserId: String? = null,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
     onOpenAccessibilityPreferences: () -> Unit,
     onShareLogs: (Uri) -> Unit,
 ) {
     val navController = rememberNavController()
+
+    LaunchedEffect(currentUserId) {
+        if (currentUserId != null) {
+            navController.navigate(Screen.Chat(currentUserId).route)
+        }
+    }
 
     NavHost(
         modifier = modifier,

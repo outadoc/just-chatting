@@ -95,9 +95,9 @@ public val sharedModule: Module
         single { get<BaseHttpClientProvider>().get() }
         single(named("twitch")) { get<TwitchHttpClientProvider>().get() }
 
-        single<DeeplinkReceiver> { get<MainRouterViewModel>() }
+        factory<DeeplinkReceiver> { get<MainRouterViewModel>() }
 
-        viewModel { MainRouterViewModel(get(), get()) }
+        single { MainRouterViewModel(get(), get()) }
         viewModel { SettingsViewModel(get(), get(), get(), get(), get()) }
         viewModel { ChannelSearchViewModel(get()) }
         viewModel { FollowedChannelsViewModel(get()) }

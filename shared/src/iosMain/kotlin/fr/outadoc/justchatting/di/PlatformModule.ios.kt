@@ -12,7 +12,6 @@ import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.AppleReadExternalDependenciesList
 import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.NoopLogRepository
-import fr.outadoc.justchatting.feature.preferences.presentation.NoopReadExternalDependenciesList
 import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.AppVersionNameProvider
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.AppleAppVersionNameProvider

@@ -57,24 +57,20 @@ internal fun xyzToColor(
  * @param color The color to be converted
  */
 internal fun colorToXyz(color: Color): DoubleArray {
-    val outXyz = DoubleArray(3)
+    val r: Double = color.red.toDouble()
+    val sr = if (r < 0.04045) r / 12.92 else ((r + 0.055) / 1.055).pow(2.4)
 
-    val r = color.red
-    val g = color.green
-    val b = color.blue
+    val g: Double = color.green.toDouble()
+    val sg = if (g < 0.04045) g / 12.92 else ((g + 0.055) / 1.055).pow(2.4)
 
-    var sr = r / 255.0
-    sr = if (sr < 0.04045) sr / 12.92 else ((sr + 0.055) / 1.055).pow(2.4)
-    var sg = g / 255.0
-    sg = if (sg < 0.04045) sg / 12.92 else ((sg + 0.055) / 1.055).pow(2.4)
-    var sb = b / 255.0
-    sb = if (sb < 0.04045) sb / 12.92 else ((sb + 0.055) / 1.055).pow(2.4)
+    val b: Double = color.blue.toDouble()
+    val sb = if (b < 0.04045) b / 12.92 else ((b + 0.055) / 1.055).pow(2.4)
 
-    outXyz[0] = 100 * (sr * 0.4124 + sg * 0.3576 + sb * 0.1805)
-    outXyz[1] = 100 * (sr * 0.2126 + sg * 0.7152 + sb * 0.0722)
-    outXyz[2] = 100 * (sr * 0.0193 + sg * 0.1192 + sb * 0.9505)
-
-    return outXyz
+    return doubleArrayOf(
+        100 * (sr * 0.4124 + sg * 0.3576 + sb * 0.1805),
+        100 * (sr * 0.2126 + sg * 0.7152 + sb * 0.0722),
+        100 * (sr * 0.0193 + sg * 0.1192 + sb * 0.9505),
+    )
 }
 
 private const val XYZ_WHITE_REFERENCE_X = 95.047

@@ -9,6 +9,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChanne
 import fr.outadoc.justchatting.feature.chat.presentation.NoopChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.NoopCreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.presentation.AppleReadExternalDependenciesList
 import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.NoopLogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.NoopReadExternalDependenciesList
@@ -41,4 +42,5 @@ internal actual val platformModule: Module
         single<ReadExternalDependenciesList> { NoopReadExternalDependenciesList() }
         single<PreferenceRepository> { UserDefaultsPreferenceRepository() }
         single<AppVersionNameProvider> { AppleAppVersionNameProvider() }
+        single<ReadExternalDependenciesList> { AppleReadExternalDependenciesList() }
     }

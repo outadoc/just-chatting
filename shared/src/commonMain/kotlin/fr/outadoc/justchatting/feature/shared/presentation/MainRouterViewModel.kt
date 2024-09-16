@@ -35,7 +35,7 @@ internal class MainRouterViewModel(
 
     sealed class Event {
         data class ViewChannel(val userId: String) : Event()
-        data class OpenInBrowser(val uri: Uri) : Event()
+        data class ShowAuthPage(val uri: Uri) : Event()
     }
 
     val state: StateFlow<State> =
@@ -60,7 +60,7 @@ internal class MainRouterViewModel(
 
     fun onLoginClick() = viewModelScope.launch {
         _events.emit(
-            Event.OpenInBrowser(
+            Event.ShowAuthPage(
                 uri = authRepository.getExternalAuthorizeUrl(),
             ),
         )

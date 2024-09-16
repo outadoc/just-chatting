@@ -14,12 +14,8 @@ struct iOSApp: App {
     }
 
     var body: some Scene {
-        let receiver = DeeplinkReceiverHelper().getInstance()
         WindowGroup {
             MainView()
-                .onOpenURL { url in
-                    receiver.onDeeplinkReceived(uri: url.absoluteString)
-                }
         }
     }
 }

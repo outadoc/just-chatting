@@ -79,7 +79,7 @@ internal class MainActivity : AppCompatActivity() {
                     openSettingsIntent(action = "android.settings.ACCESSIBILITY_SETTINGS")
                 },
                 onShareLogs = ::shareLogs,
-                onOpenUri = { uri ->
+                onShowAuthPage = { uri ->
                     val intent = CustomTabsIntent.Builder().build()
                     intent.launchUrl(this@MainActivity, uri.toAndroidUri())
                 },

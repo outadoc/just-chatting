@@ -27,7 +27,7 @@ internal fun App(
     onOpenBubblePreferences: () -> Unit,
     onOpenAccessibilityPreferences: () -> Unit,
     onShareLogs: (Uri) -> Unit,
-    onOpenUri: (Uri) -> Unit,
+    onShowAuthPage: (Uri) -> Unit,
 ) {
     val viewModel: MainRouterViewModel = koinInject()
     val state by viewModel.state.collectAsState()
@@ -41,8 +41,8 @@ internal fun App(
                     currentUserId = event.userId
                 }
 
-                is MainRouterViewModel.Event.OpenInBrowser -> {
-                    onOpenUri(event.uri)
+                is MainRouterViewModel.Event.ShowAuthPage -> {
+                    onShowAuthPage(event.uri)
                 }
             }
         }

@@ -59,6 +59,7 @@ internal fun ChannelChatScreenContent(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
     inputState: ChatViewModel.InputState,
+    showBackButton: Boolean = false,
     isEmotePickerOpen: Boolean = false,
     showTimestamps: Boolean,
     onWatchLiveClicked: () -> Unit = {},
@@ -74,6 +75,7 @@ internal fun ChannelChatScreenContent(
     onDismissUserInfo: () -> Unit = {},
     onShowInfoForUserId: (String) -> Unit = {},
     onReuseLastMessageClicked: () -> Unit = {},
+    onNavigateUp: () -> Unit = {},
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -108,6 +110,8 @@ internal fun ChannelChatScreenContent(
                 stream = stream,
                 onWatchLiveClicked = onWatchLiveClicked,
                 onOpenBubbleClicked = onOpenBubbleClicked,
+                showBackButton = showBackButton,
+                onNavigateUp = onNavigateUp,
             )
         },
         content = { insets ->

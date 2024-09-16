@@ -32,6 +32,7 @@ public class ChatActivity : AppCompatActivity() {
         }
 
         fun createGlanceAction(userId: String): Action {
+            // TODO use compose navigation instead
             return actionStartActivity<ChatActivity>(
                 actionParametersOf(
                     ActionParameters.Key<String>(CHANNEL_USER_ID) to userId,
@@ -57,6 +58,7 @@ public class ChatActivity : AppCompatActivity() {
             AppTheme {
                 ChannelChatScreen(
                     userId = intent.getStringExtra(CHANNEL_USER_ID)!!,
+                    showBackButton = false,
                 )
             }
         }

@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.PictureInPictureAlt
 import androidx.compose.material.icons.outlined.LiveTv
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -42,6 +44,8 @@ internal fun ChatTopAppBar(
     stream: Stream?,
     onWatchLiveClicked: () -> Unit,
     onOpenBubbleClicked: () -> Unit,
+    showBackButton: Boolean,
+    onNavigateUp: () -> Unit = {},
 ) {
     val notifier: ChatNotifier = koinInject()
 
@@ -72,25 +76,36 @@ internal fun ChatTopAppBar(
             }
         },
         navigationIcon = {
-            AnimatedVisibility(
-                visible = user?.profileImageUrl != null,
-                enter = fadeIn() + slideInHorizontally(),
-                exit = slideOutHorizontally() + fadeOut(),
-            ) {
-                user?.profileImageUrl?.let { imageUrl ->
-                    Row(
-                        modifier = Modifier
-                            .size(56.dp)
-                            .padding(horizontal = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        AsyncImage(
-                            modifier = Modifier
-                                .clip(MaterialTheme.shapes.medium)
-                                .background(MaterialTheme.colorScheme.surfaceVariant),
-                            model = imageUrl,
-                            contentDescription = null,
+            Row {
+                if (showBackButton) {
+                    IconButton(onClick = onNavigateUp) {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = stringResource(MR.strings.all_goBack),
                         )
+                    }
+                }
+
+                AnimatedVisibility(
+                    visible = user?.profileImageUrl != null,
+                    enter = fadeIn() + slideInHorizontally(),
+                    exit = slideOutHorizontally() + fadeOut(),
+                ) {
+                    user?.profileImageUrl?.let { imageUrl ->
+                        Row(
+                            modifier = Modifier
+                                .size(56.dp)
+                                .padding(horizontal = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            AsyncImage(
+                                modifier = Modifier
+                                    .clip(MaterialTheme.shapes.medium)
+                                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                                model = imageUrl,
+                                contentDescription = null,
+                            )
+                        }
                     }
                 }
             }

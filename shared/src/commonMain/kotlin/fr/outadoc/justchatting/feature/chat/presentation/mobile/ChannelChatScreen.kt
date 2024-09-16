@@ -26,7 +26,11 @@ import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(KoinExperimentalAPI::class)
 @Composable
-internal fun ChannelChatScreen(userId: String) {
+internal fun ChannelChatScreen(
+    userId: String,
+    showBackButton: Boolean,
+    onNavigateUp: () -> Unit = {},
+) {
     val viewModel: ChatViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
     val inputState by viewModel.inputState.collectAsState()
@@ -80,6 +84,7 @@ internal fun ChannelChatScreen(userId: String) {
             state = state,
             inputState = inputState,
             isEmotePickerOpen = isEmotePickerOpen,
+            showBackButton = showBackButton,
             showTimestamps = prefs.showTimestamps,
             onWatchLiveClicked = {
                 (state as? ChatViewModel.State.Chatting)?.user?.let { user ->
@@ -130,6 +135,7 @@ internal fun ChannelChatScreen(userId: String) {
             onReplyToMessage = viewModel::onReplyToMessage,
             onDismissUserInfo = viewModel::onDismissUserInfo,
             onShowInfoForUserId = viewModel::onShowUserInfo,
+            onNavigateUp = onNavigateUp,
         )
     }
 }

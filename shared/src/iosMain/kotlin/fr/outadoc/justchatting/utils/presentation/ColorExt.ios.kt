@@ -8,5 +8,5 @@ internal actual fun String.parseHexColor(): Color? {
         this.removePrefix("#")
             .lowercase()
             .hexToLong(),
-    )
+    ).copy(alpha = 1f)
 }

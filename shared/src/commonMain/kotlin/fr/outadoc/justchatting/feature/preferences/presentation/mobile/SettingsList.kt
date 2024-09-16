@@ -34,6 +34,7 @@ import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.ma
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.material3.shimmer
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
+import fr.outadoc.justchatting.utils.presentation.areBubblesSupported
 import fr.outadoc.justchatting.utils.presentation.plus
 import kotlinx.datetime.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -154,24 +155,26 @@ internal fun SettingsList(
             Spacer(modifier = Modifier.height(4.dp))
         }
 
-        item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = { onOpenNotificationSection() },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Notifications,
-                        contentDescription = null,
-                    )
-                },
-                title = {
-                    Text(stringResource(MR.strings.settings_notifications_header))
-                },
-            )
-        }
+        if (areBubblesSupported()) {
+            item {
+                SettingsText(
+                    modifier = Modifier.padding(itemInsets),
+                    onClick = { onOpenNotificationSection() },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Notifications,
+                            contentDescription = null,
+                        )
+                    },
+                    title = {
+                        Text(stringResource(MR.strings.settings_notifications_header))
+                    },
+                )
+            }
 
-        item {
-            Spacer(modifier = Modifier.height(4.dp))
+            item {
+                Spacer(modifier = Modifier.height(4.dp))
+            }
         }
 
         item {

@@ -23,7 +23,6 @@ import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.permissions.PermissionState
 import fr.outadoc.justchatting.utils.permissions.isGranted
 import fr.outadoc.justchatting.utils.permissions.rememberPermissionState
-import fr.outadoc.justchatting.utils.presentation.areBubblesSupported
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -118,23 +117,21 @@ private fun SettingsSectionNotificationsContent(
             )
         }
 
-        if (areBubblesSupported()) {
-            item {
-                SettingsText(
-                    modifier = Modifier.padding(itemInsets),
-                    onClick = onOpenBubblePreferences,
-                    onClickLabel = stringResource(MR.strings.settings_notifications_openBubbleSettings),
-                    title = {
-                        Text(text = stringResource(MR.strings.settings_notifications_openBubbleSettings))
-                    },
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-                            contentDescription = null,
-                        )
-                    },
-                )
-            }
+        item {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                onClick = onOpenBubblePreferences,
+                onClickLabel = stringResource(MR.strings.settings_notifications_openBubbleSettings),
+                title = {
+                    Text(text = stringResource(MR.strings.settings_notifications_openBubbleSettings))
+                },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                        contentDescription = null,
+                    )
+                },
+            )
         }
     }
 }

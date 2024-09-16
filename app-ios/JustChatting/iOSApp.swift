@@ -5,12 +5,12 @@ import SwiftUI
 struct iOSApp: App {
 
     init() {
-        // Perform dependency injection
-        SharedKoinKt.startSharedKoin { _ in }
-
         #if DEBUG
             Logger.shared.logStrategy = AppleLogStrategy()
         #endif
+
+        // Perform dependency injection
+        SharedKoinKt.startSharedKoin { _ in }
     }
 
     var body: some Scene {

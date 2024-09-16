@@ -10,7 +10,8 @@
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
-		434F6A302C948D1A00D0C381 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434F6A2F2C948D1A00D0C381 /* ContentView.swift */; };
+		434F6A302C948D1A00D0C381 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434F6A2F2C948D1A00D0C381 /* MainView.swift */; };
+		43C247E52C986CEA003B167B /* ComposeBridgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43C247E42C986CEA003B167B /* ComposeBridgeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,7 +31,8 @@
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
-		434F6A2F2C948D1A00D0C381 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		434F6A2F2C948D1A00D0C381 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		43C247E42C986CEA003B167B /* ComposeBridgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeBridgeView.swift; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* JustChatting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JustChatting.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -78,7 +80,8 @@
 				058557BA273AAA24004C7B11 /* Assets.xcassets */,
 				058557D7273AAEEB004C7B11 /* Preview Content */,
 				2152FB032600AC8F00CF470E /* iOSApp.swift */,
-				434F6A2F2C948D1A00D0C381 /* ContentView.swift */,
+				434F6A2F2C948D1A00D0C381 /* MainView.swift */,
+				43C247E42C986CEA003B167B /* ComposeBridgeView.swift */,
 			);
 			path = JustChatting;
 			sourceTree = "<group>";
@@ -187,7 +190,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				434F6A302C948D1A00D0C381 /* ContentView.swift in Sources */,
+				43C247E52C986CEA003B167B /* ComposeBridgeView.swift in Sources */,
+				434F6A302C948D1A00D0C381 /* MainView.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

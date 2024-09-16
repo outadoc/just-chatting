@@ -7,24 +7,8 @@
 //
 
 import AuthenticationServices
-import UIKit
 import SwiftUI
 import JCShared
-
-struct ComposeView: UIViewControllerRepresentable {
-
-    var onShowAuthPage: (URL) -> Void
-
-    init(onShowAuthPage: @escaping (URL) -> Void) {
-        self.onShowAuthPage = onShowAuthPage
-    }
-
-    func makeUIViewController(context: Context) -> UIViewController {
-        MainViewControllerKt.getMainViewController(onShowAuthPage: onShowAuthPage)
-    }
-
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
-}
 
 struct MainView: View {
 
@@ -33,7 +17,7 @@ struct MainView: View {
     private let receiver = DeeplinkReceiverHelper().getInstance()
 
     var body: some View {
-        ComposeView(
+        ComposeBridgeView(
             onShowAuthPage: { uri in
                 Task {
                     do {

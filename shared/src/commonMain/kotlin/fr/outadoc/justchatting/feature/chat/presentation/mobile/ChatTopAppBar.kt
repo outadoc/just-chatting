@@ -76,7 +76,9 @@ internal fun ChatTopAppBar(
             }
         },
         navigationIcon = {
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 if (showBackButton) {
                     IconButton(onClick = onNavigateUp) {
                         Icon(

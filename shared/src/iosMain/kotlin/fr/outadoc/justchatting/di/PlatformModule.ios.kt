@@ -39,7 +39,6 @@ internal actual val platformModule: Module
         single<BaseHttpClientProvider> { AppleHttpClientProvider(get()) }
 
         single<LogRepository> { NoopLogRepository() }
-        single<ReadExternalDependenciesList> { NoopReadExternalDependenciesList() }
         single<PreferenceRepository> { UserDefaultsPreferenceRepository() }
         single<AppVersionNameProvider> { AppleAppVersionNameProvider() }
         single<ReadExternalDependenciesList> { AppleReadExternalDependenciesList() }

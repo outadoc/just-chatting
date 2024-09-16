@@ -72,7 +72,7 @@ compose-ui-core = { module = "androidx.compose.ui:ui" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 desugar = "com.android.tools:desugar_jdk_libs:2.1.2"
 fluid-currency = "io.fluidsonic.currency:fluid-currency:0.13.0"
-firebase-bom = "com.google.firebase:firebase-bom:33.2.0"
+firebase-bom = "com.google.firebase:firebase-bom:33.3.0"
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 junit = "junit:junit:4.13.2"
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }

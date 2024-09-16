@@ -1,3 +1,5 @@
+import com.github.jk1.license.render.JsonReportRenderer
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
@@ -5,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.licenseReport)
     alias(libs.plugins.moko.resources)
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.skie)
@@ -143,6 +146,16 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
+}
+
+licenseReport {
+    outputDir = file("src/commonMain/moko-resources/files").path
+    configurations = arrayOf("releaseRuntimeClasspath")
+    renderers = arrayOf(JsonReportRenderer("dependencies.json"))
+}
+
+tasks.named("generateLicenseReport") {
+    outputs.upToDateWhen { false }
 }
 
 sqldelight {

@@ -1,12 +1,9 @@
-import com.github.jk1.license.render.JsonReportRenderer
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.spotless)
-    alias(libs.plugins.licenseReport)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.moko.resources)
@@ -167,16 +164,6 @@ android {
     packaging {
         resources.excludes += "DebugProbesKt.bin"
     }
-}
-
-licenseReport {
-    outputDir = file("src/main/assets").path
-    configurations = arrayOf("releaseRuntimeClasspath")
-    renderers = arrayOf(JsonReportRenderer("dependencies.json"))
-}
-
-tasks.named("generateLicenseReport") {
-    outputs.upToDateWhen { false }
 }
 
 dependencies {

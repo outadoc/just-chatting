@@ -69,7 +69,6 @@ internal fun MainScreen(
 
                 is MainRouterViewModel.State.LoggedIn -> {
                     MainRouter(
-                        onChannelClick = onChannelClick,
                         onOpenNotificationPreferences = onOpenNotificationPreferences,
                         onOpenBubblePreferences = onOpenBubblePreferences,
                         onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,

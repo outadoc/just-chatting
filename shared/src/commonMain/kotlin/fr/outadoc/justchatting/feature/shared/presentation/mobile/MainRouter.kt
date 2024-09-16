@@ -5,10 +5,13 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.eygraber.uri.Uri
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChannelChatScreen
 import fr.outadoc.justchatting.feature.followed.presentation.mobile.FollowedChannelsList
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsContent
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionAbout
@@ -22,7 +25,6 @@ import fr.outadoc.justchatting.feature.timeline.presentation.mobile.TimelineScre
 @Composable
 internal fun MainRouter(
     modifier: Modifier = Modifier,
-    onChannelClick: (userId: String) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
     onOpenAccessibilityPreferences: () -> Unit,
@@ -62,7 +64,9 @@ internal fun MainRouter(
         ) {
             FollowedChannelsList(
                 onNavigate = { navController.navigate(it.route) },
-                onItemClick = onChannelClick,
+                onItemClick = { userId ->
+                    navController.navigate(Screen.Chat(userId).route)
+                },
             )
         }
 
@@ -73,7 +77,9 @@ internal fun MainRouter(
         ) {
             TimelineScreen(
                 onNavigate = { navController.navigate(it.route) },
-                onChannelClick = onChannelClick,
+                onChannelClick = { userId ->
+                    navController.navigate(Screen.Chat(userId).route)
+                },
             )
         }
 
@@ -84,7 +90,43 @@ internal fun MainRouter(
         ) {
             SearchScreen(
                 onNavigate = { navController.navigate(it.route) },
-                onChannelClick = onChannelClick,
+                onChannelClick = { userId ->
+                    navController.navigate(Screen.Chat(userId).route)
+                },
+            )
+        }
+
+        composable(
+            route = "chat/{userId}",
+            arguments = listOf(
+                navArgument("userId") { type = NavType.StringType },
+            ),
+            enterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Up,
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Up,
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Down,
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Down,
+                )
+            },
+        ) { entry ->
+            val userId = entry.arguments?.getString("userId")
+                ?: error("Missing userId")
+
+            ChannelChatScreen(
+                userId = userId,
             )
         }
 

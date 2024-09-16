@@ -25,6 +25,12 @@ internal sealed interface Screen {
     }
 
     @Serializable
+    data class Chat(val id: String) : Screen {
+        override val route: String
+            get() = "chat/$id"
+    }
+
+    @Serializable
     sealed interface Settings : Screen {
 
         @Serializable

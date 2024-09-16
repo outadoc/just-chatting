@@ -66,11 +66,11 @@ internal class MainRouterViewModel(
         )
     }
 
-    override fun onReceiveIntent(uri: String) {
-        onReceiveIntent(Uri.parse(uri))
+    override fun onDeeplinkReceived(uri: String) {
+        onDeeplinkReceived(Uri.parse(uri))
     }
 
-    override fun onReceiveIntent(uri: Uri) {
+    override fun onDeeplinkReceived(uri: Uri) {
         viewModelScope.launch {
             val deeplink = deeplinkParser.parseDeeplink(uri)
 

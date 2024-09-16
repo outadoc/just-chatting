@@ -15,11 +15,12 @@ import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.onboarding.presentation.mobile.OnboardingScreen
 import fr.outadoc.justchatting.feature.shared.presentation.MainRouterViewModel
 import fr.outadoc.justchatting.utils.presentation.AppTheme
+import fr.outadoc.justchatting.utils.presentation.OnLifecycleEvent
 import kotlinx.coroutines.flow.collectLatest
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun MainScreen(
-    viewModel: MainRouterViewModel,
     onChannelClick: (userId: String) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
@@ -27,6 +28,7 @@ internal fun MainScreen(
     onShareLogs: (Uri) -> Unit,
     onOpenUri: (Uri) -> Unit,
 ) {
+    val viewModel: MainRouterViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(viewModel.events) {
@@ -42,6 +44,10 @@ internal fun MainScreen(
             }
         }
     }
+
+    OnLifecycleEvent(
+        onStart = { viewModel.onStart() },
+    )
 
     AppTheme {
         Crossfade(

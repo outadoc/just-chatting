@@ -15,12 +15,12 @@ import com.eygraber.uri.Uri
 import com.eygraber.uri.toAndroidUri
 import com.eygraber.uri.toUri
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
-import fr.outadoc.justchatting.feature.shared.presentation.MainRouterViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import fr.outadoc.justchatting.feature.shared.presentation.DeeplinkReceiver
+import org.koin.android.ext.android.inject
 
 internal class MainActivity : AppCompatActivity() {
 
-    private val viewModel: MainRouterViewModel by viewModel()
+    private val deeplinkReceiver: DeeplinkReceiver by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,13 +36,12 @@ internal class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             intent.data?.toUri()?.let { data: Uri ->
-                viewModel.onReceiveIntent(data)
+                deeplinkReceiver.onDeeplinkReceived(data)
             }
         }
 
         setContent {
             MainScreen(
-                viewModel = viewModel,
                 onChannelClick = { userId ->
                     startActivity(
                         ChatActivity.createIntent(
@@ -71,15 +70,10 @@ internal class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.onStart()
-    }
-
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         intent.data?.toUri()?.let { data: Uri ->
-            viewModel.onReceiveIntent(data)
+            deeplinkReceiver.onDeeplinkReceived(data)
         }
     }
 

@@ -37,8 +37,9 @@ internal class AndroidHttpClientProvider(
             }
 
             install(UserAgent) {
-                val versionName = appVersionNameProvider.appVersionName.orEmpty()
-                agent = "JustChatting-fr.outadoc.justchatting/$versionName"
+                val appVersion = appVersionNameProvider.appVersionName.orEmpty()
+                val osVersion = android.os.Build.VERSION.SDK_INT
+                agent = "JustChatting-fr.outadoc.justchatting/$appVersion (Android/$osVersion)"
             }
 
             install(Logging) {

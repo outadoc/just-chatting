@@ -35,7 +35,7 @@ internal actual val platformModule: Module
         }
 
         single<NetworkStateObserver> { NoopNetworkStateObserver() }
-        single<BaseHttpClientProvider> { AppleHttpClientProvider(get()) }
+        single<BaseHttpClientProvider> { AppleHttpClientProvider(get(), get()) }
 
         single<LogRepository> { NoopLogRepository() }
         single<PreferenceRepository> { UserDefaultsPreferenceRepository() }

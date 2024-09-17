@@ -89,6 +89,11 @@ internal class TwitchApiImpl(
                             limit = MAX_PAGE_SIZE_DEFAULT,
                             after = cursor,
                         )
+                        .onFailure { exception ->
+                            logError<TwitchApiImpl>(exception) {
+                                "getFollowedStreams: failed to load more items"
+                            }
+                        }
                         .onSuccess { response ->
                             logDebug<TwitchApiImpl> {
                                 "getFollowedStreams: loaded ${response.data.size} more items"
@@ -225,6 +230,11 @@ internal class TwitchApiImpl(
                             limit = MAX_PAGE_SIZE_DEFAULT,
                             after = cursor,
                         )
+                        .onFailure { exception ->
+                            logError<TwitchApiImpl>(exception) {
+                                "getFollowedChannels: failed to load more items"
+                            }
+                        }
                         .onSuccess { response ->
                             logDebug<TwitchApiImpl> {
                                 "getFollowedChannels: loaded ${response.data.size} more items"
@@ -335,6 +345,11 @@ internal class TwitchApiImpl(
                             limit = MAX_PAGE_SIZE_DEFAULT,
                             after = cursor,
                         )
+                        .onFailure { exception ->
+                            logError<TwitchApiImpl>(exception) {
+                                "getChannelVideos: failed to load more items"
+                            }
+                        }
                         .onSuccess { response ->
                             logDebug<TwitchApiImpl> {
                                 "getChannelVideos: loaded ${response.data.size} more items"
@@ -386,6 +401,11 @@ internal class TwitchApiImpl(
                             start = notBefore,
                             after = cursor,
                         )
+                        .onFailure { exception ->
+                            logError<TwitchApiImpl>(exception) {
+                                "getChannelSchedule: failed to load more items"
+                            }
+                        }
                         .onSuccess { response ->
                             val segments = response.data.segments.orEmpty()
 

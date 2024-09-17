@@ -16,11 +16,18 @@ internal inline fun <reified T : Any> logError(
     throwable: Throwable? = null,
     noinline content: () -> String,
 ) {
-    Logger.println(Logger.Level.Error, T::class.simpleName!!, content)
-
-    if (throwable != null) {
-        Logger.println(Logger.Level.Error, T::class.simpleName!!) {
-            throwable.stackTraceToString()
-        }
-    }
+    Logger.println(
+        level = Logger.Level.Error,
+        tag = T::class.simpleName!!,
+        content = if (throwable != null) {
+            {
+                buildString {
+                    appendLine(content())
+                    appendLine(throwable.stackTraceToString())
+                }
+            }
+        } else {
+            content
+        },
+    )
 }

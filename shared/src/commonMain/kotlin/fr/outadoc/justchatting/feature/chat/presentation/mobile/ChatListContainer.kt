@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
@@ -46,6 +47,7 @@ internal fun ChatListContainer(
     val listState = rememberLazyListState()
 
     val haptic = LocalHapticFeedback.current
+    val imeController = LocalSoftwareKeyboardController.current
 
     var isListAtBottom by remember { mutableStateOf(false) }
 
@@ -54,6 +56,13 @@ internal fun ChatListContainer(
             listState.scrollToItem(
                 index = (state.chatMessages.size - 1).coerceAtLeast(0),
             )
+        }
+    }
+
+    LaunchedEffect(isListAtBottom) {
+        // Hide the keyboard when scrolling up
+        if (!isListAtBottom) {
+            imeController?.hide()
         }
     }
 

@@ -79,7 +79,7 @@ junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", vers
 koin-android = { module = "io.insert-koin:koin-android", version = "3.5.6" }
 koin-compose = { module = "io.insert-koin:koin-compose", version = "1.1.5" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version = "1.2.0-Beta5" }
-koin-core = { module = "io.insert-koin:koin-core", version = "3.5.6" }
+koin-core = { module = "io.insert-koin:koin-core", version = "4.0.0" }
 konsist = { module = "com.lemonappdev:konsist", version.ref = "konsist" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.8"

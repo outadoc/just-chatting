@@ -427,7 +427,7 @@ internal class TwitchApiImpl(
                                     ),
                                     title = segment.title,
                                     startTime = Instant.parse(segment.startTimeIso),
-                                    endTime = Instant.parse(segment.endTimeIso),
+                                    endTime = segment.endTimeIso?.let { Instant.parse(it) },
                                     category = segment.category?.let { category ->
                                         StreamCategory(
                                             id = category.id,

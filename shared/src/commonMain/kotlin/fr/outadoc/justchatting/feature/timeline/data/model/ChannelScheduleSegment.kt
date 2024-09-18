@@ -10,7 +10,7 @@ internal data class ChannelScheduleSegment(
     @SerialName("start_time")
     val startTimeIso: String,
     @SerialName("end_time")
-    val endTimeIso: String,
+    val endTimeIso: String? = null,
     @SerialName("title")
     val title: String,
     @SerialName("canceled_until")

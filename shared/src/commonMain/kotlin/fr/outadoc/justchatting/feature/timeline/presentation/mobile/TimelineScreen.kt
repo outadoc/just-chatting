@@ -309,8 +309,11 @@ internal fun TimelineSegment(
                     modifier = Modifier.alignByBaseline(),
                     text = buildAnnotatedString {
                         append(segment.startTime.formatHourMinute())
-                        append(" - ")
-                        append(segment.endTime.formatHourMinute())
+
+                        if (segment.endTime != null) {
+                            append(" - ")
+                            append(segment.endTime.formatHourMinute())
+                        }
                     },
                     style = MaterialTheme.typography.bodyMedium,
                 )
@@ -325,12 +328,14 @@ internal fun TimelineSegment(
                     contentDescription = null,
                 )
 
-                val duration = segment.endTime - segment.startTime
-                Text(
-                    modifier = Modifier.alignByBaseline(),
-                    text = duration.format(showSeconds = false),
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+                if (segment.endTime != null) {
+                    val duration = segment.endTime - segment.startTime
+                    Text(
+                        modifier = Modifier.alignByBaseline(),
+                        text = duration.format(showSeconds = false),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
             }
         }
     }
@@ -479,8 +484,11 @@ private fun TimelineSegmentDetails(
                     Text(
                         buildAnnotatedString {
                             append(segment.startTime.formatHourMinute())
-                            append(" - ")
-                            append(segment.endTime.formatHourMinute())
+
+                            if (segment.endTime != null) {
+                                append(" - ")
+                                append(segment.endTime.formatHourMinute())
+                            }
                         },
                     )
                 }

@@ -55,7 +55,9 @@ internal class LocalStreamsDb(
                             },
                         ),
                         startTime = Instant.fromEpochMilliseconds(stream.start_time),
-                        endTime = Instant.fromEpochMilliseconds(stream.end_time),
+                        endTime = stream.end_time
+                            .takeIf { it > 0 }
+                            ?.let { Instant.fromEpochMilliseconds(it) },
                         title = stream.title,
                         category = if (stream.category_id != null && stream.category_name != null) {
                             StreamCategory(
@@ -139,7 +141,9 @@ internal class LocalStreamsDb(
                             },
                         ),
                         startTime = Instant.fromEpochMilliseconds(stream.start_time),
-                        endTime = Instant.fromEpochMilliseconds(stream.end_time),
+                        endTime = stream.end_time
+                            .takeIf { it > 0 }
+                            ?.let { Instant.fromEpochMilliseconds(it) },
                         title = stream.title,
                         category = if (stream.category_id != null && stream.category_name != null) {
                             StreamCategory(
@@ -228,7 +232,7 @@ internal class LocalStreamsDb(
                         id = segment.id,
                         user_id = segment.user.id,
                         start_time = segment.startTime.toEpochMilliseconds(),
-                        end_time = segment.endTime.toEpochMilliseconds(),
+                        end_time = segment.endTime?.toEpochMilliseconds() ?: 0,
                         title = segment.title,
                         category_id = segment.category?.id,
                     )

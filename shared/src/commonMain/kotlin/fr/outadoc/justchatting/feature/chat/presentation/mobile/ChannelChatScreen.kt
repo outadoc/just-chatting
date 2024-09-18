@@ -71,9 +71,6 @@ internal fun ChannelChatScreen(
         },
     )
 
-    // Update task description
-    UpdateTaskDescriptionForUser(user)
-
     MaterialTheme(
         colorScheme = dynamicImageColorScheme(url = user?.profileImageUrl),
     ) {

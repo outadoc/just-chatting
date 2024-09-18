@@ -12,6 +12,10 @@
       ]
     },
     {
+      "groupName": "koin",
+      "matchPackagePatterns": ["^io.insert-koin"]
+    },
+    {
       "automerge": true,
       "matchUpdateTypes": [
         "minor",

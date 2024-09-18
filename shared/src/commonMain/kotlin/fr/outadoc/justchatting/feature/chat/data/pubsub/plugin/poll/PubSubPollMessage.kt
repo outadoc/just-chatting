@@ -1,7 +1,5 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.poll
 
-import kotlinx.datetime.Instant
-import kotlinx.datetime.serializers.InstantIso8601Serializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -52,11 +50,9 @@ internal sealed class PubSubPollMessage {
             @SerialName("title")
             val title: String,
             @SerialName("started_at")
-            @Serializable(with = InstantIso8601Serializer::class)
-            val startedAt: Instant,
+            val startedAtIso: String,
             @SerialName("ended_at")
-            @Serializable(with = InstantIso8601Serializer::class)
-            val endedAt: Instant?,
+            val endedAtIso: String?,
             @SerialName("duration_seconds")
             val durationSeconds: Int,
             @SerialName("settings")

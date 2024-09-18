@@ -1,7 +1,5 @@
 package fr.outadoc.justchatting.feature.timeline.data.model
 
-import kotlinx.datetime.Instant
-import kotlinx.datetime.serializers.InstantIso8601Serializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -22,11 +20,9 @@ internal data class Video(
     @SerialName("description")
     val description: String,
     @SerialName("created_at")
-    @Serializable(with = InstantIso8601Serializer::class)
-    val createdAt: Instant,
+    val createdAtIso: String,
     @SerialName("published_at")
-    @Serializable(with = InstantIso8601Serializer::class)
-    val publishedAt: Instant,
+    val publishedAtIso: String,
     @SerialName("url")
     val videoUrl: String,
     @SerialName("thumbnail_url")

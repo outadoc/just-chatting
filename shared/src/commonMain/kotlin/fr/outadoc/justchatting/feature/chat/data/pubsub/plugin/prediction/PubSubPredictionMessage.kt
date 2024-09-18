@@ -1,7 +1,5 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.prediction
 
-import kotlinx.datetime.Instant
-import kotlinx.datetime.serializers.InstantIso8601Serializer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -16,8 +14,7 @@ internal data class PubSubPredictionMessage(
     @Serializable
     data class Data(
         @SerialName("timestamp")
-        @Serializable(with = InstantIso8601Serializer::class)
-        val timestamp: Instant,
+        val timestampIso: String,
         @SerialName("event")
         val event: Event,
     )
@@ -36,8 +33,7 @@ internal data class PubSubPredictionMessage(
             @SerialName("title")
             val title: String,
             @SerialName("created_at")
-            @Serializable(with = InstantIso8601Serializer::class)
-            val createdAt: Instant,
+            val createdAtIso: String,
             @SerialName("outcomes")
             val outcomes: List<Outcome>,
             @SerialName("prediction_window_seconds")
@@ -56,11 +52,9 @@ internal data class PubSubPredictionMessage(
             @SerialName("title")
             val title: String,
             @SerialName("created_at")
-            @Serializable(with = InstantIso8601Serializer::class)
-            val createdAt: Instant,
+            val createdAtIso: String,
             @SerialName("locked_at")
-            @Serializable(with = InstantIso8601Serializer::class)
-            val lockedAt: Instant?,
+            val lockedAtIso: String?,
             @SerialName("outcomes")
             val outcomes: List<Outcome>,
             @SerialName("prediction_window_seconds")
@@ -75,14 +69,11 @@ internal data class PubSubPredictionMessage(
             @SerialName("channel_id")
             val channelId: String,
             @SerialName("created_at")
-            @Serializable(with = InstantIso8601Serializer::class)
-            val createdAt: Instant,
+            val createdAtIso: String,
             @SerialName("ended_at")
-            @Serializable(with = InstantIso8601Serializer::class)
-            val endedAt: Instant?,
+            val endedAtIso: String?,
             @SerialName("locked_at")
-            @Serializable(with = InstantIso8601Serializer::class)
-            val lockedAt: Instant?,
+            val lockedAtIso: String?,
             @SerialName("outcomes")
             val outcomes: List<Outcome>,
             @SerialName("prediction_window_seconds")
@@ -103,14 +94,11 @@ internal data class PubSubPredictionMessage(
             @SerialName("title")
             val title: String,
             @SerialName("created_at")
-            @Serializable(with = InstantIso8601Serializer::class)
-            val createdAt: Instant,
+            val createdAtIso: String,
             @SerialName("ended_at")
-            @Serializable(with = InstantIso8601Serializer::class)
-            val endedAt: Instant?,
+            val endedAtIso: String?,
             @SerialName("locked_at")
-            @Serializable(with = InstantIso8601Serializer::class)
-            val lockedAt: Instant?,
+            val lockedAtIso: String?,
             @SerialName("outcomes")
             val outcomes: List<Outcome>,
             @SerialName("prediction_window_seconds")
@@ -168,11 +156,9 @@ internal data class PubSubPredictionMessage(
         @SerialName("points")
         val points: Int,
         @SerialName("predicted_at")
-        @Serializable(with = InstantIso8601Serializer::class)
-        val predictedAt: Instant,
+        val predictedAtIso: String,
         @SerialName("updated_at")
-        @Serializable(with = InstantIso8601Serializer::class)
-        val updatedAt: Instant,
+        val updatedAtIso: String,
         @SerialName("user_id")
         val userId: String,
         @SerialName("user_display_name")

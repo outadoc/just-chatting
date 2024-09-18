@@ -2,8 +2,6 @@ package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.channelpoints
 
 import fr.outadoc.justchatting.feature.chat.data.http.Reward
 import fr.outadoc.justchatting.feature.shared.data.model.User
-import kotlinx.datetime.Instant
-import kotlinx.datetime.serializers.InstantIso8601Serializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -19,8 +17,7 @@ internal sealed class PubSubRewardMessage {
         @Serializable
         data class Data(
             @SerialName("timestamp")
-            @Serializable(with = InstantIso8601Serializer::class)
-            val timestamp: Instant? = null,
+            val timestampIso: String? = null,
             @SerialName("redemption")
             val redemption: Redemption,
         )
@@ -34,8 +31,7 @@ internal sealed class PubSubRewardMessage {
             @SerialName("user_input")
             val userAddedMessage: String? = null,
             @SerialName("redeemed_at")
-            @Serializable(with = InstantIso8601Serializer::class)
-            val redeemedAt: Instant? = null,
+            val redeemedAtIso: String? = null,
             @SerialName("reward")
             val reward: Reward,
         )

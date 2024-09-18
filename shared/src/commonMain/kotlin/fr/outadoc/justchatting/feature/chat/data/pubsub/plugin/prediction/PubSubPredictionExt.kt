@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.prediction
 
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
+import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.seconds
 
 internal fun PubSubPredictionMessage.Outcome.map(): Prediction.Outcome {
@@ -29,7 +30,7 @@ internal fun PubSubPredictionMessage.map(): Prediction {
                 id = prediction.id,
                 title = prediction.title,
                 status = Prediction.Status.Active,
-                createdAt = prediction.createdAt,
+                createdAt = Instant.parse(prediction.createdAtIso),
                 endedAt = null,
                 lockedAt = null,
                 outcomes = prediction.outcomes.map { outcome -> outcome.map() },
@@ -43,9 +44,9 @@ internal fun PubSubPredictionMessage.map(): Prediction {
                 id = prediction.id,
                 title = prediction.title,
                 status = Prediction.Status.Locked,
-                createdAt = prediction.createdAt,
+                createdAt = Instant.parse(prediction.createdAtIso),
                 endedAt = null,
-                lockedAt = prediction.lockedAt,
+                lockedAt = prediction.lockedAtIso?.let { Instant.parse(it) },
                 outcomes = prediction.outcomes.map { outcome -> outcome.map() },
                 predictionWindow = prediction.predictionWindowSeconds.seconds,
                 winningOutcome = null,
@@ -58,9 +59,9 @@ internal fun PubSubPredictionMessage.map(): Prediction {
                 id = prediction.id,
                 title = prediction.title,
                 status = Prediction.Status.ResolvePending,
-                createdAt = prediction.createdAt,
-                endedAt = prediction.endedAt,
-                lockedAt = prediction.lockedAt,
+                createdAt = Instant.parse(prediction.createdAtIso),
+                endedAt = prediction.endedAtIso?.let { Instant.parse(it) },
+                lockedAt = prediction.lockedAtIso?.let { Instant.parse(it) },
                 outcomes = prediction.outcomes.map { outcome -> outcome.map() },
                 predictionWindow = prediction.predictionWindowSeconds.seconds,
                 winningOutcome = outcomes.first { outcome -> outcome.id == prediction.winningOutcomeId },
@@ -73,9 +74,9 @@ internal fun PubSubPredictionMessage.map(): Prediction {
                 id = prediction.id,
                 title = prediction.title,
                 status = Prediction.Status.Resolved,
-                createdAt = prediction.createdAt,
-                endedAt = prediction.endedAt,
-                lockedAt = prediction.lockedAt,
+                createdAt = Instant.parse(prediction.createdAtIso),
+                endedAt = prediction.endedAtIso?.let { Instant.parse(it) },
+                lockedAt = prediction.lockedAtIso?.let { Instant.parse(it) },
                 outcomes = prediction.outcomes.map { outcome -> outcome.map() },
                 predictionWindow = prediction.predictionWindowSeconds.seconds,
                 winningOutcome = outcomes.first { outcome -> outcome.id == prediction.winningOutcomeId },

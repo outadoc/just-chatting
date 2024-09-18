@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.poll
 
 import fr.outadoc.justchatting.feature.chat.domain.model.Poll
+import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -9,11 +10,11 @@ internal fun PubSubPollMessage.Data.Poll.map(): Poll =
         pollId = pollId,
         status = status.map(),
         title = title,
-        startedAt = startedAt,
+        startedAt = Instant.parse(startedAtIso),
         choices = choices.map { it.map() },
         duration = durationSeconds.seconds,
         remainingDuration = remainingDurationMilliseconds.milliseconds,
-        endedAt = endedAt,
+        endedAt = endedAtIso?.let { Instant.parse(it) },
         topBitsContributor = topBitsContributor,
         topChannelPointsContributor = topChannelPointsContributor,
         topContributor = topContributor,

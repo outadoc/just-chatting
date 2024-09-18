@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.prediction
 
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
+import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
 
 internal class PubSubPredictionPlugin(
@@ -15,7 +16,7 @@ internal class PubSubPredictionPlugin(
         val message = json.decodeFromString<PubSubPredictionMessage>(payload)
         return listOfNotNull(
             ChatEvent.Message.PredictionUpdate(
-                timestamp = message.data.timestamp,
+                timestamp = Instant.parse(message.data.timestampIso),
                 prediction = message.map(),
             ),
         )

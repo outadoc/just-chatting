@@ -5,6 +5,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Redemption
 import fr.outadoc.justchatting.feature.chat.domain.model.Reward
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
 
 internal class PubSubChannelPointsPlugin(
@@ -20,14 +21,17 @@ internal class PubSubChannelPointsPlugin(
             is PubSubRewardMessage.Redeemed -> {
                 listOf(
                     ChatEvent.Message.RedemptionUpdate(
-                        timestamp = message.data.redemption.redeemedAt ?: clock.now(),
+                        timestamp = message.data.redemption.redeemedAtIso
+                            ?.let { Instant.parse(it) }
+                            ?: clock.now(),
                         redemption = Redemption(
                             id = message.data.redemption.id,
                             userId = message.data.redemption.user.id,
                             userLogin = message.data.redemption.user.login,
                             userDisplayName = message.data.redemption.user.displayName,
                             userAddedMessage = message.data.redemption.userAddedMessage,
-                            redeemedAt = message.data.redemption.redeemedAt,
+                            redeemedAt = message.data.redemption.redeemedAtIso
+                                ?.let { Instant.parse(it) },
                             reward = Reward(
                                 id = message.data.redemption.reward.id,
                                 title = message.data.redemption.reward.title,

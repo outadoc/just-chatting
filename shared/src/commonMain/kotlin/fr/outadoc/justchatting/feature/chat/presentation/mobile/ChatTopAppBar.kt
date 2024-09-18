@@ -28,13 +28,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.HapticIconButton
-import fr.outadoc.justchatting.utils.presentation.canOpenActivityInBubble
-import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,10 +42,9 @@ internal fun ChatTopAppBar(
     onWatchLiveClicked: () -> Unit,
     onOpenBubbleClicked: () -> Unit,
     showBackButton: Boolean,
+    showBubbleButton: Boolean,
     onNavigateUp: () -> Unit = {},
 ) {
-    val notifier: ChatNotifier = koinInject()
-
     TopAppBar(
         modifier = modifier,
         title = {
@@ -121,7 +117,7 @@ internal fun ChatTopAppBar(
                 )
             }
 
-            if (canOpenActivityInBubble() && notifier.areNotificationsEnabled) {
+            if (showBubbleButton) {
                 HapticIconButton(onClick = { onOpenBubbleClicked() }) {
                     Icon(
                         imageVector = Icons.Default.PictureInPictureAlt,

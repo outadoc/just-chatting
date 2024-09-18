@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.annotation.RequiresPermission
@@ -22,7 +21,6 @@ import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.core.toPendingActivityIntent
 import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
 import fr.outadoc.justchatting.utils.logging.logError
-import fr.outadoc.justchatting.utils.presentation.isLaunchedFromBubbleCompat
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -60,9 +58,6 @@ internal class AndroidChatNotifier(
         }
 
     override fun notify(context: Context, user: User) {
-        // Don't post a new notification if already in a bubble
-        if ((context as? Activity)?.isLaunchedFromBubbleCompat == true) return
-
         if (areNotificationsEnabled) {
             createGenericBubbleChannelIfNeeded(context) ?: return
 

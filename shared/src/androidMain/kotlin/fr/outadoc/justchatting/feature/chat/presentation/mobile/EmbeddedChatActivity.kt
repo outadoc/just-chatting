@@ -45,7 +45,7 @@ public class EmbeddedChatActivity : AppCompatActivity() {
             AppTheme {
                 ChannelChatScreen(
                     userId = intent.getStringExtra(CHANNEL_USER_ID)!!,
-                    showBackButton = false,
+                    isStandalone = true,
                 )
             }
         }

@@ -18,7 +18,7 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.utils.core.createChannelExternalLink
 import fr.outadoc.justchatting.utils.presentation.BackHandler
 import fr.outadoc.justchatting.utils.presentation.OnLifecycleEvent
-import fr.outadoc.justchatting.utils.presentation.canOpenActivityInBubble
+import fr.outadoc.justchatting.utils.presentation.areBubblesSupported
 import fr.outadoc.justchatting.utils.presentation.isDark
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -28,7 +28,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @Composable
 internal fun ChannelChatScreen(
     userId: String,
-    showBackButton: Boolean,
+    isStandalone: Boolean,
     onNavigateUp: () -> Unit = {},
 ) {
     val viewModel: ChatViewModel = koinViewModel()
@@ -56,10 +56,13 @@ internal fun ChannelChatScreen(
         isEmotePickerOpen = false
     }
 
+    val canOpenInBubble: Boolean =
+        !isStandalone && areBubblesSupported() && prefs.enableNotifications && notifier.areNotificationsEnabled
+
     OnLifecycleEvent(
         onResume = viewModel::onResume,
         onPause = {
-            if (user != null) {
+            if (user != null && canOpenInBubble) {
                 notifier.notify(
                     context = context,
                     user = user,
@@ -71,11 +74,6 @@ internal fun ChannelChatScreen(
     // Update task description
     UpdateTaskDescriptionForUser(user)
 
-    val canOpenInBubble: Boolean =
-        prefs.enableNotifications &&
-            canOpenActivityInBubble() &&
-            notifier.areNotificationsEnabled
-
     MaterialTheme(
         colorScheme = dynamicImageColorScheme(url = user?.profileImageUrl),
     ) {
@@ -84,7 +82,8 @@ internal fun ChannelChatScreen(
             state = state,
             inputState = inputState,
             isEmotePickerOpen = isEmotePickerOpen,
-            showBackButton = showBackButton,
+            showBackButton = !isStandalone,
+            showBubbleButton = canOpenInBubble,
             showTimestamps = prefs.showTimestamps,
             onWatchLiveClicked = {
                 (state as? ChatViewModel.State.Chatting)?.user?.let { user ->

@@ -135,7 +135,7 @@ internal fun MainRouter(
 
             ChannelChatScreen(
                 userId = userId,
-                showBackButton = true,
+                isStandalone = false,
                 onNavigateUp = { navController.popBackStack() },
             )
         }

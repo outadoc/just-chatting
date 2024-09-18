@@ -59,7 +59,8 @@ internal fun ChannelChatScreenContent(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
     inputState: ChatViewModel.InputState,
-    showBackButton: Boolean = false,
+    showBackButton: Boolean = true,
+    showBubbleButton: Boolean = true,
     isEmotePickerOpen: Boolean = false,
     showTimestamps: Boolean,
     onWatchLiveClicked: () -> Unit = {},
@@ -111,6 +112,7 @@ internal fun ChannelChatScreenContent(
                 onWatchLiveClicked = onWatchLiveClicked,
                 onOpenBubbleClicked = onOpenBubbleClicked,
                 showBackButton = showBackButton,
+                showBubbleButton = showBubbleButton,
                 onNavigateUp = onNavigateUp,
             )
         },

@@ -66,8 +66,8 @@ internal class MainRouterViewModel(
         )
     }
 
-    override fun onDeeplinkReceived(uri: String) {
-        onDeeplinkReceived(Uri.parse(uri))
+    override fun onDeeplinkReceived(uriString: String) {
+        onDeeplinkReceived(Uri.parse(uriString))
     }
 
     override fun onDeeplinkReceived(uri: Uri) {

@@ -10,7 +10,6 @@ plugins {
     alias(libs.plugins.licenseReport)
     alias(libs.plugins.moko.resources)
     alias(libs.plugins.sqldelight)
-    alias(libs.plugins.skie)
 }
 
 kotlin {

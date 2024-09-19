@@ -26,14 +26,14 @@ struct MainView: View {
                             callbackURLScheme: "justchatting"
                         )
 
-                        receiver.onDeeplinkReceived(uri: urlWithToken.absoluteString)
+                        receiver.onDeeplinkReceived(uriString: urlWithToken.absoluteString)
                     } catch {
                     }
                 }
             })
             .ignoresSafeArea(.all)
             .onOpenURL { url in
-                receiver.onDeeplinkReceived(uri: url.absoluteString)
+                receiver.onDeeplinkReceived(uriString: url.absoluteString)
             }
     }
 }

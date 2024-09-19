@@ -58,6 +58,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.uiToolingPreview)
 
+            implementation(libs.androidx.datastore.preferences)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.paging.common)
             implementation(libs.androidx.paging.compose.common)
@@ -96,7 +97,6 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)
             implementation(libs.androidx.browser)
-            implementation(libs.androidx.datastore.preferences)
             implementation(libs.androidx.emoji2.core)
             implementation(libs.androidx.glance.appwidget)
             implementation(libs.androidx.glance.material3)

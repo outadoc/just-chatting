@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.preferences.data
 
-import android.content.Context
+import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -18,10 +18,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 
 internal class DataStorePreferenceRepository(
-    applicationContext: Context,
+    private val dataStore: DataStore<Preferences>,
 ) : PreferenceRepository {
 
-    private val dataStore = applicationContext.dataStore
     private val defaultPreferences = AppPreferences()
 
     private val scope = CoroutineScope(SupervisorJob())

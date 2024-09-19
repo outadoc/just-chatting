@@ -53,7 +53,9 @@ import fr.outadoc.justchatting.feature.emotes.domain.GetRecentEmotesUseCase
 import fr.outadoc.justchatting.feature.emotes.domain.InsertRecentEmotesUseCase
 import fr.outadoc.justchatting.feature.emotes.domain.RecentEmotesApi
 import fr.outadoc.justchatting.feature.followed.presentation.FollowedChannelsViewModel
+import fr.outadoc.justchatting.feature.preferences.data.DataStorePreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
+import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsApi
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsClient
@@ -90,6 +92,8 @@ public val sharedModule: Module
         single<Clock> { Clock.System }
         single<AuthRepository> { AuthRepository(get(), get(), get()) }
         single { DeeplinkParser(get()) }
+
+        single<PreferenceRepository> { DataStorePreferenceRepository(get()) }
 
         single<TwitchHttpClientProvider> { TwitchHttpClientProvider(get(), get(), get()) }
         single { get<BaseHttpClientProvider>().get() }

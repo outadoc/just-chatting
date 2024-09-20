@@ -1,8 +1,8 @@
 package fr.outadoc.justchatting.feature.shared.presentation.mobile
 
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -67,8 +67,8 @@ internal fun MainRouter(
     ) {
         composable(
             route = Screen.Followed.route,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None },
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
         ) {
             FollowedChannelsList(
                 onNavigate = { navController.navigate(it.route) },
@@ -80,8 +80,8 @@ internal fun MainRouter(
 
         composable(
             route = Screen.Timeline.route,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None },
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
         ) {
             TimelineScreen(
                 onNavigate = { navController.navigate(it.route) },
@@ -93,8 +93,8 @@ internal fun MainRouter(
 
         composable(
             route = Screen.Search.route,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None },
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
         ) {
             SearchScreen(
                 onNavigate = { navController.navigate(it.route) },
@@ -142,8 +142,8 @@ internal fun MainRouter(
 
         composable(
             route = Screen.Settings.Root.route,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None },
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
         ) {
             SettingsContent(
                 onNavigate = { navController.navigate(it.route) },

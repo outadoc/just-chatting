@@ -14,7 +14,7 @@ import io.ktor.http.Url
 @Composable
 internal fun DynamicImageColorTheme(
     imageUrl: Uri?,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val networkLoader = rememberNetworkLoader()
     val dominantColorState: DominantColorState<Url> =

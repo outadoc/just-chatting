@@ -30,6 +30,7 @@ import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import com.materialkolor.ktx.harmonizeWithPrimary
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
@@ -163,19 +164,17 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
     mentionBackground: Color = MaterialTheme.colorScheme.onBackground,
     mentionColor: Color = MaterialTheme.colorScheme.background,
 ): AnnotatedString {
-    val randomChatColors = MaterialTheme.customColors.fallbackChatColors
-    val pronoun: String? = pronouns[chatter]?.displayPronoun
+    val accessibleChatterColor: Color? =
+        color?.parseHexColor()?.let { rawColor ->
+            ensureColorIsAccessible(rawColor, backgroundHint)
+        }
 
-    val color = remember(color) {
-        color?.parseHexColor()?.let { color ->
-            ensureColorIsAccessible(
-                foreground = color,
-                background = backgroundHint,
-            )
-        } ?: randomChatColors.random(
-            Random(chatter.hashCode()),
-        )
+    val randomChatColors = MaterialTheme.customColors.fallbackChatColors
+    val fallbackColor = remember(chatter) {
+        randomChatColors.random(Random(chatter.hashCode()))
     }
+
+    val pronoun: String? = pronouns[chatter]?.displayPronoun
 
     return buildAnnotatedString {
         if (pronoun != null) {
@@ -193,7 +192,13 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
             append(' ')
         }
 
-        withStyle(SpanStyle(color = color)) {
+        withStyle(
+            SpanStyle(
+                color = MaterialTheme.colorScheme.harmonizeWithPrimary(
+                    accessibleChatterColor ?: fallbackColor,
+                ),
+            ),
+        ) {
             withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                 withAnnotation(
                     tag = CHATTER_ID_ANNOTATION_TAG,

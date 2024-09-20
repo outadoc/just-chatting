@@ -1,10 +1,12 @@
 package fr.outadoc.justchatting.utils.presentation
 
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 
 private const val MIN_LUMINANCE_SEARCH_MAX_ITERATIONS = 10
 private const val MIN_LUMINANCE_SEARCH_PRECISION = 1
 
+@Stable
 internal fun ensureColorIsAccessible(
     foreground: Color,
     background: Color,

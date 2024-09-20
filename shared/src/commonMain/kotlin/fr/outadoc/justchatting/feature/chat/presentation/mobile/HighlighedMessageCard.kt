@@ -17,6 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.materialkolor.DynamicMaterialTheme
+import com.materialkolor.PaletteStyle
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem.Message.Highlighted.Level
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.HighlightLevelPreviewProvider
 import fr.outadoc.justchatting.utils.presentation.AppTheme
@@ -30,7 +32,7 @@ internal fun HighlightedMessageCard(
     content: @Composable () -> Unit,
 ) {
     val color = when (level) {
-        Level.Base -> null
+        Level.Base -> MaterialTheme.colorScheme.primary
         Level.One -> Color(0xff6b816e)
         Level.Two -> Color(0xff32843b)
         Level.Three -> Color(0xff007a6c)
@@ -43,12 +45,15 @@ internal fun HighlightedMessageCard(
         Level.Ten -> Color(0xffc90216)
     }
 
-    MaterialTheme(colorScheme = singleSourceColorScheme(color)) {
+    DynamicMaterialTheme(
+        seedColor = color,
+        style = PaletteStyle.Vibrant,
+    ) {
         Row(modifier = Modifier.height(IntrinsicSize.Min)) {
             Box(
                 modifier = Modifier
                     .padding(vertical = 4.dp)
-                    .background(color ?: MaterialTheme.colorScheme.primary)
+                    .background(color)
                     .width(4.dp)
                     .fillMaxHeight(),
             )

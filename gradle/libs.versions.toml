@@ -6,6 +6,7 @@ compose-multiplatform = "1.7.0-beta02"
 emoji = "1.5.0"
 glance = "1.1.0"
 junit-jupiter-engine = "5.11.0"
+kmpalette = "3.1.0"
 konsist = "0.16.1"
 kotlin = "2.0.10"
 ktor = "2.3.12"
@@ -75,6 +76,8 @@ firebase-bom = "com.google.firebase:firebase-bom:33.3.0"
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 junit = "junit:junit:4.13.2"
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }
+kmpalette-core = { module = "com.kmpalette:kmpalette-core", version.ref = "kmpalette" }
+kmpalette-extensions-network = { module = "com.kmpalette:extensions-network", version.ref = "kmpalette" }
 koin-android = { module = "io.insert-koin:koin-android", version = "3.5.6" }
 koin-compose = { module = "io.insert-koin:koin-compose", version = "1.1.5" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version = "1.2.0-Beta5" }
@@ -94,6 +97,7 @@ ktor-contentNegociation = { module = "io.ktor:ktor-client-content-negotiation", 
 ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 material-core = "com.google.android.material:material:1.12.0"
+material-kolor = "com.materialkolor:material-kolor:1.7.1"
 moko-resources-core = { module = "dev.icerock.moko:resources", version.ref = "moko" }
 moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko" }
 okio = "com.squareup.okio:okio:3.9.1"

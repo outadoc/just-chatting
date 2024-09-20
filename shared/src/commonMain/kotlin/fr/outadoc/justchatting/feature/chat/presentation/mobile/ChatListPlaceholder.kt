@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.core.PlaceholderHighlight
@@ -27,7 +26,7 @@ internal fun ChatListPlaceholder(
     modifier: Modifier = Modifier,
     placeholderItemCount: Int = 100,
 ) {
-    val random = remember { Random(seed = 0xbadcafe) }
+    val random = Random(seed = 0xbadcafe)
     val listState = rememberLazyListState(
         initialFirstVisibleItemIndex = placeholderItemCount - 1,
     )

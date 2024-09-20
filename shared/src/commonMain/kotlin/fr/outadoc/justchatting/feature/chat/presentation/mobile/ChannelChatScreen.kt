@@ -16,6 +16,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.utils.core.createChannelExternalLink
+import fr.outadoc.justchatting.utils.http.toUri
 import fr.outadoc.justchatting.utils.presentation.BackHandler
 import fr.outadoc.justchatting.utils.presentation.OnLifecycleEvent
 import fr.outadoc.justchatting.utils.presentation.areBubblesSupported
@@ -71,8 +72,8 @@ internal fun ChannelChatScreen(
         },
     )
 
-    MaterialTheme(
-        colorScheme = dynamicImageColorScheme(url = user?.profileImageUrl),
+    DynamicImageColorTheme(
+        imageUrl = user?.profileImageUrl?.toUri(),
     ) {
         val isDarkTheme = MaterialTheme.colorScheme.isDark
         ChannelChatScreenContent(

@@ -1,21 +1,36 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
-import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.LaunchedEffect
+import com.eygraber.uri.Uri
+import com.kmpalette.DominantColorState
+import com.kmpalette.loader.rememberNetworkLoader
+import com.kmpalette.rememberDominantColorState
+import com.materialkolor.DynamicMaterialTheme
+import com.materialkolor.PaletteStyle
+import fr.outadoc.justchatting.utils.http.toKtorUrl
+import io.ktor.http.Url
 
-@Stable
 @Composable
-internal expect fun dynamicImageColorScheme(
-    url: String?,
-    parentScheme: ColorScheme = MaterialTheme.colorScheme,
-): ColorScheme
+internal fun DynamicImageColorTheme(
+    imageUrl: Uri?,
+    content: @Composable () -> Unit
+) {
+    val networkLoader = rememberNetworkLoader()
+    val dominantColorState: DominantColorState<Url> =
+        rememberDominantColorState(loader = networkLoader)
 
-@Stable
-@Composable
-internal expect fun singleSourceColorScheme(
-    color: Color?,
-    parentScheme: ColorScheme = MaterialTheme.colorScheme,
-): ColorScheme
+    LaunchedEffect(imageUrl) {
+        val url = imageUrl?.toKtorUrl()
+        if (url != null) {
+            dominantColorState.updateFrom(url)
+        }
+    }
+
+    DynamicMaterialTheme(
+        seedColor = dominantColorState.color,
+        style = PaletteStyle.Vibrant,
+        animate = true,
+        content = content,
+    )
+}

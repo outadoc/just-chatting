@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.onboarding.presentation.mobile
 
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -8,11 +9,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import dev.icerock.moko.resources.compose.painterResource
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.presentation.icons.TwitchIcon
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -28,18 +31,21 @@ internal fun SignInWithTwitchButton(
             contentColor = Color.White,
         ),
     ) {
-        Icon(
-            painterResource(MR.images.ic_twitch),
-            contentDescription = null,
-            modifier = Modifier.size(ButtonDefaults.IconSize),
-        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(ButtonDefaults.IconSpacing),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                rememberVectorPainter(TwitchIcon),
+                contentDescription = null,
+                modifier = Modifier.size(ButtonDefaults.IconSize),
+            )
 
-        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-
-        Text(
-            text = stringResource(MR.strings.onboarding_login_action),
-            style = MaterialTheme.typography.bodyLarge,
-        )
+            Text(
+                text = stringResource(MR.strings.onboarding_login_action),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
     }
 }
 

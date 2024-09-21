@@ -242,7 +242,7 @@
     <string name="notification_channel_bubbles_title">Chat bubbles</string>
     <string name="onboarding_login_action">Continue with Twitch</string>
     <string name="onboarding_message">In order to browse your followed channels and post in chat, you will need to link your Twitch account.</string>
-    <string name="onboarding_title">Welcome to %s!</string>
+    <string name="onboarding_title">Welcome to</string>
     <string name="poll_collapse_action">Collapse poll</string>
     <string name="poll_expand_action">Expand poll</string>
     <string name="poll_status_ended">Poll ended</string>

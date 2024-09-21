@@ -14,11 +14,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.presentation.icons.AppIcon
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -31,45 +36,49 @@ internal fun OnboardingScreen(
         Column(
             modifier = Modifier
                 .padding(insets)
-                .fillMaxSize(),
+                .padding(16.dp)
+                .fillMaxSize()
+                .widthIn(max = 320.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(
                 modifier = Modifier.widthIn(max = 320.dp),
             ) {
                 Column(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(AppIconSize)
-                            .padding(bottom = 24.dp),
-                        painter = painterResource(MR.images.ic_notif),
-                        contentDescription = null,
-                    )
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(AppIconSize),
+                            painter = rememberVectorPainter(AppIcon),
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            contentDescription = null,
+                        )
 
-                    Text(
-                        text = stringResource(
-                            MR.strings.onboarding_title,
-                            stringResource(MR.strings.app_name),
-                        ),
-                        style = MaterialTheme.typography.headlineSmall,
-                        textAlign = TextAlign.Center,
-                    )
+                        Text(
+                            text = buildAnnotatedString {
+                                appendLine(stringResource(MR.strings.onboarding_title))
+                                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    appendLine(stringResource(MR.strings.app_name))
+                                }
+                            },
+                            style = MaterialTheme.typography.headlineSmall,
+                            textAlign = TextAlign.Center,
+                        )
 
-                    Text(
-                        modifier = Modifier.padding(vertical = 32.dp),
-                        text = stringResource(MR.strings.onboarding_message),
-                        textAlign = TextAlign.Center,
-                    )
+                        Text(
+                            text = stringResource(MR.strings.onboarding_message),
+                        )
 
-                    SignInWithTwitchButton(
-                        onClick = onLoginClick,
-                    )
+                        SignInWithTwitchButton(
+                            modifier = Modifier.padding(top = 24.dp),
+                            onClick = onLoginClick,
+                        )
+                    }
                 }
             }
         }

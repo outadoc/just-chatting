@@ -242,7 +242,7 @@
     <string name="notification_channel_bubbles_title">Bulles de tchat</string>
     <string name="onboarding_login_action">Continuer avec Twitch</string>
     <string name="onboarding_message">Pour parcourir vos chaînes suivies et poster dans le tchat, vous devez lier votre compte Twitch.</string>
-    <string name="onboarding_title">Bienvenue dans %s !</string>
+    <string name="onboarding_title">Bienvenue dans</string>
     <string name="poll_collapse_action">Refermer le sondage</string>
     <string name="poll_expand_action">Développer le sondage</string>
     <string name="poll_status_ended">Sondage terminé</string>

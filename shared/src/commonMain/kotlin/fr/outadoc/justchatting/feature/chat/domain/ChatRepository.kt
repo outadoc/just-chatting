@@ -2,15 +2,11 @@ package fr.outadoc.justchatting.feature.chat.domain
 
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
+import fr.outadoc.justchatting.feature.shared.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
-internal interface ChatRepository {
-
-    val connectionStatus: Flow<ConnectionStatus>
-
-    fun getChatEventFlow(channelId: String, channelLogin: String): Flow<ChatEvent>
-    fun getConnectionStatusFlow(channelId: String, channelLogin: String): Flow<ConnectionStatus>
-    fun start(channelId: String, channelLogin: String)
-    fun stop(channelId: String)
-    fun dispose()
+internal interface ChatRepository : AutoCloseable {
+    fun getChatEventFlow(user: User): Flow<ChatEvent>
+    fun getConnectionStatusFlow(user: User): Flow<ConnectionStatus>
+    fun start(user: User)
 }

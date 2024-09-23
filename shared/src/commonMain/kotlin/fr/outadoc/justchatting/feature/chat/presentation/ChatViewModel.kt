@@ -267,6 +267,8 @@ internal class ChatViewModel(
             )
 
     init {
+        addCloseable(chatRepository)
+
         state.filterIsInstance<State.Chatting>()
             .mapNotNull { state -> state.user }
             .distinctUntilChanged()
@@ -327,10 +329,7 @@ internal class ChatViewModel(
             .distinctUntilChanged()
             .onEach { user ->
                 chatRepository
-                    .getChatEventFlow(
-                        channelId = user.id,
-                        channelLogin = user.login,
-                    )
+                    .getChatEventFlow(user)
                     .flatMapConcat { event ->
                         chatEventViewMapper.map(event).asFlow()
                     }
@@ -393,12 +392,12 @@ internal class ChatViewModel(
                     .onEach { action -> actions.emit(action) }
                     .launchIn(defaultScope)
 
-                chatRepository.getConnectionStatusFlow(user.id, user.login)
+                chatRepository.getConnectionStatusFlow(user)
                     .map { status -> Action.ChangeConnectionStatus(status) }
                     .onEach { action -> actions.emit(action) }
                     .launchIn(defaultScope)
 
-                chatRepository.start(user.id, user.login)
+                chatRepository.start(user)
             }
             .launchIn(defaultScope)
 
@@ -479,7 +478,7 @@ internal class ChatViewModel(
 
     fun onResume() {
         (state.value as? State.Chatting)?.user?.let { user ->
-            chatRepository.start(user.id, user.login)
+            chatRepository.start(user)
         }
     }
 

@@ -166,7 +166,7 @@ public val sharedModule: Module
         }
 
         single { AggregateChatEventHandler.Factory(get()) }
-        single<ChatRepository> { DefaultChatRepository(get()) }
+        factory<ChatRepository> { DefaultChatRepository(get()) }
 
         single { TwitchIrcCommandParser(get()) }
         single { ChatEventViewMapper() }

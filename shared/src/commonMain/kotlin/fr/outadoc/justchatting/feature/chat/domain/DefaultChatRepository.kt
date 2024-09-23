@@ -3,15 +3,12 @@ package fr.outadoc.justchatting.feature.chat.domain
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
+import fr.outadoc.justchatting.feature.shared.domain.model.User
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.getAndUpdate
 
 internal class DefaultChatRepository(
     private val factory: AggregateChatEventHandler.Factory,
@@ -19,60 +16,39 @@ internal class DefaultChatRepository(
 
     private val coroutineScope: CoroutineScope = CoroutineScope(Job())
 
-    private val handlers = MutableStateFlow(emptyMap<String, ChatEventHandler>())
+    private val handlerFlow: MutableStateFlow<ChatEventHandler?> = MutableStateFlow(null)
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override val connectionStatus: Flow<ConnectionStatus> = handlers
-        .flatMapLatest { current ->
-            combine(current.map { handler -> handler.value.connectionStatus }) { statuses ->
-                statuses.reduce { acc, status ->
-                    ConnectionStatus(
-                        isAlive = acc.isAlive && status.isAlive,
-                        preventSendingMessages = acc.preventSendingMessages || status.preventSendingMessages,
-                        registeredListeners = acc.registeredListeners + status.registeredListeners,
-                    )
-                }
-            }
-        }
-        .distinctUntilChanged()
-
-    override fun getChatEventFlow(channelId: String, channelLogin: String): Flow<ChatEvent> {
-        return getOrCreateEventHandler(channelId, channelLogin).eventFlow
+    override fun getChatEventFlow(user: User): Flow<ChatEvent> {
+        return getOrCreateEventHandler(user).eventFlow
     }
 
     override fun getConnectionStatusFlow(
-        channelId: String,
-        channelLogin: String,
+        user: User,
     ): Flow<ConnectionStatus> {
-        return getOrCreateEventHandler(channelId, channelLogin).connectionStatus
+        return getOrCreateEventHandler(user).connectionStatus
     }
 
-    private fun getOrCreateEventHandler(channelId: String, channelLogin: String): ChatEventHandler {
-        val handler: ChatEventHandler = handlers.value[channelId]
-            ?: factory.create(
-                channelId = channelId,
-                channelLogin = channelLogin,
-                coroutineScope = coroutineScope,
-            ).also { thread ->
-                thread.start()
-            }
+    private fun getOrCreateEventHandler(user: User): ChatEventHandler {
+        val handler: ChatEventHandler =
+            handlerFlow.value
+                ?: factory.create(
+                    channelId = user.id,
+                    channelLogin = user.login,
+                    coroutineScope = coroutineScope,
+                ).also { thread ->
+                    thread.start()
+                }
 
-        handlers.update { current ->
-            current + (channelId to handler)
+        return handler.also {
+            handlerFlow.value = it
         }
-
-        return handler
     }
 
-    override fun start(channelId: String, channelLogin: String) {
-        getOrCreateEventHandler(channelId, channelLogin).start()
+    override fun start(user: User) {
+        getOrCreateEventHandler(user).start()
     }
 
-    override fun stop(channelId: String) {
-        handlers.value[channelId]?.disconnect()
-    }
-
-    override fun dispose() {
-        handlers.value.forEach { (_, handler) -> handler.disconnect() }
+    override fun close() {
+        handlerFlow.getAndUpdate { null }?.disconnect()
     }
 }

@@ -1,8 +1,11 @@
 package fr.outadoc.justchatting.feature.shared.presentation.mobile
 
+import fr.outadoc.justchatting.utils.parcel.Parcelable
+import fr.outadoc.justchatting.utils.parcel.Parcelize
 import kotlinx.serialization.Serializable
 
-internal sealed interface DetailScreen {
+@Parcelize
+internal sealed interface DetailScreen : Parcelable {
 
     @Serializable
     data class Chat(val id: String) : DetailScreen

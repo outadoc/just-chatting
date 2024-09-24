@@ -51,7 +51,7 @@ internal fun MainRouter(
         value = navigator.scaffoldValue,
         listPane = {
             AnimatedPane(
-                modifier = Modifier.preferredWidth(450.dp),
+                modifier = Modifier.preferredWidth(500.dp),
             ) {
                 NavHost(
                     navController = navController,

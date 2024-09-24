@@ -11,6 +11,7 @@ import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -45,12 +46,14 @@ internal fun MainRouter(
     }
 
     ListDetailPaneScaffold(
+        modifier = modifier,
         directive = navigator.scaffoldDirective,
         value = navigator.scaffoldValue,
         listPane = {
-            AnimatedPane {
+            AnimatedPane(
+                modifier = Modifier.preferredWidth(450.dp),
+            ) {
                 NavHost(
-                    modifier = modifier,
                     navController = navController,
                     startDestination = DefaultScreen.route,
                     enterTransition = {

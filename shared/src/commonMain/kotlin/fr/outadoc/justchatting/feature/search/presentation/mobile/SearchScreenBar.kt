@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.window.core.layout.WindowHeightSizeClass
@@ -98,7 +99,13 @@ private fun CompactSearchBar(
                 onSearch = {},
                 expanded = isSearchExpanded,
                 onExpandedChange = onSearchExpandedChange,
-                placeholder = { Text(stringResource(MR.strings.search_hint)) },
+                placeholder = {
+                    Text(
+                        stringResource(MR.strings.search_hint),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                    )
+                },
                 leadingIcon = {
                     Crossfade(
                         targetState = isSearchExpanded,
@@ -184,7 +191,13 @@ private fun FullHeightSearchBar(
                 onSearch = {},
                 expanded = isSearchExpanded,
                 onExpandedChange = onSearchExpandedChange,
-                placeholder = { Text(stringResource(MR.strings.search_hint)) },
+                placeholder = {
+                    Text(
+                        stringResource(MR.strings.search_hint),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                    )
+                },
                 leadingIcon = {
                     Crossfade(
                         targetState = isSearchExpanded,

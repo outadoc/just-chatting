@@ -9,11 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.onboarding.presentation.mobile.OnboardingScreen
 import fr.outadoc.justchatting.feature.shared.presentation.MainRouterViewModel
@@ -23,22 +21,28 @@ import org.koin.compose.koinInject
 
 @Composable
 internal fun App(
-    onOpenNotificationPreferences: () -> Unit,
-    onOpenBubblePreferences: () -> Unit,
-    onOpenAccessibilityPreferences: () -> Unit,
-    onShareLogs: (Uri) -> Unit,
-    onShowAuthPage: (Uri) -> Unit,
+    onOpenNotificationPreferences: () -> Unit = {},
+    onOpenBubblePreferences: () -> Unit = {},
+    onOpenAccessibilityPreferences: () -> Unit = {},
+    onShareLogs: (Uri) -> Unit = {},
+    onShowAuthPage: (Uri) -> Unit = {},
 ) {
     val viewModel: MainRouterViewModel = koinInject()
     val state by viewModel.state.collectAsState()
 
-    var currentUserId by remember { mutableStateOf<String?>(null) }
+    val navController = rememberNavController()
+
+    val onChannelClick = { userId: String ->
+        navController.navigate(Screen.Chat(userId).route) {
+            launchSingleTop = true
+        }
+    }
 
     LaunchedEffect(viewModel.events) {
         viewModel.events.collect { event ->
             when (event) {
                 is MainRouterViewModel.Event.ViewChannel -> {
-                    currentUserId = event.userId
+                    onChannelClick(event.userId)
                 }
 
                 is MainRouterViewModel.Event.ShowAuthPage -> {
@@ -78,11 +82,12 @@ internal fun App(
 
                 is MainRouterViewModel.State.LoggedIn -> {
                     MainRouter(
-                        currentUserId = currentUserId,
+                        navController = navController,
                         onOpenNotificationPreferences = onOpenNotificationPreferences,
                         onOpenBubblePreferences = onOpenBubblePreferences,
                         onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
                         onShareLogs = onShareLogs,
+                        onChannelClick = onChannelClick,
                     )
                 }
             }

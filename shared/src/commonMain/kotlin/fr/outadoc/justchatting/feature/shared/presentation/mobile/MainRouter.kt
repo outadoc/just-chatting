@@ -4,8 +4,8 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,20 +26,13 @@ import fr.outadoc.justchatting.feature.timeline.presentation.mobile.TimelineScre
 @Composable
 internal fun MainRouter(
     modifier: Modifier = Modifier,
-    currentUserId: String? = null,
-    onOpenNotificationPreferences: () -> Unit,
-    onOpenBubblePreferences: () -> Unit,
-    onOpenAccessibilityPreferences: () -> Unit,
-    onShareLogs: (Uri) -> Unit,
+    navController: NavHostController = rememberNavController(),
+    onOpenNotificationPreferences: () -> Unit = {},
+    onOpenBubblePreferences: () -> Unit = {},
+    onOpenAccessibilityPreferences: () -> Unit = {},
+    onShareLogs: (Uri) -> Unit = {},
+    onChannelClick: (String) -> Unit = {},
 ) {
-    val navController = rememberNavController()
-
-    LaunchedEffect(currentUserId) {
-        if (currentUserId != null) {
-            navController.navigate(Screen.Chat(currentUserId).route)
-        }
-    }
-
     NavHost(
         modifier = modifier,
         navController = navController,
@@ -72,9 +65,7 @@ internal fun MainRouter(
         ) {
             FollowedChannelsList(
                 onNavigate = { navController.navigate(it.route) },
-                onItemClick = { userId ->
-                    navController.navigate(Screen.Chat(userId).route)
-                },
+                onItemClick = onChannelClick,
             )
         }
 
@@ -85,9 +76,7 @@ internal fun MainRouter(
         ) {
             TimelineScreen(
                 onNavigate = { navController.navigate(it.route) },
-                onChannelClick = { userId ->
-                    navController.navigate(Screen.Chat(userId).route)
-                },
+                onChannelClick = onChannelClick,
             )
         }
 
@@ -98,9 +87,7 @@ internal fun MainRouter(
         ) {
             SearchScreen(
                 onNavigate = { navController.navigate(it.route) },
-                onChannelClick = { userId ->
-                    navController.navigate(Screen.Chat(userId).route)
-                },
+                onChannelClick = onChannelClick,
             )
         }
 

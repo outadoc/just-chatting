@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.PictureInPictureAlt
 import androidx.compose.material.icons.outlined.LiveTv
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -78,7 +78,7 @@ internal fun ChatTopAppBar(
                 if (showBackButton) {
                     IconButton(onClick = onNavigateUp) {
                         Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(MR.strings.all_goBack),
                         )
                     }

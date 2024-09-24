@@ -40,7 +40,7 @@ internal fun App(
     val onChannelClick = { userId: String ->
         navigator.navigateTo(
             pane = ListDetailPaneScaffoldRole.Detail,
-            content = DetailScreen.Chat(userId)
+            content = DetailScreen.Chat(userId),
         )
     }
 

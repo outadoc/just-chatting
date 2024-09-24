@@ -30,6 +30,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @Composable
 internal fun SettingsSectionThirdParties(
     modifier: Modifier = Modifier,
+    canNavigateUp: Boolean = true,
     onNavigateUp: () -> Unit = {},
 ) {
     Scaffold(
@@ -38,13 +39,15 @@ internal fun SettingsSectionThirdParties(
             TopAppBar(
                 title = { Text(stringResource(MR.strings.settings_thirdparty_section_title)) },
                 navigationIcon = {
-                    IconButton(
-                        onClick = onNavigateUp,
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(MR.strings.all_goBack),
-                        )
+                    if (canNavigateUp) {
+                        IconButton(
+                            onClick = onNavigateUp,
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(MR.strings.all_goBack),
+                            )
+                        }
                     }
                 },
             )

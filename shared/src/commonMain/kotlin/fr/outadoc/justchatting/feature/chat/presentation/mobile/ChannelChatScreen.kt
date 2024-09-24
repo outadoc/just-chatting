@@ -30,6 +30,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 internal fun ChannelChatScreen(
     userId: String,
     isStandalone: Boolean,
+    canNavigateUp: Boolean = true,
     onNavigateUp: () -> Unit = {},
 ) {
     val viewModel: ChatViewModel = koinViewModel()
@@ -80,7 +81,7 @@ internal fun ChannelChatScreen(
             state = state,
             inputState = inputState,
             isEmotePickerOpen = isEmotePickerOpen,
-            showBackButton = !isStandalone,
+            showBackButton = !isStandalone && canNavigateUp,
             showBubbleButton = canOpenInBubble,
             showTimestamps = prefs.showTimestamps,
             onWatchLiveClicked = {

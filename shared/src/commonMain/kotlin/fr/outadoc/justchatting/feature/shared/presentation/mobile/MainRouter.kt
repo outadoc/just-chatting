@@ -117,7 +117,7 @@ internal fun MainRouter(
                             onNavigateDetails = { screen ->
                                 navigator.navigateTo(
                                     pane = ListDetailPaneScaffoldRole.Detail,
-                                    content = screen
+                                    content = screen,
                                 )
                             },
                             onShareLogs = onShareLogs,
@@ -134,18 +134,21 @@ internal fun MainRouter(
                             ChannelChatScreen(
                                 userId = screen.id,
                                 isStandalone = false,
+                                canNavigateUp = navigator.canNavigateBack(),
                                 onNavigateUp = { navigator.navigateBack() },
                             )
                         }
 
                         DetailScreen.About -> {
                             SettingsSectionAbout(
+                                canNavigateUp = navigator.canNavigateBack(),
                                 onNavigateUp = { navigator.navigateBack() },
                             )
                         }
 
                         DetailScreen.Appearance -> {
                             SettingsSectionAppearance(
+                                canNavigateUp = navigator.canNavigateBack(),
                                 onNavigateUp = { navigator.navigateBack() },
                                 onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
                             )
@@ -153,12 +156,14 @@ internal fun MainRouter(
 
                         DetailScreen.DependencyCredits -> {
                             SettingsSectionDependencies(
+                                canNavigateUp = navigator.canNavigateBack(),
                                 onNavigateUp = { navigator.navigateBack() },
                             )
                         }
 
                         DetailScreen.Notifications -> {
                             SettingsSectionNotifications(
+                                canNavigateUp = navigator.canNavigateBack(),
                                 onNavigateUp = { navigator.navigateBack() },
                                 onOpenNotificationPreferences = onOpenNotificationPreferences,
                                 onOpenBubblePreferences = onOpenBubblePreferences,
@@ -167,6 +172,7 @@ internal fun MainRouter(
 
                         DetailScreen.ThirdParties -> {
                             SettingsSectionThirdParties(
+                                canNavigateUp = navigator.canNavigateBack(),
                                 onNavigateUp = { navigator.navigateBack() },
                             )
                         }

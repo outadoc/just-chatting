@@ -36,25 +36,3 @@ internal sealed interface Screen {
 }
 
 internal val DefaultScreen = Screen.Timeline
-
-
-internal sealed interface DetailScreen {
-
-    @Serializable
-    data class Chat(val id: String) : DetailScreen
-
-    @Serializable
-    data object About : DetailScreen
-
-    @Serializable
-    data object Appearance : DetailScreen
-
-    @Serializable
-    data object DependencyCredits : DetailScreen
-
-    @Serializable
-    data object Notifications : DetailScreen
-
-    @Serializable
-    data object ThirdParties : DetailScreen
-}

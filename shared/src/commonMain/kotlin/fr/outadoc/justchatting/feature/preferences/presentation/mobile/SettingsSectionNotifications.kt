@@ -30,6 +30,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @Composable
 internal fun SettingsSectionNotifications(
     modifier: Modifier = Modifier,
+    canNavigateUp: Boolean = true,
     onNavigateUp: () -> Unit = {},
     onOpenNotificationPreferences: () -> Unit = {},
     onOpenBubblePreferences: () -> Unit = {},
@@ -40,13 +41,15 @@ internal fun SettingsSectionNotifications(
             TopAppBar(
                 title = { Text(stringResource(MR.strings.settings_appearance_header)) },
                 navigationIcon = {
-                    IconButton(
-                        onClick = onNavigateUp,
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(MR.strings.all_goBack),
-                        )
+                    if (canNavigateUp) {
+                        IconButton(
+                            onClick = onNavigateUp,
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(MR.strings.all_goBack),
+                            )
+                        }
                     }
                 },
             )

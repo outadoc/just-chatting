@@ -10,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.StrokeCap
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.MessagePostConstraint
 import kotlinx.datetime.Clock
@@ -76,7 +77,9 @@ internal fun ChatSlowModeProgress(
     )
 
     LinearProgressIndicator(
-        progress = { progress.value },
         modifier = modifier.alpha(progressVisibility.value),
+        progress = { progress.value },
+        strokeCap = StrokeCap.Square,
+        drawStopIndicator = {},
     )
 }

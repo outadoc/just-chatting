@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -19,6 +22,7 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.OnLifecycleEvent
 import org.koin.compose.koinInject
 
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun App(
     onOpenNotificationPreferences: () -> Unit = {},
@@ -31,11 +35,13 @@ internal fun App(
     val state by viewModel.state.collectAsState()
 
     val navController = rememberNavController()
+    val navigator = rememberListDetailPaneScaffoldNavigator<DetailScreen>()
 
     val onChannelClick = { userId: String ->
-        navController.navigate(Screen.Chat(userId).route) {
-            launchSingleTop = true
-        }
+        navigator.navigateTo(
+            pane = ListDetailPaneScaffoldRole.Detail,
+            content = DetailScreen.Chat(userId)
+        )
     }
 
     LaunchedEffect(viewModel.events) {
@@ -83,6 +89,7 @@ internal fun App(
                 is MainRouterViewModel.State.LoggedIn -> {
                     MainRouter(
                         navController = navController,
+                        navigator = navigator,
                         onOpenNotificationPreferences = onOpenNotificationPreferences,
                         onOpenBubblePreferences = onOpenBubblePreferences,
                         onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,

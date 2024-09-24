@@ -25,12 +25,6 @@ internal sealed interface Screen {
     }
 
     @Serializable
-    data class Chat(val id: String) : Screen {
-        override val route: String
-            get() = "chat/$id"
-    }
-
-    @Serializable
     sealed interface Settings : Screen {
 
         @Serializable
@@ -38,37 +32,29 @@ internal sealed interface Screen {
             override val route: String
                 get() = "settings"
         }
-
-        @Serializable
-        data object About : Settings {
-            override val route: String
-                get() = "settings/about"
-        }
-
-        @Serializable
-        data object Appearance : Settings {
-            override val route: String
-                get() = "settings/appearance"
-        }
-
-        @Serializable
-        data object DependencyCredits : Settings {
-            override val route: String
-                get() = "settings/dependency-credits"
-        }
-
-        @Serializable
-        data object Notifications : Settings {
-            override val route: String
-                get() = "settings/notifications"
-        }
-
-        @Serializable
-        data object ThirdParties : Settings {
-            override val route: String
-                get() = "settings/third-parties"
-        }
     }
 }
 
 internal val DefaultScreen = Screen.Timeline
+
+
+internal sealed interface DetailScreen {
+
+    @Serializable
+    data class Chat(val id: String) : DetailScreen
+
+    @Serializable
+    data object About : DetailScreen
+
+    @Serializable
+    data object Appearance : DetailScreen
+
+    @Serializable
+    data object DependencyCredits : DetailScreen
+
+    @Serializable
+    data object Notifications : DetailScreen
+
+    @Serializable
+    data object ThirdParties : DetailScreen
+}

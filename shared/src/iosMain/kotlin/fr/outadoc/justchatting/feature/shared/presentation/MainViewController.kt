@@ -8,12 +8,13 @@ import platform.UIKit.UIViewController
 
 public fun getMainViewController(
     onShowAuthPage: (NSURL) -> Unit,
+    onOpenAccessibilityPreferences: () -> Unit,
 ): UIViewController =
     ComposeUIViewController {
         App(
+            onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
             onOpenNotificationPreferences = {},
             onOpenBubblePreferences = {},
-            onOpenAccessibilityPreferences = {},
             onShareLogs = {},
             onShowAuthPage = { uri -> uri.toNSURL()?.let(onShowAuthPage) },
         )

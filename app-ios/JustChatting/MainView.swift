@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  MainView.swift
 //  JustChatting
 //
 //  Created by Baptiste Candellier on 13/09/2024.
@@ -7,11 +7,10 @@
 //
 
 import AuthenticationServices
-import SwiftUI
 import JCShared
+import SwiftUI
 
 struct MainView: View {
-
     @Environment(\.webAuthenticationSession) private var webAuthenticationSession
 
     private let receiver = DeeplinkReceiverHelper().getInstance()
@@ -27,8 +26,7 @@ struct MainView: View {
                         )
 
                         receiver.onDeeplinkReceived(uriString: urlWithToken.absoluteString)
-                    } catch {
-                    }
+                    } catch {}
                 }
             })
             .ignoresSafeArea(.all)

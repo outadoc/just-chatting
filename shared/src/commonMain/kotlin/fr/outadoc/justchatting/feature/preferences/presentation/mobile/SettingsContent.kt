@@ -14,6 +14,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.eygraber.uri.Uri
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
+import fr.outadoc.justchatting.feature.shared.presentation.mobile.DetailScreen
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainNavigation
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.Screen
 import fr.outadoc.justchatting.shared.MR
@@ -25,6 +26,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 internal fun SettingsContent(
     modifier: Modifier = Modifier,
     onNavigate: (Screen) -> Unit,
+    onNavigateDetails: (DetailScreen) -> Unit,
     onShareLogs: (Uri) -> Unit,
 ) {
     val viewModel: SettingsViewModel = koinViewModel()
@@ -56,11 +58,11 @@ internal fun SettingsContent(
             SettingsList(
                 loggedInUser = state.user,
                 onLogoutClick = viewModel::logout,
-                onOpenDependencyCredits = { onNavigate(Screen.Settings.DependencyCredits) },
-                onOpenThirdPartiesSection = { onNavigate(Screen.Settings.ThirdParties) },
-                onOpenAboutSection = { onNavigate(Screen.Settings.About) },
-                onOpenAppearanceSection = { onNavigate(Screen.Settings.Appearance) },
-                onOpenNotificationSection = { onNavigate(Screen.Settings.Notifications) },
+                onOpenDependencyCredits = { onNavigateDetails(DetailScreen.DependencyCredits) },
+                onOpenThirdPartiesSection = { onNavigateDetails(DetailScreen.ThirdParties) },
+                onOpenAboutSection = { onNavigateDetails(DetailScreen.About) },
+                onOpenAppearanceSection = { onNavigateDetails(DetailScreen.Appearance) },
+                onOpenNotificationSection = { onNavigateDetails(DetailScreen.Notifications) },
                 insets = insets,
             )
         },

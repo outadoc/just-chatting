@@ -33,6 +33,7 @@ import org.koin.compose.koinInject
 @Composable
 internal fun SettingsSectionDependencies(
     modifier: Modifier = Modifier,
+    canNavigateUp: Boolean = true,
     onNavigateUp: () -> Unit,
 ) {
     Scaffold(
@@ -41,13 +42,15 @@ internal fun SettingsSectionDependencies(
             TopAppBar(
                 title = { Text(stringResource(MR.strings.settings_dependencies_header)) },
                 navigationIcon = {
-                    IconButton(
-                        onClick = onNavigateUp,
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(MR.strings.all_goBack),
-                        )
+                    if (canNavigateUp) {
+                        IconButton(
+                            onClick = onNavigateUp,
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(MR.strings.all_goBack),
+                            )
+                        }
                     }
                 },
             )

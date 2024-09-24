@@ -27,6 +27,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @Composable
 internal fun SettingsSectionAppearance(
     modifier: Modifier = Modifier,
+    canNavigateUp: Boolean = true,
     onNavigateUp: () -> Unit = {},
     onOpenAccessibilityPreferences: () -> Unit = {},
 ) {
@@ -36,13 +37,15 @@ internal fun SettingsSectionAppearance(
             TopAppBar(
                 title = { Text(stringResource(MR.strings.settings_appearance_header)) },
                 navigationIcon = {
-                    IconButton(
-                        onClick = onNavigateUp,
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(MR.strings.all_goBack),
-                        )
+                    if (canNavigateUp) {
+                        IconButton(
+                            onClick = onNavigateUp,
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(MR.strings.all_goBack),
+                            )
+                        }
                     }
                 },
             )

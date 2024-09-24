@@ -588,6 +588,8 @@ internal class ChatViewModel(
     private suspend fun Action.LoadChat.reduce(state: State): State {
         if (state is State.Chatting && state.user.id == userId) return state
 
+        chatRepository.close()
+
         val appUser = authRepository.currentUser.first()
 
         return State.Loading(

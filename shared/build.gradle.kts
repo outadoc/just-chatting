@@ -68,6 +68,7 @@ kotlin {
             implementation(libs.coil.ktor)
             implementation(libs.compose.material.adaptive.core)
             implementation(libs.compose.material.adaptive.layout)
+            implementation(libs.compose.material.adaptive.navigation)
             implementation(libs.compose.material.adaptive.navigationSuite)
             implementation(libs.compose.material.windowSizeClass)
             implementation(libs.fluid.currency)

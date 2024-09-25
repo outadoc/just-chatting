@@ -24,7 +24,8 @@
             android:enableOnBackInvokedCallback="true"
             android:exported="true"
             android:launchMode="singleTask"
-            android:resizeableActivity="true">
+            android:resizeableActivity="true"
+            android:windowSoftInputMode="adjustResize">
 
             <layout
                 android:defaultWidth="1000dp"

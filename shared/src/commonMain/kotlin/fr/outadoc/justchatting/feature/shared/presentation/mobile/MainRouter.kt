@@ -1,8 +1,5 @@
 package fr.outadoc.justchatting.feature.shared.presentation.mobile
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
@@ -56,31 +53,9 @@ internal fun MainRouter(
                 NavHost(
                     navController = navController,
                     startDestination = DefaultScreen.route,
-                    enterTransition = {
-                        slideIntoContainer(
-                            towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                        )
-                    },
-                    exitTransition = {
-                        slideOutOfContainer(
-                            towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                        )
-                    },
-                    popEnterTransition = {
-                        slideIntoContainer(
-                            towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                        )
-                    },
-                    popExitTransition = {
-                        slideOutOfContainer(
-                            towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                        )
-                    },
                 ) {
                     composable(
                         route = Screen.Followed.route,
-                        enterTransition = { fadeIn() },
-                        exitTransition = { fadeOut() },
                     ) {
                         FollowedChannelsList(
                             onNavigate = { navController.navigate(it.route) },
@@ -90,8 +65,6 @@ internal fun MainRouter(
 
                     composable(
                         route = Screen.Timeline.route,
-                        enterTransition = { fadeIn() },
-                        exitTransition = { fadeOut() },
                     ) {
                         TimelineScreen(
                             onNavigate = { navController.navigate(it.route) },
@@ -101,8 +74,6 @@ internal fun MainRouter(
 
                     composable(
                         route = Screen.Search.route,
-                        enterTransition = { fadeIn() },
-                        exitTransition = { fadeOut() },
                     ) {
                         SearchScreen(
                             onNavigate = { navController.navigate(it.route) },
@@ -112,8 +83,6 @@ internal fun MainRouter(
 
                     composable(
                         route = Screen.Settings.Root.route,
-                        enterTransition = { fadeIn() },
-                        exitTransition = { fadeOut() },
                     ) {
                         SettingsContent(
                             onNavigate = { navController.navigate(it.route) },

@@ -92,3 +92,5 @@ iOSInjectionProject/
 
 # Tuist
 Derived/
+*.xcodeproj
+*.xcworkspace

@@ -3,7 +3,7 @@ import ProjectDescription
 import ProjectDescription
 
 let project = Project(
-    name: "JustChatting-Tuist",
+    name: "JustChatting",
     settings: .settings(base: [
         "FRAMEWORK_SEARCH_PATHS": "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
     ]),

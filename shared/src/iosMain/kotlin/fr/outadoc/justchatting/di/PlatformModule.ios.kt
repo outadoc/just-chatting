@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import fr.outadoc.justchatting.data.db.AppDatabase
+import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.NoopChatNotifier
@@ -31,6 +32,13 @@ import platform.Foundation.NSUserDomainMask
 
 internal actual val platformModule: Module
     get() = module {
+        single {
+            OAuthAppCredentials(
+                clientId = "rzpd86ie5dz4hghlvcgtfgwmvyzfz2",
+                redirectUri = "https://just-chatting.app/auth/callback.html",
+            )
+        }
+
         single<ChatNotifier> { NoopChatNotifier() }
         single<CreateShortcutForChannelUseCase> { NoopCreateShortcutForChannelUseCase() }
 

@@ -8,7 +8,6 @@ import fr.outadoc.justchatting.data.db.StreamQueries
 import fr.outadoc.justchatting.data.db.UserQueries
 import fr.outadoc.justchatting.feature.auth.data.TwitchAuthApi
 import fr.outadoc.justchatting.feature.auth.domain.AuthApi
-import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.chat.data.irc.LiveChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.irc.LoggedInChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.irc.MockChatWebSocket
@@ -218,13 +217,6 @@ public val sharedModule: Module
         single<LocalPronounsApi> { LocalPronounsDb(get(), get()) }
 
         single<Json> { DefaultJson }
-
-        single {
-            OAuthAppCredentials(
-                clientId = "l9klwmh97qgn0s0me276ezsft5szp2",
-                redirectUri = "https://just-chatting.app/auth/callback.html",
-            )
-        }
 
         single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get(), get()) }
         single<TwitchApi> { TwitchApiImpl(get()) }

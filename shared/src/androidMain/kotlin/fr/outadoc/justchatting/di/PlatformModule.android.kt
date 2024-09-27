@@ -29,6 +29,13 @@ import org.koin.dsl.module
 
 internal actual val platformModule: Module
     get() = module {
+        single {
+            OAuthAppCredentials(
+                clientId = "l9klwmh97qgn0s0me276ezsft5szp2",
+                redirectUri = "https://just-chatting.app/auth/callback.html",
+            )
+        }
+
         single<ChatNotifier> { AndroidChatNotifier(get(), get()) }
         single<CreateShortcutForChannelUseCase> { AndroidCreateShortcutForChannelUseCase(get()) }
 

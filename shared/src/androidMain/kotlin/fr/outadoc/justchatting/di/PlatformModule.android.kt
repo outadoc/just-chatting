@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.Preferences
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import fr.outadoc.justchatting.data.db.AppDatabase
+import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.AndroidChatNotifier

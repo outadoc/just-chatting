@@ -90,3 +90,7 @@ fastlane/test_output
 
 iOSInjectionProject/
 
+# Tuist
+Derived/
+*.xcodeproj
+*.xcworkspace

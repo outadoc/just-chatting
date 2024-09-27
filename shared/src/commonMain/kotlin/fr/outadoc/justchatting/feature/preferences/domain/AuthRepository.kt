@@ -34,7 +34,8 @@ internal class AuthRepository(
                 when (token) {
                     null -> AppUser.NotLoggedIn
                     else -> {
-                        authApi.validateToken(token)
+                        authApi
+                            .validateToken(token)
                             .mapCatching { response ->
                                 if (response.clientId != oAuthAppCredentials.clientId) {
                                     throw InvalidClientIdException("Invalid client ID: ${response.clientId}")

@@ -158,6 +158,10 @@ android {
     packaging {
         resources.excludes += "DebugProbesKt.bin"
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {

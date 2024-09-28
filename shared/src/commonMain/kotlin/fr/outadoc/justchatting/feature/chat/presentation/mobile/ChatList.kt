@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
@@ -34,6 +36,7 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.utils.core.isEven
 import fr.outadoc.justchatting.utils.core.isOdd
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
@@ -105,106 +108,111 @@ internal fun ChatList(
     var size by remember { mutableStateOf(IntSize.Zero) }
 
     LaunchedEffect(size) {
-        listState.scrollToItem(
-            index = (entries.size - 1).coerceAtLeast(0),
-        )
+        listState.scrollToItem(index = 0)
     }
 
-    LazyColumn(
-        modifier = modifier
-            .onGloballyPositioned { coordinates ->
-                val newSize = coordinates.size
-                if (size != newSize) {
-                    size = newSize
-                }
-            },
-        state = listState,
-        contentPadding = PaddingValues(
-            bottom = insets.calculateBottomPadding(),
-        ),
-    ) {
-        stickyHeader {
-            ChatEvents(
-                modifier = Modifier.padding(horizontal = 6.dp),
-                insets = insets,
-                roomState = roomState,
-                isDisconnected = isDisconnected,
-                ongoingEvents = ongoingEvents,
-                clock = clock,
-                inlineContent = inlineContent,
-                removedContent = removedContent,
-                appUser = appUser,
-                badges = badges,
-            )
-        }
+    Box {
+        LazyColumn(
+            modifier = modifier
+                .onGloballyPositioned { coordinates ->
+                    val newSize = coordinates.size
+                    if (size != newSize) {
+                        size = newSize
+                    }
+                },
+            state = listState,
+            reverseLayout = true,
+            contentPadding = PaddingValues(
+                bottom = insets.calculateBottomPadding(),
+            ),
+        ) {
+            item(key = "visibility_trigger") {
+                // This item will become visible when the list is scrolled to the bottom;
+                // it's used to trigger the visibility of the "scroll to bottom" FAB
 
-        itemsIndexed(
-            items = entries,
-            key = { _, item -> item.hashCode() },
-            contentType = { _, item ->
-                when (item) {
-                    is ChatListItem.Message.Highlighted -> 1
-                    is ChatListItem.Message.Simple -> 2
-                    is ChatListItem.Message.Notice -> 3
-                }
-            },
-        ) { index, item ->
-            val background =
-                if (index.isOdd) {
-                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-                } else {
-                    MaterialTheme.colorScheme.surface
+                LaunchedEffect(Unit) {
+                    onListScrolledToBottom(true)
                 }
 
-            val canBeRepliedTo = item.body?.messageId != null
-            val replyToActionCd = stringResource(MR.strings.chat_replyTo)
+                DisposableEffect(Unit) {
+                    onDispose {
+                        onListScrolledToBottom(false)
+                    }
+                }
+            }
 
-            SwipeToReply(
-                onDismiss = { onReplyToMessage(item) },
-                enabled = canBeRepliedTo,
-            ) {
-                ChatMessage(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .combinedClickable(
-                            onClick = {},
-                            onLongClick = { onMessageLongClick(item) },
-                            onLongClickLabel = stringResource(MR.strings.chat_copyToClipboard),
-                        )
-                        .semantics {
-                            if (canBeRepliedTo) {
-                                customActions = listOf(
-                                    CustomAccessibilityAction(replyToActionCd) {
-                                        onReplyToMessage(item)
-                                        true
-                                    },
-                                )
-                            }
-                        },
-                    message = item,
-                    inlineContent = inlineContent,
-                    removedContent = removedContent,
-                    pronouns = pronouns,
-                    richEmbed = item.body?.messageId?.let { messageId -> richEmbeds[messageId] },
-                    showTimestamps = showTimestamps,
-                    background = background,
-                    appUser = appUser,
-                    onShowInfoForUserId = onShowInfoForUserId,
-                )
+            itemsIndexed(
+                items = entries,
+                key = { _, item -> item.hashCode() },
+                contentType = { _, item ->
+                    when (item) {
+                        is ChatListItem.Message.Highlighted -> 1
+                        is ChatListItem.Message.Simple -> 2
+                        is ChatListItem.Message.Notice -> 3
+                    }
+                },
+            ) { index, item ->
+                // Alternate the background of each chat row.
+                // We want the colors to keep consistent for every message, so we alternate the
+                // logic every time we add a new message to the list.
+                val background: Color =
+                    if (entries.size.isOdd && index.isOdd || entries.size.isEven && index.isEven) {
+                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+                    } else {
+                        MaterialTheme.colorScheme.surface
+                    }
+
+                val canBeRepliedTo = item.body?.messageId != null
+                val replyToActionCd = stringResource(MR.strings.chat_replyTo)
+
+                SwipeToReply(
+                    onDismiss = { onReplyToMessage(item) },
+                    enabled = canBeRepliedTo,
+                ) {
+                    ChatMessage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .combinedClickable(
+                                onClick = {},
+                                onLongClick = { onMessageLongClick(item) },
+                                onLongClickLabel = stringResource(MR.strings.chat_copyToClipboard),
+                            )
+                            .semantics {
+                                if (canBeRepliedTo) {
+                                    customActions = listOf(
+                                        CustomAccessibilityAction(replyToActionCd) {
+                                            onReplyToMessage(item)
+                                            true
+                                        },
+                                    )
+                                }
+                            },
+                        message = item,
+                        inlineContent = inlineContent,
+                        removedContent = removedContent,
+                        pronouns = pronouns,
+                        richEmbed = item.body?.messageId?.let { messageId -> richEmbeds[messageId] },
+                        showTimestamps = showTimestamps,
+                        background = background,
+                        appUser = appUser,
+                        onShowInfoForUserId = onShowInfoForUserId,
+                    )
+                }
             }
         }
 
-        item(key = "visibility_trigger") {
-            LaunchedEffect(Unit) {
-                onListScrolledToBottom(true)
-            }
-
-            DisposableEffect(Unit) {
-                onDispose {
-                    onListScrolledToBottom(false)
-                }
-            }
-        }
+        ChatEvents(
+            modifier = Modifier.padding(horizontal = 6.dp),
+            insets = insets,
+            roomState = roomState,
+            isDisconnected = isDisconnected,
+            ongoingEvents = ongoingEvents,
+            clock = clock,
+            inlineContent = inlineContent,
+            removedContent = removedContent,
+            appUser = appUser,
+            badges = badges,
+        )
     }
 }
 

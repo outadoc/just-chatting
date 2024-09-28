@@ -33,8 +33,6 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.flatListOf
-import fr.outadoc.justchatting.utils.core.isOdd
-import fr.outadoc.justchatting.utils.core.roundUpOddToEven
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.ImmutableList
@@ -710,20 +708,18 @@ internal class ChatViewModel(
 
         val newMessages: PersistentList<ChatListItem> =
             state.chatMessages
-                .addAll(messages)
+                .addAll(
+                    // New messages are added to the top of the list
+                    index = 0,
+                    messages.asReversed(),
+                )
                 .distinct()
                 .toPersistentList()
-
-        // We alternate the background of each chat row.
-        // If we remove just one item, the backgrounds will shift, so we always need to remove
-        // an even number of items.
-        val maxCount =
-            state.maxAdapterCount.roundUpOddToEven() + if (newMessages.size.isOdd) 1 else 0
 
         return state.copy(
             chatMessages = newMessages
                 .filterIsInstance<ChatListItem.Message>()
-                .takeLast(maxCount)
+                .take(state.maxAdapterCount)
                 .toPersistentList(),
             lastSentMessageInstant = lastSentMessageInstant
                 ?: state.lastSentMessageInstant,

@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -51,14 +52,6 @@ internal fun ChatListContainer(
 
     var isListAtBottom by remember { mutableStateOf(false) }
 
-    LaunchedEffect(state.chatMessages) {
-        if (isListAtBottom) {
-            listState.scrollToItem(
-                index = (state.chatMessages.size - 1).coerceAtLeast(0),
-            )
-        }
-    }
-
     LaunchedEffect(isListAtBottom) {
         // Hide the keyboard when scrolling up
         if (!isListAtBottom) {
@@ -68,6 +61,7 @@ internal fun ChatListContainer(
 
     Box(modifier = modifier) {
         ChatList(
+            modifier = Modifier.fillMaxSize(),
             entries = state.chatMessages,
             emotes = state.allEmotesMap,
             cheerEmotes = state.cheerEmotes,
@@ -101,9 +95,7 @@ internal fun ChatListContainer(
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     scope.launch {
-                        listState.scrollToItem(
-                            index = (state.chatMessages.size - 1).coerceAtLeast(0),
-                        )
+                        listState.scrollToItem(index = 0)
                     }
                 },
             ) {

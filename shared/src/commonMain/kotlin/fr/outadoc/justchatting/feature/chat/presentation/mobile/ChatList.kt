@@ -108,9 +108,7 @@ internal fun ChatList(
     var size by remember { mutableStateOf(IntSize.Zero) }
 
     LaunchedEffect(size) {
-        listState.scrollToItem(
-            index = 0,
-        )
+        listState.scrollToItem(index = 0)
     }
 
     Box {

@@ -93,9 +93,7 @@ internal fun ChatListContainer(
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     scope.launch {
-                        listState.scrollToItem(
-                            index = 0,
-                        )
+                        listState.scrollToItem(index = 0)
                     }
                 },
             ) {

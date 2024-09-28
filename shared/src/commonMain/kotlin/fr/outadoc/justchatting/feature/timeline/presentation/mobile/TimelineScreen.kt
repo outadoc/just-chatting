@@ -86,6 +86,8 @@ internal fun TimelineScreen(
     val viewModel: TimelineViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
 
+    val coroutineScope = rememberCoroutineScope()
+
     LaunchedEffect(Unit) {
         viewModel.syncPeriodically()
     }
@@ -109,15 +111,21 @@ internal fun TimelineScreen(
                 TopAppBar(
                     title = { Text(stringResource(MR.strings.timeline_title)) },
                     actions = {
-                        val coroutineScope = rememberCoroutineScope()
                         HapticIconButton(
                             onClick = {
                                 coroutineScope.launch {
-                                    pastListState.scrollToItem(index = 0)
-                                    liveListState.scrollToItem(index = 0)
-                                    futureListState.scrollToItem(index = 0)
+                                    val currentPage = pagerState.currentPage
 
-                                    pagerState.scrollToPage(page = PAGE_LIVE)
+                                    liveListState.scrollToItem(index = 0)
+
+                                    if (currentPage != PAGE_LIVE) {
+                                        pagerState.animateScrollToPage(page = PAGE_LIVE)
+                                    }
+
+                                    launch {
+                                        pastListState.scrollToItem(index = 0)
+                                        futureListState.scrollToItem(index = 0)
+                                    }
                                 }
                             },
                         ) {

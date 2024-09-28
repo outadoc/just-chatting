@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -58,6 +59,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.mobile.UserInfo
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainNavigation
+import fr.outadoc.justchatting.feature.shared.presentation.mobile.NoContent
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.Screen
 import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
@@ -186,6 +188,12 @@ private fun TimelineContent(
     ) { page: Int ->
         when (page) {
             PAGE_PAST -> {
+                if (schedule.past.isEmpty()) {
+                    NoContent(
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
                     state = pastListState,
@@ -222,79 +230,89 @@ private fun TimelineContent(
             }
 
             PAGE_LIVE -> {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    state = liveListState,
-                    contentPadding = PaddingValues(
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 16.dp,
-                    ),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    stickyHeader(
-                        key = "live",
-                        contentType = "header",
+                if (schedule.live.isEmpty()) {
+                    NoContent(
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth(),
+                        state = liveListState,
+                        contentPadding = PaddingValues(
+                            start = 16.dp,
+                            end = 16.dp,
+                            bottom = 16.dp,
+                        ),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        if (schedule.live.isNotEmpty()) {
-                            SectionHeader(
-                                title = { Text(stringResource(MR.strings.live)) },
+                        stickyHeader(
+                            key = "live",
+                            contentType = "header",
+                        ) {
+                            if (schedule.live.isNotEmpty()) {
+                                SectionHeader(
+                                    title = { Text(stringResource(MR.strings.live)) },
+                                )
+                            }
+                        }
+
+                        items(
+                            schedule.live,
+                            key = { userStream -> "live-${userStream.stream.id}" },
+                            contentType = { "stream" },
+                        ) { userStream ->
+                            LiveStreamCard(
+                                modifier = Modifier.fillMaxWidth(),
+                                onClick = { onChannelClick(userStream.user.id) },
+                                title = userStream.stream.title,
+                                userName = userStream.user.displayName,
+                                viewerCount = userStream.stream.viewerCount,
+                                category = userStream.stream.category,
+                                startedAt = userStream.stream.startedAt,
+                                tags = userStream.stream.tags.toPersistentSet(),
+                                profileImageUrl = userStream.user.profileImageUrl,
                             )
                         }
-                    }
-
-                    // TODO show "empty" item
-
-                    items(
-                        schedule.live,
-                        key = { userStream -> "live-${userStream.stream.id}" },
-                        contentType = { "stream" },
-                    ) { userStream ->
-                        LiveStreamCard(
-                            modifier = Modifier.fillMaxWidth(),
-                            onClick = { onChannelClick(userStream.user.id) },
-                            title = userStream.stream.title,
-                            userName = userStream.user.displayName,
-                            viewerCount = userStream.stream.viewerCount,
-                            category = userStream.stream.category,
-                            startedAt = userStream.stream.startedAt,
-                            tags = userStream.stream.tags.toPersistentSet(),
-                            profileImageUrl = userStream.user.profileImageUrl,
-                        )
                     }
                 }
             }
 
             PAGE_FUTURE -> {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    state = futureListState,
-                    contentPadding = PaddingValues(
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 16.dp,
-                    ),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    schedule.future.keys.forEach { date ->
-                        stickyHeader(
-                            key = "future-${date.toEpochDays()}",
-                            contentType = "header",
-                        ) {
-                            SectionHeader(
-                                title = { Text(date.formatDate(isFuture = true)) },
-                            )
-                        }
+                if (schedule.future.isEmpty()) {
+                    NoContent(
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth(),
+                        state = futureListState,
+                        contentPadding = PaddingValues(
+                            start = 16.dp,
+                            end = 16.dp,
+                            bottom = 16.dp,
+                        ),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        schedule.future.keys.forEach { date ->
+                            stickyHeader(
+                                key = "future-${date.toEpochDays()}",
+                                contentType = "header",
+                            ) {
+                                SectionHeader(
+                                    title = { Text(date.formatDate(isFuture = true)) },
+                                )
+                            }
 
-                        items(
-                            items = schedule.future[date].orEmpty(),
-                            key = { segment -> "future-${segment.id}" },
-                            contentType = { "segment" },
-                        ) { segment ->
-                            TimelineSegment(
-                                modifier = Modifier.fillMaxWidth(),
-                                segment = segment,
-                            )
+                            items(
+                                items = schedule.future[date].orEmpty(),
+                                key = { segment -> "future-${segment.id}" },
+                                contentType = { "segment" },
+                            ) { segment ->
+                                TimelineSegment(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    segment = segment,
+                                )
+                            }
                         }
                     }
                 }

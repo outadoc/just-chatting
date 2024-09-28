@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -60,6 +61,7 @@ internal fun ChatListContainer(
 
     Box(modifier = modifier) {
         ChatList(
+            modifier = Modifier.fillMaxSize(),
             entries = state.chatMessages,
             emotes = state.allEmotesMap,
             cheerEmotes = state.cheerEmotes,

@@ -13,6 +13,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.VerticalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarToday
@@ -60,6 +64,7 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.HapticIconButton
 import fr.outadoc.justchatting.utils.presentation.format
@@ -86,11 +91,14 @@ internal fun TimelineScreen(
         viewModel.syncPeriodically()
     }
 
-    val listState = remember(state.schedule.todayListIndex) {
-        LazyListState(
-            firstVisibleItemIndex = state.schedule.todayListIndex,
-        )
-    }
+    val pastListState = rememberLazyListState()
+    val liveListState = rememberLazyListState()
+    val futureListState = rememberLazyListState()
+
+    val pagerState = rememberPagerState(
+        pageCount = { 3 },
+        initialPage = PAGE_LIVE,
+    )
 
     MainNavigation(
         selectedScreen = Screen.Timeline,
@@ -106,9 +114,11 @@ internal fun TimelineScreen(
                         HapticIconButton(
                             onClick = {
                                 coroutineScope.launch {
-                                    listState.animateScrollToItem(
-                                        state.schedule.todayListIndex,
-                                    )
+                                    pastListState.scrollToItem(index = 0)
+                                    liveListState.scrollToItem(index = 0)
+                                    futureListState.scrollToItem(index = 0)
+
+                                    pagerState.scrollToPage(page = PAGE_LIVE)
                                 }
                             },
                         ) {
@@ -137,11 +147,15 @@ internal fun TimelineScreen(
             }
         },
         content = { insets ->
+            logDebug("TimelineScreen") { "insets: $insets" }
             TimelineContent(
                 modifier = modifier,
                 schedule = state.schedule,
                 insets = insets,
-                listState = listState,
+                pastListState = pastListState,
+                liveListState = liveListState,
+                futureListState = futureListState,
+                pagerState = pagerState,
                 onChannelClick = onChannelClick,
             )
         },
@@ -154,91 +168,130 @@ private fun TimelineContent(
     modifier: Modifier = Modifier,
     schedule: FullSchedule,
     insets: PaddingValues = PaddingValues(),
-    listState: LazyListState,
+    pagerState: PagerState,
+    pastListState: LazyListState,
+    liveListState: LazyListState,
+    futureListState: LazyListState,
     onChannelClick: (userId: String) -> Unit,
 ) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(insets),
-        contentPadding = PaddingValues(
-            start = 16.dp,
-            end = 16.dp,
-            bottom = 16.dp,
-        ),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        state = listState,
-    ) {
-        schedule.past.keys.forEach { date ->
-            stickyHeader(
-                key = "past-${date.toEpochDays()}",
-                contentType = "header",
-            ) {
-                SectionHeader(
-                    title = { Text(date.formatDate(isFuture = false)) },
-                )
-            }
-
-            items(
-                items = schedule.past[date].orEmpty(),
-                key = { segment -> "past-${segment.id}" },
-                contentType = { "segment" },
-            ) { segment ->
-                TimelineSegment(
+    VerticalPager(
+        modifier = modifier.padding(insets),
+        state = pagerState,
+    ) { page: Int ->
+        when (page) {
+            PAGE_PAST -> {
+                LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
-                    segment = segment,
-                )
-            }
-        }
+                    state = pastListState,
+                    contentPadding = PaddingValues(
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 16.dp,
+                    ),
+                    reverseLayout = true,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    schedule.past.keys.forEach { date ->
+                        stickyHeader(
+                            key = "past-${date.toEpochDays()}",
+                            contentType = "header",
+                        ) {
+                            SectionHeader(
+                                title = { Text(date.formatDate(isFuture = false)) },
+                            )
+                        }
 
-        stickyHeader(
-            key = "live",
-            contentType = "header",
-        ) {
-            if (schedule.live.isNotEmpty()) {
-                SectionHeader(
-                    title = { Text(stringResource(MR.strings.live)) },
-                )
-            }
-        }
-
-        items(
-            schedule.live,
-            key = { userStream -> "live-${userStream.stream.id}" },
-            contentType = { "stream" },
-        ) { userStream ->
-            LiveStreamCard(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { onChannelClick(userStream.user.id) },
-                title = userStream.stream.title,
-                userName = userStream.user.displayName,
-                viewerCount = userStream.stream.viewerCount,
-                category = userStream.stream.category,
-                startedAt = userStream.stream.startedAt,
-                tags = userStream.stream.tags.toPersistentSet(),
-                profileImageUrl = userStream.user.profileImageUrl,
-            )
-        }
-
-        schedule.future.keys.forEach { date ->
-            stickyHeader(
-                key = "future-${date.toEpochDays()}",
-                contentType = "header",
-            ) {
-                SectionHeader(
-                    title = { Text(date.formatDate(isFuture = true)) },
-                )
+                        items(
+                            items = schedule.past[date].orEmpty(),
+                            key = { segment -> "past-${segment.id}" },
+                            contentType = { "segment" },
+                        ) { segment ->
+                            TimelineSegment(
+                                modifier = Modifier.fillMaxWidth(),
+                                segment = segment,
+                            )
+                        }
+                    }
+                }
             }
 
-            items(
-                items = schedule.future[date].orEmpty(),
-                key = { segment -> "future-${segment.id}" },
-                contentType = { "segment" },
-            ) { segment ->
-                TimelineSegment(
+            PAGE_LIVE -> {
+                LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
-                    segment = segment,
-                )
+                    state = liveListState,
+                    contentPadding = PaddingValues(
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 16.dp,
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    stickyHeader(
+                        key = "live",
+                        contentType = "header",
+                    ) {
+                        if (schedule.live.isNotEmpty()) {
+                            SectionHeader(
+                                title = { Text(stringResource(MR.strings.live)) },
+                            )
+                        }
+                    }
+
+                    // TODO show "empty" item
+
+                    items(
+                        schedule.live,
+                        key = { userStream -> "live-${userStream.stream.id}" },
+                        contentType = { "stream" },
+                    ) { userStream ->
+                        LiveStreamCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = { onChannelClick(userStream.user.id) },
+                            title = userStream.stream.title,
+                            userName = userStream.user.displayName,
+                            viewerCount = userStream.stream.viewerCount,
+                            category = userStream.stream.category,
+                            startedAt = userStream.stream.startedAt,
+                            tags = userStream.stream.tags.toPersistentSet(),
+                            profileImageUrl = userStream.user.profileImageUrl,
+                        )
+                    }
+                }
+            }
+
+            PAGE_FUTURE -> {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    state = futureListState,
+                    contentPadding = PaddingValues(
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 16.dp,
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    schedule.future.keys.forEach { date ->
+                        stickyHeader(
+                            key = "future-${date.toEpochDays()}",
+                            contentType = "header",
+                        ) {
+                            SectionHeader(
+                                title = { Text(date.formatDate(isFuture = true)) },
+                            )
+                        }
+
+                        items(
+                            items = schedule.future[date].orEmpty(),
+                            key = { segment -> "future-${segment.id}" },
+                            contentType = { "segment" },
+                        ) { segment ->
+                            TimelineSegment(
+                                modifier = Modifier.fillMaxWidth(),
+                                segment = segment,
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -571,3 +624,7 @@ private fun TimelineSegmentPreview() {
         )
     }
 }
+
+private const val PAGE_PAST = 0
+private const val PAGE_LIVE = 1
+private const val PAGE_FUTURE = 2

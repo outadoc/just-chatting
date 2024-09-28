@@ -12,5 +12,4 @@ internal data class FullSchedule(
     val past: ImmutableMap<LocalDate, List<ChannelScheduleSegment>> = persistentMapOf(),
     val live: ImmutableList<UserStream> = persistentListOf(),
     val future: ImmutableMap<LocalDate, List<ChannelScheduleSegment>> = persistentMapOf(),
-    val todayListIndex: Int = 0,
 )

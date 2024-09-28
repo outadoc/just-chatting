@@ -246,9 +246,6 @@ internal class TwitchRepositoryImpl(
                         }
                         .toPersistentList(),
                     future = groupedFuture,
-                    // We want to scroll to "today", so skip the number of past segments
-                    // + the number of days, used as headers
-                    todayListIndex = past.size + groupedPast.keys.size,
                 )
             }
         }

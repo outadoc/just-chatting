@@ -2,6 +2,8 @@ package fr.outadoc.justchatting.feature.shared.presentation.mobile
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
@@ -152,6 +154,7 @@ internal fun MainNavigation(
             Scaffold(
                 topBar = topBar,
                 content = content,
+                contentWindowInsets = WindowInsets.statusBars,
             )
         },
     )

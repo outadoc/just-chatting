@@ -51,14 +51,6 @@ internal fun ChatListContainer(
 
     var isListAtBottom by remember { mutableStateOf(false) }
 
-    LaunchedEffect(state.chatMessages) {
-        if (isListAtBottom) {
-            listState.scrollToItem(
-                index = 0,
-            )
-        }
-    }
-
     LaunchedEffect(isListAtBottom) {
         // Hide the keyboard when scrolling up
         if (!isListAtBottom) {

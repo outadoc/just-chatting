@@ -710,7 +710,11 @@ internal class ChatViewModel(
 
         val newMessages: PersistentList<ChatListItem> =
             state.chatMessages
-                .addAll(messages)
+                .addAll(
+                    // New messages are added to the top of the list
+                    index = 0,
+                    messages.asReversed(),
+                )
                 .distinct()
                 .toPersistentList()
 
@@ -723,7 +727,7 @@ internal class ChatViewModel(
         return state.copy(
             chatMessages = newMessages
                 .filterIsInstance<ChatListItem.Message>()
-                .takeLast(maxCount)
+                .take(maxCount)
                 .toPersistentList(),
             lastSentMessageInstant = lastSentMessageInstant
                 ?: state.lastSentMessageInstant,

@@ -54,7 +54,7 @@ internal fun ChatListContainer(
     LaunchedEffect(state.chatMessages) {
         if (isListAtBottom) {
             listState.scrollToItem(
-                index = (state.chatMessages.size - 1).coerceAtLeast(0),
+                index = 0,
             )
         }
     }
@@ -102,7 +102,7 @@ internal fun ChatListContainer(
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     scope.launch {
                         listState.scrollToItem(
-                            index = (state.chatMessages.size - 1).coerceAtLeast(0),
+                            index = 0,
                         )
                     }
                 },

@@ -19,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
@@ -35,6 +36,7 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.utils.core.isEven
 import fr.outadoc.justchatting.utils.core.isOdd
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
@@ -152,8 +154,11 @@ internal fun ChatList(
                     }
                 },
             ) { index, item ->
-                val background =
-                    if (index.isOdd) {
+                // Alternate the background of each chat row.
+                // We want the colors to keep consistent for every message, so we alternate the
+                // logic every time we add a new message to the list.
+                val background: Color =
+                    if (entries.size.isOdd && index.isOdd || entries.size.isEven && index.isEven) {
                         MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
                     } else {
                         MaterialTheme.colorScheme.surface

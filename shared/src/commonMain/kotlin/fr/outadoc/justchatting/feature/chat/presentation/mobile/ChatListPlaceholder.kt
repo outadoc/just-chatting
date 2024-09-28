@@ -27,18 +27,16 @@ internal fun ChatListPlaceholder(
     placeholderItemCount: Int = 100,
 ) {
     val random = Random(seed = 0xbadcafe)
-    val listState = rememberLazyListState(
-        initialFirstVisibleItemIndex = placeholderItemCount - 1,
-    )
+    val listState = rememberLazyListState()
 
     LazyColumn(
         modifier = modifier,
         userScrollEnabled = false,
+        reverseLayout = true,
         state = listState,
     ) {
         items(
             count = placeholderItemCount,
-            contentType = { Any() },
         ) { index ->
             Box(
                 modifier = Modifier

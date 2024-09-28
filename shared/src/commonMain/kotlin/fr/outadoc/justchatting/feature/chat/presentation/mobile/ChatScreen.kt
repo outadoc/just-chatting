@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
@@ -30,7 +31,9 @@ internal fun ChatScreen(
         when {
             showPlaceholder -> {
                 ChatListPlaceholder(
-                    modifier = modifier.fillMaxSize(),
+                    modifier = modifier
+                        .padding(insets)
+                        .fillMaxSize(),
                 )
             }
 

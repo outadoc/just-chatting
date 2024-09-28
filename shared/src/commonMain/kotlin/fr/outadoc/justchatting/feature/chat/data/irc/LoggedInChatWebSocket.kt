@@ -65,7 +65,6 @@ internal class LoggedInChatWebSocket(
         MutableStateFlow(
             ConnectionStatus(
                 isAlive = false,
-                preventSendingMessages = true,
                 registeredListeners = 0,
             ),
         )
@@ -99,7 +98,6 @@ internal class LoggedInChatWebSocket(
                     _connectionStatus.update { status ->
                         status.copy(
                             isAlive = true,
-                            preventSendingMessages = false,
                         )
                     }
 
@@ -113,7 +111,6 @@ internal class LoggedInChatWebSocket(
                     _connectionStatus.update { status ->
                         status.copy(
                             isAlive = false,
-                            preventSendingMessages = true,
                         )
                     }
                 }

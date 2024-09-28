@@ -74,7 +74,6 @@ internal class LiveChatWebSocket private constructor(
         MutableStateFlow(
             ConnectionStatus(
                 isAlive = false,
-                preventSendingMessages = false,
                 registeredListeners = 0,
             ),
         )

@@ -11,33 +11,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.StrokeCap
-import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.MessagePostConstraint
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlin.time.Duration
-
-@Composable
-internal fun ChatSlowModeProgress(
-    modifier: Modifier,
-    state: ChatViewModel.State,
-) {
-    when (state) {
-        is ChatViewModel.State.Initial -> {}
-        is ChatViewModel.State.Loading -> {}
-        is ChatViewModel.State.Failed -> {}
-        is ChatViewModel.State.Chatting -> {
-            ChatSlowModeProgress(
-                modifier = modifier,
-                constraint = state.messagePostConstraint
-                    ?: MessagePostConstraint(
-                        lastMessageSentAt = Instant.DISTANT_PAST,
-                        slowModeDuration = Duration.ZERO,
-                    ),
-            )
-        }
-    }
-}
 
 @Composable
 internal fun ChatSlowModeProgress(

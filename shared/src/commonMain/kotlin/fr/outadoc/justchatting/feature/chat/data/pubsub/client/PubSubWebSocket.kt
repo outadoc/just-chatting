@@ -67,7 +67,6 @@ internal class PubSubWebSocket(
         MutableStateFlow(
             ConnectionStatus(
                 isAlive = false,
-                preventSendingMessages = false,
                 registeredListeners = 0,
             ),
         )

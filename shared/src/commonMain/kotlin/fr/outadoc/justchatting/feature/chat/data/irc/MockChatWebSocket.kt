@@ -60,7 +60,6 @@ internal class MockChatWebSocket private constructor(
         MutableStateFlow(
             ConnectionStatus(
                 isAlive = false,
-                preventSendingMessages = false,
                 registeredListeners = 0,
             ),
         )
@@ -90,7 +89,6 @@ internal class MockChatWebSocket private constructor(
                     _connectionStatus.update { status ->
                         status.copy(
                             isAlive = true,
-                            preventSendingMessages = false,
                         )
                     }
 
@@ -104,7 +102,6 @@ internal class MockChatWebSocket private constructor(
                     _connectionStatus.update { status ->
                         status.copy(
                             isAlive = false,
-                            preventSendingMessages = true,
                         )
                     }
                 }

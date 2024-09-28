@@ -6,6 +6,6 @@ import kotlin.time.Duration
 
 @Immutable
 internal data class MessagePostConstraint(
-    val lastMessageSentAt: Instant,
-    val slowModeDuration: Duration,
+    val lastMessageSentAt: Instant = Instant.DISTANT_PAST,
+    val slowModeDuration: Duration = Duration.ZERO,
 )

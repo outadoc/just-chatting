@@ -47,6 +47,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
+import fr.outadoc.justchatting.feature.chat.presentation.MessagePostConstraint
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
@@ -155,10 +156,13 @@ internal fun ChannelChatScreenContent(
         },
         bottomBar = {
             Column {
-                ChatSlowModeProgress(
-                    modifier = Modifier.fillMaxWidth(),
-                    state = state,
-                )
+                if (state is ChatViewModel.State.Chatting) {
+                    ChatSlowModeProgress(
+                        modifier = Modifier.fillMaxWidth(),
+                        constraint = state.messagePostConstraint
+                            ?: MessagePostConstraint(),
+                    )
+                }
 
                 Surface(
                     shadowElevation = 2.dp,
@@ -175,8 +179,6 @@ internal fun ChannelChatScreenContent(
                                 },
                             )
                             .fillMaxWidth(),
-                        isSubmitVisible = state is ChatViewModel.State.Chatting,
-                        isSubmitEnabled = state is ChatViewModel.State.Chatting && !state.connectionStatus.preventSendingMessages,
                         message = TextFieldValue(
                             text = inputState.message,
                             selection = TextRange(
@@ -196,11 +198,12 @@ internal fun ChannelChatScreenContent(
                             }
                             onToggleEmotePicker()
                         },
-                        onTriggerAutoComplete = onTriggerAutoComplete,
                         onClearReplyingTo = onClearReplyingTo,
+                        onTriggerAutoComplete = onTriggerAutoComplete,
                         canReuseLastMessage = inputState.canReuseLastMessage,
                         onReuseLastMessageClicked = onReuseLastMessageClicked,
                         onSubmit = onSubmit,
+                        isSubmitVisible = state is ChatViewModel.State.Chatting,
                         contentPadding = 8.dp,
                     )
                 }

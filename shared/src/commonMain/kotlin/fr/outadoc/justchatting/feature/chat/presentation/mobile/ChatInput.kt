@@ -1,6 +1,10 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,7 +19,8 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Mood
 import androidx.compose.material.icons.filled.SubdirectoryArrowLeft
-import androidx.compose.material3.Button
+import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -68,7 +73,6 @@ internal fun ChatInput(
     onReuseLastMessageClicked: () -> Unit = {},
     onSubmit: () -> Unit = {},
     isSubmitVisible: Boolean = true,
-    isSubmitEnabled: Boolean = true,
     contentPadding: Dp = 0.dp,
 ) {
     val haptic = LocalHapticFeedback.current
@@ -146,12 +150,15 @@ internal fun ChatInput(
                     onSubmit = onSubmit,
                 )
 
-                AnimatedVisibility(visible = isSubmitVisible && message.text.isNotEmpty()) {
-                    Button(
+                AnimatedVisibility(
+                    visible = isSubmitVisible && message.text.isNotEmpty(),
+                    enter = fadeIn() + expandHorizontally(expandFrom = Alignment.Start),
+                    exit = shrinkHorizontally(shrinkTowards = Alignment.Start) + fadeOut(),
+                ) {
+                    FloatingActionButton(
                         modifier = Modifier.size(56.0.dp),
-                        contentPadding = PaddingValues(4.dp),
-                        enabled = isSubmitEnabled,
-                        shape = MaterialTheme.shapes.large,
+                        containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+                        elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
                         onClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             onSubmit()

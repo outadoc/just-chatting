@@ -64,7 +64,6 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.HapticIconButton
 import fr.outadoc.justchatting.utils.presentation.format
@@ -147,7 +146,6 @@ internal fun TimelineScreen(
             }
         },
         content = { insets ->
-            logDebug("TimelineScreen") { "insets: $insets" }
             TimelineContent(
                 modifier = modifier,
                 schedule = state.schedule,

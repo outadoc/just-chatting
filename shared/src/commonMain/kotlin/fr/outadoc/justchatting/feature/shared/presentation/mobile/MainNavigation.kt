@@ -13,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuite
@@ -93,6 +94,7 @@ internal fun MainNavigation(
                         Spacer(Modifier.weight(1f))
                     }
                 }
+
                 else -> {
                     NavigationSuite(
                         modifier = modifier,
@@ -154,7 +156,15 @@ internal fun MainNavigation(
             Scaffold(
                 topBar = topBar,
                 content = content,
-                contentWindowInsets = WindowInsets.statusBars,
+                contentWindowInsets = when (navSuiteType) {
+                    NavigationSuiteType.NavigationBar -> {
+                        WindowInsets.statusBars
+                    }
+
+                    else -> {
+                        ScaffoldDefaults.contentWindowInsets
+                    }
+                },
             )
         },
     )

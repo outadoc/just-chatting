@@ -23,6 +23,7 @@ import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.Hyphens
 import androidx.compose.ui.text.style.TextOverflow
@@ -190,6 +191,10 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
             )
 
             append(' ')
+        }
+
+        if (isAction) {
+            pushStyle(SpanStyle(fontStyle = FontStyle.Italic))
         }
 
         withStyle(

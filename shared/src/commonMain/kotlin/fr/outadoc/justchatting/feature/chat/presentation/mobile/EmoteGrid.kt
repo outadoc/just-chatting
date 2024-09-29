@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -62,6 +63,7 @@ internal fun EmoteGrid(
 
                 is EmoteSetItem.Emote -> {
                     AccessibleIconButton(
+                        modifier = Modifier.aspectRatio(1f),
                         onClick = { onEmoteClick(item.emote) },
                         onClickLabel = item.emote.name,
                     ) {

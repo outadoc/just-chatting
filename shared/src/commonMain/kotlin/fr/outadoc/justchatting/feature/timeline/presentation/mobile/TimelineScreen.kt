@@ -92,7 +92,8 @@ internal fun TimelineScreen(
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        viewModel.syncPeriodically()
+        viewModel.syncEverythingNow()
+        viewModel.syncLiveStreamsPeriodically()
     }
 
     val pastListState = rememberLazyListState()
@@ -139,7 +140,7 @@ internal fun TimelineScreen(
                         }
 
                         HapticIconButton(
-                            onClick = { viewModel.synchronize() },
+                            onClick = { viewModel.syncEverythingNow() },
                         ) {
                             if (state.isLoading) {
                                 CircularProgressIndicator(

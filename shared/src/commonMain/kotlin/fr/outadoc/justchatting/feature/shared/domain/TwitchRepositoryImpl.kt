@@ -155,6 +155,22 @@ internal class TwitchRepositoryImpl(
         }
     }
 
+    override suspend fun syncFollowedStreams() {
+        when (val appUser = authRepository.currentUser.first()) {
+            is AppUser.LoggedIn -> {
+                syncLocalUserInfo()
+
+                syncLiveStreams(
+                    appUserId = appUser.userId,
+                )
+            }
+
+            else -> {
+                logWarning<TwitchRepositoryImpl> { "No user logged in, skipping live streams sync" }
+            }
+        }
+    }
+
     override suspend fun syncFollowedChannelsSchedule(
         today: LocalDate,
         timeZone: TimeZone,

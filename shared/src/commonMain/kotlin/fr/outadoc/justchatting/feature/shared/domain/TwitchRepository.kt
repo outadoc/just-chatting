@@ -17,8 +17,6 @@ internal interface TwitchRepository {
 
     suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>>
 
-    suspend fun syncFollowedChannels()
-
     suspend fun getFollowedChannels(): Flow<List<ChannelFollow>>
 
     suspend fun getStreamByUserId(userId: String): Flow<Result<Stream>>
@@ -33,14 +31,12 @@ internal interface TwitchRepository {
 
     suspend fun getRecentChannels(): Flow<List<User>>
 
-    suspend fun markChannelAsVisited(channel: User, visitedAt: Instant)
-
-    suspend fun syncFollowedChannelsSchedule(today: LocalDate, timeZone: TimeZone)
-
     suspend fun getFollowedChannelsSchedule(
         today: LocalDate,
         timeZone: TimeZone,
     ): Flow<FullSchedule>
+
+    suspend fun markChannelAsVisited(channel: User, visitedAt: Instant)
 
     suspend fun getGlobalBadges(): Result<List<TwitchBadge>>
 
@@ -51,4 +47,10 @@ internal interface TwitchRepository {
         message: String,
         inReplyToMessageId: String?,
     ): Result<String>
+
+    suspend fun syncFollowedChannelsSchedule(today: LocalDate, timeZone: TimeZone)
+
+    suspend fun syncFollowedStreams()
+
+    suspend fun syncFollowedChannels()
 }

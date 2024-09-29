@@ -52,23 +52,29 @@ internal class TimelineViewModel(
         }
     }
 
-    fun syncPeriodically() {
+    fun syncLiveStreamsPeriodically() {
         if (periodicSyncJob?.isActive == true) {
             return
         }
 
         periodicSyncJob = viewModelScope.launch(DispatchersProvider.default) {
             while (isActive) {
-                if (syncJob?.isActive != true) {
-                    synchronize()
-                }
-
                 delay(1.minutes)
+
+                if (syncJob?.isActive != true) {
+                    syncLiveStreamsNow()
+                }
             }
         }
     }
 
-    fun synchronize() {
+    fun syncLiveStreamsNow() {
+        viewModelScope.launch(DispatchersProvider.io) {
+            twitchRepository.syncFollowedStreams()
+        }
+    }
+
+    fun syncEverythingNow() {
         syncJob?.cancel()
         syncJob = viewModelScope.launch(DispatchersProvider.io) {
             _state.update { state ->

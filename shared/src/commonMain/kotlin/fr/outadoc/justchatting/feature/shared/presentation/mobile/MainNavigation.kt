@@ -80,8 +80,8 @@ internal fun MainNavigation(
                         )
 
                         NavigationRailItem(
-                            selected = selectedScreen == Screen.Settings.Root,
-                            onClick = { onSelectedTabChange(Screen.Settings.Root) },
+                            selected = selectedScreen == Screen.Settings,
+                            onClick = { onSelectedTabChange(Screen.Settings) },
                             icon = {
                                 Icon(
                                     imageVector = Icons.Default.AccountCircle,
@@ -137,8 +137,8 @@ internal fun MainNavigation(
                             )
 
                             item(
-                                selected = selectedScreen == Screen.Settings.Root,
-                                onClick = { onSelectedTabChange(Screen.Settings.Root) },
+                                selected = selectedScreen == Screen.Settings,
+                                onClick = { onSelectedTabChange(Screen.Settings) },
                                 icon = {
                                     Icon(
                                         imageVector = Icons.Default.AccountCircle,

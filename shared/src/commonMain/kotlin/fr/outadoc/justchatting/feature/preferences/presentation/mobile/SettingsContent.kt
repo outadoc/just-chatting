@@ -46,7 +46,7 @@ internal fun SettingsContent(
 
     MainNavigation(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        selectedScreen = Screen.Settings.Root,
+        selectedScreen = Screen.Settings,
         onSelectedTabChange = onNavigate,
         topBar = {
             TopAppBar(

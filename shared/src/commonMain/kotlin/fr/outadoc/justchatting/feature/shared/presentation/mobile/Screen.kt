@@ -25,13 +25,9 @@ internal sealed interface Screen {
     }
 
     @Serializable
-    sealed interface Settings : Screen {
-
-        @Serializable
-        data object Root : Settings {
-            override val route: String
-                get() = "settings"
-        }
+    data object Settings : Screen {
+        override val route: String
+            get() = "settings"
     }
 }
 

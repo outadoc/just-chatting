@@ -82,7 +82,7 @@ internal fun MainRouter(
                     }
 
                     composable(
-                        route = Screen.Settings.Root.route,
+                        route = Screen.Settings.route,
                     ) {
                         SettingsContent(
                             onNavigate = { navController.navigate(it.route) },

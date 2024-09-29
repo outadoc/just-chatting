@@ -233,7 +233,7 @@
     <string name="menu_item_openInBubble">Open in bubble</string>
     <string name="message_limit">Message limit</string>
     <string name="no">No</string>
-    <string name="nothing_here">Nothing to see here</string>
+    <string name="nothing_here">Nothing here yet</string>
     <string name="notification_action_disconnect">Disconnect</string>
     <string name="notification_action_reply">Reply</string>
     <string name="notification_action_reply_hint">Reply in chat…</string>

@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.shared.presentation.mobile
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
@@ -100,54 +101,59 @@ internal fun MainRouter(
         },
         detailPane = {
             AnimatedPane {
-                navigator.currentDestination?.content?.let { screen ->
-                    when (screen) {
-                        is DetailScreen.Chat -> {
-                            ChannelChatScreen(
-                                userId = screen.id,
-                                isStandalone = false,
-                                canNavigateUp = navigator.canNavigateBack(),
-                                onNavigateUp = { navigator.navigateBack() },
-                            )
-                        }
+                when (val screen = navigator.currentDestination?.content) {
+                    is DetailScreen.Chat -> {
+                        ChannelChatScreen(
+                            userId = screen.id,
+                            isStandalone = false,
+                            canNavigateUp = navigator.canNavigateBack(),
+                            onNavigateUp = { navigator.navigateBack() },
+                        )
+                    }
 
-                        DetailScreen.About -> {
-                            SettingsSectionAbout(
-                                canNavigateUp = navigator.canNavigateBack(),
-                                onNavigateUp = { navigator.navigateBack() },
-                            )
-                        }
+                    DetailScreen.About -> {
+                        SettingsSectionAbout(
+                            canNavigateUp = navigator.canNavigateBack(),
+                            onNavigateUp = { navigator.navigateBack() },
+                        )
+                    }
 
-                        DetailScreen.Appearance -> {
-                            SettingsSectionAppearance(
-                                canNavigateUp = navigator.canNavigateBack(),
-                                onNavigateUp = { navigator.navigateBack() },
-                                onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
-                            )
-                        }
+                    DetailScreen.Appearance -> {
+                        SettingsSectionAppearance(
+                            canNavigateUp = navigator.canNavigateBack(),
+                            onNavigateUp = { navigator.navigateBack() },
+                            onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
+                        )
+                    }
 
-                        DetailScreen.DependencyCredits -> {
-                            SettingsSectionDependencies(
-                                canNavigateUp = navigator.canNavigateBack(),
-                                onNavigateUp = { navigator.navigateBack() },
-                            )
-                        }
+                    DetailScreen.DependencyCredits -> {
+                        SettingsSectionDependencies(
+                            canNavigateUp = navigator.canNavigateBack(),
+                            onNavigateUp = { navigator.navigateBack() },
+                        )
+                    }
 
-                        DetailScreen.Notifications -> {
-                            SettingsSectionNotifications(
-                                canNavigateUp = navigator.canNavigateBack(),
-                                onNavigateUp = { navigator.navigateBack() },
-                                onOpenNotificationPreferences = onOpenNotificationPreferences,
-                                onOpenBubblePreferences = onOpenBubblePreferences,
-                            )
-                        }
+                    DetailScreen.Notifications -> {
+                        SettingsSectionNotifications(
+                            canNavigateUp = navigator.canNavigateBack(),
+                            onNavigateUp = { navigator.navigateBack() },
+                            onOpenNotificationPreferences = onOpenNotificationPreferences,
+                            onOpenBubblePreferences = onOpenBubblePreferences,
+                        )
+                    }
 
-                        DetailScreen.ThirdParties -> {
-                            SettingsSectionThirdParties(
-                                canNavigateUp = navigator.canNavigateBack(),
-                                onNavigateUp = { navigator.navigateBack() },
-                            )
-                        }
+                    DetailScreen.ThirdParties -> {
+                        SettingsSectionThirdParties(
+                            canNavigateUp = navigator.canNavigateBack(),
+                            onNavigateUp = { navigator.navigateBack() },
+                        )
+                    }
+
+                    null -> {
+                        // No detail screen selected
+                        NoContent(
+                            modifier = Modifier.fillMaxSize(),
+                        )
                     }
                 }
             }

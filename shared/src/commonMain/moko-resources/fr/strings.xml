@@ -233,7 +233,7 @@
     <string name="menu_item_openInBubble">Ouvrir dans une bulle</string>
     <string name="message_limit">Limite de messages</string>
     <string name="no">Non</string>
-    <string name="nothing_here">Rien à voir ici</string>
+    <string name="nothing_here">Rien pour l\'instant</string>
     <string name="notification_action_disconnect">Déconnecter</string>
     <string name="notification_action_reply">Répondre</string>
     <string name="notification_action_reply_hint">Répondre dans le tchat…</string>

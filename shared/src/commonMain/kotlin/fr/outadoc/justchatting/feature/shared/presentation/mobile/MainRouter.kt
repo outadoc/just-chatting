@@ -41,14 +41,6 @@ internal fun MainRouter(
     onChannelClick: (String) -> Unit = {},
     preferredListWidth: Dp = 500.dp,
 ) {
-    BackHandler(chatNavigator.canNavigateBack()) {
-        chatNavigator.navigateBack()
-    }
-
-    BackHandler(settingsNavigator.canNavigateBack()) {
-        settingsNavigator.navigateBack()
-    }
-
     NavHost(
         navController = navController,
         startDestination = DefaultScreen.route,
@@ -73,6 +65,10 @@ internal fun MainRouter(
                 detailPane = {
                     AnimatedPane {
                         chatNavigator.currentDestination?.content?.let { screen ->
+                            BackHandler(chatNavigator.canNavigateBack()) {
+                                chatNavigator.navigateBack()
+                            }
+
                             ChannelChatScreen(
                                 modifier = modifier,
                                 userId = screen.id,
@@ -106,6 +102,10 @@ internal fun MainRouter(
                 detailPane = {
                     AnimatedPane {
                         chatNavigator.currentDestination?.content?.let { screen ->
+                            BackHandler(chatNavigator.canNavigateBack()) {
+                                chatNavigator.navigateBack()
+                            }
+
                             ChannelChatScreen(
                                 modifier = modifier,
                                 userId = screen.id,
@@ -139,6 +139,10 @@ internal fun MainRouter(
                 detailPane = {
                     AnimatedPane {
                         chatNavigator.currentDestination?.content?.let { screen ->
+                            BackHandler(chatNavigator.canNavigateBack()) {
+                                chatNavigator.navigateBack()
+                            }
+
                             ChannelChatScreen(
                                 modifier = modifier,
                                 userId = screen.id,
@@ -178,6 +182,10 @@ internal fun MainRouter(
                 detailPane = {
                     AnimatedPane {
                         settingsNavigator.currentDestination?.content?.let { screen ->
+                            BackHandler(settingsNavigator.canNavigateBack()) {
+                                settingsNavigator.navigateBack()
+                            }
+
                             when (screen) {
                                 SettingsSubScreen.About -> {
                                     SettingsSectionAbout(

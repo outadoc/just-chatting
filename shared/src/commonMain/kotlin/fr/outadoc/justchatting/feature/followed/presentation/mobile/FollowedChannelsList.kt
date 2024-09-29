@@ -32,7 +32,7 @@ import fr.outadoc.justchatting.feature.shared.presentation.mobile.Screen
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.UserItemCard
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.UserItemCardPlaceholder
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.presentation.HapticIconButton
+import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.plus
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -62,8 +62,9 @@ internal fun FollowedChannelsList(
                 title = { Text(stringResource(MR.strings.channels)) },
                 scrollBehavior = scrollBehavior,
                 actions = {
-                    HapticIconButton(
+                    AccessibleIconButton(
                         onClick = { viewModel.synchronize() },
+                        onClickLabel = stringResource(MR.strings.timeline_refresh_action_cd),
                     ) {
                         if (state.isLoading) {
                             CircularProgressIndicator(
@@ -72,7 +73,7 @@ internal fun FollowedChannelsList(
                         } else {
                             Icon(
                                 imageVector = Icons.Default.Sync,
-                                contentDescription = stringResource(MR.strings.timeline_refresh_action_cd),
+                                contentDescription = null,
                             )
                         }
                     }

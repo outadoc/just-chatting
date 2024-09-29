@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteSetItem
-import fr.outadoc.justchatting.utils.presentation.HapticIconButton
+import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
@@ -61,7 +61,10 @@ internal fun EmoteGrid(
                 }
 
                 is EmoteSetItem.Emote -> {
-                    HapticIconButton(onClick = { onEmoteClick(item.emote) }) {
+                    AccessibleIconButton(
+                        onClick = { onEmoteClick(item.emote) },
+                        onClickLabel = item.emote.name,
+                    ) {
                         EmoteItem(
                             modifier = Modifier.size(emoteSize),
                             emote = item.emote,

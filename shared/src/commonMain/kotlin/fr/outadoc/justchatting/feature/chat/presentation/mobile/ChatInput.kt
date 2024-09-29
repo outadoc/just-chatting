@@ -51,8 +51,8 @@ import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.HapticIconButton
 import kotlinx.datetime.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -104,10 +104,13 @@ internal fun ChatInput(
                             message = replyingToMessage.message.orEmpty(),
                         )
 
-                        HapticIconButton(onClick = onClearReplyingTo) {
+                        AccessibleIconButton(
+                            onClick = onClearReplyingTo,
+                            onClickLabel = stringResource(MR.strings.chat_input_replyClear),
+                        ) {
                             Icon(
                                 Icons.Default.Clear,
-                                contentDescription = stringResource(MR.strings.chat_input_replyClear),
+                                contentDescription = null,
                             )
                         }
                     }
@@ -227,31 +230,38 @@ internal fun ChatTextField(
             unfocusedIndicatorColor = Color.Transparent,
         ),
         leadingIcon = {
-            HapticIconButton(onClick = onToggleEmotePicker) {
+            AccessibleIconButton(
+                onClick = onToggleEmotePicker,
+                onClickLabel = stringResource(MR.strings.chat_input_emote_cd),
+            ) {
                 Icon(
                     Icons.Default.Mood,
-                    contentDescription = stringResource(MR.strings.chat_input_emote_cd),
+                    contentDescription = null,
                 )
             }
         },
         trailingIcon = {
             when {
                 message.text.isNotEmpty() -> {
-                    HapticIconButton(
+                    AccessibleIconButton(
                         onClick = { onMessageChange(TextFieldValue("")) },
+                        onClickLabel = stringResource(MR.strings.chat_input_clear_cd),
                     ) {
                         Icon(
                             Icons.Filled.Cancel,
-                            contentDescription = stringResource(MR.strings.chat_input_clear_cd),
+                            contentDescription = null,
                         )
                     }
                 }
 
                 canReuseLastMessage -> {
-                    HapticIconButton(onClick = onReuseLastMessageClicked) {
+                    AccessibleIconButton(
+                        onClick = onReuseLastMessageClicked,
+                        onClickLabel = stringResource(MR.strings.chat_input_reuseLastMessage_cd),
+                    ) {
                         Icon(
                             Icons.Default.SubdirectoryArrowLeft,
-                            contentDescription = stringResource(MR.strings.chat_input_reuseLastMessage_cd),
+                            contentDescription = null,
                         )
                     }
                 }

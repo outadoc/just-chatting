@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.search.presentation.mobile
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -30,7 +30,7 @@ import app.cash.paging.compose.LazyPagingItems
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.presentation.HapticIconButton
+import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 
 @Composable
 internal fun SearchScreenBar(
@@ -107,25 +107,25 @@ private fun CompactSearchBar(
                     )
                 },
                 leadingIcon = {
-                    Crossfade(
+                    AnimatedContent(
                         targetState = isSearchExpanded,
                         label = "search leading icon",
                     ) { isActive ->
-                        HapticIconButton(
-                            onClick = onDismissSearchBar,
-                            enabled = isActive,
-                        ) {
-                            if (isActive) {
+                        if (isActive) {
+                            AccessibleIconButton(
+                                onClick = onDismissSearchBar,
+                                onClickLabel = stringResource(MR.strings.all_goBack),
+                            ) {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = stringResource(MR.strings.all_goBack),
-                                )
-                            } else {
-                                Icon(
-                                    Icons.Filled.Search,
                                     contentDescription = null,
                                 )
                             }
+                        } else {
+                            Icon(
+                                Icons.Filled.Search,
+                                contentDescription = null,
+                            )
                         }
                     }
                 },
@@ -140,10 +140,13 @@ private fun CompactSearchBar(
                         }
 
                         AnimatedVisibility(visible = query.isNotEmpty()) {
-                            HapticIconButton(onClick = onClearSearchBar) {
+                            AccessibleIconButton(
+                                onClick = onClearSearchBar,
+                                onClickLabel = stringResource(MR.strings.search_clear_cd),
+                            ) {
                                 Icon(
                                     Icons.Filled.Cancel,
-                                    contentDescription = stringResource(MR.strings.search_clear_cd),
+                                    contentDescription = null,
                                 )
                             }
                         }
@@ -199,34 +202,37 @@ private fun FullHeightSearchBar(
                     )
                 },
                 leadingIcon = {
-                    Crossfade(
+                    AnimatedContent(
                         targetState = isSearchExpanded,
                         label = "search leading icon",
                     ) { isActive ->
-                        HapticIconButton(
-                            onClick = onDismissSearchBar,
-                            enabled = isActive,
-                        ) {
-                            if (isActive) {
+                        if (isActive) {
+                            AccessibleIconButton(
+                                onClick = onDismissSearchBar,
+                                onClickLabel = stringResource(MR.strings.all_goBack),
+                            ) {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = stringResource(MR.strings.all_goBack),
-                                )
-                            } else {
-                                Icon(
-                                    Icons.Filled.Search,
                                     contentDescription = null,
                                 )
                             }
+                        } else {
+                            Icon(
+                                Icons.Filled.Search,
+                                contentDescription = null,
+                            )
                         }
                     }
                 },
                 trailingIcon = {
                     AnimatedVisibility(visible = query.isNotEmpty()) {
-                        HapticIconButton(onClick = onClearSearchBar) {
+                        AccessibleIconButton(
+                            onClick = onClearSearchBar,
+                            onClickLabel = stringResource(MR.strings.search_clear_cd),
+                        ) {
                             Icon(
                                 Icons.Filled.Cancel,
-                                contentDescription = stringResource(MR.strings.search_clear_cd),
+                                contentDescription = null,
                             )
                         }
                     }

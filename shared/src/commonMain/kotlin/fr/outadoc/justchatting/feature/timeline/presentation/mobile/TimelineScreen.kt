@@ -67,8 +67,8 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.HapticIconButton
 import fr.outadoc.justchatting.utils.presentation.format
 import fr.outadoc.justchatting.utils.presentation.formatDate
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
@@ -115,7 +115,8 @@ internal fun TimelineScreen(
                 TopAppBar(
                     title = { Text(stringResource(MR.strings.timeline_title)) },
                     actions = {
-                        HapticIconButton(
+                        AccessibleIconButton(
+                            onClickLabel = stringResource(MR.strings.timeline_today_action_cd),
                             onClick = {
                                 coroutineScope.launch {
                                     val currentPage = pagerState.currentPage
@@ -135,11 +136,12 @@ internal fun TimelineScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Today,
-                                contentDescription = stringResource(MR.strings.timeline_today_action_cd),
+                                contentDescription = null,
                             )
                         }
 
-                        HapticIconButton(
+                        AccessibleIconButton(
+                            onClickLabel = stringResource(MR.strings.timeline_refresh_action_cd),
                             onClick = { viewModel.syncEverythingNow() },
                         ) {
                             if (state.isLoading) {
@@ -149,7 +151,7 @@ internal fun TimelineScreen(
                             } else {
                                 Icon(
                                     imageVector = Icons.Default.Sync,
-                                    contentDescription = stringResource(MR.strings.timeline_refresh_action_cd),
+                                    contentDescription = null,
                                 )
                             }
                         }

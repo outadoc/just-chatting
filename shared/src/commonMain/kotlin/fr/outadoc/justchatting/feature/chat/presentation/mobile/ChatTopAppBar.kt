@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.PictureInPictureAlt
 import androidx.compose.material.icons.outlined.LiveTv
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -31,7 +30,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.presentation.HapticIconButton
+import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,10 +75,13 @@ internal fun ChatTopAppBar(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (showBackButton) {
-                    IconButton(onClick = onNavigateUp) {
+                    AccessibleIconButton(
+                        onClick = onNavigateUp,
+                        onClickLabel = stringResource(MR.strings.all_goBack),
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(MR.strings.all_goBack),
+                            contentDescription = null,
                         )
                     }
                 }
@@ -109,19 +111,25 @@ internal fun ChatTopAppBar(
             }
         },
         actions = {
-            HapticIconButton(onClick = { onWatchLiveClicked() }) {
+            AccessibleIconButton(
+                onClick = { onWatchLiveClicked() },
+                onClickLabel = stringResource(MR.strings.watch_live),
+            ) {
                 Icon(
                     modifier = Modifier.padding(bottom = 3.dp),
                     imageVector = Icons.Outlined.LiveTv,
-                    contentDescription = stringResource(MR.strings.watch_live),
+                    contentDescription = null,
                 )
             }
 
             if (showBubbleButton) {
-                HapticIconButton(onClick = { onOpenBubbleClicked() }) {
+                AccessibleIconButton(
+                    onClick = { onOpenBubbleClicked() },
+                    onClickLabel = stringResource(MR.strings.menu_item_openInBubble),
+                ) {
                     Icon(
                         imageVector = Icons.Default.PictureInPictureAlt,
-                        contentDescription = stringResource(MR.strings.menu_item_openInBubble),
+                        contentDescription = null,
                     )
                 }
             }

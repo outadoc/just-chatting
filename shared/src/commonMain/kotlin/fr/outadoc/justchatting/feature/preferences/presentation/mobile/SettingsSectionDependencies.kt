@@ -9,7 +9,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -26,6 +25,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.preferences.presentation.Dependency
 import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.plus
 import org.koin.compose.koinInject
 
@@ -43,12 +43,13 @@ internal fun SettingsSectionDependencies(
                 title = { Text(stringResource(MR.strings.settings_dependencies_header)) },
                 navigationIcon = {
                     if (canNavigateUp) {
-                        IconButton(
+                        AccessibleIconButton(
                             onClick = onNavigateUp,
+                            onClickLabel = stringResource(MR.strings.all_goBack),
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(MR.strings.all_goBack),
+                                contentDescription = null,
                             )
                         }
                     }

@@ -215,7 +215,7 @@ private fun TimelineContent(
                 ) {
                     schedule.past.keys.forEach { date ->
                         stickyHeader(
-                            key = "past-${date.toEpochDays()}",
+                            key = "header-${date.toEpochDays()}",
                             contentType = "header",
                         ) {
                             SectionHeader(
@@ -225,7 +225,7 @@ private fun TimelineContent(
 
                         items(
                             items = schedule.past[date].orEmpty(),
-                            key = { segment -> "past-${segment.id}" },
+                            key = { segment -> segment.id },
                             contentType = { "segment" },
                         ) { segment ->
                             TimelineSegment(
@@ -268,7 +268,7 @@ private fun TimelineContent(
 
                         items(
                             schedule.live,
-                            key = { userStream -> "live-${userStream.stream.id}" },
+                            key = { userStream -> userStream.stream.id },
                             contentType = { "stream" },
                         ) { userStream ->
                             LiveStreamCard(
@@ -307,7 +307,7 @@ private fun TimelineContent(
                     ) {
                         schedule.future.keys.forEach { date ->
                             stickyHeader(
-                                key = "future-${date.toEpochDays()}",
+                                key = "header-${date.toEpochDays()}",
                                 contentType = "header",
                             ) {
                                 SectionHeader(
@@ -317,7 +317,7 @@ private fun TimelineContent(
 
                             items(
                                 items = schedule.future[date].orEmpty(),
-                                key = { segment -> "future-${segment.id}" },
+                                key = { segment -> segment.id },
                                 contentType = { "segment" },
                             ) { segment ->
                                 TimelineSegment(

@@ -352,7 +352,7 @@ private fun SectionHeader(
             .fillMaxWidth(),
     ) {
         CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.titleLarge,
+            LocalTextStyle provides MaterialTheme.typography.titleMedium,
         ) {
             title()
         }

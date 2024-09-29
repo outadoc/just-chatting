@@ -26,6 +26,8 @@ kotlin {
             freeCompilerArgs.addAll(
                 "-P",
                 "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=fr.outadoc.justchatting.utils.parcel.Parcelize",
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${project.buildDir}/reports/composeReports",
             )
         }
     }

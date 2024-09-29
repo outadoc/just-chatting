@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -53,8 +55,16 @@ internal fun ChatAutoCompleteRow(
     items: List<AutoCompleteItem>,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
+    val listState = rememberLazyListState()
+
+    // Scroll back to start when items change
+    LaunchedEffect(items) {
+        listState.scrollToItem(0)
+    }
+
     LazyRow(
         modifier = modifier.fillMaxWidth(),
+        state = listState,
         horizontalArrangement = Arrangement.spacedBy(
             space = 8.dp,
             alignment = Alignment.Start,

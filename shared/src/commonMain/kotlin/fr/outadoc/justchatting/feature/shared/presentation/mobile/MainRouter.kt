@@ -8,7 +8,6 @@ import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -32,145 +31,63 @@ import fr.outadoc.justchatting.utils.presentation.BackHandler
 internal fun MainRouter(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    chatNavigator: ThreePaneScaffoldNavigator<ChatScreen> = rememberListDetailPaneScaffoldNavigator<ChatScreen>(),
-    settingsNavigator: ThreePaneScaffoldNavigator<SettingsSubScreen> = rememberListDetailPaneScaffoldNavigator<SettingsSubScreen>(),
+    navigator: ThreePaneScaffoldNavigator<DetailScreen> = rememberListDetailPaneScaffoldNavigator<DetailScreen>(),
     onOpenNotificationPreferences: () -> Unit = {},
     onOpenBubblePreferences: () -> Unit = {},
     onOpenAccessibilityPreferences: () -> Unit = {},
     onShareLogs: (Uri) -> Unit = {},
     onChannelClick: (String) -> Unit = {},
-    preferredListWidth: Dp = 500.dp,
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = DefaultScreen.route,
-    ) {
-        composable(
-            route = Screen.Timeline.route,
-        ) {
-            ListDetailPaneScaffold(
-                modifier = modifier,
-                directive = chatNavigator.scaffoldDirective,
-                value = chatNavigator.scaffoldValue,
-                listPane = {
-                    AnimatedPane(
-                        modifier = Modifier.preferredWidth(preferredListWidth),
-                    ) {
-                        TimelineScreen(
-                            onNavigate = { navController.navigate(it.route) },
-                            onChannelClick = onChannelClick,
-                        )
-                    }
-                },
-                detailPane = {
-                    AnimatedPane {
-                        chatNavigator.currentDestination?.content?.let { screen ->
-                            BackHandler(chatNavigator.canNavigateBack()) {
-                                chatNavigator.navigateBack()
-                            }
+    BackHandler(navigator.canNavigateBack()) {
+        navigator.navigateBack()
+    }
 
-                            ChannelChatScreen(
-                                modifier = modifier,
-                                userId = screen.id,
-                                isStandalone = false,
-                                canNavigateUp = chatNavigator.canNavigateBack(),
-                                onNavigateUp = { chatNavigator.navigateBack() },
-                            )
-                        }
-                    }
-                },
-            )
-        }
-
-        composable(
-            route = Screen.Followed.route,
-        ) {
-            ListDetailPaneScaffold(
-                modifier = modifier,
-                directive = chatNavigator.scaffoldDirective,
-                value = chatNavigator.scaffoldValue,
-                listPane = {
-                    AnimatedPane(
-                        modifier = Modifier.preferredWidth(preferredListWidth),
+    ListDetailPaneScaffold(
+        modifier = modifier,
+        directive = navigator.scaffoldDirective,
+        value = navigator.scaffoldValue,
+        listPane = {
+            AnimatedPane(
+                modifier = Modifier.preferredWidth(500.dp),
+            ) {
+                NavHost(
+                    navController = navController,
+                    startDestination = DefaultScreen.route,
+                ) {
+                    composable(
+                        route = Screen.Followed.route,
                     ) {
                         FollowedChannelsList(
                             onNavigate = { navController.navigate(it.route) },
                             onItemClick = onChannelClick,
                         )
                     }
-                },
-                detailPane = {
-                    AnimatedPane {
-                        chatNavigator.currentDestination?.content?.let { screen ->
-                            BackHandler(chatNavigator.canNavigateBack()) {
-                                chatNavigator.navigateBack()
-                            }
 
-                            ChannelChatScreen(
-                                modifier = modifier,
-                                userId = screen.id,
-                                isStandalone = false,
-                                canNavigateUp = chatNavigator.canNavigateBack(),
-                                onNavigateUp = { chatNavigator.navigateBack() },
-                            )
-                        }
+                    composable(
+                        route = Screen.Timeline.route,
+                    ) {
+                        TimelineScreen(
+                            onNavigate = { navController.navigate(it.route) },
+                            onChannelClick = onChannelClick,
+                        )
                     }
-                },
-            )
-        }
 
-        composable(
-            route = Screen.Search.route,
-        ) {
-            ListDetailPaneScaffold(
-                modifier = modifier,
-                directive = chatNavigator.scaffoldDirective,
-                value = chatNavigator.scaffoldValue,
-                listPane = {
-                    AnimatedPane(
-                        modifier = Modifier.preferredWidth(preferredListWidth),
+                    composable(
+                        route = Screen.Search.route,
                     ) {
                         SearchScreen(
                             onNavigate = { navController.navigate(it.route) },
                             onChannelClick = onChannelClick,
                         )
                     }
-                },
-                detailPane = {
-                    AnimatedPane {
-                        chatNavigator.currentDestination?.content?.let { screen ->
-                            BackHandler(chatNavigator.canNavigateBack()) {
-                                chatNavigator.navigateBack()
-                            }
 
-                            ChannelChatScreen(
-                                modifier = modifier,
-                                userId = screen.id,
-                                isStandalone = false,
-                                canNavigateUp = chatNavigator.canNavigateBack(),
-                                onNavigateUp = { chatNavigator.navigateBack() },
-                            )
-                        }
-                    }
-                },
-            )
-        }
-
-        composable(
-            route = Screen.Settings.Root.route,
-        ) {
-            ListDetailPaneScaffold(
-                modifier = modifier,
-                directive = chatNavigator.scaffoldDirective,
-                value = chatNavigator.scaffoldValue,
-                listPane = {
-                    AnimatedPane(
-                        modifier = Modifier.preferredWidth(preferredListWidth),
+                    composable(
+                        route = Screen.Settings.Root.route,
                     ) {
                         SettingsContent(
                             onNavigate = { navController.navigate(it.route) },
                             onNavigateDetails = { screen ->
-                                settingsNavigator.navigateTo(
+                                navigator.navigateTo(
                                     pane = ListDetailPaneScaffoldRole.Detail,
                                     content = screen,
                                 )
@@ -178,62 +95,62 @@ internal fun MainRouter(
                             onShareLogs = onShareLogs,
                         )
                     }
-                },
-                detailPane = {
-                    AnimatedPane {
-                        settingsNavigator.currentDestination?.content?.let { screen ->
-                            BackHandler(settingsNavigator.canNavigateBack()) {
-                                settingsNavigator.navigateBack()
-                            }
+                }
+            }
+        },
+        detailPane = {
+            AnimatedPane {
+                navigator.currentDestination?.content?.let { screen ->
+                    when (screen) {
+                        is DetailScreen.Chat -> {
+                            ChannelChatScreen(
+                                userId = screen.id,
+                                isStandalone = false,
+                                canNavigateUp = navigator.canNavigateBack(),
+                                onNavigateUp = { navigator.navigateBack() },
+                            )
+                        }
 
-                            when (screen) {
-                                SettingsSubScreen.About -> {
-                                    SettingsSectionAbout(
-                                        modifier = modifier,
-                                        canNavigateUp = settingsNavigator.canNavigateBack(),
-                                        onNavigateUp = { settingsNavigator.navigateBack() },
-                                    )
-                                }
+                        DetailScreen.About -> {
+                            SettingsSectionAbout(
+                                canNavigateUp = navigator.canNavigateBack(),
+                                onNavigateUp = { navigator.navigateBack() },
+                            )
+                        }
 
-                                SettingsSubScreen.Appearance -> {
-                                    SettingsSectionAppearance(
-                                        modifier = modifier,
-                                        canNavigateUp = settingsNavigator.canNavigateBack(),
-                                        onNavigateUp = { settingsNavigator.navigateBack() },
-                                        onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
-                                    )
-                                }
+                        DetailScreen.Appearance -> {
+                            SettingsSectionAppearance(
+                                canNavigateUp = navigator.canNavigateBack(),
+                                onNavigateUp = { navigator.navigateBack() },
+                                onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
+                            )
+                        }
 
-                                SettingsSubScreen.DependencyCredits -> {
-                                    SettingsSectionDependencies(
-                                        modifier = modifier,
-                                        canNavigateUp = settingsNavigator.canNavigateBack(),
-                                        onNavigateUp = { settingsNavigator.navigateBack() },
-                                    )
-                                }
+                        DetailScreen.DependencyCredits -> {
+                            SettingsSectionDependencies(
+                                canNavigateUp = navigator.canNavigateBack(),
+                                onNavigateUp = { navigator.navigateBack() },
+                            )
+                        }
 
-                                SettingsSubScreen.Notifications -> {
-                                    SettingsSectionNotifications(
-                                        modifier = modifier,
-                                        canNavigateUp = settingsNavigator.canNavigateBack(),
-                                        onNavigateUp = { settingsNavigator.navigateBack() },
-                                        onOpenNotificationPreferences = onOpenNotificationPreferences,
-                                        onOpenBubblePreferences = onOpenBubblePreferences,
-                                    )
-                                }
+                        DetailScreen.Notifications -> {
+                            SettingsSectionNotifications(
+                                canNavigateUp = navigator.canNavigateBack(),
+                                onNavigateUp = { navigator.navigateBack() },
+                                onOpenNotificationPreferences = onOpenNotificationPreferences,
+                                onOpenBubblePreferences = onOpenBubblePreferences,
+                            )
+                        }
 
-                                SettingsSubScreen.ThirdParties -> {
-                                    SettingsSectionThirdParties(
-                                        modifier = modifier,
-                                        canNavigateUp = settingsNavigator.canNavigateBack(),
-                                        onNavigateUp = { settingsNavigator.navigateBack() },
-                                    )
-                                }
-                            }
+                        DetailScreen.ThirdParties -> {
+                            SettingsSectionThirdParties(
+                                canNavigateUp = navigator.canNavigateBack(),
+                                onNavigateUp = { navigator.navigateBack() },
+                            )
                         }
                     }
-                },
-            )
-        }
-    }
+                }
+            }
+        },
+    )
 }

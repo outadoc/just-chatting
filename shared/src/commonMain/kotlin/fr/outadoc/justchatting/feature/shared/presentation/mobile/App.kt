@@ -35,12 +35,12 @@ internal fun App(
     val state by viewModel.state.collectAsState()
 
     val navController = rememberNavController()
-    val navigator = rememberListDetailPaneScaffoldNavigator<DetailScreen>()
+    val chatNavigator = rememberListDetailPaneScaffoldNavigator<ChatScreen>()
 
     val onChannelClick = { userId: String ->
-        navigator.navigateTo(
+        chatNavigator.navigateTo(
             pane = ListDetailPaneScaffoldRole.Detail,
-            content = DetailScreen.Chat(userId),
+            content = ChatScreen(userId),
         )
     }
 
@@ -89,7 +89,7 @@ internal fun App(
                 is MainRouterViewModel.State.LoggedIn -> {
                     MainRouter(
                         navController = navController,
-                        navigator = navigator,
+                        chatNavigator = chatNavigator,
                         onOpenNotificationPreferences = onOpenNotificationPreferences,
                         onOpenBubblePreferences = onOpenBubblePreferences,
                         onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,

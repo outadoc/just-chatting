@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
 import coil3.compose.LocalPlatformContext
@@ -28,6 +29,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @OptIn(KoinExperimentalAPI::class)
 @Composable
 internal fun ChannelChatScreen(
+    modifier: Modifier = Modifier,
     userId: String,
     isStandalone: Boolean,
     canNavigateUp: Boolean = true,
@@ -78,6 +80,7 @@ internal fun ChannelChatScreen(
     ) {
         val isDarkTheme = MaterialTheme.colorScheme.isDark
         ChannelChatScreenContent(
+            modifier = modifier,
             state = state,
             inputState = inputState,
             isEmotePickerOpen = isEmotePickerOpen,

@@ -24,11 +24,12 @@ import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 internal fun InReplyToMessage(
     modifier: Modifier = Modifier,
-    mentions: List<String>,
+    mentions: ImmutableList<String>,
     message: String?,
     appUser: AppUser.LoggedIn? = null,
     mentionBackground: Color = MaterialTheme.colorScheme.onBackground,

@@ -14,6 +14,7 @@ import io.ktor.client.request.headers
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.http.path
+import kotlinx.collections.immutable.toImmutableSet
 
 internal class TwitchAuthApi(httpClient: HttpClient) : AuthApi {
 
@@ -36,7 +37,7 @@ internal class TwitchAuthApi(httpClient: HttpClient) : AuthApi {
                 clientId = response.clientId,
                 login = response.login,
                 userId = response.userId,
-                scopes = response.scopes.toSet(),
+                scopes = response.scopes.toImmutableSet(),
             )
         }
 

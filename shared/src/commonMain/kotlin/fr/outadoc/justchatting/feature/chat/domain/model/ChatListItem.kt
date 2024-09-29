@@ -76,7 +76,7 @@ internal sealed interface ChatListItem {
             @Immutable
             data class InReplyTo(
                 val message: String?,
-                val mentions: List<String>,
+                val mentions: ImmutableList<String>,
             )
         }
     }

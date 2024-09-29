@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.utils.presentation
 
 import android.text.format.DateFormat
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.datetime.Instant
@@ -14,6 +15,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
+@Stable
 @Composable
 internal actual fun Instant.formatHourMinute(): String? {
     val context = LocalContext.current
@@ -27,6 +29,7 @@ internal actual fun Instant.formatHourMinute(): String? {
     }
 }
 
+@Stable
 internal actual fun LocalDate.formatWithoutYear(): String {
     return toJavaLocalDate()
         .format(
@@ -34,6 +37,7 @@ internal actual fun LocalDate.formatWithoutYear(): String {
         )
 }
 
+@Stable
 internal actual fun LocalDate.formatWithYear(): String {
     return toJavaLocalDate()
         .format(

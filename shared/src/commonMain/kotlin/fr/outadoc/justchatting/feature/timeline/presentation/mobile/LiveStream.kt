@@ -36,53 +36,6 @@ import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.datetime.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@Preview
-@Composable
-internal fun LiveStreamPreview() {
-    AppTheme {
-        LiveStreamCard(
-            modifier = Modifier.padding(8.dp),
-            userName = "Maghla",
-            category = StreamCategory(
-                id = "1",
-                name = "Powerwash Simulator",
-            ),
-            title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
-            viewerCount = 5_305,
-            startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
-            profileImageUrl = null,
-            tags = persistentSetOf(
-                "French",
-                "Test",
-                "Sponsored",
-                "Label 1",
-                "Super long label with too much text, you can't really argue otherwise",
-            ),
-        )
-    }
-}
-
-@Preview
-@Composable
-internal fun LiveStreamLongPreview() {
-    AppTheme {
-        LiveStreamCard(
-            modifier = Modifier
-                .width(250.dp)
-                .padding(8.dp),
-            userName = "Maghla",
-            category = StreamCategory(
-                id = "1",
-                name = "Powerwash Simulator",
-            ),
-            title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
-            viewerCount = 5_305,
-            startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
-            profileImageUrl = null,
-        )
-    }
-}
-
 @Composable
 internal fun LiveStreamCard(
     modifier: Modifier = Modifier,
@@ -236,5 +189,52 @@ private fun LiveStream(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+internal fun LiveStreamPreview() {
+    AppTheme {
+        LiveStreamCard(
+            modifier = Modifier.padding(8.dp),
+            userName = "Maghla",
+            category = StreamCategory(
+                id = "1",
+                name = "Powerwash Simulator",
+            ),
+            title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
+            viewerCount = 5_305,
+            startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
+            profileImageUrl = null,
+            tags = persistentSetOf(
+                "French",
+                "Test",
+                "Sponsored",
+                "Label 1",
+                "Super long label with too much text, you can't really argue otherwise",
+            ),
+        )
+    }
+}
+
+@Preview
+@Composable
+internal fun LiveStreamLongPreview() {
+    AppTheme {
+        LiveStreamCard(
+            modifier = Modifier
+                .width(250.dp)
+                .padding(8.dp),
+            userName = "Maghla",
+            category = StreamCategory(
+                id = "1",
+                name = "Powerwash Simulator",
+            ),
+            title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
+            viewerCount = 5_305,
+            startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
+            profileImageUrl = null,
+        )
     }
 }

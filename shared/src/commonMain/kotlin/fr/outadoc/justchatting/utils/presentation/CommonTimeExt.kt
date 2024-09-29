@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.utils.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,6 +66,7 @@ internal fun Instant.formatDate(
         )
 }
 
+@Stable
 @Composable
 internal fun Duration.format(
     showSeconds: Boolean = true,
@@ -116,6 +118,7 @@ internal fun Instant.formatTimeSince(
  * Otherwise, if the date is within the current year, return the date without the year.
  * Otherwise, return the full date.
  */
+@Stable
 @Composable
 internal fun LocalDate.formatDate(
     today: LocalDate,

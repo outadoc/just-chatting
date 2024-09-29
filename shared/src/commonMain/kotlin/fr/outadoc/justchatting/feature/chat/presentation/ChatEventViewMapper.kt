@@ -481,9 +481,11 @@ internal class ChatEventViewMapper {
             inReplyTo = if (mentions.isNotEmpty()) {
                 ChatListItem.Message.Body.InReplyTo(
                     message = inReplyTo?.message,
-                    mentions = mentions.map { mention ->
-                        mention.drop(1)
-                    },
+                    mentions = mentions
+                        .map { mention ->
+                            mention.drop(1)
+                        }
+                        .toImmutableList(),
                 )
             } else {
                 null

@@ -53,6 +53,7 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.AppTheme
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -100,7 +101,7 @@ internal fun ChatInput(
                         InReplyToMessage(
                             modifier = Modifier.weight(1f),
                             appUser = appUser,
-                            mentions = listOf(replyingToMessage.chatter.displayName),
+                            mentions = persistentListOf(replyingToMessage.chatter.displayName),
                             message = replyingToMessage.message.orEmpty(),
                         )
 

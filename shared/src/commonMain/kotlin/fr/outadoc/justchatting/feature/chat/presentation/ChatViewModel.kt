@@ -731,7 +731,7 @@ internal class ChatViewModel(
         return state.copy(
             chatMessages = newMessages
                 .filterIsInstance<ChatListItem.Message>()
-                .takeLast(maxCount)
+                .take(maxCount)
                 .toPersistentList(),
             lastSentMessageInstant = lastSentMessageInstant
                 ?: state.lastSentMessageInstant,

@@ -166,6 +166,7 @@ internal fun ChatList(
                 val replyToActionCd = stringResource(MR.strings.chat_replyTo)
 
                 SwipeToReply(
+                    modifier = Modifier.animateItem(),
                     onDismiss = { onReplyToMessage(item) },
                     enabled = canBeRepliedTo,
                 ) {

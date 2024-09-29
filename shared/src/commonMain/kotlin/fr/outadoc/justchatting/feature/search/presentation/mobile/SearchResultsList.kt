@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.search.presentation.mobile
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,20 +45,25 @@ internal fun SearchResultsList(
                 }
             }
         } else {
-            items(searchResults.itemCount) { index ->
-                val item: ChannelSearchResult? = searchResults[index]
-                if (item != null) {
-                    UserItemCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        displayName = item.user.displayName,
-                        profileImageUrl = item.user.profileImageUrl,
-                        tags = item.tags.toImmutableList(),
-                        onClick = { onItemClick(item) },
-                    )
-                } else {
-                    UserItemCardPlaceholder(
-                        modifier = Modifier.fillMaxWidth(),
-                    )
+            items(
+                count = searchResults.itemCount,
+                key = { index -> searchResults[index]?.user?.id ?: index },
+            ) { index ->
+                Box(modifier = Modifier.animateItem()) {
+                    val item: ChannelSearchResult? = searchResults[index]
+                    if (item != null) {
+                        UserItemCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            displayName = item.user.displayName,
+                            profileImageUrl = item.user.profileImageUrl,
+                            tags = item.tags.toImmutableList(),
+                            onClick = { onItemClick(item) },
+                        )
+                    } else {
+                        UserItemCardPlaceholder(
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
                 }
             }
         }

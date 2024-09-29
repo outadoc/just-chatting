@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyRow
@@ -68,20 +69,28 @@ internal fun ChatAutoCompleteRow(
                     is AutoCompleteItem.User -> 1
                 }
             },
-        ) { item ->
-            when (item) {
-                is AutoCompleteItem.Emote -> {
-                    AutoCompleteEmoteItem(
-                        onClick = { onEmoteClick(item.emote) },
-                        emote = item.emote,
-                    )
+            key = { item ->
+                when (item) {
+                    is AutoCompleteItem.Emote -> item.emote.name
+                    is AutoCompleteItem.User -> item.chatter.id
                 }
+            },
+        ) { item ->
+            Box(modifier = Modifier.animateItem()) {
+                when (item) {
+                    is AutoCompleteItem.Emote -> {
+                        AutoCompleteEmoteItem(
+                            onClick = { onEmoteClick(item.emote) },
+                            emote = item.emote,
+                        )
+                    }
 
-                is AutoCompleteItem.User -> {
-                    AutoCompleteUserItem(
-                        onClick = { onChatterClick(item.chatter) },
-                        chatter = item.chatter,
-                    )
+                    is AutoCompleteItem.User -> {
+                        AutoCompleteUserItem(
+                            onClick = { onChatterClick(item.chatter) },
+                            chatter = item.chatter,
+                        )
+                    }
                 }
             }
         }

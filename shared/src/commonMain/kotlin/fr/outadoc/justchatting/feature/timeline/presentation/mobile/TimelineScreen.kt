@@ -229,7 +229,9 @@ private fun TimelineContent(
                             contentType = { "segment" },
                         ) { segment ->
                             TimelineSegment(
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier
+                                    .animateItem()
+                                    .fillMaxWidth(),
                                 segment = segment,
                             )
                         }
@@ -270,7 +272,9 @@ private fun TimelineContent(
                             contentType = { "stream" },
                         ) { userStream ->
                             LiveStreamCard(
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier
+                                    .animateItem()
+                                    .fillMaxWidth(),
                                 onClick = { onChannelClick(userStream.user.id) },
                                 title = userStream.stream.title,
                                 userName = userStream.user.displayName,
@@ -317,7 +321,9 @@ private fun TimelineContent(
                                 contentType = { "segment" },
                             ) { segment ->
                                 TimelineSegment(
-                                    modifier = Modifier.fillMaxWidth(),
+                                    modifier = Modifier
+                                        .animateItem()
+                                        .fillMaxWidth(),
                                     segment = segment,
                                 )
                             }

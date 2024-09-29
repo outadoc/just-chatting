@@ -124,9 +124,14 @@ private fun InnerFollowedChannelsList(
                 }
             }
         } else {
-            items(items) { item ->
+            items(
+                items = items,
+                key = { item -> item.user.id },
+            ) { item ->
                 UserItemCard(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .animateItem()
+                        .fillMaxWidth(),
                     displayName = item.user.displayName,
                     profileImageUrl = item.user.profileImageUrl,
                     followedAt = item.followedAt,

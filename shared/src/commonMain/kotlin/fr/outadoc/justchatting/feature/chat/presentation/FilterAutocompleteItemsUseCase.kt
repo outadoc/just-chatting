@@ -2,8 +2,14 @@ package fr.outadoc.justchatting.feature.chat.presentation
 
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentSet
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.plus
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 
 internal class FilterAutocompleteItemsUseCase {
 
@@ -12,7 +18,7 @@ internal class FilterAutocompleteItemsUseCase {
         recentEmotes: List<Emote>,
         allEmotesMap: ImmutableMap<String, Emote>,
         chatters: PersistentSet<Chatter>,
-    ): List<AutoCompleteItem> {
+    ): ImmutableList<AutoCompleteItem> {
         val cleanFilter: CharSequence = filter
             .removePrefix(ChatPrefixConstants.ChatterPrefix.toString())
             .removePrefix(ChatPrefixConstants.EmotePrefix.toString())
@@ -40,33 +46,37 @@ internal class FilterAutocompleteItemsUseCase {
                         AutoCompleteItem.Emote(emote)
                     }
                 }
-            }
+            }.toImmutableList()
         }
 
-        val emoteItems: List<AutoCompleteItem.Emote> =
+        val emoteItems: PersistentList<AutoCompleteItem.Emote> =
             if (prefix == null || prefix == ChatPrefixConstants.EmotePrefix) {
-                allEmotesMap.mapNotNull { emote ->
-                    if (emote.key.contains(cleanFilter, ignoreCase = true)) {
-                        AutoCompleteItem.Emote(emote.value)
-                    } else {
-                        null
+                allEmotesMap
+                    .mapNotNull { emote ->
+                        if (emote.key.contains(cleanFilter, ignoreCase = true)) {
+                            AutoCompleteItem.Emote(emote.value)
+                        } else {
+                            null
+                        }
                     }
-                }
+                    .toPersistentList()
             } else {
-                emptyList()
+                persistentListOf()
             }
 
-        val chatterItems: List<AutoCompleteItem.User> =
+        val chatterItems: PersistentList<AutoCompleteItem.User> =
             if (prefix == null || prefix == ChatPrefixConstants.ChatterPrefix) {
-                chatters.mapNotNull { chatter ->
-                    if (chatter.contains(cleanFilter)) {
-                        AutoCompleteItem.User(chatter)
-                    } else {
-                        null
+                chatters
+                    .mapNotNull { chatter ->
+                        if (chatter.contains(cleanFilter)) {
+                            AutoCompleteItem.User(chatter)
+                        } else {
+                            null
+                        }
                     }
-                }
+                    .toPersistentList()
             } else {
-                emptyList()
+                persistentListOf()
             }
 
         return emoteItems + chatterItems

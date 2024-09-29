@@ -53,6 +53,7 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.AppTheme
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -62,7 +63,7 @@ internal fun ChatInput(
     modifier: Modifier = Modifier,
     appUser: AppUser.LoggedIn? = null,
     message: TextFieldValue = TextFieldValue(),
-    autoCompleteItems: List<AutoCompleteItem> = emptyList(),
+    autoCompleteItems: ImmutableList<AutoCompleteItem> = persistentListOf(),
     replyingTo: ChatListItem.Message? = null,
     onEmoteClick: (Emote) -> Unit = {},
     onChatterClick: (Chatter) -> Unit = {},

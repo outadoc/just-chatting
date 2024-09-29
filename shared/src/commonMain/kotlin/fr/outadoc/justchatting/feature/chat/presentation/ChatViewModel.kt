@@ -216,9 +216,13 @@ internal class ChatViewModel(
 
         data object ReplaceInputWithLastSentMessage : InputAction()
 
-        data class ReplyToMessage(val chatListItem: ChatListItem.Message? = null) : InputAction()
+        data class ReplyToMessage(
+            val chatListItem: ChatListItem.Message? = null,
+        ) : InputAction()
 
-        data class UpdateAutoCompleteItems(val items: List<AutoCompleteItem>) : InputAction()
+        data class UpdateAutoCompleteItems(
+            val items: ImmutableList<AutoCompleteItem>,
+        ) : InputAction()
 
         data class Submit(
             val screenDensity: Float,
@@ -232,7 +236,7 @@ internal class ChatViewModel(
         val selectionRange: IntRange = 0..0,
         val replyingTo: ChatListItem.Message? = null,
         val lastSentMessage: String? = null,
-        val autoCompleteItems: List<AutoCompleteItem> = emptyList(),
+        val autoCompleteItems: ImmutableList<AutoCompleteItem> = persistentListOf(),
     ) {
         val canReuseLastMessage: Boolean
             get() = message.isBlank() && lastSentMessage.isNullOrBlank().not()

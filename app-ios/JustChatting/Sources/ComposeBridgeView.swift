@@ -19,10 +19,7 @@ struct ComposeBridgeView: UIViewControllerRepresentable {
 
     func makeUIViewController(context _: Context) -> UIViewController {
         MainViewControllerKt.getMainViewController(
-            onShowAuthPage: onShowAuthPage,
-            onOpenAccessibilityPreferences: {
-                UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
-            }
+            onShowAuthPage: onShowAuthPage
         )
     }
 

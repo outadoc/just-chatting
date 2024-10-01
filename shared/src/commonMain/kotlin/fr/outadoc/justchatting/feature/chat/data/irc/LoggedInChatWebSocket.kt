@@ -43,7 +43,7 @@ import kotlin.time.Duration.Companion.seconds
  * Use this class to write messages to the chat.
  */
 internal class LoggedInChatWebSocket(
-    networkStateObserver: NetworkStateObserver,
+    private val networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
     private val parser: TwitchIrcCommandParser,
     private val httpClient: HttpClient,
@@ -72,17 +72,28 @@ internal class LoggedInChatWebSocket(
     override val connectionStatus = _connectionStatus.asStateFlow()
 
     private var isNetworkAvailable: Boolean = false
-    private var socketJob: Job? = null
 
-    init {
-        scope.launch {
+    private var socketJob: Job? = null
+    private var networkStateJob: Job? = null
+
+    override fun start() {
+        observeNetworkState()
+        observeSocket()
+    }
+
+    private fun observeNetworkState() {
+        if (networkStateJob?.isActive == true) {
+            return
+        }
+
+        networkStateJob = scope.launch {
             networkStateObserver.state.collectLatest { state ->
                 isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
             }
         }
     }
 
-    override fun start() {
+    private fun observeSocket() {
         if (socketJob?.isActive == true) {
             return
         }

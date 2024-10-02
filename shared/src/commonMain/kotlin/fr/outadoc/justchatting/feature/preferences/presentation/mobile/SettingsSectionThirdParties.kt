@@ -24,7 +24,6 @@ import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewMode
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,7 +61,6 @@ internal fun SettingsSectionThirdParties(
     }
 }
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 private fun SettingsSectionThirdPartiesContent(
     modifier: Modifier = Modifier,

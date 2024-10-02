@@ -81,8 +81,8 @@ import fr.outadoc.justchatting.utils.http.BaseHttpClientProvider
 import fr.outadoc.justchatting.utils.http.TwitchHttpClientProvider
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
-import org.koin.compose.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 

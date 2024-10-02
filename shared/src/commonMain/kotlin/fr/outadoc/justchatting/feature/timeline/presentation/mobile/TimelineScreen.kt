@@ -22,22 +22,23 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.Gamepad
+import androidx.compose.material.icons.filled.LiveTv
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material.icons.filled.Today
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -58,6 +59,7 @@ import coil3.compose.AsyncImage
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.UserInfo
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
+import fr.outadoc.justchatting.feature.details.presentation.DetailsDialog
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainNavigation
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.NoContent
@@ -359,7 +361,6 @@ private fun SectionHeader(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TimelineSegment(
     modifier: Modifier = Modifier,
@@ -431,22 +432,88 @@ internal fun TimelineSegment(
         }
     }
 
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-    )
-
     if (isExpanded) {
-        ModalBottomSheet(
+        DetailsDialog(
             onDismissRequest = { isExpanded = false },
-            sheetState = sheetState,
+            userDetails = {
+                UserInfo(user = segment.user)
+            },
+            streamDetails = {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        LiveIndicator()
+                        Text("Live")
+                    }
+
+                    TimelineSegmentDetails(segment = segment)
+                }
+            },
+            actions = {
+                ContextualButton(
+                    onClick = {},
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.LiveTv,
+                            contentDescription = null,
+                        )
+                    },
+                    text = {
+                        Text(stringResource(MR.strings.watch_live))
+                    },
+                )
+
+                ContextualButton(
+                    onClick = {},
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.ChatBubble,
+                            contentDescription = null,
+                        )
+                    },
+                    text = {
+                        Text("Open chat")
+                    },
+                )
+
+                ContextualButton(
+                    onClick = {},
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.ChatBubble,
+                            contentDescription = null,
+                        )
+                    },
+                    text = {
+                        Text("Open chat")
+                    },
+                )
+            },
+        )
+    }
+}
+
+@Composable
+private fun ContextualButton(
+    modifier: Modifier = Modifier,
+    icon: @Composable () -> Unit,
+    text: @Composable () -> Unit,
+    onClick: () -> Unit,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Button(
+            modifier = modifier,
+            onClick = onClick,
         ) {
-            TimelineSegmentDetails(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                segment = segment,
-            )
+            icon()
         }
+
+        text()
     }
 }
 
@@ -527,79 +594,67 @@ private fun TimelineSegmentDetails(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        UserInfo(
-            user = segment.user,
-        )
 
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Column(
-                modifier = Modifier.padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                if (segment.title.isNotEmpty()) {
-                    Text(
-                        segment.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        maxLines = 5,
-                    )
-                }
+        if (segment.title.isNotEmpty()) {
+            Text(
+                segment.title,
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 5,
+            )
+        }
 
-                val date: String =
-                    segment.startTime.formatDate()
+        val date: String =
+            segment.startTime.formatDate()
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .padding(end = 8.dp),
-                        imageVector = Icons.Default.CalendarToday,
-                        contentDescription = null,
-                    )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(end = 8.dp),
+                imageVector = Icons.Default.CalendarToday,
+                contentDescription = null,
+            )
 
-                    Text(date)
-                }
+            Text(date)
+        }
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .padding(end = 8.dp),
-                        imageVector = Icons.Default.AccessTime,
-                        contentDescription = null,
-                    )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(end = 8.dp),
+                imageVector = Icons.Default.AccessTime,
+                contentDescription = null,
+            )
 
-                    Text(
-                        buildAnnotatedString {
-                            append(segment.startTime.formatHourMinute())
+            Text(
+                buildAnnotatedString {
+                    append(segment.startTime.formatHourMinute())
 
-                            if (segment.endTime != null) {
-                                append(" - ")
-                                append(segment.endTime.formatHourMinute())
-                            }
-                        },
-                    )
-                }
-
-                segment.category?.let { category ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            modifier = Modifier
-                                .size(24.dp)
-                                .padding(end = 8.dp),
-                            imageVector = Icons.Default.Gamepad,
-                            contentDescription = null,
-                        )
-
-                        Text(
-                            category.name,
-                            maxLines = 2,
-                        )
+                    if (segment.endTime != null) {
+                        append(" - ")
+                        append(segment.endTime.formatHourMinute())
                     }
-                }
+                },
+            )
+        }
+
+        segment.category?.let { category ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(end = 8.dp),
+                    imageVector = Icons.Default.Gamepad,
+                    contentDescription = null,
+                )
+
+                Text(
+                    category.name,
+                    maxLines = 2,
+                )
             }
         }
     }

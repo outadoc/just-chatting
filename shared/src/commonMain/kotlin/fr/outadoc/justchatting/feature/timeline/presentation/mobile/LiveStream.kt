@@ -135,13 +135,7 @@ private fun LiveStream(
                     }
 
                     viewerCount?.let { viewerCount ->
-                        Box(
-                            modifier = Modifier
-                                .padding(end = 4.dp)
-                                .size(6.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.customColors.live),
-                        ) {}
+                        LiveIndicator()
 
                         Text(
                             modifier = Modifier.alignByBaseline(),

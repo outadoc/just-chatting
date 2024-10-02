@@ -8,6 +8,7 @@ glance = "1.1.0"
 haze = "0.9.0-beta03"
 junit-jupiter-engine = "5.11.2"
 kmpalette = "3.1.0"
+koin = "4.0.0"
 konsist = "0.16.1"
 kotlin = "2.0.21"
 ktor = "2.3.12"
@@ -75,10 +76,10 @@ junit = "junit:junit:4.13.2"
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }
 kmpalette-core = { module = "com.kmpalette:kmpalette-core", version.ref = "kmpalette" }
 kmpalette-extensions-network = { module = "com.kmpalette:extensions-network", version.ref = "kmpalette" }
-koin-android = { module = "io.insert-koin:koin-android", version = "4.0.0" }
-koin-compose = { module = "io.insert-koin:koin-compose", version = "4.0.0" }
-koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version = "4.0.0" }
-koin-core = { module = "io.insert-koin:koin-core", version = "4.0.0" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 konsist = { module = "com.lemonappdev:konsist", version.ref = "konsist" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.8"

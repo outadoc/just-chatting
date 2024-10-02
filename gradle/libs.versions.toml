@@ -77,10 +77,10 @@ junit = "junit:junit:4.13.2"
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }
 kmpalette-core = { module = "com.kmpalette:kmpalette-core", version.ref = "kmpalette" }
 kmpalette-extensions-network = { module = "com.kmpalette:extensions-network", version.ref = "kmpalette" }
-koin-android = { module = "io.insert-koin:koin-android", version = "3.5.6" }
-koin-compose = { module = "io.insert-koin:koin-compose", version = "1.1.5" }
-koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version = "1.2.0-Beta5" }
-koin-core = { module = "io.insert-koin:koin-core", version = "3.5.6" }
+koin-android = { module = "io.insert-koin:koin-android", version = "4.0.0" }
+koin-compose = { module = "io.insert-koin:koin-compose", version = "4.0.0" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version = "4.0.0" }
+koin-core = { module = "io.insert-koin:koin-core", version = "4.0.0" }
 konsist = { module = "com.lemonappdev:konsist", version.ref = "konsist" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0"

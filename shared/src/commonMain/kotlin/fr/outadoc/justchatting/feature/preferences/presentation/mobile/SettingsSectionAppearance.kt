@@ -27,7 +27,6 @@ import fr.outadoc.justchatting.shared.settings_appearance_timestamps_title
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +66,6 @@ internal fun SettingsSectionAppearance(
     }
 }
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 private fun SettingsSectionAppearanceContent(
     modifier: Modifier = Modifier,

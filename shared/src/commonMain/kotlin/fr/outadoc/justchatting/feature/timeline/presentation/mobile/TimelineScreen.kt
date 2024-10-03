@@ -76,6 +76,7 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.createChannelExternalLink
+import fr.outadoc.justchatting.utils.core.createVideoExternalLink
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.format
@@ -250,7 +251,7 @@ private fun TimelineContent(
                             key = { segment -> segment.id },
                             contentType = { "segment" },
                         ) { segment ->
-                            TimelineSegment(
+                            PastTimelineSegment(
                                 modifier = Modifier
                                     .animateItem()
                                     .fillMaxWidth(),
@@ -346,7 +347,7 @@ private fun TimelineContent(
                                 key = { segment -> segment.id },
                                 contentType = { "segment" },
                             ) { segment ->
-                                TimelineSegment(
+                                FutureTimelineSegment(
                                     modifier = Modifier
                                         .animateItem()
                                         .fillMaxWidth(),
@@ -388,7 +389,7 @@ private fun SectionHeader(
 }
 
 @Composable
-internal fun TimelineSegment(
+internal fun PastTimelineSegment(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
     onChannelClick: (User) -> Unit = {},
@@ -476,17 +477,17 @@ internal fun TimelineSegment(
                     ContextualButton(
                         onClick = {
                             uriHandler.openUri(
-                                createChannelExternalLink(segment.user)
+                                createVideoExternalLink(segment.id)
                             )
                             isExpanded = false
                         },
                         icon = {
                             Icon(
-                                imageVector = Icons.Default.LiveTv,
+                                imageVector = Icons.Default.ChatBubble,
                                 contentDescription = null,
                             )
                         },
-                        text = stringResource(MR.strings.watch_live),
+                        text = "Watch replay",
                     )
                 }
 
@@ -519,6 +520,163 @@ internal fun TimelineSegment(
                             )
                         },
                         text = "Open in bubble",
+                    )
+                }
+
+                item {
+                    ContextualButton(
+                        onClick = {
+                            uriHandler.openUri(
+                                createChannelExternalLink(segment.user)
+                            )
+                            isExpanded = false
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.LiveTv,
+                                contentDescription = null,
+                            )
+                        },
+                        text = stringResource(MR.strings.watch_live),
+                    )
+                }
+            },
+        )
+    }
+}
+
+@Composable
+internal fun FutureTimelineSegment(
+    modifier: Modifier = Modifier,
+    segment: ChannelScheduleSegment,
+    onChannelClick: (User) -> Unit = {},
+    onOpenInBubble: (User) -> Unit = {},
+) {
+    var isExpanded by remember { mutableStateOf(false) }
+
+    OutlinedCard(
+        modifier = modifier,
+    ) {
+        Column {
+            Card(
+                onClick = { isExpanded = true },
+            ) {
+                TimelineSegmentContent(
+                    modifier = Modifier.padding(8.dp),
+                    title = segment.title,
+                    userName = segment.user.displayName,
+                    category = segment.category,
+                    profileImageUrl = segment.user.profileImageUrl,
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Icon(
+                    modifier = Modifier.size(16.dp),
+                    imageVector = Icons.Default.AccessTime,
+                    contentDescription = null,
+                )
+
+                Text(
+                    modifier = Modifier.alignByBaseline(),
+                    text = buildAnnotatedString {
+                        append(segment.startTime.formatHourMinute())
+
+                        if (segment.endTime != null) {
+                            append(" - ")
+                            append(segment.endTime.formatHourMinute())
+                        }
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+
+                Spacer(
+                    modifier = Modifier.weight(1f, fill = true),
+                )
+
+                Icon(
+                    modifier = Modifier.size(16.dp),
+                    imageVector = Icons.Default.Timelapse,
+                    contentDescription = null,
+                )
+
+                if (segment.endTime != null) {
+                    val duration = segment.endTime - segment.startTime
+                    Text(
+                        modifier = Modifier.alignByBaseline(),
+                        text = duration.format(showSeconds = false),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
+            }
+        }
+    }
+
+    val uriHandler = LocalUriHandler.current
+
+    if (isExpanded) {
+        DetailsDialog(
+            onDismissRequest = { isExpanded = false },
+            userDetails = {
+                UserInfo(user = segment.user)
+            },
+            streamDetails = {
+                TimelineSegmentDetails(segment = segment)
+            },
+            actions = {
+                item {
+                    ContextualButton(
+                        onClick = {
+                            onChannelClick(segment.user)
+                            isExpanded = false
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.ChatBubble,
+                                contentDescription = null,
+                            )
+                        },
+                        text = "Open chat",
+                    )
+                }
+
+                item {
+                    ContextualButton(
+                        onClick = {
+                            onOpenInBubble(segment.user)
+                            isExpanded = false
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.PictureInPictureAlt,
+                                contentDescription = null,
+                            )
+                        },
+                        text = "Open in bubble",
+                    )
+                }
+
+                item {
+                    ContextualButton(
+                        onClick = {
+                            uriHandler.openUri(
+                                createChannelExternalLink(segment.user)
+                            )
+                            isExpanded = false
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.LiveTv,
+                                contentDescription = null,
+                            )
+                        },
+                        text = stringResource(MR.strings.watch_live),
                     )
                 }
             },
@@ -701,35 +859,6 @@ private fun TimelineSegmentDetailsPreview() {
     val lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     AppTheme {
         TimelineSegmentDetails(
-            segment = ChannelScheduleSegment(
-                id = "1",
-                user = User(
-                    id = "1",
-                    login = "user",
-                    displayName = lorem,
-                    description = "",
-                    profileImageUrl = "",
-                    createdAt = Instant.DISTANT_PAST,
-                    usedAt = Instant.DISTANT_PAST,
-                ),
-                title = lorem,
-                startTime = Instant.parse("2022-01-01T12:00:00Z"),
-                endTime = Instant.parse("2022-01-01T13:00:00Z"),
-                category = StreamCategory(
-                    id = "1",
-                    name = lorem,
-                ),
-            ),
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun TimelineSegmentPreview() {
-    val lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-    AppTheme {
-        TimelineSegment(
             segment = ChannelScheduleSegment(
                 id = "1",
                 user = User(

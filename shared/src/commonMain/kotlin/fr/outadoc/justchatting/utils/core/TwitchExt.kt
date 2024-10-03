@@ -9,3 +9,10 @@ internal fun createChannelExternalLink(user: User): String =
         .appendPath(user.login)
         .build()
         .toString()
+
+internal fun createVideoExternalLink(videoId: String): String =
+    Uri.parse("https://www.twitch.tv/videos")
+        .buildUpon()
+        .appendPath(videoId)
+        .build()
+        .toString()

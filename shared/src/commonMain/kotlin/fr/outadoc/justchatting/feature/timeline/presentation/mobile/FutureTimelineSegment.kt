@@ -1,5 +1,7 @@
 package fr.outadoc.justchatting.feature.timeline.presentation.mobile
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +32,7 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegm
 import fr.outadoc.justchatting.utils.presentation.format
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun FutureTimelineSegment(
     modifier: Modifier = Modifier,
@@ -43,7 +46,11 @@ internal fun FutureTimelineSegment(
     ) {
         Column {
             Card(
-                onClick = { isExpanded = true },
+                modifier = Modifier
+                    .combinedClickable(
+                        onClick = { isExpanded = true },
+                        onLongClick = { isExpanded = true },
+                    ),
             ) {
                 TimelineSegmentContent(
                     modifier = Modifier.padding(8.dp),

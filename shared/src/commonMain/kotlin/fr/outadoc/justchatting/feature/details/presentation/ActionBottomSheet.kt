@@ -34,7 +34,7 @@ internal fun ActionBottomSheet(
         onDismissRequest = onDismissRequest,
     ) {
         DetailsDialogContent(
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             header = header,
             content = content,
             actions = actions,
@@ -43,7 +43,7 @@ internal fun ActionBottomSheet(
 }
 
 @Composable
-internal fun DetailsDialogContent(
+private fun DetailsDialogContent(
     modifier: Modifier = Modifier,
     header: @Composable () -> Unit = {},
     content: @Composable () -> Unit = {},

@@ -439,18 +439,7 @@ internal fun TimelineSegment(
                 UserInfo(user = segment.user)
             },
             streamDetails = {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        LiveIndicator()
-                        Text("Live")
-                    }
-
-                    TimelineSegmentDetails(segment = segment)
-                }
+                TimelineSegmentDetails(segment = segment)
             },
             actions = {
                 ContextualButton(

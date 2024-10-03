@@ -89,7 +89,7 @@ internal fun ChannelChatScreen(
             showTimestamps = prefs.showTimestamps,
             onWatchLiveClicked = {
                 (state as? ChatViewModel.State.Chatting)?.user?.let { user ->
-                    uriHandler.openUri(createChannelExternalLink(user.login))
+                    uriHandler.openUri(createChannelExternalLink(user))
                 }
             },
             onMessageChange = { textFieldValue ->
@@ -117,7 +117,7 @@ internal fun ChannelChatScreen(
                 viewModel.onReuseLastMessageClicked()
             },
             onOpenBubbleClicked = {
-                if (canOpenInBubble && user != null) {
+                if (user != null) {
                     notifier.notify(
                         context = context,
                         user = user,

@@ -1,15 +1,16 @@
 package fr.outadoc.justchatting.feature.timeline.presentation.mobile
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material3.Card
@@ -24,11 +25,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.TagList
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
+import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.customColors
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 import fr.outadoc.justchatting.utils.presentation.formatTimeSince
 import kotlinx.collections.immutable.ImmutableSet
@@ -36,6 +38,7 @@ import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.datetime.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun LiveStreamCard(
     modifier: Modifier = Modifier,
@@ -46,14 +49,22 @@ internal fun LiveStreamCard(
     startedAt: Instant? = null,
     profileImageUrl: String? = null,
     tags: ImmutableSet<String> = persistentSetOf(),
+    onUserClick: () -> Unit = {},
     onClick: () -> Unit = {},
+    onLongClick: () -> Unit = {},
 ) {
     OutlinedCard(
         modifier = modifier,
     ) {
         Column {
             Card(
-                onClick = onClick,
+                modifier = Modifier
+                    .combinedClickable(
+                        onClick = onClick,
+                        onClickLabel = stringResource(MR.strings.chat_open_action),
+                        onLongClick = onLongClick,
+                        onLongClickLabel = stringResource(MR.strings.all_showDetails_cd),
+                    ),
             ) {
                 LiveStream(
                     modifier = Modifier.padding(8.dp),
@@ -62,7 +73,8 @@ internal fun LiveStreamCard(
                     viewerCount = viewerCount,
                     category = category,
                     startedAt = startedAt,
-                    profileImageURL = profileImageUrl,
+                    profileImageUrl = profileImageUrl,
+                    onUserClick = onUserClick,
                 )
             }
 
@@ -89,7 +101,8 @@ private fun LiveStream(
     viewerCount: Long?,
     category: StreamCategory?,
     startedAt: Instant?,
-    profileImageURL: String?,
+    profileImageUrl: String?,
+    onUserClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier,
@@ -102,8 +115,9 @@ private fun LiveStream(
                     .padding(end = 8.dp)
                     .size(56.dp)
                     .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surface),
-                model = remoteImageModel(profileImageURL),
+                    .background(MaterialTheme.colorScheme.surface)
+                    .clickable(onClick = onUserClick),
+                model = remoteImageModel(profileImageUrl),
                 contentDescription = null,
             )
 
@@ -135,13 +149,7 @@ private fun LiveStream(
                     }
 
                     viewerCount?.let { viewerCount ->
-                        Box(
-                            modifier = Modifier
-                                .padding(end = 4.dp)
-                                .size(6.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.customColors.live),
-                        ) {}
+                        LiveIndicator()
 
                         Text(
                             modifier = Modifier.alignByBaseline(),

@@ -9,7 +9,4 @@ internal class NoopChatNotifier : ChatNotifier {
 
     override fun notify(context: PlatformContext, user: User) {
     }
-
-    override fun dismissNotification(context: PlatformContext, channelId: String) {
-    }
 }

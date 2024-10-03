@@ -145,10 +145,5 @@ internal class AndroidChatNotifier(
         )
     }
 
-    override fun dismissNotification(context: Context, channelId: String) {
-        NotificationManagerCompat.from(context)
-            .cancel(notificationIdFor(channelId))
-    }
-
     private fun notificationIdFor(channelId: String) = channelId.hashCode()
 }

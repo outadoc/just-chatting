@@ -1,6 +1,8 @@
 package fr.outadoc.justchatting.feature.timeline.presentation.mobile
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +35,7 @@ import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.datetime.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun LiveStreamCard(
     modifier: Modifier = Modifier,
@@ -44,13 +47,20 @@ internal fun LiveStreamCard(
     profileImageUrl: String? = null,
     tags: ImmutableSet<String> = persistentSetOf(),
     onClick: () -> Unit = {},
+    onLongClick: () -> Unit = {},
 ) {
     OutlinedCard(
         modifier = modifier,
     ) {
         Column {
             Card(
-                onClick = onClick,
+                modifier = Modifier
+                    .combinedClickable(
+                        onClick = onClick,
+                        onClickLabel = "Open stream", // TODO
+                        onLongClick = onLongClick,
+                        onLongClickLabel = "Open context menu", // TODO
+                    ),
             ) {
                 LiveStream(
                     modifier = Modifier.padding(8.dp),

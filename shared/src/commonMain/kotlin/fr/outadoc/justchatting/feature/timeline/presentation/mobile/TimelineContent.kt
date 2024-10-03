@@ -28,7 +28,6 @@ import fr.outadoc.justchatting.feature.shared.presentation.mobile.NoContent
 import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.formatDate
-import kotlinx.collections.immutable.toPersistentSet
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -130,20 +129,12 @@ internal fun TimelineContent(
                             key = { userStream -> userStream.stream.id },
                             contentType = { "stream" },
                         ) { userStream ->
-                            LiveStreamCard(
+                            LiveTimelineSegment(
                                 modifier = Modifier
                                     .animateItem()
                                     .fillMaxWidth(),
-                                onClick = {
-                                    onChannelClick(userStream.user)
-                                },
-                                title = userStream.stream.title,
-                                userName = userStream.user.displayName,
-                                viewerCount = userStream.stream.viewerCount,
-                                category = userStream.stream.category,
-                                startedAt = userStream.stream.startedAt,
-                                tags = userStream.stream.tags.toPersistentSet(),
-                                profileImageUrl = userStream.user.profileImageUrl,
+                                onChannelClick = onChannelClick,
+                                userStream = userStream,
                             )
                         }
                     }

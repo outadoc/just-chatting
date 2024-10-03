@@ -46,6 +46,7 @@ internal fun PastTimelineSegment(
     onChannelClick: (User) -> Unit = {},
     onOpenInBubble: (User) -> Unit = {},
 ) {
+    val uriHandler = LocalUriHandler.current
     var isExpanded by remember { mutableStateOf(false) }
 
     OutlinedCard(
@@ -111,8 +112,6 @@ internal fun PastTimelineSegment(
             }
         }
     }
-
-    val uriHandler = LocalUriHandler.current
 
     if (isExpanded) {
         DetailsDialog(

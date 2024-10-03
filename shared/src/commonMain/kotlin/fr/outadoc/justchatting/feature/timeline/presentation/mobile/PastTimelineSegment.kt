@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.Timelapse
+import androidx.compose.material.icons.filled.Tv
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -141,7 +141,7 @@ internal fun PastTimelineSegment(
                         },
                         icon = {
                             Icon(
-                                imageVector = Icons.Default.ChatBubble,
+                                imageVector = Icons.Default.Tv,
                                 contentDescription = null,
                             )
                         },

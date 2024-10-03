@@ -3,10 +3,11 @@ package fr.outadoc.justchatting.feature.details.presentation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -23,7 +24,7 @@ internal fun DetailsDialog(
     modifier: Modifier = Modifier,
     userDetails: @Composable () -> Unit = {},
     streamDetails: @Composable () -> Unit = {},
-    actions: @Composable RowScope.() -> Unit = {},
+    actions: LazyGridScope.() -> Unit = {},
     onDismissRequest: () -> Unit = {},
 ) {
     ModalBottomSheet(
@@ -53,7 +54,7 @@ internal fun DetailsDialogContent(
     modifier: Modifier = Modifier,
     userDetails: @Composable () -> Unit,
     streamDetails: @Composable () -> Unit,
-    actions: @Composable RowScope.() -> Unit,
+    actions: LazyGridScope.() -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -75,10 +76,10 @@ internal fun DetailsDialogContent(
 
         HorizontalDivider()
 
-        Row(
+        LazyVerticalGrid(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            columns = GridCells.Adaptive(80.dp),
         ) {
             actions()
         }

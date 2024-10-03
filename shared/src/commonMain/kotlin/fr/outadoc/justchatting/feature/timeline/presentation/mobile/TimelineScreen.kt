@@ -55,6 +55,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.PlatformContext
@@ -471,52 +472,55 @@ internal fun TimelineSegment(
                 TimelineSegmentDetails(segment = segment)
             },
             actions = {
-                ContextualButton(
-                    onClick = {
-                        uriHandler.openUri(
-                            createChannelExternalLink(segment.user)
-                        )
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.LiveTv,
-                            contentDescription = null,
-                        )
-                    },
-                    text = {
-                        Text(stringResource(MR.strings.watch_live))
-                    },
-                )
+                item {
+                    ContextualButton(
+                        onClick = {
+                            uriHandler.openUri(
+                                createChannelExternalLink(segment.user)
+                            )
+                            isExpanded = false
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.LiveTv,
+                                contentDescription = null,
+                            )
+                        },
+                        text = stringResource(MR.strings.watch_live),
+                    )
+                }
 
-                ContextualButton(
-                    onClick = {
-                        onChannelClick(segment.user)
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.ChatBubble,
-                            contentDescription = null,
-                        )
-                    },
-                    text = {
-                        Text("Open chat")
-                    },
-                )
+                item {
+                    ContextualButton(
+                        onClick = {
+                            onChannelClick(segment.user)
+                            isExpanded = false
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.ChatBubble,
+                                contentDescription = null,
+                            )
+                        },
+                        text = "Open chat",
+                    )
+                }
 
-                ContextualButton(
-                    onClick = {
-                        onOpenInBubble(segment.user)
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.PictureInPictureAlt,
-                            contentDescription = null,
-                        )
-                    },
-                    text = {
-                        Text("Open in bubble")
-                    },
-                )
+                item {
+                    ContextualButton(
+                        onClick = {
+                            onOpenInBubble(segment.user)
+                            isExpanded = false
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.PictureInPictureAlt,
+                                contentDescription = null,
+                            )
+                        },
+                        text = "Open in bubble",
+                    )
+                }
             },
         )
     }
@@ -526,7 +530,7 @@ internal fun TimelineSegment(
 private fun ContextualButton(
     modifier: Modifier = Modifier,
     icon: @Composable () -> Unit,
-    text: @Composable () -> Unit,
+    text: String,
     onClick: () -> Unit,
 ) {
     Column(
@@ -539,7 +543,12 @@ private fun ContextualButton(
             icon()
         }
 
-        text()
+        Text(
+            text = text,
+            textAlign = TextAlign.Center,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 

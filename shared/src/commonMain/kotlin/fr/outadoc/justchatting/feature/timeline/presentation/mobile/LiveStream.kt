@@ -2,14 +2,12 @@ package fr.outadoc.justchatting.feature.timeline.presentation.mobile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material3.Card
@@ -28,7 +26,6 @@ import fr.outadoc.justchatting.feature.chat.presentation.mobile.TagList
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.customColors
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 import fr.outadoc.justchatting.utils.presentation.formatTimeSince
 import kotlinx.collections.immutable.ImmutableSet

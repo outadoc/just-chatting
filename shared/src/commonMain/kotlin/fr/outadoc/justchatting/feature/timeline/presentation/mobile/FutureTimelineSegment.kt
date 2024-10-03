@@ -29,8 +29,9 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.feature.chat.presentation.mobile.UserInfo
-import fr.outadoc.justchatting.feature.details.presentation.DetailsDialog
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.BasicUserInfo
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.FullUserInfo
+import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.shared.MR
@@ -113,12 +114,10 @@ internal fun FutureTimelineSegment(
     }
 
     if (isExpanded) {
-        DetailsDialog(
+        ActionBottomSheet(
             onDismissRequest = { isExpanded = false },
-            userDetails = {
-                UserInfo(user = segment.user)
-            },
-            streamDetails = {
+            content = {
+                BasicUserInfo(user = segment.user)
                 TimelineSegmentDetails(segment = segment)
             },
             actions = {

@@ -1,14 +1,13 @@
 package fr.outadoc.justchatting.feature.details.presentation
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalBottomSheet
@@ -20,12 +19,11 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun DetailsDialog(
+internal fun ActionBottomSheet(
     modifier: Modifier = Modifier,
-    userDetails: @Composable () -> Unit = {},
-    streamDetails: @Composable () -> Unit = {},
     actions: LazyGridScope.() -> Unit = {},
     onDismissRequest: () -> Unit = {},
+    content: @Composable ColumnScope.() -> Unit = {},
 ) {
     ModalBottomSheet(
         modifier = modifier,
@@ -42,9 +40,8 @@ internal fun DetailsDialog(
                     end = 24.dp,
                     bottom = 16.dp,
                 ),
-            userDetails = userDetails,
-            streamDetails = streamDetails,
             actions = actions,
+            content = content,
         )
     }
 }
@@ -52,27 +49,14 @@ internal fun DetailsDialog(
 @Composable
 internal fun DetailsDialogContent(
     modifier: Modifier = Modifier,
-    userDetails: @Composable () -> Unit,
-    streamDetails: @Composable () -> Unit,
-    actions: LazyGridScope.() -> Unit,
+    actions: LazyGridScope.() -> Unit = {},
+    content: @Composable ColumnScope.() -> Unit = {},
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        userDetails()
-
-        HorizontalDivider()
-
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Box(
-                modifier = Modifier.padding(16.dp),
-            ) {
-                streamDetails()
-            }
-        }
+        content()
 
         HorizontalDivider()
 

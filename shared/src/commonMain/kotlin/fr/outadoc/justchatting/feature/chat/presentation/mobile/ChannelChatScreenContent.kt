@@ -23,7 +23,6 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -240,15 +239,12 @@ internal fun ChannelChatScreenContent(
         },
     )
 
-    val userInfoBottomSheetState = rememberModalBottomSheetState()
-
     val showInfoForUserId: String? =
         (state as? ChatViewModel.State.Chatting)?.showInfoForUserId
 
     if (showInfoForUserId != null) {
         ModalBottomSheet(
             onDismissRequest = { onDismissUserInfo() },
-            sheetState = userInfoBottomSheetState,
         ) {
             StreamAndUserInfoScreen(
                 modifier = Modifier

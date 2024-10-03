@@ -31,7 +31,7 @@ internal fun StreamAndUserInfo(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         if (user != null) {
-            UserInfo(user = user)
+            FullUserInfo(user = user)
         }
 
         if (stream != null) {

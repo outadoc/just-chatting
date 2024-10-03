@@ -129,24 +129,23 @@ internal fun PastTimelineSegment(
             content = {
                 TimelineSegmentDetails(segment = segment)
             },
-            actions = {
-                item {
-                    ContextualButton(
-                        onClick = {
-                            uriHandler.openUri(
-                                createVideoExternalLink(segment.id),
-                            )
-                            isExpanded = false
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Tv,
-                                contentDescription = null,
-                            )
-                        },
-                        text = "Watch replay",
-                    )
-                }
+            actions = { padding ->
+                ContextualButton(
+                    contentPadding = padding,
+                    onClick = {
+                        uriHandler.openUri(
+                            createVideoExternalLink(segment.id),
+                        )
+                        isExpanded = false
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Tv,
+                            contentDescription = null,
+                        )
+                    },
+                    text = "Watch replay",
+                )
             },
         )
     }

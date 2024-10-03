@@ -37,56 +37,53 @@ internal fun LiveDetailsDialog(
         content = {
             StreamInfo(stream = stream)
         },
-        actions = {
-            item {
-                ContextualButton(
-                    onClick = {
-                        onOpenChat()
-                        onDismissRequest()
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.ChatBubble,
-                            contentDescription = null,
-                        )
-                    },
-                    text = "Open chat",
-                )
-            }
+        actions = { padding ->
+            ContextualButton(
+                contentPadding = padding,
+                onClick = {
+                    onOpenChat()
+                    onDismissRequest()
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.ChatBubble,
+                        contentDescription = null,
+                    )
+                },
+                text = "Open chat",
+            )
 
-            item {
-                ContextualButton(
-                    onClick = {
-                        onOpenInBubble()
-                        onDismissRequest()
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.PictureInPictureAlt,
-                            contentDescription = null,
-                        )
-                    },
-                    text = "Open in bubble",
-                )
-            }
+            ContextualButton(
+                contentPadding = padding,
+                onClick = {
+                    onOpenInBubble()
+                    onDismissRequest()
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.PictureInPictureAlt,
+                        contentDescription = null,
+                    )
+                },
+                text = "Open in bubble",
+            )
 
-            item {
-                ContextualButton(
-                    onClick = {
-                        uriHandler.openUri(
-                            createChannelExternalLink(user),
-                        )
-                        onDismissRequest()
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.LiveTv,
-                            contentDescription = null,
-                        )
-                    },
-                    text = stringResource(MR.strings.watch_live),
-                )
-            }
+            ContextualButton(
+                contentPadding = padding,
+                onClick = {
+                    uriHandler.openUri(
+                        createChannelExternalLink(user),
+                    )
+                    onDismissRequest()
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.LiveTv,
+                        contentDescription = null,
+                    )
+                },
+                text = stringResource(MR.strings.watch_live),
+            )
         },
     )
 }

@@ -1,13 +1,13 @@
 package fr.outadoc.justchatting.feature.details.presentation
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridScope
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalBottomSheet
@@ -22,9 +22,9 @@ import androidx.compose.ui.unit.dp
 internal fun ActionBottomSheet(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit = {},
-    header: @Composable ColumnScope.() -> Unit = {},
-    content: @Composable ColumnScope.() -> Unit = {},
-    actions: (LazyGridScope.() -> Unit)? = null,
+    header: @Composable () -> Unit = {},
+    content: @Composable () -> Unit = {},
+    actions: (@Composable (PaddingValues) -> Unit)? = null,
 ) {
     ModalBottomSheet(
         modifier = modifier,
@@ -34,13 +34,7 @@ internal fun ActionBottomSheet(
         onDismissRequest = onDismissRequest,
     ) {
         DetailsDialogContent(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(
-                    start = 24.dp,
-                    end = 24.dp,
-                    bottom = 16.dp,
-                ),
+            modifier = modifier.fillMaxWidth(),
             header = header,
             content = content,
             actions = actions,
@@ -51,30 +45,47 @@ internal fun ActionBottomSheet(
 @Composable
 internal fun DetailsDialogContent(
     modifier: Modifier = Modifier,
-    header: @Composable ColumnScope.() -> Unit = {},
-    content: @Composable ColumnScope.() -> Unit = {},
-    actions: (LazyGridScope.() -> Unit)? = null,
+    header: @Composable () -> Unit = {},
+    content: @Composable () -> Unit = {},
+    actions: (@Composable (PaddingValues) -> Unit)? = null,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 32.dp),
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        header()
+        Box(
+            modifier = Modifier.padding(contentPadding),
+        ) {
+            header()
+        }
 
-        HorizontalDivider()
+        Box(
+            modifier = Modifier.padding(contentPadding),
+        ) {
+            HorizontalDivider()
+        }
 
-        content()
+        Box(
+            modifier = Modifier.padding(contentPadding),
+        ) {
+            content()
+        }
 
         if (actions != null) {
-            HorizontalDivider()
-
-            LazyVerticalGrid(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                columns = GridCells.Adaptive(80.dp),
+            Box(
+                modifier = Modifier.padding(contentPadding),
             ) {
-                actions()
+                HorizontalDivider()
+            }
+
+            Column(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+            ) {
+                actions(contentPadding)
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }

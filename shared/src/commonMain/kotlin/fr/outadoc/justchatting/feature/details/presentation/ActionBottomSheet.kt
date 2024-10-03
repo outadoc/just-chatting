@@ -21,9 +21,10 @@ import androidx.compose.ui.unit.dp
 @Composable
 internal fun ActionBottomSheet(
     modifier: Modifier = Modifier,
-    actions: LazyGridScope.() -> Unit = {},
     onDismissRequest: () -> Unit = {},
+    header: @Composable ColumnScope.() -> Unit = {},
     content: @Composable ColumnScope.() -> Unit = {},
+    actions: (LazyGridScope.() -> Unit)? = null,
 ) {
     ModalBottomSheet(
         modifier = modifier,
@@ -40,8 +41,9 @@ internal fun ActionBottomSheet(
                     end = 24.dp,
                     bottom = 16.dp,
                 ),
-            actions = actions,
+            header = header,
             content = content,
+            actions = actions,
         )
     }
 }
@@ -49,23 +51,30 @@ internal fun ActionBottomSheet(
 @Composable
 internal fun DetailsDialogContent(
     modifier: Modifier = Modifier,
-    actions: LazyGridScope.() -> Unit = {},
+    header: @Composable ColumnScope.() -> Unit = {},
     content: @Composable ColumnScope.() -> Unit = {},
+    actions: (LazyGridScope.() -> Unit)? = null,
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        content()
+        header()
 
         HorizontalDivider()
 
-        LazyVerticalGrid(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            columns = GridCells.Adaptive(80.dp),
-        ) {
-            actions()
+        content()
+
+        if (actions != null) {
+            HorizontalDivider()
+
+            LazyVerticalGrid(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                columns = GridCells.Adaptive(80.dp),
+            ) {
+                actions()
+            }
         }
     }
 }

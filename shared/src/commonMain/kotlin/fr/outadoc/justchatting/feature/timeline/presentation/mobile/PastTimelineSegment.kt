@@ -1,5 +1,7 @@
 package fr.outadoc.justchatting.feature.timeline.presentation.mobile
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,8 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.ChatBubble
-import androidx.compose.material.icons.filled.LiveTv
-import androidx.compose.material.icons.filled.PictureInPictureAlt
 import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -28,18 +28,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.BasicUserInfo
-import fr.outadoc.justchatting.feature.chat.presentation.mobile.FullUserInfo
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
-import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.core.createChannelExternalLink
 import fr.outadoc.justchatting.utils.core.createVideoExternalLink
 import fr.outadoc.justchatting.utils.presentation.format
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun PastTimelineSegment(
     modifier: Modifier = Modifier,
@@ -55,7 +52,17 @@ internal fun PastTimelineSegment(
     ) {
         Column {
             Card(
-                onClick = { isExpanded = true },
+                modifier = Modifier
+                    .combinedClickable(
+                        onClick = {
+                            uriHandler.openUri(
+                                createVideoExternalLink(segment.id),
+                            )
+                        },
+                        onClickLabel = "Open VOD", // TODO
+                        onLongClick = { isExpanded = true },
+                        onLongClickLabel = "Open context menu", // TODO
+                    ),
             ) {
                 TimelineSegmentContent(
                     modifier = Modifier.padding(8.dp),
@@ -117,8 +124,10 @@ internal fun PastTimelineSegment(
     if (isExpanded) {
         ActionBottomSheet(
             onDismissRequest = { isExpanded = false },
-            content = {
+            header = {
                 BasicUserInfo(user = segment.user)
+            },
+            content = {
                 TimelineSegmentDetails(segment = segment)
             },
             actions = {
@@ -137,56 +146,6 @@ internal fun PastTimelineSegment(
                             )
                         },
                         text = "Watch replay",
-                    )
-                }
-
-                item {
-                    ContextualButton(
-                        onClick = {
-                            onChannelClick(segment.user)
-                            isExpanded = false
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.ChatBubble,
-                                contentDescription = null,
-                            )
-                        },
-                        text = "Open chat",
-                    )
-                }
-
-                item {
-                    ContextualButton(
-                        onClick = {
-                            onOpenInBubble(segment.user)
-                            isExpanded = false
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.PictureInPictureAlt,
-                                contentDescription = null,
-                            )
-                        },
-                        text = "Open in bubble",
-                    )
-                }
-
-                item {
-                    ContextualButton(
-                        onClick = {
-                            uriHandler.openUri(
-                                createChannelExternalLink(segment.user),
-                            )
-                            isExpanded = false
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.LiveTv,
-                                contentDescription = null,
-                            )
-                        },
-                        text = stringResource(MR.strings.watch_live),
                     )
                 }
             },

@@ -31,8 +31,10 @@ internal fun LiveDetailsDialog(
     ActionBottomSheet(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
-        content = {
+        header = {
             BasicUserInfo(user = user)
+        },
+        content = {
             StreamInfo(stream = stream)
         },
         actions = {

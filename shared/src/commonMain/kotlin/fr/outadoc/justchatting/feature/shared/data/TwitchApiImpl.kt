@@ -93,6 +93,7 @@ internal class TwitchApiImpl(
                             logError<TwitchApiImpl>(exception) {
                                 "getFollowedStreams: failed to load more items"
                             }
+                            // TODO fail everything if one request fails
                         }
                         .onSuccess { response ->
                             logDebug<TwitchApiImpl> {

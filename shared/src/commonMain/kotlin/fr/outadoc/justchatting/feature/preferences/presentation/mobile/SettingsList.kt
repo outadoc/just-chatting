@@ -1,5 +1,7 @@
 package fr.outadoc.justchatting.feature.preferences.presentation.mobile
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -27,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.BasicUserInfo
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ExtraUserInfo
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.core.PlaceholderHighlight
@@ -74,7 +77,7 @@ internal fun SettingsList(
                     )
                 }
 
-                ExtraUserInfo(
+                Column(
                     modifier = Modifier
                         .padding(itemInsets)
                         .padding(top = 16.dp)
@@ -83,8 +86,16 @@ internal fun SettingsList(
                             color = MaterialTheme.colorScheme.surfaceVariant,
                             highlight = PlaceholderHighlight.shimmer(),
                         ),
-                    user = loggedInUser ?: placeholderUser,
-                )
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    BasicUserInfo(
+                        user = loggedInUser ?: placeholderUser,
+                    )
+
+                    ExtraUserInfo(
+                        user = loggedInUser ?: placeholderUser,
+                    )
+                }
 
                 SettingsText(
                     modifier = Modifier.padding(itemInsets),

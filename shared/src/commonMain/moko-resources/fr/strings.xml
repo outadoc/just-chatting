@@ -26,6 +26,8 @@
     <string name="chat_massSubGift_header">offre %1$s abonnements %2$s à la communauté ! Iel a offert un total de %3$s abonnements sur cette chaîne.</string>
     <string name="chat_message_actionSeparator">&#160;</string>
     <string name="chat_message_standardSeparator">&#160;:&#160;</string>
+    <string name="chat_open_action">Ouvrir le tchat</string>
+    <string name="chat_openBubble_action">Ouvrir le tchat dans une bulle</string>
     <string name="chat_paidMessage">Mis en avant pour %1$s</string>
     <string name="chat_raid_header">a raid la chaîne avec %1$s !</string>
     <string name="chat_replyTo">Répondre à ce message</string>
@@ -315,6 +317,7 @@
     <string name="settings_thirdparty_stv_subtitle">Données fournies par 7tv.app</string>
     <string name="settings_thirdparty_stv_title">Afficher les émotes 7TV</string>
     <string name="stream_info">Infos du stream</string>
+    <string name="timeline_openVod_action">Regarder la vidéo</string>
     <string name="timeline_refresh_action_cd">Rafraîchir les données</string>
     <string name="timeline_title">Chronologie</string>
     <string name="timeline_today_action_cd">Sauter au contenu en direct</string>

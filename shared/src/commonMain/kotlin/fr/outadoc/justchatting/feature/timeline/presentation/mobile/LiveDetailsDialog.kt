@@ -50,7 +50,7 @@ internal fun LiveDetailsDialog(
                         contentDescription = null,
                     )
                 },
-                text = "Open chat",
+                text = stringResource(MR.strings.chat_open_action),
             )
 
             ContextualButton(
@@ -65,7 +65,7 @@ internal fun LiveDetailsDialog(
                         contentDescription = null,
                     )
                 },
-                text = "Open in bubble",
+                text = stringResource(MR.strings.chat_openBubble_action),
             )
 
             ContextualButton(

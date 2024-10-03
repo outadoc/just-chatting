@@ -25,9 +25,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.TagList
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
+import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 import fr.outadoc.justchatting.utils.presentation.formatTimeSince
@@ -59,9 +61,9 @@ internal fun LiveStreamCard(
                 modifier = Modifier
                     .combinedClickable(
                         onClick = onClick,
-                        onClickLabel = "Open stream", // TODO
+                        onClickLabel = stringResource(MR.strings.chat_open_action),
                         onLongClick = onLongClick,
-                        onLongClickLabel = "Open context menu", // TODO
+                        onLongClickLabel = stringResource(MR.strings.all_showDetails_cd),
                     ),
             ) {
                 LiveStream(

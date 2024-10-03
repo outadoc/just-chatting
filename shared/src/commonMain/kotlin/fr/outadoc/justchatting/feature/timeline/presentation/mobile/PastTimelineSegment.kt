@@ -30,7 +30,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.BasicUserInfo
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
-import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.utils.core.createVideoExternalLink
 import fr.outadoc.justchatting.utils.presentation.format
@@ -41,8 +40,6 @@ import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 internal fun PastTimelineSegment(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
-    onChannelClick: (User) -> Unit = {},
-    onOpenInBubble: (User) -> Unit = {},
 ) {
     val uriHandler = LocalUriHandler.current
     var isExpanded by remember { mutableStateOf(false) }

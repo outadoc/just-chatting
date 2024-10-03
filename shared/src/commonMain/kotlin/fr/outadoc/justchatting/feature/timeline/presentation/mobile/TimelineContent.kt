@@ -89,8 +89,6 @@ internal fun TimelineContent(
                                     .animateItem()
                                     .fillMaxWidth(),
                                 segment = segment,
-                                onChannelClick = onChannelClick,
-                                onOpenInBubble = onOpenInBubble,
                             )
                         }
                     }
@@ -177,8 +175,6 @@ internal fun TimelineContent(
                                         .animateItem()
                                         .fillMaxWidth(),
                                     segment = segment,
-                                    onChannelClick = onChannelClick,
-                                    onOpenInBubble = onOpenInBubble,
                                 )
                             }
                         }

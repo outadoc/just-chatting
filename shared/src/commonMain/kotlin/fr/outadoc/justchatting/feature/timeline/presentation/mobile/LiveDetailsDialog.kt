@@ -6,16 +6,23 @@ import androidx.compose.material.icons.filled.LiveTv
 import androidx.compose.material.icons.filled.PictureInPictureAlt
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import dev.icerock.moko.resources.compose.stringResource
+import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.BasicUserInfo
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.StreamInfo
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
+import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.createChannelExternalLink
+import fr.outadoc.justchatting.utils.presentation.areBubblesSupported
+import org.koin.compose.koinInject
 
 @Composable
 internal fun LiveDetailsDialog(
@@ -27,6 +34,14 @@ internal fun LiveDetailsDialog(
     onOpenInBubble: () -> Unit = {},
 ) {
     val uriHandler = LocalUriHandler.current
+
+    val preferencesRepository: PreferenceRepository = koinInject()
+    val notifier: ChatNotifier = koinInject()
+
+    val prefs by preferencesRepository.currentPreferences.collectAsState(initial = AppPreferences())
+
+    val canOpenInBubble: Boolean =
+        areBubblesSupported() && prefs.enableNotifications && notifier.areNotificationsEnabled
 
     ActionBottomSheet(
         modifier = modifier,
@@ -53,20 +68,22 @@ internal fun LiveDetailsDialog(
                 text = stringResource(MR.strings.chat_open_action),
             )
 
-            ContextualButton(
-                contentPadding = padding,
-                onClick = {
-                    onOpenInBubble()
-                    onDismissRequest()
-                },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.PictureInPictureAlt,
-                        contentDescription = null,
-                    )
-                },
-                text = stringResource(MR.strings.chat_openBubble_action),
-            )
+            if (canOpenInBubble) {
+                ContextualButton(
+                    contentPadding = padding,
+                    onClick = {
+                        onOpenInBubble()
+                        onDismissRequest()
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.PictureInPictureAlt,
+                            contentDescription = null,
+                        )
+                    },
+                    text = stringResource(MR.strings.chat_openBubble_action),
+                )
+            }
 
             ContextualButton(
                 contentPadding = padding,

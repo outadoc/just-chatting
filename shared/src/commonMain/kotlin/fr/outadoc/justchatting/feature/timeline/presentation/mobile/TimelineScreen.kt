@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.Gamepad
 import androidx.compose.material.icons.filled.LiveTv
+import androidx.compose.material.icons.filled.PictureInPictureAlt
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material.icons.filled.Today
@@ -52,11 +53,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil3.PlatformContext
 import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
 import dev.icerock.moko.resources.compose.stringResource
+import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.UserInfo
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.feature.details.presentation.DetailsDialog
@@ -69,6 +74,7 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.utils.core.createChannelExternalLink
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.format
@@ -78,6 +84,7 @@ import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -90,6 +97,9 @@ internal fun TimelineScreen(
 ) {
     val viewModel: TimelineViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
+
+    val notifier: ChatNotifier = koinInject()
+    val context: PlatformContext = LocalPlatformContext.current
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -170,7 +180,15 @@ internal fun TimelineScreen(
                 liveListState = liveListState,
                 futureListState = futureListState,
                 pagerState = pagerState,
-                onChannelClick = onChannelClick,
+                onChannelClick = { user ->
+                    onChannelClick(user.id)
+                },
+                onOpenInBubble = { user ->
+                    notifier.notify(
+                        context = context,
+                        user = user,
+                    )
+                },
             )
         },
     )
@@ -186,7 +204,8 @@ private fun TimelineContent(
     pastListState: LazyListState,
     liveListState: LazyListState,
     futureListState: LazyListState,
-    onChannelClick: (userId: String) -> Unit,
+    onChannelClick: (User) -> Unit,
+    onOpenInBubble: (User) -> Unit,
 ) {
     VerticalPager(
         modifier = modifier.padding(insets),
@@ -235,6 +254,8 @@ private fun TimelineContent(
                                     .animateItem()
                                     .fillMaxWidth(),
                                 segment = segment,
+                                onChannelClick = onChannelClick,
+                                onOpenInBubble = onOpenInBubble,
                             )
                         }
                     }
@@ -277,7 +298,9 @@ private fun TimelineContent(
                                 modifier = Modifier
                                     .animateItem()
                                     .fillMaxWidth(),
-                                onClick = { onChannelClick(userStream.user.id) },
+                                onClick = {
+                                    onChannelClick(userStream.user)
+                                },
                                 title = userStream.stream.title,
                                 userName = userStream.user.displayName,
                                 viewerCount = userStream.stream.viewerCount,
@@ -327,6 +350,8 @@ private fun TimelineContent(
                                         .animateItem()
                                         .fillMaxWidth(),
                                     segment = segment,
+                                    onChannelClick = onChannelClick,
+                                    onOpenInBubble = onOpenInBubble,
                                 )
                             }
                         }
@@ -365,6 +390,8 @@ private fun SectionHeader(
 internal fun TimelineSegment(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
+    onChannelClick: (User) -> Unit = {},
+    onOpenInBubble: (User) -> Unit = {},
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -432,6 +459,8 @@ internal fun TimelineSegment(
         }
     }
 
+    val uriHandler = LocalUriHandler.current
+
     if (isExpanded) {
         DetailsDialog(
             onDismissRequest = { isExpanded = false },
@@ -443,7 +472,11 @@ internal fun TimelineSegment(
             },
             actions = {
                 ContextualButton(
-                    onClick = {},
+                    onClick = {
+                        uriHandler.openUri(
+                            createChannelExternalLink(segment.user)
+                        )
+                    },
                     icon = {
                         Icon(
                             imageVector = Icons.Default.LiveTv,
@@ -456,7 +489,9 @@ internal fun TimelineSegment(
                 )
 
                 ContextualButton(
-                    onClick = {},
+                    onClick = {
+                        onChannelClick(segment.user)
+                    },
                     icon = {
                         Icon(
                             imageVector = Icons.Default.ChatBubble,
@@ -469,15 +504,17 @@ internal fun TimelineSegment(
                 )
 
                 ContextualButton(
-                    onClick = {},
+                    onClick = {
+                        onOpenInBubble(segment.user)
+                    },
                     icon = {
                         Icon(
-                            imageVector = Icons.Default.ChatBubble,
+                            imageVector = Icons.Default.PictureInPictureAlt,
                             contentDescription = null,
                         )
                     },
                     text = {
-                        Text("Open chat")
+                        Text("Open in bubble")
                     },
                 )
             },

@@ -19,7 +19,7 @@ import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.formatDate
 
 @Composable
-internal fun FullUserInfo(
+internal fun ExtraUserInfo(
     modifier: Modifier = Modifier,
     user: User,
 ) {
@@ -27,8 +27,6 @@ internal fun FullUserInfo(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        BasicUserInfo(user = user)
-
         if (user.description.isNotEmpty()) {
             Text(text = user.description)
         }

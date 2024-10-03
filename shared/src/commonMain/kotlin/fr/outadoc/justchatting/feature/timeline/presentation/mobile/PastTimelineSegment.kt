@@ -40,6 +40,7 @@ import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 internal fun PastTimelineSegment(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
+    onUserClick: () -> Unit = {},
 ) {
     val uriHandler = LocalUriHandler.current
     var isExpanded by remember { mutableStateOf(false) }
@@ -67,6 +68,7 @@ internal fun PastTimelineSegment(
                     userName = segment.user.displayName,
                     category = segment.category,
                     profileImageUrl = segment.user.profileImageUrl,
+                    onUserClick = onUserClick,
                 )
             }
 

@@ -6,15 +6,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
 
 @Composable
 internal fun LiveTimelineSegment(
     modifier: Modifier = Modifier,
     userStream: UserStream,
-    onChannelClick: (User) -> Unit = {},
-    onOpenInBubble: (User) -> Unit = {},
+    onUserClick: () -> Unit = {},
+    onOpenChat: () -> Unit = {},
+    onOpenInBubble: () -> Unit = {},
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -27,9 +27,8 @@ internal fun LiveTimelineSegment(
         startedAt = userStream.stream.startedAt,
         tags = userStream.stream.tags,
         profileImageUrl = userStream.user.profileImageUrl,
-        onClick = {
-            onChannelClick(userStream.user)
-        },
+        onUserClick = onUserClick,
+        onClick = onOpenChat,
         onLongClick = {
             isExpanded = true
         },
@@ -40,7 +39,7 @@ internal fun LiveTimelineSegment(
             user = userStream.user,
             stream = userStream.stream,
             onDismissRequest = { isExpanded = false },
-            onChannelClick = onChannelClick,
+            onOpenChat = onOpenChat,
             onOpenInBubble = onOpenInBubble,
         )
     }

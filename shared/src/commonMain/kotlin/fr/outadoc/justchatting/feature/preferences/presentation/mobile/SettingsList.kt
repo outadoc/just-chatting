@@ -27,7 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.feature.chat.presentation.mobile.FullUserInfo
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.ExtraUserInfo
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.core.PlaceholderHighlight
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.material3.placeholder
@@ -74,7 +74,7 @@ internal fun SettingsList(
                     )
                 }
 
-                FullUserInfo(
+                ExtraUserInfo(
                     modifier = Modifier
                         .padding(itemInsets)
                         .padding(top = 16.dp)

@@ -34,6 +34,7 @@ import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 internal fun FutureTimelineSegment(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
+    onUserClick: () -> Unit = {},
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -50,6 +51,7 @@ internal fun FutureTimelineSegment(
                     userName = segment.user.displayName,
                     category = segment.category,
                     profileImageUrl = segment.user.profileImageUrl,
+                    onUserClick = onUserClick,
                 )
             }
 

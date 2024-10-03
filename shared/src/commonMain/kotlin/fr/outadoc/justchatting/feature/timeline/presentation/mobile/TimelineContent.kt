@@ -19,10 +19,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.BasicUserInfo
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.ExtraUserInfo
+import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.NoContent
 import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
@@ -42,6 +49,8 @@ internal fun TimelineContent(
     onChannelClick: (User) -> Unit,
     onOpenInBubble: (User) -> Unit,
 ) {
+    var showUserDetails: User? by remember { mutableStateOf(null) }
+
     VerticalPager(
         modifier = modifier.padding(insets),
         state = pagerState,
@@ -89,6 +98,9 @@ internal fun TimelineContent(
                                     .animateItem()
                                     .fillMaxWidth(),
                                 segment = segment,
+                                onUserClick = {
+                                    showUserDetails = segment.user
+                                },
                             )
                         }
                     }
@@ -131,8 +143,16 @@ internal fun TimelineContent(
                                 modifier = Modifier
                                     .animateItem()
                                     .fillMaxWidth(),
-                                onChannelClick = onChannelClick,
                                 userStream = userStream,
+                                onOpenChat = {
+                                    onChannelClick(userStream.user)
+                                },
+                                onUserClick = {
+                                    showUserDetails = userStream.user
+                                },
+                                onOpenInBubble = {
+                                    onOpenInBubble(userStream.user)
+                                },
                             )
                         }
                     }
@@ -175,6 +195,9 @@ internal fun TimelineContent(
                                         .animateItem()
                                         .fillMaxWidth(),
                                     segment = segment,
+                                    onUserClick = {
+                                        showUserDetails = segment.user
+                                    },
                                 )
                             }
                         }
@@ -182,6 +205,18 @@ internal fun TimelineContent(
                 }
             }
         }
+    }
+
+    showUserDetails?.let { user ->
+        ActionBottomSheet(
+            onDismissRequest = { showUserDetails = null },
+            header = {
+                BasicUserInfo(user = user)
+            },
+            content = {
+                ExtraUserInfo(user = user)
+            },
+        )
     }
 }
 

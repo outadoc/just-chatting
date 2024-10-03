@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.timeline.presentation.mobile
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,6 +47,7 @@ internal fun LiveStreamCard(
     startedAt: Instant? = null,
     profileImageUrl: String? = null,
     tags: ImmutableSet<String> = persistentSetOf(),
+    onUserClick: () -> Unit = {},
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
 ) {
@@ -69,7 +71,8 @@ internal fun LiveStreamCard(
                     viewerCount = viewerCount,
                     category = category,
                     startedAt = startedAt,
-                    profileImageURL = profileImageUrl,
+                    profileImageUrl = profileImageUrl,
+                    onUserClick = onUserClick,
                 )
             }
 
@@ -96,7 +99,8 @@ private fun LiveStream(
     viewerCount: Long?,
     category: StreamCategory?,
     startedAt: Instant?,
-    profileImageURL: String?,
+    profileImageUrl: String?,
+    onUserClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier,
@@ -109,8 +113,9 @@ private fun LiveStream(
                     .padding(end = 8.dp)
                     .size(56.dp)
                     .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surface),
-                model = remoteImageModel(profileImageURL),
+                    .background(MaterialTheme.colorScheme.surface)
+                    .clickable(onClick = onUserClick),
+                model = remoteImageModel(profileImageUrl),
                 contentDescription = null,
             )
 

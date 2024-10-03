@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.timeline.presentation.mobile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ internal fun TimelineSegmentContent(
     userName: String,
     category: StreamCategory?,
     profileImageUrl: String?,
+    onUserClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier,
@@ -38,7 +40,8 @@ internal fun TimelineSegmentContent(
                     .padding(end = 8.dp)
                     .size(56.dp)
                     .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surface),
+                    .background(MaterialTheme.colorScheme.surface)
+                    .clickable(onClick = onUserClick),
                 model = remoteImageModel(profileImageUrl),
                 contentDescription = null,
             )

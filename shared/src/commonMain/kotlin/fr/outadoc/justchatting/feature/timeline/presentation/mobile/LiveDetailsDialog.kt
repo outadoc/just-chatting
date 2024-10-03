@@ -23,8 +23,8 @@ internal fun LiveDetailsDialog(
     user: User,
     stream: Stream,
     onDismissRequest: () -> Unit = {},
-    onChannelClick: (User) -> Unit = {},
-    onOpenInBubble: (User) -> Unit = {},
+    onOpenChat: () -> Unit = {},
+    onOpenInBubble: () -> Unit = {},
 ) {
     val uriHandler = LocalUriHandler.current
 
@@ -41,7 +41,7 @@ internal fun LiveDetailsDialog(
             item {
                 ContextualButton(
                     onClick = {
-                        onChannelClick(user)
+                        onOpenChat()
                         onDismissRequest()
                     },
                     icon = {
@@ -57,7 +57,7 @@ internal fun LiveDetailsDialog(
             item {
                 ContextualButton(
                     onClick = {
-                        onOpenInBubble(user)
+                        onOpenInBubble()
                         onDismissRequest()
                     },
                     icon = {

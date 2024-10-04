@@ -22,6 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -53,6 +55,8 @@ internal fun LiveStreamCard(
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
 ) {
+    val haptic = LocalHapticFeedback.current
+
     OutlinedCard(
         modifier = modifier,
     ) {
@@ -62,7 +66,10 @@ internal fun LiveStreamCard(
                     .combinedClickable(
                         onClick = onClick,
                         onClickLabel = stringResource(MR.strings.chat_open_action),
-                        onLongClick = onLongClick,
+                        onLongClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onLongClick()
+                        },
                         onLongClickLabel = stringResource(MR.strings.all_showDetails_cd),
                     ),
             ) {

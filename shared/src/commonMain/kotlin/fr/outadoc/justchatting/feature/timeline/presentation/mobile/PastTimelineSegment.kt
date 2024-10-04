@@ -26,6 +26,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
@@ -45,7 +47,9 @@ internal fun PastTimelineSegment(
     segment: ChannelScheduleSegment,
     onUserClick: () -> Unit = {},
 ) {
+    val haptic = LocalHapticFeedback.current
     val uriHandler = LocalUriHandler.current
+
     var isExpanded by remember { mutableStateOf(false) }
 
     OutlinedCard(
@@ -61,7 +65,10 @@ internal fun PastTimelineSegment(
                             )
                         },
                         onClickLabel = stringResource(MR.strings.timeline_openVod_action),
-                        onLongClick = { isExpanded = true },
+                        onLongClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            isExpanded = true
+                        },
                         onLongClickLabel = stringResource(MR.strings.all_showDetails_cd),
                     ),
             ) {

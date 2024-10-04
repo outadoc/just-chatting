@@ -15,8 +15,6 @@ import androidx.compose.material3.TooltipDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -30,8 +28,6 @@ internal fun AccessibleIconButton(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable () -> Unit,
 ) {
-    val haptic = LocalHapticFeedback.current
-
     val tooltipPosition = TooltipDefaults.rememberPlainTooltipPositionProvider()
     val tooltipState = rememberBasicTooltipState(isPersistent = false)
 
@@ -48,10 +44,7 @@ internal fun AccessibleIconButton(
         },
     ) {
         IconButton(
-            onClick = {
-                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                onClick()
-            },
+            onClick = onClick,
             modifier = modifier,
             enabled = enabled,
             colors = colors,

@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
 
 @Composable
@@ -16,6 +18,7 @@ internal fun LiveTimelineSegment(
     onOpenChat: () -> Unit = {},
     onOpenInBubble: () -> Unit = {},
 ) {
+    val haptic = LocalHapticFeedback.current
     var isExpanded by remember { mutableStateOf(false) }
 
     LiveStreamCard(
@@ -30,6 +33,7 @@ internal fun LiveTimelineSegment(
         onUserClick = onUserClick,
         onClick = onOpenChat,
         onLongClick = {
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             isExpanded = true
         },
     )

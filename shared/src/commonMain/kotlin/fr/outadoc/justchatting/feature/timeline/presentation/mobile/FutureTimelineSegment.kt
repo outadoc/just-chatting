@@ -25,6 +25,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.BasicUserInfo
@@ -40,6 +42,7 @@ internal fun FutureTimelineSegment(
     segment: ChannelScheduleSegment,
     onUserClick: () -> Unit = {},
 ) {
+    val haptic = LocalHapticFeedback.current
     var isExpanded by remember { mutableStateOf(false) }
 
     OutlinedCard(
@@ -50,7 +53,10 @@ internal fun FutureTimelineSegment(
                 modifier = Modifier
                     .combinedClickable(
                         onClick = { isExpanded = true },
-                        onLongClick = { isExpanded = true },
+                        onLongClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            isExpanded = true
+                        },
                     ),
             ) {
                 TimelineSegmentContent(

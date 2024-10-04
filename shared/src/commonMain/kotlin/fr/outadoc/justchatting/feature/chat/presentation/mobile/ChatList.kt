@@ -20,7 +20,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
@@ -68,6 +70,8 @@ internal fun ChatList(
     insets: PaddingValues,
     clock: Clock = Clock.System,
 ) {
+    val haptic = LocalHapticFeedback.current
+
     val inlinesEmotes: PersistentMap<String, InlineTextContent> =
         remember(emotes) {
             emotes.mapValues { (_, emote) ->
@@ -175,7 +179,10 @@ internal fun ChatList(
                             .fillMaxWidth()
                             .combinedClickable(
                                 onClick = {},
-                                onLongClick = { onMessageLongClick(item) },
+                                onLongClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onMessageLongClick(item)
+                                },
                                 onLongClickLabel = stringResource(MR.strings.chat_copyToClipboard),
                             )
                             .semantics {

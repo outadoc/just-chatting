@@ -34,9 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
@@ -131,7 +129,6 @@ internal fun ChannelChatScreenContent(
         },
         content = { insets ->
             val clipboard = LocalClipboardManager.current
-            val haptic = LocalHapticFeedback.current
             val scope = rememberCoroutineScope()
             val snackbarCopiedMessage = stringResource(MR.strings.chat_copiedToClipboard)
 
@@ -145,9 +142,6 @@ internal fun ChannelChatScreenContent(
                     item.body?.message?.let { rawMessage ->
                         // Copy to clipboard
                         clipboard.setText(AnnotatedString(rawMessage))
-
-                        // Vibrate device
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
 
                         // Show "copied to clipboard" confirmation
                         scope.launch {

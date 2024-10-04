@@ -93,7 +93,8 @@ internal class TwitchApiImpl(
                             logError<TwitchApiImpl>(exception) {
                                 "getFollowedStreams: failed to load more items"
                             }
-                            // TODO fail everything if one request fails
+
+                            throw exception
                         }
                         .onSuccess { response ->
                             logDebug<TwitchApiImpl> {
@@ -235,6 +236,8 @@ internal class TwitchApiImpl(
                             logError<TwitchApiImpl>(exception) {
                                 "getFollowedChannels: failed to load more items"
                             }
+
+                            throw exception
                         }
                         .onSuccess { response ->
                             logDebug<TwitchApiImpl> {
@@ -350,6 +353,8 @@ internal class TwitchApiImpl(
                             logError<TwitchApiImpl>(exception) {
                                 "getChannelVideos: failed to load more items"
                             }
+
+                            throw exception
                         }
                         .onSuccess { response ->
                             logDebug<TwitchApiImpl> {
@@ -406,6 +411,8 @@ internal class TwitchApiImpl(
                             logError<TwitchApiImpl>(exception) {
                                 "getChannelSchedule: failed to load more items"
                             }
+
+                            throw exception
                         }
                         .onSuccess { response ->
                             val segments = response.data.segments.orEmpty()

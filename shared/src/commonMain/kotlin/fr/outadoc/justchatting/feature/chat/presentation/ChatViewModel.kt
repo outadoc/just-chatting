@@ -126,6 +126,7 @@ internal class ChatViewModel(
         data class UpdateChatterPronouns(val pronouns: Map<Chatter, Pronoun?>) : Action()
         data class UpdateStreamDetails(val stream: Stream) : Action()
         data class ShowUserInfo(val userId: String?) : Action()
+        data class UpdateStreamInfoVisibility(val isVisible: Boolean) : Action()
         data class UpdateUser(val user: User) : Action()
     }
 
@@ -162,6 +163,7 @@ internal class ChatViewModel(
             val connectionStatus: ConnectionStatus = ConnectionStatus(),
             val maxAdapterCount: Int,
             val showInfoForUserId: String? = null,
+            val isStreamInfoVisible: Boolean = false,
         ) : State() {
 
             val allEmotesMap: ImmutableMap<String, Emote>
@@ -504,6 +506,18 @@ internal class ChatViewModel(
         }
     }
 
+    fun onShowStreamInfo() {
+        defaultScope.launch {
+            actions.emit(Action.UpdateStreamInfoVisibility(isVisible = true))
+        }
+    }
+
+    fun onDismissStreamInfo() {
+        defaultScope.launch {
+            actions.emit(Action.UpdateStreamInfoVisibility(isVisible = false))
+        }
+    }
+
     fun onReplyToMessage(entry: ChatListItem.Message?) {
         inputScope.launch {
             inputActions.emit(InputAction.ReplyToMessage(entry))
@@ -585,6 +599,7 @@ internal class ChatViewModel(
             is Action.UpdateRaidAnnouncement -> reduce(state)
             is Action.UpdatePinnedMessage -> reduce(state)
             is Action.ShowUserInfo -> reduce(state)
+            is Action.UpdateStreamInfoVisibility -> reduce(state)
             is Action.UpdateUser -> reduce(state)
         }
     }
@@ -874,6 +889,13 @@ internal class ChatViewModel(
         if (state !is State.Chatting) return state
         return state.copy(
             showInfoForUserId = userId,
+        )
+    }
+
+    private fun Action.UpdateStreamInfoVisibility.reduce(state: State): State {
+        if (state !is State.Chatting) return state
+        return state.copy(
+            isStreamInfoVisible = isVisible,
         )
     }
 

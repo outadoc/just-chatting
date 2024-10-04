@@ -38,7 +38,7 @@ internal class UserInfoViewModel(
                                 "Error while loading user $userId: $exception"
                             }
                             State.Error(exception)
-                        }
+                        },
                     )
                 }
                 .onStart { emit(State.Loading) }

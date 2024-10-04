@@ -113,9 +113,7 @@ internal fun ChannelChatScreen(
                     )
                 }
             },
-            onTriggerAutoComplete = {
-                viewModel.onTriggerAutoComplete()
-            },
+            onTriggerAutoComplete = viewModel::onTriggerAutoComplete,
             onSubmit = {
                 viewModel.submit(
                     screenDensity = density,
@@ -123,11 +121,11 @@ internal fun ChannelChatScreen(
                 )
             },
             onReplyToMessage = viewModel::onReplyToMessage,
-            onDismissUserInfo = viewModel::onDismissUserInfo,
             onShowInfoForUserId = viewModel::onShowUserInfo,
-            onReuseLastMessageClicked = {
-                viewModel.onReuseLastMessageClicked()
-            },
+            onDismissUserInfo = viewModel::onDismissUserInfo,
+            onShowStreamInfo = viewModel::onShowStreamInfo,
+            onDismissStreamInfo = viewModel::onDismissStreamInfo,
+            onReuseLastMessageClicked = viewModel::onReuseLastMessageClicked,
             onNavigateUp = onNavigateUp,
         )
     }

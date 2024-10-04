@@ -78,8 +78,10 @@ internal fun ChannelChatScreenContent(
     onTriggerAutoComplete: () -> Unit = {},
     onSubmit: () -> Unit = {},
     onReplyToMessage: (ChatListItem.Message) -> Unit = {},
-    onDismissUserInfo: () -> Unit = {},
     onShowInfoForUserId: (String) -> Unit = {},
+    onDismissUserInfo: () -> Unit = {},
+    onShowStreamInfo: () -> Unit = {},
+    onDismissStreamInfo: () -> Unit = {},
     onReuseLastMessageClicked: () -> Unit = {},
     onNavigateUp: () -> Unit = {},
 ) {
@@ -92,8 +94,6 @@ internal fun ChannelChatScreenContent(
     val snackbarHostState = remember { SnackbarHostState() }
 
     val hazeState = remember { HazeState() }
-
-    var showStreamInfoDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(isEmotePickerOpen) {
         if (isEmotePickerOpen) {
@@ -122,9 +122,7 @@ internal fun ChannelChatScreenContent(
                 onUserClicked = {
                     user?.id?.let(onShowInfoForUserId)
                 },
-                onStreamInfoClicked = {
-                    showStreamInfoDialog = true
-                },
+                onStreamInfoClicked = onShowStreamInfo,
                 onOpenBubbleClicked = onOpenBubbleClicked,
                 showBackButton = showBackButton,
                 showBubbleButton = showBubbleButton,
@@ -262,33 +260,34 @@ internal fun ChannelChatScreenContent(
         },
     )
 
-    val showInfoForUserId: String? =
-        (state as? ChatViewModel.State.Chatting)?.showInfoForUserId
+    when (state) {
+        is ChatViewModel.State.Chatting -> {
+            if (state.showInfoForUserId != null) {
+                UserInfoDialog(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = 24.dp,
+                            end = 24.dp,
+                            bottom = 24.dp,
+                        ),
+                    userId = state.showInfoForUserId,
+                    onDismissRequest = onDismissUserInfo,
+                )
+            }
 
-    if (showInfoForUserId != null) {
-        UserInfoDialog(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = 24.dp,
-                    end = 24.dp,
-                    bottom = 24.dp,
-                ),
-            userId = showInfoForUserId,
-            onDismissRequest = onDismissUserInfo,
-        )
-    }
+            if (state.isStreamInfoVisible && state.stream != null) {
+                LiveDetailsDialog(
+                    user = state.user,
+                    stream = state.stream,
+                    onDismissRequest = onDismissStreamInfo,
+                    onOpenChat = null,
+                    onOpenInBubble = onOpenBubbleClicked,
+                )
+            }
+        }
 
-    if (showStreamInfoDialog && stream != null && user != null) {
-        LiveDetailsDialog(
-            user = user,
-            stream = stream,
-            onDismissRequest = {
-                showStreamInfoDialog = false
-            },
-            onOpenChat = null,
-            onOpenInBubble = onOpenBubbleClicked,
-        )
+        else -> {}
     }
 }
 

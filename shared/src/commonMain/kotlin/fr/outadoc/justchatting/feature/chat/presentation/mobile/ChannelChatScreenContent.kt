@@ -69,7 +69,6 @@ internal fun ChannelChatScreenContent(
     showBubbleButton: Boolean = true,
     isEmotePickerOpen: Boolean = false,
     showTimestamps: Boolean,
-    onWatchLiveClicked: () -> Unit = {},
     onMessageChange: (TextFieldValue) -> Unit = {},
     onToggleEmotePicker: () -> Unit = {},
     onEmoteClick: (Emote) -> Unit = {},

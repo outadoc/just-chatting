@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -77,7 +76,7 @@ internal fun FollowedChannelsList(
                 modifier = Modifier
                     .hazeChild(
                         state = hazeState,
-                        style = HazeMaterials.regular(MaterialTheme.colorScheme.surface),
+                        style = HazeMaterials.regular(),
                     ),
                 title = { Text(stringResource(MR.strings.channels)) },
                 scrollBehavior = scrollBehavior,

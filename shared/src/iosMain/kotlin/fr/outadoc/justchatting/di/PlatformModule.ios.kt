@@ -30,6 +30,7 @@ import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 
+@OptIn(ExperimentalForeignApi::class)
 internal actual val platformModule: Module
     get() = module {
         single {
@@ -49,25 +50,10 @@ internal actual val platformModule: Module
             )
         }
 
-        @OptIn(ExperimentalForeignApi::class)
         single<DataStore<Preferences>> {
             PreferenceDataStoreFactory.createWithPath(
                 produceFile = {
-                    val documentDirectory: Path =
-                        NSFileManager.defaultManager
-                            .URLForDirectory(
-                                directory = NSDocumentDirectory,
-                                inDomain = NSUserDomainMask,
-                                appropriateForURL = null,
-                                create = false,
-                                error = null,
-                            )
-                            ?.path
-                            ?.toPath()
-                            ?: error("Could not get document directory")
-
-                    documentDirectory
-                        .resolve("fr.outadoc.justchatting.preferences_pb")
+                    getDocumentsDirectory().resolve("fr.outadoc.justchatting.preferences_pb")
                 },
             )
         }
@@ -79,3 +65,18 @@ internal actual val platformModule: Module
         single<AppVersionNameProvider> { AppleAppVersionNameProvider() }
         single<ReadExternalDependenciesList> { AppleReadExternalDependenciesList() }
     }
+
+@OptIn(ExperimentalForeignApi::class)
+private fun getDocumentsDirectory(): Path {
+    return NSFileManager.defaultManager
+        .URLForDirectory(
+            directory = NSDocumentDirectory,
+            inDomain = NSUserDomainMask,
+            appropriateForURL = null,
+            create = false,
+            error = null,
+        )
+        ?.path
+        ?.toPath()
+        ?: error("Could not get document directory")
+}

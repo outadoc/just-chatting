@@ -113,6 +113,7 @@ kotlin {
             implementation(libs.androidx.palette)
             implementation(libs.androidx.paging.runtime.android)
             implementation(libs.androidx.splashscreen)
+            implementation(libs.coil.gif)
             implementation(libs.koin.android)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.material.core)

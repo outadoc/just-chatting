@@ -10,13 +10,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalUriHandler
 import coil3.compose.LocalPlatformContext
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
-import fr.outadoc.justchatting.utils.core.createChannelExternalLink
 import fr.outadoc.justchatting.utils.http.toUri
 import fr.outadoc.justchatting.utils.presentation.BackHandler
 import fr.outadoc.justchatting.utils.presentation.OnLifecycleEvent
@@ -46,7 +44,6 @@ internal fun ChannelChatScreen(
 
     val context = LocalPlatformContext.current
     val density = LocalDensity.current.density
-    val uriHandler = LocalUriHandler.current
 
     val user = (state as? ChatViewModel.State.Chatting)?.user
 
@@ -83,15 +80,10 @@ internal fun ChannelChatScreen(
             modifier = modifier,
             state = state,
             inputState = inputState,
-            isEmotePickerOpen = isEmotePickerOpen,
             showBackButton = !isStandalone && canNavigateUp,
             showBubbleButton = canOpenInBubble,
+            isEmotePickerOpen = isEmotePickerOpen,
             showTimestamps = prefs.showTimestamps,
-            onWatchLiveClicked = {
-                (state as? ChatViewModel.State.Chatting)?.user?.let { user ->
-                    uriHandler.openUri(createChannelExternalLink(user))
-                }
-            },
             onMessageChange = { textFieldValue ->
                 viewModel.onMessageInputChanged(
                     message = textFieldValue.text,
@@ -113,9 +105,6 @@ internal fun ChannelChatScreen(
             onClearReplyingTo = {
                 viewModel.onReplyToMessage(null)
             },
-            onReuseLastMessageClicked = {
-                viewModel.onReuseLastMessageClicked()
-            },
             onOpenBubbleClicked = {
                 if (user != null) {
                     notifier.notify(
@@ -124,9 +113,7 @@ internal fun ChannelChatScreen(
                     )
                 }
             },
-            onTriggerAutoComplete = {
-                viewModel.onTriggerAutoComplete()
-            },
+            onTriggerAutoComplete = viewModel::onTriggerAutoComplete,
             onSubmit = {
                 viewModel.submit(
                     screenDensity = density,
@@ -134,8 +121,11 @@ internal fun ChannelChatScreen(
                 )
             },
             onReplyToMessage = viewModel::onReplyToMessage,
-            onDismissUserInfo = viewModel::onDismissUserInfo,
             onShowInfoForUserId = viewModel::onShowUserInfo,
+            onDismissUserInfo = viewModel::onDismissUserInfo,
+            onShowStreamInfo = viewModel::onShowStreamInfo,
+            onDismissStreamInfo = viewModel::onDismissStreamInfo,
+            onReuseLastMessageClicked = viewModel::onReuseLastMessageClicked,
             onNavigateUp = onNavigateUp,
         )
     }

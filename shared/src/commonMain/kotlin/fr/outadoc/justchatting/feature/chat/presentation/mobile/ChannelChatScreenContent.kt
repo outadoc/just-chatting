@@ -5,7 +5,6 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -55,6 +53,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.MessagePostConstraint
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
+import fr.outadoc.justchatting.feature.timeline.presentation.mobile.LiveDetailsDialog
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.coroutines.launch
@@ -70,7 +69,6 @@ internal fun ChannelChatScreenContent(
     showBubbleButton: Boolean = true,
     isEmotePickerOpen: Boolean = false,
     showTimestamps: Boolean,
-    onWatchLiveClicked: () -> Unit = {},
     onMessageChange: (TextFieldValue) -> Unit = {},
     onToggleEmotePicker: () -> Unit = {},
     onEmoteClick: (Emote) -> Unit = {},
@@ -80,8 +78,10 @@ internal fun ChannelChatScreenContent(
     onTriggerAutoComplete: () -> Unit = {},
     onSubmit: () -> Unit = {},
     onReplyToMessage: (ChatListItem.Message) -> Unit = {},
-    onDismissUserInfo: () -> Unit = {},
     onShowInfoForUserId: (String) -> Unit = {},
+    onDismissUserInfo: () -> Unit = {},
+    onShowStreamInfo: () -> Unit = {},
+    onDismissStreamInfo: () -> Unit = {},
     onReuseLastMessageClicked: () -> Unit = {},
     onNavigateUp: () -> Unit = {},
 ) {
@@ -115,15 +115,14 @@ internal fun ChannelChatScreenContent(
                     .hazeChild(
                         state = hazeState,
                         style = HazeMaterials.regular(),
-                    )
-                    .clickable(
-                        onClick = { user?.id?.let(onShowInfoForUserId) },
-                        onClickLabel = stringResource(MR.strings.stream_info),
                     ),
                 colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
                 user = user,
                 stream = stream,
-                onWatchLiveClicked = onWatchLiveClicked,
+                onUserClicked = {
+                    user?.id?.let(onShowInfoForUserId)
+                },
+                onStreamInfoClicked = onShowStreamInfo,
                 onOpenBubbleClicked = onOpenBubbleClicked,
                 showBackButton = showBackButton,
                 showBubbleButton = showBubbleButton,
@@ -261,24 +260,34 @@ internal fun ChannelChatScreenContent(
         },
     )
 
-    val showInfoForUserId: String? =
-        (state as? ChatViewModel.State.Chatting)?.showInfoForUserId
+    when (state) {
+        is ChatViewModel.State.Chatting -> {
+            if (state.showInfoForUserId != null) {
+                UserInfoDialog(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = 24.dp,
+                            end = 24.dp,
+                            bottom = 24.dp,
+                        ),
+                    userId = state.showInfoForUserId,
+                    onDismissRequest = onDismissUserInfo,
+                )
+            }
 
-    if (showInfoForUserId != null) {
-        ModalBottomSheet(
-            onDismissRequest = { onDismissUserInfo() },
-        ) {
-            StreamAndUserInfoScreen(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        start = 24.dp,
-                        end = 24.dp,
-                        bottom = 24.dp,
-                    ),
-                userId = showInfoForUserId,
-            )
+            if (state.isStreamInfoVisible && state.stream != null) {
+                LiveDetailsDialog(
+                    user = state.user,
+                    stream = state.stream,
+                    onDismissRequest = onDismissStreamInfo,
+                    onOpenChat = null,
+                    onOpenInBubble = onOpenBubbleClicked,
+                )
+            }
         }
+
+        else -> {}
     }
 }
 

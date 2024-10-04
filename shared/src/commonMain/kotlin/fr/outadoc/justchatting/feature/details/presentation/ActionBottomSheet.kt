@@ -11,16 +11,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 internal fun ActionBottomSheet(
     modifier: Modifier = Modifier,
+    sheetState: SheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+    ),
     onDismissRequest: () -> Unit = {},
     header: @Composable () -> Unit = {},
     content: @Composable () -> Unit = {},
@@ -28,9 +32,7 @@ internal fun ActionBottomSheet(
 ) {
     ModalBottomSheet(
         modifier = modifier,
-        sheetState = rememberModalBottomSheetState(
-            skipPartiallyExpanded = true,
-        ),
+        sheetState = sheetState,
         onDismissRequest = onDismissRequest,
     ) {
         DetailsDialogContent(

@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -13,7 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.PictureInPictureAlt
-import androidx.compose.material.icons.outlined.LiveTv
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,7 +42,8 @@ internal fun ChatTopAppBar(
     user: User?,
     stream: Stream?,
     colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
-    onWatchLiveClicked: () -> Unit,
+    onUserClicked: () -> Unit,
+    onStreamInfoClicked: () -> Unit,
     onOpenBubbleClicked: () -> Unit,
     showBackButton: Boolean,
     showBubbleButton: Boolean,
@@ -105,6 +107,7 @@ internal fun ChatTopAppBar(
                             AsyncImage(
                                 modifier = Modifier
                                     .clip(MaterialTheme.shapes.medium)
+                                    .clickable(onClick = onUserClicked)
                                     .background(MaterialTheme.colorScheme.surfaceVariant),
                                 model = imageUrl,
                                 contentDescription = null,
@@ -115,15 +118,16 @@ internal fun ChatTopAppBar(
             }
         },
         actions = {
-            AccessibleIconButton(
-                onClick = { onWatchLiveClicked() },
-                onClickLabel = stringResource(MR.strings.watch_live),
-            ) {
-                Icon(
-                    modifier = Modifier.padding(bottom = 3.dp),
-                    imageVector = Icons.Outlined.LiveTv,
-                    contentDescription = null,
-                )
+            if (stream != null) {
+                AccessibleIconButton(
+                    onClick = { onStreamInfoClicked() },
+                    onClickLabel = stringResource(MR.strings.stream_info),
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = null,
+                    )
+                }
             }
 
             if (showBubbleButton) {

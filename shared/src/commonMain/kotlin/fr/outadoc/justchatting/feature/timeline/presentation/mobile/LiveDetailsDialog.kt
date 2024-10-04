@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.LiveTv
 import androidx.compose.material.icons.filled.PictureInPictureAlt
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -24,13 +25,14 @@ import fr.outadoc.justchatting.utils.core.createChannelExternalLink
 import fr.outadoc.justchatting.utils.presentation.areBubblesSupported
 import org.koin.compose.koinInject
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun LiveDetailsDialog(
     modifier: Modifier = Modifier,
     user: User,
     stream: Stream,
     onDismissRequest: () -> Unit = {},
-    onOpenChat: () -> Unit = {},
+    onOpenChat: (() -> Unit)? = {},
     onOpenInBubble: () -> Unit = {},
 ) {
     val uriHandler = LocalUriHandler.current
@@ -53,20 +55,22 @@ internal fun LiveDetailsDialog(
             StreamInfo(stream = stream)
         },
         actions = { padding ->
-            ContextualButton(
-                contentPadding = padding,
-                onClick = {
-                    onOpenChat()
-                    onDismissRequest()
-                },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.ChatBubble,
-                        contentDescription = null,
-                    )
-                },
-                text = stringResource(MR.strings.chat_open_action),
-            )
+            if (onOpenChat != null) {
+                ContextualButton(
+                    contentPadding = padding,
+                    onClick = {
+                        onOpenChat()
+                        onDismissRequest()
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.ChatBubble,
+                            contentDescription = null,
+                        )
+                    },
+                    text = stringResource(MR.strings.chat_open_action),
+                )
+            }
 
             if (canOpenInBubble) {
                 ContextualButton(

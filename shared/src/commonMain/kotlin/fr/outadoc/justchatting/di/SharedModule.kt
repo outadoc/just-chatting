@@ -32,7 +32,7 @@ import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPluginsProvider
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEventViewMapper
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.FilterAutocompleteItemsUseCase
-import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
+import fr.outadoc.justchatting.feature.chat.presentation.UserInfoViewModel
 import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesApi
 import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesServer
@@ -106,7 +106,7 @@ public val sharedModule: Module
         viewModel { FollowedChannelsViewModel(get()) }
         viewModel { RecentChannelsViewModel(get()) }
         viewModel { TimelineViewModel(get(), get()) }
-        viewModel { StreamAndUserInfoViewModel(get()) }
+        viewModel { UserInfoViewModel(get()) }
         viewModel {
             ChatViewModel(
                 get(),

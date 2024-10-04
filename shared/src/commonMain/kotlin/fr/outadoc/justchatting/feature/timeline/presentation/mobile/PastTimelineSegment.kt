@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material.icons.filled.Tv
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -37,7 +38,7 @@ import fr.outadoc.justchatting.utils.core.createVideoExternalLink
 import fr.outadoc.justchatting.utils.presentation.format
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 internal fun PastTimelineSegment(
     modifier: Modifier = Modifier,

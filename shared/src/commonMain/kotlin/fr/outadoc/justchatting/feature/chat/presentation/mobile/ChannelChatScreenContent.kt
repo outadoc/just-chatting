@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -265,20 +264,17 @@ internal fun ChannelChatScreenContent(
         (state as? ChatViewModel.State.Chatting)?.showInfoForUserId
 
     if (showInfoForUserId != null) {
-        ModalBottomSheet(
-            onDismissRequest = { onDismissUserInfo() },
-        ) {
-            StreamAndUserInfoScreen(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        start = 24.dp,
-                        end = 24.dp,
-                        bottom = 24.dp,
-                    ),
-                userId = showInfoForUserId,
-            )
-        }
+        UserInfoDialog(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = 24.dp,
+                    end = 24.dp,
+                    bottom = 24.dp,
+                ),
+            userId = showInfoForUserId,
+            onDismissRequest = onDismissUserInfo,
+        )
     }
 }
 

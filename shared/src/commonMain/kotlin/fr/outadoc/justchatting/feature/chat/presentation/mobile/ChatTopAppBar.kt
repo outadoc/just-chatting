@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.PictureInPictureAlt
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,9 +43,7 @@ internal fun ChatTopAppBar(
     colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     onUserClicked: () -> Unit,
     onStreamInfoClicked: () -> Unit,
-    onOpenBubbleClicked: () -> Unit,
     showBackButton: Boolean,
-    showBubbleButton: Boolean,
     onNavigateUp: () -> Unit = {},
 ) {
     TopAppBar(
@@ -125,18 +122,6 @@ internal fun ChatTopAppBar(
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Info,
-                        contentDescription = null,
-                    )
-                }
-            }
-
-            if (showBubbleButton) {
-                AccessibleIconButton(
-                    onClick = { onOpenBubbleClicked() },
-                    onClickLabel = stringResource(MR.strings.menu_item_openInBubble),
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.PictureInPictureAlt,
                         contentDescription = null,
                     )
                 }

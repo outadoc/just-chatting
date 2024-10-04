@@ -81,7 +81,6 @@ internal fun ChannelChatScreen(
             state = state,
             inputState = inputState,
             showBackButton = !isStandalone && canNavigateUp,
-            showBubbleButton = canOpenInBubble,
             isEmotePickerOpen = isEmotePickerOpen,
             showTimestamps = prefs.showTimestamps,
             onMessageChange = { textFieldValue ->

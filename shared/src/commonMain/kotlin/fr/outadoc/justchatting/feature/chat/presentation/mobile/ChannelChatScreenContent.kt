@@ -64,7 +64,6 @@ internal fun ChannelChatScreenContent(
     state: ChatViewModel.State,
     inputState: ChatViewModel.InputState,
     showBackButton: Boolean = true,
-    showBubbleButton: Boolean = true,
     isEmotePickerOpen: Boolean = false,
     showTimestamps: Boolean,
     onMessageChange: (TextFieldValue) -> Unit = {},
@@ -114,16 +113,14 @@ internal fun ChannelChatScreenContent(
                         state = hazeState,
                         style = HazeMaterials.regular(),
                     ),
-                colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
                 user = user,
                 stream = stream,
+                colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
                 onUserClicked = {
                     user?.id?.let(onShowInfoForUserId)
                 },
                 onStreamInfoClicked = onShowStreamInfo,
-                onOpenBubbleClicked = onOpenBubbleClicked,
                 showBackButton = showBackButton,
-                showBubbleButton = showBubbleButton,
                 onNavigateUp = onNavigateUp,
             )
         },

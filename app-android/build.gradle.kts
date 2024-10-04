@@ -1,12 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.spotless)
-    alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.moko.resources)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
 }
@@ -26,54 +21,9 @@ kotlin {
         }
 
         androidMain.dependencies {
-            implementation(compose.material)
-            implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.foundation)
-
-            implementation(libs.accompanist.systemuicontroller)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.androidx.appcompat)
-            implementation(libs.androidx.browser)
-            implementation(libs.androidx.constraintlayout)
-            implementation(libs.androidx.core)
-            implementation(libs.androidx.core)
-            implementation(libs.androidx.datastore.preferences)
-            implementation(libs.androidx.emoji2.core)
-            implementation(libs.androidx.fragment)
-            implementation(libs.androidx.lifecycle.common)
-            implementation(libs.androidx.lifecycle.livedata)
-            implementation(libs.androidx.lifecycle.process)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.paging.common)
-            implementation(libs.androidx.paging.compose.common)
-            implementation(libs.androidx.palette)
-            implementation(libs.androidx.splashscreen)
-            implementation(libs.coil.core)
-            implementation(libs.coil.gif)
-            implementation(libs.compose.material.windowSizeClass)
-            implementation(libs.compose.runtime.livedata)
-            implementation(libs.compose.ui.core)
-            implementation(libs.compose.ui.tooling)
-            implementation(libs.firebase.crashlytics)
-            implementation(libs.koin.android)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.core)
-            implementation(libs.kotlinx.collections.immutable)
-            implementation(libs.kotlinx.coroutines)
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.kotlinx.serialization.json)
             implementation(libs.material.core)
-            implementation(libs.moko.resources.core)
-            implementation(libs.moko.resources.compose)
-            implementation(libs.okio)
-            implementation(libs.uri.kmp)
         }
     }
-}
-
-multiplatformResources {
-    resourcesPackage.set("fr.outadoc.justchatting")
 }
 
 android {

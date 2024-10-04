@@ -7,10 +7,13 @@ import coil3.Canvas
 import coil3.Image
 import coil3.ImageLoader
 import coil3.decode.DecodeResult
+import coil3.decode.DecodeUtils
 import coil3.decode.Decoder
 import coil3.decode.ImageSource
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
+import okio.BufferedSource
+import okio.ByteString.Companion.encodeUtf8
 import okio.use
 import org.jetbrains.skia.AnimationFrameInfo
 import org.jetbrains.skia.Bitmap
@@ -24,6 +27,7 @@ import org.jetbrains.skia.ImageInfo
 import kotlin.time.TimeSource
 import org.jetbrains.skia.Image as SkiaImage
 
+@Deprecated("Replace with proper coil3 implementation once available")
 internal class AnimatedSkiaImageDecoder(
     private val source: ImageSource,
     private val options: Options,
@@ -42,11 +46,15 @@ internal class AnimatedSkiaImageDecoder(
     class Factory(
         private val prerenderFrames: Boolean = false,
     ) : Decoder.Factory {
+
         override fun create(
             result: SourceFetchResult,
             options: Options,
             imageLoader: ImageLoader,
-        ): Decoder? = AnimatedSkiaImageDecoder(result.source, options, prerenderFrames)
+        ): Decoder? {
+            if (!DecodeUtils.isGif(result.source.source())) return null
+            return AnimatedSkiaImageDecoder(result.source, options, prerenderFrames)
+        }
     }
 }
 
@@ -145,3 +153,17 @@ private val AnimationFrameInfo.safeFrameDuration: Int
     get() = duration.let { if (it <= 0) DEFAULT_FRAME_DURATION else it }
 
 private const val DEFAULT_FRAME_DURATION = 100
+
+// Copied from coil3.gif
+
+// https://www.matthewflickinger.com/lab/whatsinagif/bits_and_bytes.asp
+private val GIF_HEADER_87A = "GIF87a".encodeUtf8()
+private val GIF_HEADER_89A = "GIF89a".encodeUtf8()
+
+/**
+ * Return 'true' if the [source] contains a GIF image. The [source] is not consumed.
+ */
+private fun DecodeUtils.isGif(source: BufferedSource): Boolean {
+    return source.rangeEquals(0, GIF_HEADER_89A) ||
+            source.rangeEquals(0, GIF_HEADER_87A)
+}

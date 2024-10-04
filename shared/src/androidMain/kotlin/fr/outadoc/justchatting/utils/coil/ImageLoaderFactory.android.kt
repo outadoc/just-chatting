@@ -29,7 +29,7 @@ internal actual object ImageLoaderFactory : SingletonImageLoader.Factory {
             }
             .components {
                 if (Build.VERSION.SDK_INT >= 28) {
-                    add(AnimatedImageDecoder.Factory(enforceMinimumFrameDelay = true))
+                    add(AnimatedImageDecoder.Factory())
                 } else {
                     add(GifDecoder.Factory())
                 }

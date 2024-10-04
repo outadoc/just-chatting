@@ -15,9 +15,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import coil3.SingletonImageLoader
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.onboarding.presentation.mobile.OnboardingScreen
 import fr.outadoc.justchatting.feature.shared.presentation.MainRouterViewModel
+import fr.outadoc.justchatting.utils.coil.ImageLoaderFactory
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.OnLifecycleEvent
 import org.koin.compose.koinInject
@@ -36,6 +38,11 @@ internal fun App(
 
     val navController = rememberNavController()
     val navigator = rememberListDetailPaneScaffoldNavigator<DetailScreen>()
+
+    LaunchedEffect(Unit) {
+        // Initialize Coil
+        SingletonImageLoader.setSafe(ImageLoaderFactory)
+    }
 
     val onChannelClick = { userId: String ->
         navigator.navigateTo(

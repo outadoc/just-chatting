@@ -11,7 +11,6 @@ import coil3.decode.Decoder
 import coil3.decode.ImageSource
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
-import kotlin.time.TimeSource
 import okio.use
 import org.jetbrains.skia.AnimationFrameInfo
 import org.jetbrains.skia.Bitmap
@@ -22,6 +21,7 @@ import org.jetbrains.skia.ColorSpace
 import org.jetbrains.skia.ColorType
 import org.jetbrains.skia.Data
 import org.jetbrains.skia.ImageInfo
+import kotlin.time.TimeSource
 import org.jetbrains.skia.Image as SkiaImage
 
 internal class AnimatedSkiaImageDecoder(

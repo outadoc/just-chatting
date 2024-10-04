@@ -165,5 +165,5 @@ private val GIF_HEADER_89A = "GIF89a".encodeUtf8()
  */
 private fun DecodeUtils.isGif(source: BufferedSource): Boolean {
     return source.rangeEquals(0, GIF_HEADER_89A) ||
-            source.rangeEquals(0, GIF_HEADER_87A)
+        source.rangeEquals(0, GIF_HEADER_87A)
 }

@@ -17,12 +17,14 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -42,6 +45,11 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
+import dev.chrisbanes.haze.materials.HazeMaterials
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
@@ -53,7 +61,7 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalHazeMaterialsApi::class)
 @Composable
 internal fun ChannelChatScreenContent(
     modifier: Modifier = Modifier,
@@ -86,6 +94,8 @@ internal fun ChannelChatScreenContent(
     val inputFocusRequester = remember { FocusRequester() }
     val snackbarHostState = remember { SnackbarHostState() }
 
+    val hazeState = remember { HazeState() }
+
     LaunchedEffect(isEmotePickerOpen) {
         if (isEmotePickerOpen) {
             keyboardController?.hide()
@@ -103,10 +113,15 @@ internal fun ChannelChatScreenContent(
         topBar = {
             ChatTopAppBar(
                 modifier = Modifier
+                    .hazeChild(
+                        state = hazeState,
+                        style = HazeMaterials.regular(MaterialTheme.colorScheme.surface),
+                    )
                     .clickable(
                         onClick = { user?.id?.let(onShowInfoForUserId) },
                         onClickLabel = stringResource(MR.strings.stream_info),
                     ),
+                colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
                 user = user,
                 stream = stream,
                 onWatchLiveClicked = onWatchLiveClicked,
@@ -123,7 +138,9 @@ internal fun ChannelChatScreenContent(
             val snackbarCopiedMessage = stringResource(MR.strings.chat_copiedToClipboard)
 
             ChatScreen(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .haze(hazeState),
                 state = state,
                 showTimestamps = showTimestamps,
                 onMessageLongClick = { item ->
@@ -164,6 +181,12 @@ internal fun ChannelChatScreenContent(
                 }
 
                 Surface(
+                    modifier = Modifier
+                        .hazeChild(
+                            state = hazeState,
+                            style = HazeMaterials.regular(MaterialTheme.colorScheme.surface),
+                        ),
+                    color = Color.Transparent,
                     shadowElevation = 2.dp,
                     tonalElevation = 1.dp,
                 ) {

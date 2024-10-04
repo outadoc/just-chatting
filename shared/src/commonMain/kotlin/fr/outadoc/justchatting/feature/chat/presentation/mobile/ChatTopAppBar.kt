@@ -19,6 +19,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +40,7 @@ internal fun ChatTopAppBar(
     modifier: Modifier = Modifier,
     user: User?,
     stream: Stream?,
+    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     onWatchLiveClicked: () -> Unit,
     onOpenBubbleClicked: () -> Unit,
     showBackButton: Boolean,
@@ -46,6 +49,7 @@ internal fun ChatTopAppBar(
 ) {
     TopAppBar(
         modifier = modifier,
+        colors = colors,
         title = {
             Column {
                 AnimatedVisibility(visible = user != null) {

@@ -5,6 +5,7 @@ coil = "3.0.0-alpha10"
 compose-multiplatform = "1.7.0-rc01"
 emoji = "1.5.0"
 glance = "1.1.0"
+haze = "0.9.0-beta02"
 junit-jupiter-engine = "5.11.1"
 kmpalette = "3.1.0"
 konsist = "0.16.1"
@@ -76,6 +77,8 @@ desugar = "com.android.tools:desugar_jdk_libs:2.1.2"
 fluid-currency = "io.fluidsonic.currency:fluid-currency:0.13.0"
 firebase-bom = "com.google.firebase:firebase-bom:33.4.0"
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+haze-core = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
+haze-materials = { module = "dev.chrisbanes.haze:haze-materials", version.ref = "haze" }
 junit = "junit:junit:4.13.2"
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }
 kmpalette-core = { module = "com.kmpalette:kmpalette-core", version.ref = "kmpalette" }

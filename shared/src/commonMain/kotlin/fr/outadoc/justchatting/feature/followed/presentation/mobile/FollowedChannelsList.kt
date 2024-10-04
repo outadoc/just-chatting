@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -20,9 +21,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
+import dev.chrisbanes.haze.materials.HazeMaterials
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.followed.presentation.FollowedChannelsViewModel
@@ -37,7 +45,11 @@ import fr.outadoc.justchatting.utils.presentation.plus
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(ExperimentalMaterial3Api::class, KoinExperimentalAPI::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalHazeMaterialsApi::class,
+    KoinExperimentalAPI::class,
+)
 @Composable
 internal fun FollowedChannelsList(
     modifier: Modifier = Modifier,
@@ -49,6 +61,8 @@ internal fun FollowedChannelsList(
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
+    val hazeState = remember { HazeState() }
+
     LaunchedEffect(Unit) {
         viewModel.synchronize()
     }
@@ -59,6 +73,12 @@ internal fun FollowedChannelsList(
         onSelectedTabChange = onNavigate,
         topBar = {
             TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
+                modifier = Modifier
+                    .hazeChild(
+                        state = hazeState,
+                        style = HazeMaterials.regular(MaterialTheme.colorScheme.surface),
+                    ),
                 title = { Text(stringResource(MR.strings.channels)) },
                 scrollBehavior = scrollBehavior,
                 actions = {
@@ -82,7 +102,9 @@ internal fun FollowedChannelsList(
         },
         content = { insets ->
             InnerFollowedChannelsList(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .haze(hazeState)
+                    .fillMaxSize(),
                 insets = insets,
                 items = state.data,
                 isRefreshing = state.isLoading,

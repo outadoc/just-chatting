@@ -5,7 +5,6 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -54,6 +53,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.MessagePostConstraint
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
+import fr.outadoc.justchatting.feature.timeline.presentation.mobile.LiveDetailsDialog
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.coroutines.launch
@@ -94,6 +94,8 @@ internal fun ChannelChatScreenContent(
 
     val hazeState = remember { HazeState() }
 
+    var showStreamInfoDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(isEmotePickerOpen) {
         if (isEmotePickerOpen) {
             keyboardController?.hide()
@@ -114,15 +116,16 @@ internal fun ChannelChatScreenContent(
                     .hazeChild(
                         state = hazeState,
                         style = HazeMaterials.regular(),
-                    )
-                    .clickable(
-                        onClick = { user?.id?.let(onShowInfoForUserId) },
-                        onClickLabel = stringResource(MR.strings.stream_info),
                     ),
                 colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
                 user = user,
                 stream = stream,
-                onWatchLiveClicked = onWatchLiveClicked,
+                onUserClicked = {
+                    user?.id?.let(onShowInfoForUserId)
+                },
+                onStreamInfoClicked = {
+                    showStreamInfoDialog = true
+                },
                 onOpenBubbleClicked = onOpenBubbleClicked,
                 showBackButton = showBackButton,
                 showBubbleButton = showBubbleButton,
@@ -274,6 +277,18 @@ internal fun ChannelChatScreenContent(
                 ),
             userId = showInfoForUserId,
             onDismissRequest = onDismissUserInfo,
+        )
+    }
+
+    if (showStreamInfoDialog && stream != null && user != null) {
+        LiveDetailsDialog(
+            user = user,
+            stream = stream,
+            onDismissRequest = {
+                showStreamInfoDialog = false
+            },
+            onOpenChat = null,
+            onOpenInBubble = onOpenBubbleClicked,
         )
     }
 }

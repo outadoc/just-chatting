@@ -32,7 +32,7 @@ internal fun LiveDetailsDialog(
     user: User,
     stream: Stream,
     onDismissRequest: () -> Unit = {},
-    onOpenChat: () -> Unit = {},
+    onOpenChat: (() -> Unit)? = {},
     onOpenInBubble: () -> Unit = {},
 ) {
     val uriHandler = LocalUriHandler.current
@@ -55,20 +55,22 @@ internal fun LiveDetailsDialog(
             StreamInfo(stream = stream)
         },
         actions = { padding ->
-            ContextualButton(
-                contentPadding = padding,
-                onClick = {
-                    onOpenChat()
-                    onDismissRequest()
-                },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.ChatBubble,
-                        contentDescription = null,
-                    )
-                },
-                text = stringResource(MR.strings.chat_open_action),
-            )
+            if (onOpenChat != null) {
+                ContextualButton(
+                    contentPadding = padding,
+                    onClick = {
+                        onOpenChat()
+                        onDismissRequest()
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.ChatBubble,
+                            contentDescription = null,
+                        )
+                    },
+                    text = stringResource(MR.strings.chat_open_action),
+                )
+            }
 
             if (canOpenInBubble) {
                 ContextualButton(

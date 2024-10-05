@@ -25,7 +25,6 @@ internal sealed interface ChatEvent {
             val isFirstMessageByUser: Boolean = false,
             val rewardId: String?,
             val inReplyTo: InReplyTo?,
-            val paidMessageInfo: PaidMessageInfo?,
         ) : Message {
 
             @Immutable
@@ -35,15 +34,6 @@ internal sealed interface ChatEvent {
                 val userId: String,
                 val userLogin: String,
                 val userDisplayName: String,
-            )
-
-            @Immutable
-            data class PaidMessageInfo(
-                val amount: Long,
-                val currency: String,
-                val exponent: Long,
-                val isSystemMessage: Boolean,
-                val level: String,
             )
         }
 

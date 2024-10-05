@@ -158,7 +158,6 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
             timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
             rewardId = ircMessage.tags.customRewardId,
             inReplyTo = ircMessage.tags.parseParentMessage(),
-            paidMessageInfo = ircMessage.tags.parsePaidMessageInfo(),
         )
     }
 

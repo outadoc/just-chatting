@@ -51,7 +51,6 @@ internal class TwitchIrcCommandParserTest {
                 timestamp = Instant.parse("2017-10-05T23:36:12.675Z"),
                 rewardId = null,
                 inReplyTo = null,
-                paidMessageInfo = null,
             )
         }
     }
@@ -83,7 +82,6 @@ internal class TwitchIrcCommandParserTest {
                 timestamp = Instant.parse("2022-07-08T16:47:29.487Z"),
                 rewardId = null,
                 inReplyTo = null,
-                paidMessageInfo = null,
             )
         }
     }
@@ -185,7 +183,6 @@ internal class TwitchIrcCommandParserTest {
                     timestamp = Instant.parse("2022-07-08T16:49:19.852Z"),
                     rewardId = null,
                     inReplyTo = null,
-                    paidMessageInfo = null,
                 ),
             )
         }
@@ -218,7 +215,6 @@ internal class TwitchIrcCommandParserTest {
                     timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
                     rewardId = null,
                     inReplyTo = null,
-                    paidMessageInfo = null,
                 ),
             )
         }
@@ -365,7 +361,6 @@ internal class TwitchIrcCommandParserTest {
                     userId = "108193474",
                     userLogin = "brankhorst",
                 ),
-                paidMessageInfo = null,
             )
         }
     }
@@ -399,7 +394,6 @@ internal class TwitchIrcCommandParserTest {
                     isFirstMessageByUser = false,
                     rewardId = null,
                     inReplyTo = null,
-                    paidMessageInfo = null,
                 ),
             )
         }
@@ -432,13 +426,6 @@ internal class TwitchIrcCommandParserTest {
                 isFirstMessageByUser = false,
                 rewardId = null,
                 inReplyTo = null,
-                paidMessageInfo = ChatEvent.Message.ChatMessage.PaidMessageInfo(
-                    amount = 600,
-                    currency = "EUR",
-                    exponent = 2,
-                    isSystemMessage = false,
-                    level = "TWO",
-                ),
             )
         }
     }

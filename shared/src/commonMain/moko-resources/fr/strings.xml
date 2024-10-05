@@ -29,7 +29,6 @@
     <string name="chat_message_standardSeparator">&#160;:&#160;</string>
     <string name="chat_open_action">Ouvrir le tchat</string>
     <string name="chat_openBubble_action">Ouvrir le tchat dans une bulle</string>
-    <string name="chat_paidMessage">Mis en avant pour %1$s</string>
     <string name="chat_raid_header">a raid la chaîne avec %1$s !</string>
     <string name="chat_replyTo">Répondre à ce message</string>
     <string name="chat_replyingTo">En réponse à</string>

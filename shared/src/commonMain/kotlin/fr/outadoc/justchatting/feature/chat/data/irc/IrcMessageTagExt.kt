@@ -70,18 +70,6 @@ internal fun Map<String, String?>.parseParentMessage(): ChatEvent.Message.ChatMe
     )
 }
 
-internal fun Map<String, String?>.parsePaidMessageInfo(): ChatEvent.Message.ChatMessage.PaidMessageInfo? {
-    return ChatEvent.Message.ChatMessage.PaidMessageInfo(
-        amount = this["pinned-chat-paid-amount"]?.toLongOrNull()
-            ?: this["pinned-chat-paid-canonical-amount"]?.toLongOrNull()
-            ?: return null,
-        currency = this["pinned-chat-paid-currency"] ?: return null,
-        exponent = this["pinned-chat-paid-exponent"]?.toLongOrNull() ?: return null,
-        isSystemMessage = this["pinned-chat-paid-is-system-message"] == "1",
-        level = this["pinned-chat-paid-level"] ?: return null,
-    )
-}
-
 internal val Map<String, String?>.banDuration: Duration?
     get() = this["ban-duration"]?.toIntOrNull()?.seconds
 

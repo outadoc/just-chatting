@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.chat.presentation
 
-import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.format
@@ -10,9 +9,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Icon
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.presentation.formatCurrency
 import fr.outadoc.justchatting.utils.presentation.formatNumber
-import io.fluidsonic.currency.Currency
 import kotlinx.collections.immutable.toImmutableList
 
 internal class ChatEventViewMapper {
@@ -318,36 +315,6 @@ internal class ChatEventViewMapper {
                             title = MR.strings.chat_reward.desc(),
                             titleIcon = Icon.Toll,
                             subtitle = null,
-                        )
-                    }
-
-                    paidMessageInfo != null -> {
-                        val currency = Currency.forCode(paidMessageInfo.currency)
-                        val amount = BigDecimal.fromLongWithExponent(
-                            paidMessageInfo.amount,
-                            paidMessageInfo.exponent,
-                        )
-
-                        val formattedAmount = amount.formatCurrency(currency)
-                        val header = MR.strings.chat_paidMessage.format(formattedAmount)
-
-                        ChatListItem.Message.Highlighted.Metadata(
-                            title = header,
-                            titleIcon = Icon.Bolt,
-                            subtitle = null,
-                            level = when (paidMessageInfo.level) {
-                                "ONE" -> ChatListItem.Message.Highlighted.Level.One
-                                "TWO" -> ChatListItem.Message.Highlighted.Level.Two
-                                "THREE" -> ChatListItem.Message.Highlighted.Level.Three
-                                "FOUR" -> ChatListItem.Message.Highlighted.Level.Four
-                                "FIVE" -> ChatListItem.Message.Highlighted.Level.Five
-                                "SIX" -> ChatListItem.Message.Highlighted.Level.Six
-                                "SEVEN" -> ChatListItem.Message.Highlighted.Level.Seven
-                                "EIGHT" -> ChatListItem.Message.Highlighted.Level.Eight
-                                "NINE" -> ChatListItem.Message.Highlighted.Level.Nine
-                                "TEN" -> ChatListItem.Message.Highlighted.Level.Ten
-                                else -> ChatListItem.Message.Highlighted.Level.Base
-                            },
                         )
                     }
 

@@ -41,16 +41,10 @@ accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-
 androidx-activity-compose = "androidx.activity:activity-compose:1.9.2"
 androidx-appcompat = "androidx.appcompat:appcompat:1.7.0"
 androidx-browser = "androidx.browser:browser:1.8.0"
-androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
-androidx-core = "androidx.core:core-ktx:1.13.1"
 androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.1.1"
 androidx-emoji2-core = { module = "androidx.emoji2:emoji2", version.ref = "emoji" }
-androidx-fragment = "androidx.fragment:fragment-ktx:1.8.4"
 androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
 androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }
-androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref = "lifecycle" }
-androidx-lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
-androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle" }
 androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
 androidx-paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging-multiplatform" }
@@ -59,7 +53,6 @@ androidx-paging-runtime-android = { module = "androidx.paging:paging-runtime", v
 androidx-paging-runtime-ios = { module = "app.cash.paging:paging-runtime-uikit", version.ref = "paging-multiplatform" }
 androidx-palette = "androidx.palette:palette:1.0.0"
 androidx-splashscreen = "androidx.core:core-splashscreen:1.0.1"
-bignum = "com.ionspin.kotlin:bignum:0.3.10"
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-core = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 coil-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coil" }
@@ -74,7 +67,6 @@ compose-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata
 compose-ui-core = { module = "androidx.compose.ui:ui" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 desugar = "com.android.tools:desugar_jdk_libs:2.1.2"
-fluid-currency = "io.fluidsonic.currency:fluid-currency:0.13.0"
 firebase-bom = "com.google.firebase:firebase-bom:33.4.0"
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 haze-core = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }

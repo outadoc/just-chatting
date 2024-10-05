@@ -114,31 +114,6 @@ private val highlightedEntries = sequence {
     )
 }
 
-private val paidEntries = sequence {
-    yield(
-        ChatListItem.Message.Highlighted(
-            timestamp = Instant.parse("2023-06-26T17:53:11.208Z"),
-            metadata = ChatListItem.Message.Highlighted.Metadata(
-                title = "Boosted for $1".desc(),
-                titleIcon = Icon.Bolt,
-                subtitle = null,
-                level = ChatListItem.Message.Highlighted.Level.Eight,
-            ),
-            body = ChatListItem.Message.Body(
-                messageId = "e63c83f4-4f4c-44fb-b62d-b1003599e61a",
-                chatter = Chatter(
-                    id = "43868596",
-                    login = "atyby",
-                    displayName = "Atyby",
-                ),
-                message = "Everybody.",
-                color = "#34BEED",
-                isAction = false,
-            ),
-        ),
-    )
-}
-
 private val noticeEntries = sequence {
     yield(
         ChatListItem.Message.Notice(
@@ -160,7 +135,6 @@ internal class ChatMessagePreviewProvider : PreviewParameterProvider<ChatListIte
         yieldAll(simpleEntries)
         yieldAll(noticeEntries)
         yieldAll(highlightedEntries)
-        yieldAll(paidEntries)
     }
 }
 

@@ -40,7 +40,7 @@ kotlin {
         iosTarget.binaries {
             framework {
                 baseName = "JCShared"
-                isStatic = false
+                isStatic = true
             }
         }
     }

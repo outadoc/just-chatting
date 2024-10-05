@@ -50,7 +50,10 @@ let project = Project(
                     basedOnDependencyAnalysis: false
                 ),
             ],
-            dependencies: []
+            dependencies: [],
+            settings: .settings(
+                base: ["OTHER_LDFLAGS": "$(inherited) -lsqlite3"]
+            )
         ),
     ]
 )

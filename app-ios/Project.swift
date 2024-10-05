@@ -19,6 +19,7 @@ let project = Project(
             deploymentTargets: .iOS("17.0.0"),
             infoPlist: .extendingDefault(
                 with: [
+                    "CFBundleName": "Just Chatting",
                     "CFBundleShortVersionString": "0.1.0",
                     "CFBundleVersion": "0.1.0",
                     "CFBundleLocalizations": ["en", "fr"],

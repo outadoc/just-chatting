@@ -32,8 +32,8 @@
 
         <receiver
             android:name="fr.outadoc.justchatting.feature.timeline.presentation.widget.LiveWidgetReceiver"
-            android:label="@string/live"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/live">
 
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -51,8 +51,8 @@
 
         <receiver
             android:name="fr.outadoc.justchatting.feature.followed.presentation.widget.FollowedChannelsWidgetReceiver"
-            android:label="@string/channels"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/channels">
 
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -70,8 +70,8 @@
 
         <receiver
             android:name="fr.outadoc.justchatting.feature.recent.presentation.widget.RecentChannelsWidgetReceiver"
-            android:label="@string/chat_header_recent"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/chat_header_recent">
 
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -86,6 +86,92 @@
                 android:resource="@xml/widget_samsung_info" />
 
         </receiver>
+
+        <activity
+            android:name="fr.outadoc.justchatting.feature.shared.presentation.mobile.MainActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:enableOnBackInvokedCallback="true"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:windowSoftInputMode="adjustResize"
+            tools:targetApi="tiramisu">
+
+            <layout
+                android:defaultWidth="1000dp"
+                android:defaultHeight="800dp"
+                android:minWidth="350dp"
+                android:minHeight="500dp" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="justchatting" />
+
+            </intent-filter>
+
+            <intent-filter
+                android:autoVerify="true"
+                tools:targetApi="m">
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="just-chatting.app" />
+
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="fr.outadoc.justchatting.feature.chat.presentation.mobile.EmbeddedChatActivity"
+            android:allowEmbedded="true"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:exported="true"
+            android:resizeableActivity="true"
+            android:windowSoftInputMode="adjustResize"
+            tools:targetApi="n">
+
+            <layout
+                android:defaultWidth="500dp"
+                android:defaultHeight="900dp"
+                android:minWidth="300dp"
+                android:minHeight="430dp" />
+
+        </activity>
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+
+            <meta-data
+                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+                tools:node="remove" />
+
+        </provider>
+
+        <provider
+            android:name="fr.outadoc.justchatting.feature.chat.presentation.UserProfileImageContentProvider"
+            android:authorities="${applicationId}.user-image-provider"
+            android:exported="true"
+            android:grantUriPermissions="true"
+            tools:ignore="ExportedContentProvider" />
+
+        <service
+            android:name="fr.outadoc.justchatting.feature.chat.presentation.ChatConnectionService"
+            android:foregroundServiceType="" />
 
     </application>
 </manifest>

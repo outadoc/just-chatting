@@ -20,8 +20,12 @@ let project = Project(
             infoPlist: .extendingDefault(
                 with: [
                     "CFBundleName": "Just Chatting",
-                    "CFBundleShortVersionString": "0.1.0",
-                    "CFBundleVersion": "0.1.0",
+                    "CFBundleVersion": Plist.Value.string(
+                        Environment.versionCode.getString(default: "1")
+                    ),
+                    "CFBundleShortVersionString": Plist.Value.string(
+                        Environment.versionName.getString(default: "0.1.0")
+                    ),
                     "CFBundleLocalizations": ["en", "fr"],
                     "CFBundleURLTypes": [
                         Plist.Value.dictionary(

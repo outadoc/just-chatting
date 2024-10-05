@@ -24,6 +24,10 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y.%m')"
+
       - name: Build app bundle
         run: |
             ./gradlew bundleQa \

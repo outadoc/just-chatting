@@ -27,13 +27,13 @@ internal fun SearchBar(
     // extra Box with semantics and fillMaxWidth is a workaround to get the search bar to focus
     // before the content.
     Box(
-        modifier
+        Modifier
             .semantics { isTraversalGroup = true }
             .zIndex(1f)
             .fillMaxWidth(),
     ) {
         SearchScreenBar(
-            modifier = Modifier
+            modifier = modifier
                 .statusBarsPadding()
                 .fillMaxWidth(),
             searchResults = searchResults,

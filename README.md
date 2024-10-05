@@ -11,13 +11,9 @@ An app focused on a great Twitch chat experience.
 
 <table>
 <tr>
-<th>Android</th>
-<th>iOS</th>
-</tr>
-<tr>
 <td>
 
-![](./assets/screenshots/android/chat-recording.mp4)
+https://github.com/user-attachments/assets/0f107cee-6294-4fbf-aa15-5466b57a548f
 
 </td>
 <td>

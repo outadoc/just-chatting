@@ -4,7 +4,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.CallReceived
 import androidx.compose.material.icons.automirrored.filled.Reply
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.FastForward
@@ -19,7 +18,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import fr.outadoc.justchatting.feature.chat.domain.model.Icon
 
 internal fun Icon.toMaterialIcon(): ImageVector = when (this) {
-    Icon.Bolt -> Icons.Default.Bolt
     Icon.CallReceived -> Icons.AutoMirrored.Filled.CallReceived
     Icon.Campaign -> Icons.Default.Campaign
     Icon.Cancel -> Icons.Default.Cancel

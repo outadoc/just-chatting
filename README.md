@@ -2,6 +2,8 @@
 
 An app focused on a great Twitch chat experience.
 
+![](./assets/screenshots/android/chat-recording.mp4)
+
 <table>
 <tr>
 <th>Android</th>
@@ -9,8 +11,6 @@ An app focused on a great Twitch chat experience.
 </tr>
 <tr>
 <td>
-
-![](./assets/screenshots/android/chat-recording.mp4)
 
 </td>
 <td>

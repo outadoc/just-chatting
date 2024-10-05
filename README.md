@@ -10,12 +10,12 @@ An app focused on a great Twitch chat experience.
 <tr>
 <td>
 
-![](./assets/android/chat-recording.png)
+![](./assets/screenshots/android/chat-recording.mp4)
 
 </td>
 <td>
 
-![](./assets/ios/ipad-static.png)
+![](./assets/screenshots/ios/ipad-static.png)
 
 </td>
 </tr>

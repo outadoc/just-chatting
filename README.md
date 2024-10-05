@@ -2,6 +2,10 @@
 
 An app focused on a great Twitch chat experience.
 
+| Android                                  | iOS                               |
+|------------------------------------------|-----------------------------------|
+| ![](./assets/android/chat-recording.png) | ![](./assets/ios/ipad-static.png) |
+
 ## Project setup
 
 ### Android
@@ -13,4 +17,4 @@ An app focused on a great Twitch chat experience.
 
 1. Install Xcode 16;
 2. Install [Tuist](https://docs.tuist.io/guides/quick-start/install-tuist);
-2. Move to the `app-ios` directory, and run `tuist generate` to generate and open the Xcode project.
+3. Move to the `app-ios` directory, and run `tuist generate` to generate and open the Xcode project.

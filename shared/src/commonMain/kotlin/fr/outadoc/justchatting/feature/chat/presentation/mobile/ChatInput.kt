@@ -191,6 +191,8 @@ internal fun ChatTextField(
     onReuseLastMessageClicked: () -> Unit,
     onSubmit: () -> Unit,
 ) {
+    val haptic = LocalHapticFeedback.current
+
     TextField(
         modifier = modifier
             .onPreviewKeyEvent { event ->
@@ -233,7 +235,10 @@ internal fun ChatTextField(
         ),
         leadingIcon = {
             AccessibleIconButton(
-                onClick = onToggleEmotePicker,
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onToggleEmotePicker()
+                },
                 onClickLabel = stringResource(MR.strings.chat_input_emote_cd),
             ) {
                 Icon(
@@ -246,7 +251,10 @@ internal fun ChatTextField(
             when {
                 message.text.isNotEmpty() -> {
                     AccessibleIconButton(
-                        onClick = { onMessageChange(TextFieldValue("")) },
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onMessageChange(TextFieldValue(""))
+                        },
                         onClickLabel = stringResource(MR.strings.chat_input_clear_cd),
                     ) {
                         Icon(
@@ -258,7 +266,10 @@ internal fun ChatTextField(
 
                 canReuseLastMessage -> {
                     AccessibleIconButton(
-                        onClick = onReuseLastMessageClicked,
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onReuseLastMessageClicked()
+                        },
                         onClickLabel = stringResource(MR.strings.chat_input_reuseLastMessage_cd),
                     ) {
                         Icon(

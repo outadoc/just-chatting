@@ -19,7 +19,7 @@ let project = Project(
             deploymentTargets: .iOS("17.0.0"),
             infoPlist: .extendingDefault(
                 with: [
-                    "CFBundleName": "Just Chatting",
+                    "CFBundleDisplayName": "Just Chatting",
                     "CFBundleVersion": Plist.Value.string(
                         Environment.versionCode.getString(default: "1")
                     ),

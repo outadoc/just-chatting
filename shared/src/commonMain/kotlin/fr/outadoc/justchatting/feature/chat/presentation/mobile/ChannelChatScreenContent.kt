@@ -16,12 +16,14 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -173,11 +175,11 @@ internal fun ChannelChatScreenContent(
                     modifier = Modifier
                         .hazeChild(
                             state = hazeState,
-                            style = HazeMaterials.regular(),
+                            style = HazeMaterials.regular(
+                                MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
+                            ),
                         ),
                     color = Color.Transparent,
-                    shadowElevation = 2.dp,
-                    tonalElevation = 1.dp,
                 ) {
                     ChatInput(
                         modifier = Modifier

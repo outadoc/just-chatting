@@ -36,7 +36,7 @@ let project = Project(
                             ]
                         ),
                     ],
-                    "UILaunchStoryboardName": "Launch Screen.storyboard",
+                    "UILaunchStoryboardName": "Launch Screen",
                     "CADisableMinimumFrameDurationOnPhone": true,
                     "LSApplicationCategoryType": "public.app-category.social-networking",
                 ]

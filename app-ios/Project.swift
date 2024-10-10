@@ -45,14 +45,17 @@ let project = Project(
             resources: .resources(["JustChatting/Resources/**"]),
             scripts: [
                 .pre(
-                    script: "cd \"$SRCROOT/..\" && ./gradlew :shared:embedAndSignAppleFrameworkForXcode",
+                    script: "cd \"$SRCROOT/..\"\n./gradlew :shared:embedAndSignAppleFrameworkForXcode",
                     name: "Generate shared framework",
                     basedOnDependencyAnalysis: false
                 ),
             ],
             dependencies: [],
             settings: .settings(
-                base: ["OTHER_LDFLAGS": "$(inherited) -lsqlite3"]
+                base: SettingsDictionary()
+                    .automaticCodeSigning(devTeam: "C38RDC5QNT")
+                    .otherLinkerFlags(["$(inherited)", "-lsqlite3"]),
+                defaultSettings: .recommended
             )
         ),
     ]

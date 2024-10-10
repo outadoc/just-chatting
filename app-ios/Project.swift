@@ -45,8 +45,22 @@ let project = Project(
             resources: .resources(["JustChatting/Resources/**"]),
             scripts: [
                 .pre(
-                    script: "cd \"$SRCROOT/..\"\n./gradlew :shared:embedAndSignAppleFrameworkForXcode",
+                    script: """
+                    "$SRCROOT/../gradlew" -p "$SRCROOT/../" :shared:embedAndSignAppleFrameworkForXcode
+                    """,
                     name: "Generate shared framework",
+                    basedOnDependencyAnalysis: false
+                ),
+                .pre(
+                    script: """
+                    "$SRCROOT/../gradlew" -p "$SRCROOT/../" :shared:copyFrameworkResourcesToApp \
+                        -Pmoko.resources.PLATFORM_NAME="$PLATFORM_NAME" \
+                        -Pmoko.resources.CONFIGURATION="$CONFIGURATION" \
+                        -Pmoko.resources.ARCHS="$ARCHS" \
+                        -Pmoko.resources.BUILT_PRODUCTS_DIR="$BUILT_PRODUCTS_DIR" \
+                        -Pmoko.resources.CONTENTS_FOLDER_PATH="$CONTENTS_FOLDER_PATH"
+                    """,
+                    name: "Copy Moko resources",
                     basedOnDependencyAnalysis: false
                 ),
             ],

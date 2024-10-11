@@ -38,6 +38,8 @@ let project = Project(
                     "UILaunchStoryboardName": "Launch Screen",
                     "CADisableMinimumFrameDurationOnPhone": true,
                     "LSApplicationCategoryType": "public.app-category.social-networking",
+                    "LSMinimumSystemVersion": "15.0",
+                    "ITSAppUsesNonExemptEncryption": false,
                 ]
             ),
             sources: ["JustChatting/Sources/**"],

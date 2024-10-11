@@ -147,7 +147,12 @@ private class AnimatedSkiaImage(
 
         canvas.drawFrame(frameIndexToDraw)
 
-        if (!isAnimationComplete && frameIndexToDraw == codec.frameCount - 1) {
+        // We still need to wait for the last frame's duration before we start with the next repetition.
+        val drewLastFrame = frameIndexToDraw == codec.frameCount - 1
+        val lastFrameDuration = codec.framesInfo[frameIndexToDraw].safeFrameDuration
+        val hasLastFrameDurationElapsed = elapsedTime >= accumulatedDuration + lastFrameDuration
+
+        if (!isAnimationComplete && drewLastFrame && hasLastFrameDurationElapsed) {
             // We've reached the last frame of the current repetition, but we can still loop.
             // Reset the state and start over from the first frame.
             lastDrawnFrameIndex = 0

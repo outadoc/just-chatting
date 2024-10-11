@@ -71,16 +71,18 @@ private class AnimatedSkiaImage(
         width = codec.width,
         height = codec.height,
     )
+
     private val bitmap = Bitmap().apply { allocPixels(codec.imageInfo) }
     private val frames = Array(codec.frameCount) { index ->
         if (prerenderFrames) decodeFrame(index) else null
     }
 
     private var invalidateTick by mutableIntStateOf(0)
-    private var startTime: TimeSource.Monotonic.ValueTimeMark? = null
-    private var lastFrameIndex = 0
-    private var lastRepetitionCount = 0
-    private var isDone = false
+
+    private var currentRepetitionStartTime: TimeSource.Monotonic.ValueTimeMark? = null
+    private var currentRepetitionCount = 0
+    private var lastDrawnFrameIndex = 0
+    private var isAnimationComplete = false
 
     override val size: Long
         get() {
@@ -103,50 +105,57 @@ private class AnimatedSkiaImage(
 
     override fun draw(canvas: Canvas) {
         if (codec.frameCount == 0) {
+            // The image is empty, nothing to draw.
             return
         }
 
         if (codec.frameCount == 1) {
+            // This is a static image, simply draw it.
             canvas.drawFrame(0)
             return
         }
 
-        if (isDone) {
-            canvas.drawFrame(lastFrameIndex)
+        if (isAnimationComplete) {
+            // The animation is complete, freeze on the last frame.
+            canvas.drawFrame(lastDrawnFrameIndex)
             return
         }
 
-        val startTime = startTime ?: TimeSource.Monotonic.markNow().also { startTime = it }
+        val startTime = currentRepetitionStartTime
+            ?: TimeSource.Monotonic.markNow().also { currentRepetitionStartTime = it }
+
         val elapsedTime = startTime.elapsedNow().inWholeMilliseconds
 
         var accumulatedDuration = 0
-        var frameIndex = codec.frameCount - 1
+        var frameIndexToDraw = codec.frameCount - 1
 
         for ((index, frame) in codec.framesInfo.withIndex()) {
             if (accumulatedDuration > elapsedTime) {
-                frameIndex = (index - 1).coerceAtLeast(0)
+                frameIndexToDraw = (index - 1).coerceAtLeast(0)
                 break
             }
 
             accumulatedDuration += frame.safeFrameDuration
         }
 
-        lastFrameIndex = frameIndex
+        // Remember the last frame we drew; the next time we draw, we'll start from here.
+        lastDrawnFrameIndex = frameIndexToDraw
 
-        // Check if we've reached the last frame of the last repetition.
-        isDone = codec.repetitionCount in 1..lastRepetitionCount &&
-                frameIndex == (codec.frameCount - 1)
+        // Check if we've reached the last frame of the last repetition. If so, we're done.
+        isAnimationComplete = codec.repetitionCount in 1..currentRepetitionCount &&
+                frameIndexToDraw == (codec.frameCount - 1)
 
-        canvas.drawFrame(frameIndex)
+        canvas.drawFrame(frameIndexToDraw)
 
-        if (!isDone && frameIndex == codec.frameCount - 1) {
+        if (!isAnimationComplete && frameIndexToDraw == codec.frameCount - 1) {
             // We've reached the last frame of the current repetition, but we can still loop.
-            lastRepetitionCount++
-            lastFrameIndex = 0
-            this.startTime = null
+            // Reset the state and start over from the first frame.
+            lastDrawnFrameIndex = 0
+            currentRepetitionCount++
+            currentRepetitionStartTime = null
         }
 
-        if (!isDone) {
+        if (!isAnimationComplete) {
             // Increment this value to force the image to be redrawn.
             invalidateTick++
         }
@@ -159,7 +168,15 @@ private class AnimatedSkiaImage(
 
     private fun Canvas.drawFrame(frameIndex: Int) {
         val frame = frames[frameIndex] ?: decodeFrame(frameIndex).also { frames[frameIndex] = it }
-        drawImage(SkiaImage.makeRaster(imageInfo, frame, imageInfo.minRowBytes), 0f, 0f)
+        drawImage(
+            image = SkiaImage.makeRaster(
+                imageInfo = imageInfo,
+                bytes = frame,
+                rowBytes = imageInfo.minRowBytes,
+            ),
+            left = 0f,
+            top = 0f,
+        )
     }
 }
 

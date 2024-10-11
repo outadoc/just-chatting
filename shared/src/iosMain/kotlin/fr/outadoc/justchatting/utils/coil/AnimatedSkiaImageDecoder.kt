@@ -7,7 +7,6 @@ import coil3.Canvas
 import coil3.Image
 import coil3.ImageLoader
 import coil3.decode.DecodeResult
-import coil3.decode.DecodeUtils
 import coil3.decode.Decoder
 import coil3.decode.ImageSource
 import coil3.fetch.SourceFetchResult
@@ -30,11 +29,10 @@ import org.jetbrains.skia.Image as SkiaImage
 @Deprecated("Replace with proper coil3 implementation once available")
 internal class AnimatedSkiaImageDecoder(
     private val source: ImageSource,
-    private val options: Options,
     private val prerenderFrames: Boolean = true,
 ) : Decoder {
 
-    override suspend fun decode(): DecodeResult? {
+    override suspend fun decode(): DecodeResult {
         val bytes = source.source().use { it.readByteArray() }
         val codec = Codec.makeFromData(Data.makeFromBytes(bytes))
         return DecodeResult(
@@ -52,8 +50,11 @@ internal class AnimatedSkiaImageDecoder(
             options: Options,
             imageLoader: ImageLoader,
         ): Decoder? {
-            if (!DecodeUtils.isGif(result.source.source())) return null
-            return AnimatedSkiaImageDecoder(result.source, options, prerenderFrames)
+            if (!isGif(result.source.source())) return null
+            return AnimatedSkiaImageDecoder(
+                source = result.source,
+                prerenderFrames = prerenderFrames
+            )
         }
     }
 }
@@ -199,7 +200,7 @@ private val GIF_HEADER_89A = "GIF89a".encodeUtf8()
 /**
  * Return 'true' if the [source] contains a GIF image. The [source] is not consumed.
  */
-private fun DecodeUtils.isGif(source: BufferedSource): Boolean {
+private fun isGif(source: BufferedSource): Boolean {
     return source.rangeEquals(0, GIF_HEADER_89A) ||
         source.rangeEquals(0, GIF_HEADER_87A)
 }

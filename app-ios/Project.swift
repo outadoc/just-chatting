@@ -19,13 +19,16 @@ let project = Project(
             deploymentTargets: .iOS("17.6"),
             infoPlist: .extendingDefault(
                 with: [
-                    "CFBundleVersion": Plist.Value.string(
-                        Environment.versionCode.getString(default: "1")
-                    ),
+                    "CFBundleDisplayName": "Just Chatting",
+                    "CFBundleLocalizations": ["en", "fr"],
+                    // Set short version string, dynamically read from TUIST_VERSION_NAME
                     "CFBundleShortVersionString": Plist.Value.string(
                         Environment.versionName.getString(default: "0.1.0")
                     ),
-                    "CFBundleLocalizations": ["en", "fr"],
+                    // Set bundle version, dynamically read from TUIST_VERSION_CODE
+                    "CFBundleVersion": Plist.Value.string(
+                        Environment.versionCode.getString(default: "1")
+                    ),
                     "CFBundleURLTypes": [
                         Plist.Value.dictionary(
                             [
@@ -35,11 +38,12 @@ let project = Project(
                             ]
                         ),
                     ],
-                    "UILaunchStoryboardName": "Launch Screen",
+                    // Uncap max frame rate on ProMotion devices for Compose
                     "CADisableMinimumFrameDurationOnPhone": true,
+                    "ITSAppUsesNonExemptEncryption": false,
                     "LSApplicationCategoryType": "public.app-category.social-networking",
                     "LSMinimumSystemVersion": "15.0",
-                    "ITSAppUsesNonExemptEncryption": false,
+                    "UILaunchStoryboardName": "Launch Screen",
                 ]
             ),
             sources: ["JustChatting/Sources/**"],

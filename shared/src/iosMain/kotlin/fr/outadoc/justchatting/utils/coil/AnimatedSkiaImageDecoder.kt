@@ -101,12 +101,11 @@ private class AnimatedSkiaImage(
         get() = false
 
     override fun draw(canvas: Canvas) {
-        val totalFrames = codec.framesInfo.size
-        if (totalFrames == 0) {
+        if (codec.frameCount == 0) {
             return
         }
 
-        if (totalFrames == 1) {
+        if (codec.frameCount == 1) {
             canvas.drawFrame(0)
             return
         }
@@ -118,17 +117,21 @@ private class AnimatedSkiaImage(
 
         val startTime = startTime ?: TimeSource.Monotonic.markNow().also { startTime = it }
         val elapsedTime = startTime.elapsedNow().inWholeMilliseconds
-        var durationMillis = 0
-        var frameIndex = totalFrames - 1
+
+        var accumulatedDuration = 0
+        var frameIndex = codec.frameCount - 1
+
         for ((index, frame) in codec.framesInfo.withIndex()) {
-            if (durationMillis > elapsedTime) {
+            if (accumulatedDuration > elapsedTime) {
                 frameIndex = (index - 1).coerceAtLeast(0)
                 break
             }
-            durationMillis += frame.safeFrameDuration
+
+            accumulatedDuration += frame.safeFrameDuration
         }
+
         lastFrameIndex = frameIndex
-        isDone = frameIndex == (totalFrames - 1)
+        isDone = frameIndex == (codec.frameCount - 1)
 
         canvas.drawFrame(frameIndex)
 
@@ -165,5 +168,5 @@ private val GIF_HEADER_89A = "GIF89a".encodeUtf8()
  */
 private fun DecodeUtils.isGif(source: BufferedSource): Boolean {
     return source.rangeEquals(0, GIF_HEADER_89A) ||
-        source.rangeEquals(0, GIF_HEADER_87A)
+            source.rangeEquals(0, GIF_HEADER_87A)
 }

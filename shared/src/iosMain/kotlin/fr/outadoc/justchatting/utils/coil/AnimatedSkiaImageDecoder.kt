@@ -143,7 +143,7 @@ private class AnimatedSkiaImage(
 
         // Check if we've reached the last frame of the last repetition. If so, we're done.
         isAnimationComplete = codec.repetitionCount in 1..currentRepetitionCount &&
-                frameIndexToDraw == (codec.frameCount - 1)
+            frameIndexToDraw == (codec.frameCount - 1)
 
         canvas.drawFrame(frameIndexToDraw)
 
@@ -201,5 +201,5 @@ private val GIF_HEADER_89A = "GIF89a".encodeUtf8()
  */
 private fun DecodeUtils.isGif(source: BufferedSource): Boolean {
     return source.rangeEquals(0, GIF_HEADER_89A) ||
-            source.rangeEquals(0, GIF_HEADER_87A)
+        source.rangeEquals(0, GIF_HEADER_87A)
 }

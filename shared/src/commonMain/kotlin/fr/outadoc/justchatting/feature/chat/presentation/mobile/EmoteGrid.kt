@@ -11,6 +11,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
@@ -28,6 +30,7 @@ internal fun EmoteGrid(
     onEmoteClick: (Emote) -> Unit,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
+    val haptic = LocalHapticFeedback.current
     LazyVerticalGrid(
         modifier = modifier,
         contentPadding = contentPadding,
@@ -64,7 +67,10 @@ internal fun EmoteGrid(
                 is EmoteSetItem.Emote -> {
                     AccessibleIconButton(
                         modifier = Modifier.aspectRatio(1f),
-                        onClick = { onEmoteClick(item.emote) },
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onEmoteClick(item.emote)
+                        },
                         onClickLabel = item.emote.name,
                     ) {
                         EmoteItem(

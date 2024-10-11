@@ -14,11 +14,11 @@ let project = Project(
             name: "JustChatting",
             destinations: .iOS,
             product: .app,
+            productName: "Just Chatting",
             bundleId: "fr.outadoc.justchatting",
             deploymentTargets: .iOS("17.6"),
             infoPlist: .extendingDefault(
                 with: [
-                    "CFBundleDisplayName": "Just Chatting",
                     "CFBundleVersion": Plist.Value.string(
                         Environment.versionCode.getString(default: "1")
                     ),

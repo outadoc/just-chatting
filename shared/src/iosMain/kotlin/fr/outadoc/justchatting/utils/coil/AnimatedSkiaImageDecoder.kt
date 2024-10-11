@@ -71,15 +71,18 @@ private class AnimatedSkiaImage(
         width = codec.width,
         height = codec.height,
     )
+
     private val bitmap = Bitmap().apply { allocPixels(codec.imageInfo) }
     private val frames = Array(codec.frameCount) { index ->
         if (prerenderFrames) decodeFrame(index) else null
     }
 
     private var invalidateTick by mutableIntStateOf(0)
-    private var startTime: TimeSource.Monotonic.ValueTimeMark? = null
-    private var lastFrameIndex = 0
-    private var isDone = false
+
+    private var currentRepetitionStartTime: TimeSource.Monotonic.ValueTimeMark? = null
+    private var currentRepetitionCount = 0
+    private var lastDrawnFrameIndex = 0
+    private var isAnimationComplete = false
 
     override val size: Long
         get() {
@@ -101,38 +104,63 @@ private class AnimatedSkiaImage(
         get() = false
 
     override fun draw(canvas: Canvas) {
-        val totalFrames = codec.framesInfo.size
-        if (totalFrames == 0) {
+        if (codec.frameCount == 0) {
+            // The image is empty, nothing to draw.
             return
         }
 
-        if (totalFrames == 1) {
+        if (codec.frameCount == 1) {
+            // This is a static image, simply draw it.
             canvas.drawFrame(0)
             return
         }
 
-        if (isDone) {
-            canvas.drawFrame(lastFrameIndex)
+        if (isAnimationComplete) {
+            // The animation is complete, freeze on the last frame.
+            canvas.drawFrame(lastDrawnFrameIndex)
             return
         }
 
-        val startTime = startTime ?: TimeSource.Monotonic.markNow().also { startTime = it }
+        val startTime = currentRepetitionStartTime
+            ?: TimeSource.Monotonic.markNow().also { currentRepetitionStartTime = it }
         val elapsedTime = startTime.elapsedNow().inWholeMilliseconds
-        var durationMillis = 0
-        var frameIndex = totalFrames - 1
+
+        var accumulatedDuration = 0
+        var frameIndexToDraw = codec.frameCount - 1
+
+        // Find the right frame to draw based on the elapsed time.
         for ((index, frame) in codec.framesInfo.withIndex()) {
-            if (durationMillis > elapsedTime) {
-                frameIndex = (index - 1).coerceAtLeast(0)
+            if (accumulatedDuration > elapsedTime) {
+                frameIndexToDraw = (index - 1).coerceAtLeast(0)
                 break
             }
-            durationMillis += frame.safeFrameDuration
+
+            accumulatedDuration += frame.safeFrameDuration
         }
-        lastFrameIndex = frameIndex
-        isDone = frameIndex == (totalFrames - 1)
 
-        canvas.drawFrame(frameIndex)
+        // Remember the last frame we drew; the next time we draw, we'll start from here.
+        lastDrawnFrameIndex = frameIndexToDraw
 
-        if (!isDone) {
+        // Check if we've reached the last frame of the last repetition. If so, we're done.
+        isAnimationComplete = codec.repetitionCount in 1..currentRepetitionCount &&
+            frameIndexToDraw == (codec.frameCount - 1)
+
+        canvas.drawFrame(frameIndexToDraw)
+
+        // We still need to wait for the last frame's duration before we start with the next repetition.
+        val drewLastFrame = frameIndexToDraw == codec.frameCount - 1
+        val lastFrameDuration = codec.framesInfo[frameIndexToDraw].safeFrameDuration
+        val hasLastFrameDurationElapsed = elapsedTime >= accumulatedDuration + lastFrameDuration
+
+        if (!isAnimationComplete && drewLastFrame && hasLastFrameDurationElapsed) {
+            // We've reached the last frame of the current repetition, but we can still loop.
+            // Reset the state and start over from the first frame.
+            lastDrawnFrameIndex = 0
+            currentRepetitionCount++
+            currentRepetitionStartTime = null
+        }
+
+        if (!isAnimationComplete) {
             // Increment this value to force the image to be redrawn.
             invalidateTick++
         }
@@ -145,7 +173,15 @@ private class AnimatedSkiaImage(
 
     private fun Canvas.drawFrame(frameIndex: Int) {
         val frame = frames[frameIndex] ?: decodeFrame(frameIndex).also { frames[frameIndex] = it }
-        drawImage(SkiaImage.makeRaster(imageInfo, frame, imageInfo.minRowBytes), 0f, 0f)
+        drawImage(
+            image = SkiaImage.makeRaster(
+                imageInfo = imageInfo,
+                bytes = frame,
+                rowBytes = imageInfo.minRowBytes,
+            ),
+            left = 0f,
+            top = 0f,
+        )
     }
 }
 

@@ -123,12 +123,12 @@ private class AnimatedSkiaImage(
 
         val startTime = currentRepetitionStartTime
             ?: TimeSource.Monotonic.markNow().also { currentRepetitionStartTime = it }
-
         val elapsedTime = startTime.elapsedNow().inWholeMilliseconds
 
         var accumulatedDuration = 0
         var frameIndexToDraw = codec.frameCount - 1
 
+        // Find the right frame to draw based on the elapsed time.
         for ((index, frame) in codec.framesInfo.withIndex()) {
             if (accumulatedDuration > elapsedTime) {
                 frameIndexToDraw = (index - 1).coerceAtLeast(0)

@@ -79,6 +79,7 @@ private class AnimatedSkiaImage(
     private var invalidateTick by mutableIntStateOf(0)
     private var startTime: TimeSource.Monotonic.ValueTimeMark? = null
     private var lastFrameIndex = 0
+    private var lastRepetitionCount = 0
     private var isDone = false
 
     override val size: Long
@@ -131,9 +132,19 @@ private class AnimatedSkiaImage(
         }
 
         lastFrameIndex = frameIndex
-        isDone = frameIndex == (codec.frameCount - 1)
+
+        // Check if we've reached the last frame of the last repetition.
+        isDone = codec.repetitionCount in 1..lastRepetitionCount &&
+                frameIndex == (codec.frameCount - 1)
 
         canvas.drawFrame(frameIndex)
+
+        if (!isDone && frameIndex == codec.frameCount - 1) {
+            // We've reached the last frame of the current repetition, but we can still loop.
+            lastRepetitionCount++
+            lastFrameIndex = 0
+            this.startTime = null
+        }
 
         if (!isDone) {
             // Increment this value to force the image to be redrawn.

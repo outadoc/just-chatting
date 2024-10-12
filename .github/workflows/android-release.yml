@@ -1,9 +1,9 @@
 name: Deploy release - Play Store
 
 on:
-  release:
-    types:
-      - released
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build:

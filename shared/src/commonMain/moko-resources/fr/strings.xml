@@ -275,6 +275,7 @@
     <string name="search">Recherche</string>
     <string name="search_clear_cd">Effacer le champ de recherche</string>
     <string name="search_hint">Rechercher quelqu\'un…</string>
+    <string name="search_recentChannels_remove_action">Oublier la visite récente</string>
     <string name="settings">Réglages</string>
     <string name="settings_about_header">À propos</string>
     <string name="settings_about_license_cd">Voir la licence</string>

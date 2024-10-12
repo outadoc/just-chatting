@@ -1,0 +1,40 @@
+name: Build iOS app
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up Mise
+        uses: jdx/mise-action@v2
+        with:
+          install: false
+
+      - name: Install Mise dependencies
+        run: mise install
+        working-directory: app-ios
+
+      - name: Build iOS app
+        run: tuist build
+        working-directory: app-ios

@@ -31,6 +31,8 @@ internal interface TwitchRepository {
 
     suspend fun getRecentChannels(): Flow<List<User>>
 
+    suspend fun forgetRecentChannel(userId: String)
+
     suspend fun getFollowedChannelsSchedule(
         today: LocalDate,
         timeZone: TimeZone,

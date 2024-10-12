@@ -27,8 +27,8 @@ internal class LocalUsersDb(
     override fun getRecentChannels(): Flow<List<User>> {
         return userQueries.getRecent()
             .asFlow()
-            .distinctUntilChanged()
             .mapToList(DispatchersProvider.io)
+            .distinctUntilChanged()
             .map { users ->
                 users.map { userInfo ->
                     User(
@@ -49,11 +49,15 @@ internal class LocalUsersDb(
             .flowOn(DispatchersProvider.io)
     }
 
+    override fun forgetRecentChannel(userId: String) {
+        userQueries.forgetRecentVisits(userId)
+    }
+
     override fun getFollowedChannels(): Flow<List<ChannelFollow>> {
         return userQueries.getFollowed()
             .asFlow()
-            .distinctUntilChanged()
             .mapToList(DispatchersProvider.io)
+            .distinctUntilChanged()
             .map { users ->
                 users.map { userInfo ->
                     ChannelFollow(
@@ -85,8 +89,8 @@ internal class LocalUsersDb(
     override fun getUsersById(ids: List<String>): Flow<List<User>> {
         return userQueries.getByIds(ids)
             .asFlow()
-            .distinctUntilChanged()
             .mapToList(DispatchersProvider.io)
+            .distinctUntilChanged()
             .map { users ->
                 users.map { userInfo ->
                     User(
@@ -177,6 +181,7 @@ internal class LocalUsersDb(
             )
             .asFlow()
             .mapToList(DispatchersProvider.io)
+            .distinctUntilChanged()
             .flowOn(DispatchersProvider.io)
     }
 

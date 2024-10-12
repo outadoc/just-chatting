@@ -36,6 +36,7 @@ internal fun UserItemCard(
     followedAt: Instant? = null,
     profileImageUrl: String? = null,
     tags: ImmutableList<String> = persistentListOf(),
+    trailingActions: (@Composable () -> Unit)? = null,
     onClick: () -> Unit = {},
 ) {
     Card(
@@ -46,7 +47,8 @@ internal fun UserItemCard(
             modifier = Modifier.padding(8.dp),
             displayName = displayName,
             followedAt = followedAt,
-            profileImageURL = profileImageUrl,
+            profileImageUrl = profileImageUrl,
+            trailingActions = trailingActions,
             tags = tags,
         )
     }
@@ -58,8 +60,9 @@ internal fun UserItem(
     modifier: Modifier = Modifier,
     displayName: String?,
     followedAt: Instant?,
-    profileImageURL: String?,
+    profileImageUrl: String?,
     tags: ImmutableList<String>,
+    trailingActions: (@Composable () -> Unit)? = null,
 ) {
     Row(
         modifier = modifier,
@@ -71,11 +74,11 @@ internal fun UserItem(
                 .size(56.dp)
                 .clip(MaterialTheme.shapes.medium)
                 .background(MaterialTheme.colorScheme.surface),
-            model = remoteImageModel(profileImageURL),
+            model = remoteImageModel(profileImageUrl),
             contentDescription = null,
         )
 
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             displayName?.let { displayName ->
                 Text(
                     text = displayName,
@@ -108,6 +111,8 @@ internal fun UserItem(
                 }
             }
         }
+
+        trailingActions?.invoke()
     }
 }
 

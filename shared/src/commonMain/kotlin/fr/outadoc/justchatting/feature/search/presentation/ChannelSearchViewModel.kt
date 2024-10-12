@@ -101,4 +101,10 @@ internal class ChannelSearchViewModel(
             state.copy(query = "")
         }
     }
+
+    fun onRemoveRecentChannel(user: User) {
+        viewModelScope.launch {
+            twitchRepository.forgetRecentChannel(user.id)
+        }
+    }
 }

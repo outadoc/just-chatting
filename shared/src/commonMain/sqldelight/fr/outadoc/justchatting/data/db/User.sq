@@ -68,3 +68,6 @@ VALUES ('followed_users', ?);
 
 getFollowedUsersUpdatedAt:
 SELECT last_updated FROM UserCacheInfo WHERE feature_id = 'followed_users';
+
+forgetRecentVisits:
+UPDATE User SET used_at = 0 WHERE id = :id;

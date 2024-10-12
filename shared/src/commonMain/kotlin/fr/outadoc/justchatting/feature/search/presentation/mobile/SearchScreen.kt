@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,6 +27,7 @@ import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainNavigation
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.Screen
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.UserItemCard
+import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.plus
 import kotlinx.collections.immutable.ImmutableList
 import org.koin.compose.viewmodel.koinViewModel
@@ -73,7 +77,10 @@ internal fun SearchScreen(
                 modifier = modifier.haze(hazeState),
                 insets = insets,
                 users = state.recentChannels,
-                onChannelClick = onChannelClick,
+                onChannelClick = { user ->
+                    onChannelClick(user.id)
+                },
+                onRemoveChannelClick = viewModel::onRemoveRecentChannel,
             )
         },
     )
@@ -84,7 +91,8 @@ private fun RecentUsersList(
     modifier: Modifier,
     insets: PaddingValues,
     users: ImmutableList<User>,
-    onChannelClick: (userId: String) -> Unit,
+    onChannelClick: (User) -> Unit,
+    onRemoveChannelClick: (User) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -97,10 +105,23 @@ private fun RecentUsersList(
     ) {
         items(users) { user ->
             UserItemCard(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { onChannelClick(user.id) },
+                modifier = Modifier
+                    .animateItem()
+                    .fillMaxWidth(),
+                onClick = { onChannelClick(user) },
                 displayName = user.displayName,
                 profileImageUrl = user.profileImageUrl,
+                trailingActions = {
+                    AccessibleIconButton(
+                        onClick = { onRemoveChannelClick(user) },
+                        onClickLabel = "Remove",
+                    ) {
+                        Icon(
+                            Icons.Default.Cancel,
+                            contentDescription = null,
+                        )
+                    }
+                },
             )
         }
     }

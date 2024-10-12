@@ -13,6 +13,8 @@ internal interface LocalUsersApi {
     fun getRecentChannels(): Flow<List<User>>
     fun getFollowedChannels(): Flow<List<ChannelFollow>>
 
+    fun forgetRecentChannel(userId: String)
+
     fun getUserIdsToUpdate(): Flow<List<String>>
 
     suspend fun saveUser(userId: String, visitedAt: Instant? = null)

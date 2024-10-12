@@ -146,6 +146,12 @@ internal class TwitchRepositoryImpl(
             localUsersApi.getRecentChannels()
         }
 
+    override suspend fun forgetRecentChannel(userId: String) {
+        withContext(DispatchersProvider.io) {
+            localUsersApi.forgetRecentChannel(userId = userId)
+        }
+    }
+
     override suspend fun markChannelAsVisited(channel: User, visitedAt: Instant) {
         withContext(DispatchersProvider.io) {
             localUsersApi.saveUser(

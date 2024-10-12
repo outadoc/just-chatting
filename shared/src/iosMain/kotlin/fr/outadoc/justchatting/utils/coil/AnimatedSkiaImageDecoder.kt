@@ -53,7 +53,7 @@ internal class AnimatedSkiaImageDecoder(
             if (!isGif(result.source.source())) return null
             return AnimatedSkiaImageDecoder(
                 source = result.source,
-                prerenderFrames = prerenderFrames
+                prerenderFrames = prerenderFrames,
             )
         }
     }

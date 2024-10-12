@@ -14,9 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Mise
-        uses: jdx/mise-action@v2
-
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -29,5 +26,17 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Set up Mise
+        uses: jdx/mise-action@v2
+        with:
+          install: false
+
+      - name: Install Mise dependencies
+        run: mise install
+        with:
+          working-directory: app-ios
+
       - name: Build iOS app
         run: tuist build
+        with:
+          working-directory: app-ios

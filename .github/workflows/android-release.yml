@@ -58,4 +58,4 @@ jobs:
           packageName: fr.outadoc.justchatting
           releaseFiles: app-android/build/outputs/bundle/release/app-android-release.aab
           mappingFile: app-android/build/outputs/mapping/release/mapping.txt
-          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_INTERNAL_APP_SHARING }}
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}

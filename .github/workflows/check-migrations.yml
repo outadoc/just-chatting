@@ -6,7 +6,8 @@ on:
       - 'shared/src/commonMain/sqldelight/**'
 
 jobs:
-  build:
+  verify:
+    name: Check SQLDelight migrations
     runs-on: ubuntu-latest
 
     concurrency:

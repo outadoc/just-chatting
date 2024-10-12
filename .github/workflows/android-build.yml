@@ -5,10 +5,13 @@ on:
 
 jobs:
   build:
+    name: Build and test
     runs-on: ubuntu-latest
+
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
+
     steps:
       - uses: actions/checkout@v4
 

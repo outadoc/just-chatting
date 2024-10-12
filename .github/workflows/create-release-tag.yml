@@ -6,7 +6,8 @@ on:
       - main
 
 jobs:
-  build:
+  create-release:
+    name: Create release and tag
     runs-on: ubuntu-latest
     environment: release
 
@@ -37,3 +38,4 @@ jobs:
           commit: main
           makeLatest: true
           generateReleaseNotes: true
+          token: ${{ secrets.RELEASE_GITHUB_TOKEN }}

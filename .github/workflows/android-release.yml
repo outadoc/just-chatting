@@ -1,12 +1,13 @@
-name: Deploy release - Play Store
+name: Release - Deploy Android
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types:
+      - released
 
 jobs:
-  build:
+  deploy:
+    name: Build and upload to Play Store
     runs-on: ubuntu-latest
     environment: deploy
 

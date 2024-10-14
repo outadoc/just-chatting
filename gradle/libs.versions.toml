@@ -1,6 +1,6 @@
 [versions]
 accompanist = "0.36.0"
-android = "8.7.0"
+android = "8.7.1"
 coil = "3.0.0-rc01"
 compose-multiplatform = "1.7.0-rc01"
 emoji = "1.5.0"

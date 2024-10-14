@@ -292,20 +292,20 @@ internal class ChatViewModel(
                 }
             }
             .distinctUntilChanged()
+            .onEach { userId ->
+                twitchRepository.markChannelAsVisited(
+                    userId = userId,
+                    visitedAt = clock.now(),
+                )
+            }
             .flatMapLatest { userId ->
                 twitchRepository.getUserById(userId)
             }
             .onEach { result ->
                 result
                     .onSuccess { user ->
-                        actions.emit(Action.UpdateUser(user))
-
-                        twitchRepository.markChannelAsVisited(
-                            channel = user,
-                            visitedAt = clock.now(),
-                        )
-
                         createShortcutForChannel(user)
+                        actions.emit(Action.UpdateUser(user))
                     }
                     .onFailure { exception ->
                         logError<ChatViewModel>(exception) { "Failed to load user" }

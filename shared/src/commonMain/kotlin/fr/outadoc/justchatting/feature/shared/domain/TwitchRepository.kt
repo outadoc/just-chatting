@@ -38,7 +38,7 @@ internal interface TwitchRepository {
         timeZone: TimeZone,
     ): Flow<FullSchedule>
 
-    suspend fun markChannelAsVisited(channel: User, visitedAt: Instant)
+    suspend fun markChannelAsVisited(userId: String, visitedAt: Instant)
 
     suspend fun getGlobalBadges(): Result<List<TwitchBadge>>
 

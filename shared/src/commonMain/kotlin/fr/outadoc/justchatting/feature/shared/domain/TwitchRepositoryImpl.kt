@@ -152,10 +152,10 @@ internal class TwitchRepositoryImpl(
         }
     }
 
-    override suspend fun markChannelAsVisited(channel: User, visitedAt: Instant) {
+    override suspend fun markChannelAsVisited(userId: String, visitedAt: Instant) {
         withContext(DispatchersProvider.io) {
             localUsersApi.saveUser(
-                userId = channel.id,
+                userId = userId,
                 visitedAt = visitedAt,
             )
         }

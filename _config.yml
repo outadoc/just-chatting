@@ -1,1 +1,12 @@
+theme: jekyll-theme-minimal
+title: Just Chatting
+description: A mobile app focused on a great Twitch chat experience.
+
 include: [".well-known"]
+remote_theme: jekyll/minima
+
+minima:
+  skin: auto
+  social_links:
+    - { platform: github,  user_url: "https://github.com/outadoc/just-chatting" }
+    - { platform: mastodon, user_url: "https://mastodon.social/@outadoc" }

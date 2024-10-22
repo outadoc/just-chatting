@@ -171,7 +171,10 @@ internal fun ChatList(
 
                 SwipeToReply(
                     modifier = Modifier.animateItem(),
-                    onDismiss = { onReplyToMessage(item) },
+                    onDismiss = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onReplyToMessage(item)
+                    },
                     enabled = canBeRepliedTo,
                 ) {
                     ChatMessage(

@@ -18,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -30,21 +31,22 @@ internal fun SwipeToReply(
     onDismiss: () -> Unit,
     content: @Composable () -> Unit,
 ) {
+    val direction: SwipeToDismissBoxValue = SwipeToDismissBoxValue.EndToStart
     val dismissState: SwipeToDismissBoxState =
         rememberSwipeToDismissBoxState(
             confirmValueChange = { value ->
-                if (value == SwipeToDismissBoxValue.StartToEnd) {
+                if (value == direction) {
                     onDismiss()
                 }
-                value != SwipeToDismissBoxValue.StartToEnd
+                value != direction
             },
         )
 
     SwipeToDismissBox(
         modifier = modifier,
         state = dismissState,
-        enableDismissFromStartToEnd = enabled,
-        enableDismissFromEndToStart = false,
+        enableDismissFromStartToEnd = false,
+        enableDismissFromEndToStart = enabled,
         backgroundContent = {
             val scale by animateFloatAsState(
                 when (dismissState.targetValue) {
@@ -56,7 +58,7 @@ internal fun SwipeToReply(
 
             val haptic = LocalHapticFeedback.current
             LaunchedEffect(dismissState.targetValue) {
-                if (dismissState.targetValue == SwipeToDismissBoxValue.StartToEnd) {
+                if (dismissState.targetValue == direction) {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 }
             }
@@ -64,20 +66,22 @@ internal fun SwipeToReply(
             Box(
                 Modifier
                     .fillMaxSize()
-                    .padding(start = 8.dp),
-                contentAlignment = Alignment.CenterStart,
+                    .padding(end = 8.dp),
+                contentAlignment = Alignment.CenterEnd,
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.Reply,
                     contentDescription = "Reply",
-                    modifier = Modifier.scale(scale),
+                    modifier = Modifier
+                        .scale(scale)
+                        .alpha(scale),
                 )
             }
         },
         content = {
             val elevation by animateDpAsState(
                 targetValue = when (dismissState.targetValue) {
-                    SwipeToDismissBoxValue.StartToEnd -> 1.dp
+                    direction -> 2.dp
                     else -> 0.dp
                 },
                 label = "Reply item elevation",

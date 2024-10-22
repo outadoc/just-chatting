@@ -10,6 +10,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Reply
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -37,6 +40,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.RoomState
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
+import fr.outadoc.justchatting.feature.shared.presentation.mobile.SwipeActionBox
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.isEven
 import fr.outadoc.justchatting.utils.core.isOdd
@@ -169,11 +173,17 @@ internal fun ChatList(
                 val canBeRepliedTo = item.body?.messageId != null
                 val replyToActionCd = stringResource(MR.strings.chat_replyTo)
 
-                SwipeToReply(
+                SwipeActionBox(
                     modifier = Modifier.animateItem(),
-                    onDismiss = {
+                    onSwiped = {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         onReplyToMessage(item)
+                    },
+                    icon = {
+                        Icon(
+                            Icons.AutoMirrored.Filled.Reply,
+                            contentDescription = stringResource(MR.strings.chat_replyTo),
+                        )
                     },
                     enabled = canBeRepliedTo,
                 ) {

@@ -1,13 +1,10 @@
-package fr.outadoc.justchatting.feature.chat.presentation.mobile
+package fr.outadoc.justchatting.feature.shared.presentation.mobile
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Reply
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxState
@@ -25,10 +22,11 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 
 @Composable
-internal fun SwipeToReply(
+internal fun SwipeActionBox(
     modifier: Modifier = Modifier,
-    enabled: Boolean,
-    onDismiss: () -> Unit,
+    enabled: Boolean = true,
+    onSwiped: () -> Unit,
+    icon: @Composable () -> Unit,
     content: @Composable () -> Unit,
 ) {
     val direction: SwipeToDismissBoxValue = SwipeToDismissBoxValue.EndToStart
@@ -36,7 +34,7 @@ internal fun SwipeToReply(
         rememberSwipeToDismissBoxState(
             confirmValueChange = { value ->
                 if (value == direction) {
-                    onDismiss()
+                    onSwiped()
                 }
                 value != direction
             },
@@ -53,7 +51,7 @@ internal fun SwipeToReply(
                     SwipeToDismissBoxValue.Settled -> 0.75f
                     else -> 1f
                 },
-                label = "Reply icon scale",
+                label = "Action icon scale",
             )
 
             val haptic = LocalHapticFeedback.current
@@ -69,13 +67,13 @@ internal fun SwipeToReply(
                     .padding(end = 8.dp),
                 contentAlignment = Alignment.CenterEnd,
             ) {
-                Icon(
-                    Icons.AutoMirrored.Filled.Reply,
-                    contentDescription = "Reply",
+                Box(
                     modifier = Modifier
                         .scale(scale)
                         .alpha(scale),
-                )
+                ) {
+                    icon()
+                }
             }
         },
         content = {
@@ -84,11 +82,10 @@ internal fun SwipeToReply(
                     direction -> 2.dp
                     else -> 0.dp
                 },
-                label = "Reply item elevation",
+                label = "Action content elevation",
             )
 
             Surface(
-                tonalElevation = elevation,
                 shadowElevation = elevation,
             ) {
                 content()

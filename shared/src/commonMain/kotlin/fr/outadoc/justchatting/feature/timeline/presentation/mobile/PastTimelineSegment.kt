@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material.icons.filled.Tv
 import androidx.compose.material3.Card
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.BasicUserInfo
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
+import fr.outadoc.justchatting.feature.shared.presentation.mobile.SwipeActionBox
 import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.createVideoExternalLink
@@ -50,89 +52,99 @@ internal fun PastTimelineSegment(
     val haptic = LocalHapticFeedback.current
     val uriHandler = LocalUriHandler.current
 
-    var isExpanded by remember { mutableStateOf(false) }
+    var showDetailsDialog by remember { mutableStateOf(false) }
 
-    OutlinedCard(
-        modifier = modifier,
+    SwipeActionBox(
+        onSwiped = { showDetailsDialog = true },
+        icon = {
+            Icon(
+                Icons.Default.MoreHoriz,
+                contentDescription = stringResource(MR.strings.stream_info),
+            )
+        },
     ) {
-        Column {
-            Card(
-                modifier = Modifier
-                    .combinedClickable(
-                        onClick = {
-                            uriHandler.openUri(
-                                createVideoExternalLink(segment.id),
-                            )
-                        },
-                        onClickLabel = stringResource(MR.strings.timeline_openVod_action),
-                        onLongClick = {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            isExpanded = true
-                        },
-                        onLongClickLabel = stringResource(MR.strings.all_showDetails_cd),
-                    ),
-            ) {
-                TimelineSegmentContent(
-                    modifier = Modifier.padding(8.dp),
-                    title = segment.title,
-                    userName = segment.user.displayName,
-                    category = segment.category,
-                    profileImageUrl = segment.user.profileImageUrl,
-                    onUserClick = onUserClick,
-                )
-            }
+        OutlinedCard(
+            modifier = modifier,
+        ) {
+            Column {
+                Card(
+                    modifier = Modifier
+                        .combinedClickable(
+                            onClick = {
+                                uriHandler.openUri(
+                                    createVideoExternalLink(segment.id),
+                                )
+                            },
+                            onClickLabel = stringResource(MR.strings.timeline_openVod_action),
+                            onLongClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                showDetailsDialog = true
+                            },
+                            onLongClickLabel = stringResource(MR.strings.all_showDetails_cd),
+                        ),
+                ) {
+                    TimelineSegmentContent(
+                        modifier = Modifier.padding(8.dp),
+                        title = segment.title,
+                        userName = segment.user.displayName,
+                        category = segment.category,
+                        profileImageUrl = segment.user.profileImageUrl,
+                        onUserClick = onUserClick,
+                    )
+                }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                Icon(
-                    modifier = Modifier.size(16.dp),
-                    imageVector = Icons.Default.AccessTime,
-                    contentDescription = null,
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    Icon(
+                        modifier = Modifier.size(16.dp),
+                        imageVector = Icons.Default.AccessTime,
+                        contentDescription = null,
+                    )
 
-                Text(
-                    modifier = Modifier.alignByBaseline(),
-                    text = buildAnnotatedString {
-                        append(segment.startTime.formatHourMinute())
-
-                        if (segment.endTime != null) {
-                            append(" - ")
-                            append(segment.endTime.formatHourMinute())
-                        }
-                    },
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-
-                Spacer(
-                    modifier = Modifier.weight(1f, fill = true),
-                )
-
-                Icon(
-                    modifier = Modifier.size(16.dp),
-                    imageVector = Icons.Default.Timelapse,
-                    contentDescription = null,
-                )
-
-                if (segment.endTime != null) {
-                    val duration = segment.endTime - segment.startTime
                     Text(
                         modifier = Modifier.alignByBaseline(),
-                        text = duration.format(showSeconds = false),
+                        text = buildAnnotatedString {
+                            append(segment.startTime.formatHourMinute())
+
+                            if (segment.endTime != null) {
+                                append(" - ")
+                                append(segment.endTime.formatHourMinute())
+                            }
+                        },
                         style = MaterialTheme.typography.bodyMedium,
                     )
+
+                    Spacer(
+                        modifier = Modifier.weight(1f, fill = true),
+                    )
+
+                    Icon(
+                        modifier = Modifier.size(16.dp),
+                        imageVector = Icons.Default.Timelapse,
+                        contentDescription = null,
+                    )
+
+                    if (segment.endTime != null) {
+                        val duration = segment.endTime - segment.startTime
+                        Text(
+                            modifier = Modifier.alignByBaseline(),
+                            text = duration.format(showSeconds = false),
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
                 }
             }
         }
     }
 
-    if (isExpanded) {
+    if (showDetailsDialog) {
         ActionBottomSheet(
-            onDismissRequest = { isExpanded = false },
+            onDismissRequest = { showDetailsDialog = false },
             header = {
                 BasicUserInfo(user = segment.user)
             },
@@ -146,7 +158,7 @@ internal fun PastTimelineSegment(
                         uriHandler.openUri(
                             createVideoExternalLink(segment.id),
                         )
-                        isExpanded = false
+                        showDetailsDialog = false
                     },
                     icon = {
                         Icon(

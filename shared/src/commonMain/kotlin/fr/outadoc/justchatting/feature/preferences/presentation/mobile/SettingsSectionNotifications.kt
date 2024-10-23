@@ -24,7 +24,6 @@ import fr.outadoc.justchatting.utils.permissions.isGranted
 import fr.outadoc.justchatting.utils.permissions.rememberPermissionState
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,7 +65,6 @@ internal fun SettingsSectionNotifications(
     }
 }
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 private fun SettingsSectionNotificationsContent(
     modifier: Modifier = Modifier,

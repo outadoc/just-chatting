@@ -32,9 +32,8 @@ import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(ExperimentalMaterial3Api::class, KoinExperimentalAPI::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TimelineScreen(
     modifier: Modifier = Modifier,

@@ -67,7 +67,7 @@ compose-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata
 compose-ui-core = { module = "androidx.compose.ui:ui" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 desugar = "com.android.tools:desugar_jdk_libs:2.1.2"
-firebase-bom = "com.google.firebase:firebase-bom:33.5.0"
+firebase-bom = "com.google.firebase:firebase-bom:33.5.1"
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 haze-core = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 haze-materials = { module = "dev.chrisbanes.haze:haze-materials", version.ref = "haze" }

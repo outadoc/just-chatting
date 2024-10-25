@@ -115,16 +115,14 @@ internal fun ChatTopAppBar(
             }
         },
         actions = {
-            if (stream != null) {
-                AccessibleIconButton(
-                    onClick = { onStreamInfoClicked() },
-                    onClickLabel = stringResource(MR.strings.stream_info),
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Info,
-                        contentDescription = null,
-                    )
-                }
+            AccessibleIconButton(
+                onClick = { onStreamInfoClicked() },
+                onClickLabel = stringResource(MR.strings.stream_info),
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Info,
+                    contentDescription = null,
+                )
             }
         },
     )

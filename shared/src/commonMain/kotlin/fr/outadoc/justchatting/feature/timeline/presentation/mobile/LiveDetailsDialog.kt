@@ -30,7 +30,7 @@ import org.koin.compose.koinInject
 internal fun LiveDetailsDialog(
     modifier: Modifier = Modifier,
     user: User,
-    stream: Stream,
+    stream: Stream?,
     onDismissRequest: () -> Unit = {},
     onOpenChat: (() -> Unit)? = {},
     onOpenInBubble: () -> Unit = {},
@@ -51,8 +51,8 @@ internal fun LiveDetailsDialog(
         header = {
             BasicUserInfo(user = user)
         },
-        content = {
-            StreamInfo(stream = stream)
+        content = stream?.let {
+            { StreamInfo(stream = stream) }
         },
         actions = { padding ->
             if (onOpenChat != null) {

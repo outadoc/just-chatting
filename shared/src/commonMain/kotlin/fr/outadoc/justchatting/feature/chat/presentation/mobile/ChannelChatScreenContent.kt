@@ -269,7 +269,7 @@ internal fun ChannelChatScreenContent(
                 )
             }
 
-            if (state.isStreamInfoVisible && state.stream != null) {
+            if (state.isStreamInfoVisible) {
                 LiveDetailsDialog(
                     user = state.user,
                     stream = state.stream,

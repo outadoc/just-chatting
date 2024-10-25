@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -27,7 +26,7 @@ internal fun ActionBottomSheet(
     ),
     onDismissRequest: () -> Unit = {},
     header: @Composable () -> Unit = {},
-    content: @Composable () -> Unit = {},
+    content: (@Composable () -> Unit)? = null,
     actions: (@Composable (PaddingValues) -> Unit)? = null,
 ) {
     ModalBottomSheet(
@@ -48,13 +47,13 @@ internal fun ActionBottomSheet(
 private fun DetailsDialogContent(
     modifier: Modifier = Modifier,
     header: @Composable () -> Unit = {},
-    content: @Composable () -> Unit = {},
+    content: (@Composable () -> Unit)? = null,
     actions: (@Composable (PaddingValues) -> Unit)? = null,
     contentPadding: PaddingValues = PaddingValues(horizontal = 32.dp),
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
         Box(
             modifier = Modifier.padding(contentPadding),
@@ -62,25 +61,15 @@ private fun DetailsDialogContent(
             header()
         }
 
-        Box(
-            modifier = Modifier.padding(contentPadding),
-        ) {
-            HorizontalDivider()
-        }
-
-        Box(
-            modifier = Modifier.padding(contentPadding),
-        ) {
-            content()
-        }
-
-        if (actions != null) {
+        content?.let {
             Box(
                 modifier = Modifier.padding(contentPadding),
             ) {
-                HorizontalDivider()
+                content()
             }
+        }
 
+        if (actions != null) {
             Column(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
             ) {
@@ -88,6 +77,6 @@ private fun DetailsDialogContent(
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }

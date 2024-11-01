@@ -1,10 +1,10 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile.preview
 
-import dev.icerock.moko.resources.desc.desc
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Icon
+import fr.outadoc.justchatting.utils.resources.desc2
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
@@ -67,9 +67,9 @@ private val highlightedEntries = sequence {
         ChatListItem.Message.Highlighted(
             timestamp = Instant.fromEpochMilliseconds(1664398268452),
             metadata = ChatListItem.Message.Highlighted.Metadata(
-                title = "clo_chette_".desc(),
+                title = "clo_chette_".desc2(),
                 titleIcon = Icon.Star,
-                subtitle = "subscribed at Tier 1. They've subscribed for 18 months!".desc(),
+                subtitle = "subscribed at Tier 1. They've subscribed for 18 months!".desc2(),
             ),
             body = ChatListItem.Message.Body(
                 chatter = Chatter(
@@ -92,7 +92,7 @@ private val highlightedEntries = sequence {
         ChatListItem.Message.Highlighted(
             timestamp = Instant.fromEpochMilliseconds(1664400523912),
             metadata = ChatListItem.Message.Highlighted.Metadata(
-                title = "First message".desc(),
+                title = "First message".desc2(),
                 titleIcon = Icon.WavingHand,
                 subtitle = null,
             ),
@@ -118,14 +118,14 @@ private val noticeEntries = sequence {
     yield(
         ChatListItem.Message.Notice(
             timestamp = Instant.fromEpochMilliseconds(1664400523912),
-            text = "This room is now in followers-only mode.".desc(),
+            text = "This room is now in followers-only mode.".desc2(),
         ),
     )
 
     yield(
         ChatListItem.Message.Notice(
             timestamp = Instant.fromEpochMilliseconds(1664400523912),
-            text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.".desc(),
+            text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.".desc2(),
         ),
     )
 }

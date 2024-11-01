@@ -37,6 +37,7 @@ import fr.outadoc.justchatting.utils.core.isOdd
 import fr.outadoc.justchatting.utils.core.roundUpOddToEven
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
+import fr.outadoc.justchatting.utils.resources.desc2
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentList
@@ -969,9 +970,9 @@ internal class ChatViewModel(
                                 ChatListItem.Message.Highlighted(
                                     timestamp = clock.now(),
                                     metadata = ChatListItem.Message.Highlighted.Metadata(
-                                        title = MR.strings.chat_send_msg_error.desc(),
+                                        title = MR.strings.chat_send_msg_error.desc2(),
                                         subtitle = (exception as? MessageNotSentException)
-                                            ?.dropReasonMessage?.desc(),
+                                            ?.dropReasonMessage?.desc2(),
                                     ),
                                     body = null,
                                 ),

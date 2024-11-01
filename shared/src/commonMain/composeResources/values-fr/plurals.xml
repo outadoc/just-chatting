@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="viewers">
-        <item quantity="one">%s spectateur</item>
-        <item quantity="other">%s spectateur·rice·s</item>
-        <item quantity="many">%s de spectateur·rice·s</item>
+        <item quantity="one">%1$s spectateur</item>
+        <item quantity="other">%1$s spectateur·rice·s</item>
+        <item quantity="many">%1$s de spectateur·rice·s</item>
     </plurals>
 
     <plurals name="months">
-        <item quantity="one">%s mois</item>
-        <item quantity="other">%s mois</item>
-        <item quantity="many">%s de mois</item>
+        <item quantity="one">%1$s mois</item>
+        <item quantity="other">%1$s mois</item>
+        <item quantity="many">%1$s de mois</item>
     </plurals>
 
     <plurals name="user_redeemed">

@@ -60,12 +60,8 @@
     <string name="date_tomorrow">Tomorrow</string>
     <string name="date_yesterday">Yesterday</string>
     <string name="duration_days">%1$dd</string>
-    <string name="duration_days">%1$dd</string>
-    <string name="duration_hours">%1$dh</string>
     <string name="duration_hours">%1$dh</string>
     <string name="duration_minutes">%1$dm</string>
-    <string name="duration_minutes">%1$dm</string>
-    <string name="duration_seconds">%1$ds</string>
     <string name="duration_seconds">%1$ds</string>
     <string name="followed_at">Following since %s</string>
     <string name="info_loadError">An error occurred while loading user details.</string>

@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.feature.chat.domain.model
 import androidx.compose.runtime.Immutable
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
-import fr.outadoc.justchatting.utils.resources.StringDesc2
+import fr.outadoc.justchatting.utils.resources.StringDesc
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
@@ -32,9 +32,9 @@ internal sealed interface ChatListItem {
         ) : Message() {
 
             data class Metadata(
-                val title: StringDesc2,
+                val title: StringDesc,
                 val titleIcon: Icon? = null,
-                val subtitle: StringDesc2?,
+                val subtitle: StringDesc?,
                 val level: Level = Level.Base,
             )
 
@@ -57,7 +57,7 @@ internal sealed interface ChatListItem {
         @Immutable
         data class Notice(
             override val timestamp: Instant,
-            val text: StringDesc2,
+            val text: StringDesc,
         ) : Message() {
             override val body: Body? = null
         }

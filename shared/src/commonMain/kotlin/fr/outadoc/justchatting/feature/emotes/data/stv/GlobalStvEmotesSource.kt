@@ -7,7 +7,7 @@ import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.chat_source_stv
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.flatListOf
-import fr.outadoc.justchatting.utils.resources.desc2
+import fr.outadoc.justchatting.utils.resources.desc
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
@@ -31,7 +31,7 @@ internal class GlobalStvEmotesSource(
                     flatListOf(
                         EmoteSetItem.Header(
                             title = null,
-                            source = Res.string.chat_source_stv.desc2(),
+                            source = Res.string.chat_source_stv.desc(),
                         ),
                         emotes.map { emote -> EmoteSetItem.Emote(emote) },
                     )

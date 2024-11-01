@@ -6,12 +6,12 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
-internal sealed interface StringDesc2 {
+internal sealed interface StringDesc {
 
     @Composable
     fun localized(): String
 
-    class Raw(val value: String) : StringDesc2 {
+    class Raw(val value: String) : StringDesc {
 
         @Composable
         override fun localized(): String {
@@ -21,7 +21,7 @@ internal sealed interface StringDesc2 {
 
     class Resource(
         private val resource: StringResource,
-    ) : StringDesc2 {
+    ) : StringDesc {
 
         @Composable
         override fun localized(): String {
@@ -32,7 +32,7 @@ internal sealed interface StringDesc2 {
     class Formatted(
         private val resource: StringResource,
         private val args: Array<out Any>,
-    ) : StringDesc2 {
+    ) : StringDesc {
 
         @Composable
         override fun localized(): String {
@@ -43,7 +43,7 @@ internal sealed interface StringDesc2 {
     class Plural(
         private val resource: PluralStringResource,
         private val number: Int,
-    ) : StringDesc2 {
+    ) : StringDesc {
 
         @Composable
         override fun localized(): String {
@@ -55,7 +55,7 @@ internal sealed interface StringDesc2 {
         private val resource: PluralStringResource,
         private val number: Int,
         private val args: Array<out Any>,
-    ) : StringDesc2 {
+    ) : StringDesc {
 
         @Composable
         override fun localized(): String {
@@ -66,22 +66,22 @@ internal sealed interface StringDesc2 {
 
 // Moko
 
-internal fun String.desc2(): StringDesc2 {
-    return StringDesc2.Raw(this)
+internal fun String.desc(): StringDesc {
+    return StringDesc.Raw(this)
 }
 
-internal fun StringResource.desc2(): StringDesc2 {
-    return StringDesc2.Resource(this)
+internal fun StringResource.desc(): StringDesc {
+    return StringDesc.Resource(this)
 }
 
-internal fun StringResource.desc2(vararg args: Any): StringDesc2 {
-    return StringDesc2.Formatted(this, args)
+internal fun StringResource.desc(vararg args: Any): StringDesc {
+    return StringDesc.Formatted(this, args)
 }
 
-internal fun PluralStringResource.desc2(number: Int): StringDesc2 {
-    return StringDesc2.Plural(this, number)
+internal fun PluralStringResource.desc(number: Int): StringDesc {
+    return StringDesc.Plural(this, number)
 }
 
-internal fun PluralStringResource.desc2(number: Int, vararg args: Any): StringDesc2 {
-    return StringDesc2.PluralFormatted(this, number, args)
+internal fun PluralStringResource.desc(number: Int, vararg args: Any): StringDesc {
+    return StringDesc.PluralFormatted(this, number, args)
 }

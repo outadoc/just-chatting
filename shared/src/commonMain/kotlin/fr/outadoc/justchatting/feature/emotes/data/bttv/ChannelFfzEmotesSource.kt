@@ -7,7 +7,7 @@ import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.chat_source_ffz
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.flatListOf
-import fr.outadoc.justchatting.utils.resources.desc2
+import fr.outadoc.justchatting.utils.resources.desc
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
@@ -31,8 +31,8 @@ internal class ChannelFfzEmotesSource(
                 .map { emotes ->
                     flatListOf(
                         EmoteSetItem.Header(
-                            title = params.channelName.desc2(),
-                            source = Res.string.chat_source_ffz.desc2(),
+                            title = params.channelName.desc(),
+                            source = Res.string.chat_source_ffz.desc(),
                         ),
                         emotes.map { emote -> EmoteSetItem.Emote(emote) },
                     )

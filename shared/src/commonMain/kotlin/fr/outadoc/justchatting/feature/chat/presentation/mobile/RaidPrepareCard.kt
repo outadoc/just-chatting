@@ -26,7 +26,7 @@ import fr.outadoc.justchatting.shared.raid_prepare_title
 import fr.outadoc.justchatting.shared.viewers
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatNumber
-import fr.outadoc.justchatting.utils.resources.desc2
+import fr.outadoc.justchatting.utils.resources.desc
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -73,7 +73,7 @@ internal fun RaidPrepareCard(
                         Res.string.raid_prepare_message,
                         raid.targetDisplayName,
                         Res.plurals.viewers
-                            .desc2(
+                            .desc(
                                 number = raid.viewerCount,
                                 raid.viewerCount.formatNumber(),
                             )

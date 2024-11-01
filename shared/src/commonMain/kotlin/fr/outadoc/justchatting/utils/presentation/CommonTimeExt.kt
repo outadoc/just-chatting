@@ -16,7 +16,7 @@ import fr.outadoc.justchatting.shared.duration_days
 import fr.outadoc.justchatting.shared.duration_hours
 import fr.outadoc.justchatting.shared.duration_minutes
 import fr.outadoc.justchatting.shared.duration_seconds
-import fr.outadoc.justchatting.utils.resources.desc2
+import fr.outadoc.justchatting.utils.resources.desc
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.datetime.Clock
@@ -83,17 +83,17 @@ internal fun Duration.format(
         listOfNotNull(
             days
                 .takeIf { it > 0 }
-                ?.let { Res.string.duration_days.desc2(it) },
+                ?.let { Res.string.duration_days.desc(it) },
             hours
                 .takeIf { it > 0 }
-                ?.let { Res.string.duration_hours.desc2(it) },
+                ?.let { Res.string.duration_hours.desc(it) },
             minutes
                 .takeIf { it > 0 }
-                ?.let { Res.string.duration_minutes.desc2(it) },
+                ?.let { Res.string.duration_minutes.desc(it) },
             seconds
                 .takeIf { it > 0 }
                 .takeIf { showSeconds }
-                ?.let { Res.string.duration_seconds.desc2(it) },
+                ?.let { Res.string.duration_seconds.desc(it) },
         )
     }
         .map { desc -> desc.localized() }

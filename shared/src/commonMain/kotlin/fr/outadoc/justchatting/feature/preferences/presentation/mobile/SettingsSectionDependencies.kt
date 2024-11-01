@@ -21,10 +21,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.preferences.presentation.Dependency
 import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.all_goBack
+import fr.outadoc.justchatting.shared.settings_dependencies_cd
+import fr.outadoc.justchatting.shared.settings_dependencies_header
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.plus
 import org.koin.compose.koinInject
@@ -40,12 +43,12 @@ internal fun SettingsSectionDependencies(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(MR.strings.settings_dependencies_header)) },
+                title = { Text(stringResource(Res.string.settings_dependencies_header)) },
                 navigationIcon = {
                     if (canNavigateUp) {
                         AccessibleIconButton(
                             onClick = onNavigateUp,
-                            onClickLabel = stringResource(MR.strings.all_goBack),
+                            onClickLabel = stringResource(Res.string.all_goBack),
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -91,7 +94,7 @@ private fun SettingsSectionDependenciesContent(
                         uriHandler.openUri(url)
                     }
                 },
-                onClickLabel = stringResource(MR.strings.settings_dependencies_cd)
+                onClickLabel = stringResource(Res.string.settings_dependencies_cd)
                     .takeIf { dependency.moduleUrl != null },
                 title = { Text(text = dependency.moduleName) },
                 subtitle = {

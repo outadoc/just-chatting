@@ -16,9 +16,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.all_goBack
+import fr.outadoc.justchatting.shared.settings_appearance_header
+import fr.outadoc.justchatting.shared.settings_notifications_enable_subtitle
+import fr.outadoc.justchatting.shared.settings_notifications_enable_title
+import fr.outadoc.justchatting.shared.settings_notifications_openBubbleSettings
+import fr.outadoc.justchatting.shared.settings_notifications_openNotificationsSettings
 import fr.outadoc.justchatting.utils.permissions.PermissionState
 import fr.outadoc.justchatting.utils.permissions.isGranted
 import fr.outadoc.justchatting.utils.permissions.rememberPermissionState
@@ -39,12 +45,12 @@ internal fun SettingsSectionNotifications(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(MR.strings.settings_appearance_header)) },
+                title = { Text(stringResource(Res.string.settings_appearance_header)) },
                 navigationIcon = {
                     if (canNavigateUp) {
                         AccessibleIconButton(
                             onClick = onNavigateUp,
-                            onClickLabel = stringResource(MR.strings.all_goBack),
+                            onClickLabel = stringResource(Res.string.all_goBack),
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -89,8 +95,8 @@ private fun SettingsSectionNotificationsContent(
 
             SettingsSwitch(
                 modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.settings_notifications_enable_title)) },
-                subtitle = { Text(text = stringResource(MR.strings.settings_notifications_enable_subtitle)) },
+                title = { Text(text = stringResource(Res.string.settings_notifications_enable_title)) },
+                subtitle = { Text(text = stringResource(Res.string.settings_notifications_enable_subtitle)) },
                 checked = notificationPermissionState.status.isGranted && appPreferences.enableNotifications,
                 onCheckedChange = { checked ->
                     if (checked) {
@@ -108,9 +114,9 @@ private fun SettingsSectionNotificationsContent(
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = onOpenNotificationPreferences,
-                onClickLabel = stringResource(MR.strings.settings_notifications_openNotificationsSettings),
+                onClickLabel = stringResource(Res.string.settings_notifications_openNotificationsSettings),
                 title = {
-                    Text(text = stringResource(MR.strings.settings_notifications_openNotificationsSettings))
+                    Text(text = stringResource(Res.string.settings_notifications_openNotificationsSettings))
                 },
                 trailingIcon = {
                     Icon(
@@ -125,9 +131,9 @@ private fun SettingsSectionNotificationsContent(
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = onOpenBubblePreferences,
-                onClickLabel = stringResource(MR.strings.settings_notifications_openBubbleSettings),
+                onClickLabel = stringResource(Res.string.settings_notifications_openBubbleSettings),
                 title = {
-                    Text(text = stringResource(MR.strings.settings_notifications_openBubbleSettings))
+                    Text(text = stringResource(Res.string.settings_notifications_openBubbleSettings))
                 },
                 trailingIcon = {
                     Icon(

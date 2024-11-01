@@ -15,12 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.pluralStringResource
-import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.uptime
+import fr.outadoc.justchatting.shared.viewers
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import fr.outadoc.justchatting.utils.presentation.formatNumber
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun StreamInfo(
@@ -60,7 +62,7 @@ internal fun StreamInfo(
 
             Text(
                 text = pluralStringResource(
-                    MR.plurals.viewers,
+                    Res.plurals.viewers,
                     stream.viewerCount.toInt(),
                     stream.viewerCount.toInt().formatNumber(),
                 ),
@@ -78,7 +80,7 @@ internal fun StreamInfo(
                     contentDescription = null,
                 )
 
-                Text(text = stringResource(MR.strings.uptime, startedAt))
+                Text(text = stringResource(Res.string.uptime, startedAt))
             }
         }
 

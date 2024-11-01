@@ -30,12 +30,13 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.BasicUserInfo
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.SwipeActionBox
 import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.stream_info
 import fr.outadoc.justchatting.utils.presentation.format
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 
@@ -54,7 +55,7 @@ internal fun FutureTimelineSegment(
         icon = {
             Icon(
                 Icons.Default.MoreHoriz,
-                contentDescription = stringResource(MR.strings.stream_info),
+                contentDescription = stringResource(Res.string.stream_info),
             )
         },
     ) {

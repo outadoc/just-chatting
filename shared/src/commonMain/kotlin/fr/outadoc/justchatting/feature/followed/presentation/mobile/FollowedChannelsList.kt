@@ -30,7 +30,7 @@ import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.followed.presentation.FollowedChannelsViewModel
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainNavigation
@@ -38,7 +38,9 @@ import fr.outadoc.justchatting.feature.shared.presentation.mobile.NoContent
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.Screen
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.UserItemCard
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.UserItemCardPlaceholder
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.channels
+import fr.outadoc.justchatting.shared.timeline_refresh_action_cd
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.plus
 import org.koin.compose.viewmodel.koinViewModel
@@ -78,12 +80,12 @@ internal fun FollowedChannelsList(
                         state = hazeState,
                         style = HazeMaterials.regular(),
                     ),
-                title = { Text(stringResource(MR.strings.channels)) },
+                title = { Text(stringResource(Res.string.channels)) },
                 scrollBehavior = scrollBehavior,
                 actions = {
                     AccessibleIconButton(
                         onClick = { viewModel.synchronize() },
-                        onClickLabel = stringResource(MR.strings.timeline_refresh_action_cd),
+                        onClickLabel = stringResource(Res.string.timeline_refresh_action_cd),
                     ) {
                         if (state.isLoading) {
                             CircularProgressIndicator(

@@ -1,12 +1,13 @@
 package fr.outadoc.justchatting.feature.emotes.data.stv
 
-import dev.icerock.moko.resources.desc.desc
 import fr.outadoc.justchatting.feature.emotes.domain.CachedEmoteListSource
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteSetItem
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.chat_source_stv
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.flatListOf
+import fr.outadoc.justchatting.utils.resources.desc2
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
@@ -30,7 +31,7 @@ internal class GlobalStvEmotesSource(
                     flatListOf(
                         EmoteSetItem.Header(
                             title = null,
-                            source = MR.strings.chat_source_stv.desc(),
+                            source = Res.string.chat_source_stv.desc2(),
                         ),
                         emotes.map { emote -> EmoteSetItem.Emote(emote) },
                     )

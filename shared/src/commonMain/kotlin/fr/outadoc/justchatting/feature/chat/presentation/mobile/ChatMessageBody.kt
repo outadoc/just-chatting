@@ -32,14 +32,16 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import com.materialkolor.ktx.harmonizeWithPrimary
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.chat_message_actionSeparator
+import fr.outadoc.justchatting.shared.chat_message_standardSeparator
 import fr.outadoc.justchatting.utils.presentation.customColors
 import fr.outadoc.justchatting.utils.presentation.ensureColorIsAccessible
 import fr.outadoc.justchatting.utils.presentation.isValidWebUrl
@@ -220,9 +222,9 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
             append(
                 stringResource(
                     if (isAction) {
-                        MR.strings.chat_message_actionSeparator
+                        Res.string.chat_message_actionSeparator
                     } else {
-                        MR.strings.chat_message_standardSeparator
+                        Res.string.chat_message_standardSeparator
                     },
                 ),
             )

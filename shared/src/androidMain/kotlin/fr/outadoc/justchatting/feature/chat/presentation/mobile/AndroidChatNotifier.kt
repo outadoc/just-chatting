@@ -16,7 +16,6 @@ import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageIcon
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.shared.domain.model.User
-import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.core.toPendingActivityIntent
 import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
@@ -73,8 +72,8 @@ internal class AndroidChatNotifier(
                 NOTIFICATION_CHANNEL_ID,
                 NotificationManagerCompat.IMPORTANCE_MIN,
             )
-                .setName(MR.strings.notification_channel_bubbles_title.getString(context))
-                .setDescription(MR.strings.notification_channel_bubbles_message.getString(context))
+                .setName(context.getString(R.string.notification_channel_bubbles_title))
+                .setDescription(context.getString(R.string.notification_channel_bubbles_message))
                 .build(),
         )
 
@@ -107,18 +106,14 @@ internal class AndroidChatNotifier(
                 .addAction(
                     NotificationCompat.Action.Builder(
                         R.drawable.ic_reply,
-                        MR.strings.notification_action_reply.getString(context),
+                        context.getString(R.string.notification_action_reply),
                         ChatConnectionService.createReplyIntent(context, channelId = user.id)
                             .toPendingForegroundServiceIntent(context, mutable = true),
                     )
                         .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_REPLY)
                         .addRemoteInput(
                             RemoteInput.Builder(KEY_QUICK_REPLY_TEXT)
-                                .setLabel(
-                                    MR.strings.notification_action_reply_hint.getString(
-                                        context,
-                                    ),
-                                )
+                                .setLabel(context.getString(R.string.notification_action_reply_hint))
                                 .build(),
                         )
                         .build(),
@@ -136,7 +131,7 @@ internal class AndroidChatNotifier(
                 .setStyle(
                     NotificationCompat.MessagingStyle(person)
                         .addMessage(
-                            MR.strings.notification_channel_bubbles_openPrompt.getString(context),
+                            context.getString(R.string.notification_channel_bubbles_openPrompt),
                             System.currentTimeMillis(),
                             person,
                         ),

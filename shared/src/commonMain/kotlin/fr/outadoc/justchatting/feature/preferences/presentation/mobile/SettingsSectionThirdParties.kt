@@ -19,9 +19,27 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.all_goBack
+import fr.outadoc.justchatting.shared.app_pronouns_url
+import fr.outadoc.justchatting.shared.settings_thirdparty_bttv_subtitle
+import fr.outadoc.justchatting.shared.settings_thirdparty_bttv_title
+import fr.outadoc.justchatting.shared.settings_thirdparty_emotes_header
+import fr.outadoc.justchatting.shared.settings_thirdparty_ffz_subtitle
+import fr.outadoc.justchatting.shared.settings_thirdparty_ffz_title
+import fr.outadoc.justchatting.shared.settings_thirdparty_pronouns_header
+import fr.outadoc.justchatting.shared.settings_thirdparty_pronouns_set_cd
+import fr.outadoc.justchatting.shared.settings_thirdparty_pronouns_set_title
+import fr.outadoc.justchatting.shared.settings_thirdparty_pronouns_subtitle
+import fr.outadoc.justchatting.shared.settings_thirdparty_pronouns_title
+import fr.outadoc.justchatting.shared.settings_thirdparty_recent_header
+import fr.outadoc.justchatting.shared.settings_thirdparty_recent_subtitle
+import fr.outadoc.justchatting.shared.settings_thirdparty_recent_title
+import fr.outadoc.justchatting.shared.settings_thirdparty_section_title
+import fr.outadoc.justchatting.shared.settings_thirdparty_stv_subtitle
+import fr.outadoc.justchatting.shared.settings_thirdparty_stv_title
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -37,12 +55,12 @@ internal fun SettingsSectionThirdParties(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(MR.strings.settings_thirdparty_section_title)) },
+                title = { Text(stringResource(Res.string.settings_thirdparty_section_title)) },
                 navigationIcon = {
                     if (canNavigateUp) {
                         AccessibleIconButton(
                             onClick = onNavigateUp,
-                            onClickLabel = stringResource(MR.strings.all_goBack),
+                            onClickLabel = stringResource(Res.string.all_goBack),
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -85,7 +103,7 @@ private fun SettingsSectionThirdPartiesContent(
                     .padding(top = 8.dp)
                     .padding(itemInsets),
             ) {
-                Text(stringResource(MR.strings.settings_thirdparty_recent_header))
+                Text(stringResource(Res.string.settings_thirdparty_recent_header))
             }
         }
 
@@ -97,10 +115,10 @@ private fun SettingsSectionThirdPartiesContent(
                     viewModel.updatePreferences(appPreferences.copy(enableRecentMessages = checked))
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_recent_title))
+                    Text(stringResource(Res.string.settings_thirdparty_recent_title))
                 },
                 subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_recent_subtitle))
+                    Text(stringResource(Res.string.settings_thirdparty_recent_subtitle))
                 },
             )
         }
@@ -115,7 +133,7 @@ private fun SettingsSectionThirdPartiesContent(
                     .padding(top = 8.dp)
                     .padding(itemInsets),
             ) {
-                Text(stringResource(MR.strings.settings_thirdparty_pronouns_header))
+                Text(stringResource(Res.string.settings_thirdparty_pronouns_header))
             }
         }
 
@@ -127,21 +145,21 @@ private fun SettingsSectionThirdPartiesContent(
                     viewModel.updatePreferences(appPreferences.copy(enablePronouns = checked))
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_pronouns_title))
+                    Text(stringResource(Res.string.settings_thirdparty_pronouns_title))
                 },
                 subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_pronouns_subtitle))
+                    Text(stringResource(Res.string.settings_thirdparty_pronouns_subtitle))
                 },
             )
         }
 
         item {
-            val pronounsUrl = stringResource(MR.strings.app_pronouns_url)
+            val pronounsUrl = stringResource(Res.string.app_pronouns_url)
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = { uriHandler.openUri(pronounsUrl) },
-                onClickLabel = stringResource(MR.strings.settings_thirdparty_pronouns_set_cd),
-                title = { Text(text = stringResource(MR.strings.settings_thirdparty_pronouns_set_title)) },
+                onClickLabel = stringResource(Res.string.settings_thirdparty_pronouns_set_cd),
+                title = { Text(text = stringResource(Res.string.settings_thirdparty_pronouns_set_title)) },
                 trailingIcon = {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.OpenInNew,
@@ -161,7 +179,7 @@ private fun SettingsSectionThirdPartiesContent(
                     .padding(top = 8.dp)
                     .padding(itemInsets),
             ) {
-                Text(stringResource(MR.strings.settings_thirdparty_emotes_header))
+                Text(stringResource(Res.string.settings_thirdparty_emotes_header))
             }
         }
 
@@ -173,10 +191,10 @@ private fun SettingsSectionThirdPartiesContent(
                     viewModel.updatePreferences(appPreferences.copy(enableBttvEmotes = checked))
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_bttv_title))
+                    Text(stringResource(Res.string.settings_thirdparty_bttv_title))
                 },
                 subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_bttv_subtitle))
+                    Text(stringResource(Res.string.settings_thirdparty_bttv_subtitle))
                 },
             )
         }
@@ -189,10 +207,10 @@ private fun SettingsSectionThirdPartiesContent(
                     viewModel.updatePreferences(appPreferences.copy(enableFfzEmotes = checked))
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_ffz_title))
+                    Text(stringResource(Res.string.settings_thirdparty_ffz_title))
                 },
                 subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_ffz_subtitle))
+                    Text(stringResource(Res.string.settings_thirdparty_ffz_subtitle))
                 },
             )
         }
@@ -205,10 +223,10 @@ private fun SettingsSectionThirdPartiesContent(
                     viewModel.updatePreferences(appPreferences.copy(enableStvEmotes = checked))
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_stv_title))
+                    Text(stringResource(Res.string.settings_thirdparty_stv_title))
                 },
                 subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_stv_subtitle))
+                    Text(stringResource(Res.string.settings_thirdparty_stv_subtitle))
                 },
             )
         }

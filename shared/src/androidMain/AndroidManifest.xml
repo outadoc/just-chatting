@@ -33,7 +33,7 @@
         <receiver
             android:name="fr.outadoc.justchatting.feature.timeline.presentation.widget.LiveWidgetReceiver"
             android:exported="true"
-            android:label="@string/live">
+            android:label="@string/widget_live_title">
 
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -52,7 +52,7 @@
         <receiver
             android:name="fr.outadoc.justchatting.feature.followed.presentation.widget.FollowedChannelsWidgetReceiver"
             android:exported="true"
-            android:label="@string/channels">
+            android:label="@string/widget_channels_title">
 
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -71,7 +71,7 @@
         <receiver
             android:name="fr.outadoc.justchatting.feature.recent.presentation.widget.RecentChannelsWidgetReceiver"
             android:exported="true"
-            android:label="@string/chat_header_recent">
+            android:label="@string/widget_recent_title">
 
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

@@ -25,11 +25,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.prediction_collapse_action
+import fr.outadoc.justchatting.shared.prediction_expand_action
+import fr.outadoc.justchatting.shared.prediction_status_ended
+import fr.outadoc.justchatting.shared.prediction_status_locked
+import fr.outadoc.justchatting.shared.prediction_status_points
+import fr.outadoc.justchatting.shared.prediction_status_progress
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ensureColorIsAccessible
 import fr.outadoc.justchatting.utils.presentation.formatNumber
@@ -58,11 +64,11 @@ internal fun PredictionCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             val status = when (prediction.status) {
-                Prediction.Status.Active -> MR.strings.prediction_status_progress
-                Prediction.Status.Locked -> MR.strings.prediction_status_locked
+                Prediction.Status.Active -> Res.string.prediction_status_progress
+                Prediction.Status.Locked -> Res.string.prediction_status_locked
                 Prediction.Status.ResolvePending,
                 Prediction.Status.Resolved,
-                -> MR.strings.prediction_status_ended
+                -> Res.string.prediction_status_ended
             }
 
             val totalPointsSpent: Int =
@@ -82,7 +88,7 @@ internal fun PredictionCard(
                             append(" · ")
                             append(
                                 stringResource(
-                                    MR.strings.prediction_status_points,
+                                    Res.string.prediction_status_points,
                                     totalPointsSpent.formatNumber(),
                                 ),
                             )
@@ -102,12 +108,12 @@ internal fun PredictionCard(
                 if (isExpanded) {
                     Icon(
                         Icons.Default.ArrowDropUp,
-                        contentDescription = stringResource(MR.strings.prediction_collapse_action),
+                        contentDescription = stringResource(Res.string.prediction_collapse_action),
                     )
                 } else {
                     Icon(
                         Icons.Default.ArrowDropDown,
-                        contentDescription = stringResource(MR.strings.prediction_expand_action),
+                        contentDescription = stringResource(Res.string.prediction_expand_action),
                     )
                 }
             }

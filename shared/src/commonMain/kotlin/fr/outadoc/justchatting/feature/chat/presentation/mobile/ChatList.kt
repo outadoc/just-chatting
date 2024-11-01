@@ -31,7 +31,7 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
@@ -41,7 +41,9 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.SwipeActionBox
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.chat_copyToClipboard
+import fr.outadoc.justchatting.shared.chat_replyTo
 import fr.outadoc.justchatting.utils.core.isEven
 import fr.outadoc.justchatting.utils.core.isOdd
 import kotlinx.collections.immutable.ImmutableList
@@ -171,7 +173,7 @@ internal fun ChatList(
                     }
 
                 val canBeRepliedTo = item.body?.messageId != null
-                val replyToActionCd = stringResource(MR.strings.chat_replyTo)
+                val replyToActionCd = stringResource(Res.string.chat_replyTo)
 
                 SwipeActionBox(
                     modifier = Modifier.animateItem(),
@@ -182,7 +184,7 @@ internal fun ChatList(
                     icon = {
                         Icon(
                             Icons.AutoMirrored.Filled.Reply,
-                            contentDescription = stringResource(MR.strings.chat_replyTo),
+                            contentDescription = stringResource(Res.string.chat_replyTo),
                         )
                     },
                     enabled = canBeRepliedTo,
@@ -196,7 +198,7 @@ internal fun ChatList(
                                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                     onMessageLongClick(item)
                                 },
-                                onLongClickLabel = stringResource(MR.strings.chat_copyToClipboard),
+                                onLongClickLabel = stringResource(Res.string.chat_copyToClipboard),
                             )
                             .semantics {
                                 if (canBeRepliedTo) {

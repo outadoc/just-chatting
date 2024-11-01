@@ -63,6 +63,6 @@ internal actual val platformModule: Module
         single<BaseHttpClientProvider> { AndroidHttpClientProvider(get(), get()) }
 
         single<LogRepository> { AndroidLogRepository(get()) }
-        single<ReadExternalDependenciesList> { AndroidReadExternalDependenciesList(get()) }
+        single<ReadExternalDependenciesList> { AndroidReadExternalDependenciesList() }
         single<AppVersionNameProvider> { AndroidAppVersionNameProvider(get()) }
     }

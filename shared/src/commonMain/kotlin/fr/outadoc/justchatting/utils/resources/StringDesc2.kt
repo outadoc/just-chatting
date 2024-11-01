@@ -1,10 +1,10 @@
 package fr.outadoc.justchatting.utils.resources
 
 import androidx.compose.runtime.Composable
-import dev.icerock.moko.resources.PluralsResource
-import dev.icerock.moko.resources.StringResource
-import dev.icerock.moko.resources.format
-import fr.outadoc.justchatting.utils.presentation.asString
+import org.jetbrains.compose.resources.PluralStringResource
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 internal sealed interface StringDesc2 {
 
@@ -25,7 +25,7 @@ internal sealed interface StringDesc2 {
 
         @Composable
         override fun localized(): String {
-            return resource.format().asString()
+            return stringResource(resource)
         }
     }
 
@@ -36,30 +36,30 @@ internal sealed interface StringDesc2 {
 
         @Composable
         override fun localized(): String {
-            return resource.format(*args).asString()
+            return stringResource(resource, *args)
         }
     }
 
     class Plural(
-        private val resource: PluralsResource,
+        private val resource: PluralStringResource,
         private val number: Int,
     ) : StringDesc2 {
 
         @Composable
         override fun localized(): String {
-            return resource.format(number).asString()
+            return pluralStringResource(resource, number)
         }
     }
 
     class PluralFormatted(
-        private val resource: PluralsResource,
+        private val resource: PluralStringResource,
         private val number: Int,
         private val args: Array<out Any>,
     ) : StringDesc2 {
 
         @Composable
         override fun localized(): String {
-            return resource.format(number, *args).asString()
+            return pluralStringResource(resource, number, *args)
         }
     }
 }
@@ -78,11 +78,10 @@ internal fun StringResource.desc2(vararg args: Any): StringDesc2 {
     return StringDesc2.Formatted(this, args)
 }
 
-internal fun PluralsResource.desc2(number: Int): StringDesc2 {
+internal fun PluralStringResource.desc2(number: Int): StringDesc2 {
     return StringDesc2.Plural(this, number)
 }
 
-internal fun PluralsResource.desc2(number: Int, vararg args: Any): StringDesc2 {
+internal fun PluralStringResource.desc2(number: Int, vararg args: Any): StringDesc2 {
     return StringDesc2.PluralFormatted(this, number, args)
 }
-

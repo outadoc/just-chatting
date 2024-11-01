@@ -2,12 +2,13 @@ package fr.outadoc.justchatting.feature.emotes.domain.model
 
 import androidx.compose.runtime.Immutable
 import dev.icerock.moko.resources.desc.StringDesc
+import fr.outadoc.justchatting.utils.resources.StringDesc2
 
 @Immutable
 internal sealed class EmoteSetItem {
     data class Header(
-        val title: StringDesc?,
-        val source: StringDesc?,
+        val title: StringDesc2?,
+        val source: StringDesc2?,
         val iconUrl: String? = null,
     ) : EmoteSetItem()
 

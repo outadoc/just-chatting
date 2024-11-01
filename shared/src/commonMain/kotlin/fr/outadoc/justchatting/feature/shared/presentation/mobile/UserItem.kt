@@ -19,9 +19,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.followed_at
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatDate
 import kotlinx.collections.immutable.ImmutableList
@@ -92,7 +93,7 @@ internal fun UserItem(
                 ?.formatDate()
                 ?.let { followedAt ->
                     Text(
-                        text = stringResource(MR.strings.followed_at, followedAt),
+                        text = stringResource(Res.string.followed_at, followedAt),
                         style = MaterialTheme.typography.labelMedium,
                     )
                 }

@@ -233,11 +233,6 @@
     <string name="no">No</string>
     <string name="nothing_here">Nothing here yet</string>
     <string name="notification_action_disconnect">Disconnect</string>
-    <string name="notification_action_reply">Reply</string>
-    <string name="notification_action_reply_hint">Reply in chat…</string>
-    <string name="notification_channel_bubbles_message">Used to show the Twitch chat in notification bubbles.</string>
-    <string name="notification_channel_bubbles_openPrompt">Keep an eye on this chat by opening this notification in a bubble.</string>
-    <string name="notification_channel_bubbles_title">Chat bubbles</string>
     <string name="onboarding_login_action">Continue with Twitch</string>
     <string name="onboarding_message">In order to browse your followed channels and post in chat, you will need to link your Twitch account.</string>
     <string name="onboarding_title">Welcome to</string>
@@ -320,8 +315,5 @@
     <string name="timeline_today_action_cd">Jump to live content</string>
     <string name="uptime">Live since %s</string>
     <string name="watch_live">Watch live</string>
-    <string name="widget_description_followed">Shows your followed channels.</string>
-    <string name="widget_description_live">Shows your followed channels that are currently live.</string>
-    <string name="widget_description_recent">Shows your recently visited channels.</string>
     <string name="yes">Yes</string>
 </resources>

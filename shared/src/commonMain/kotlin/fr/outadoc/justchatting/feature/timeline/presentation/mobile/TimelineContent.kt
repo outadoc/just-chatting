@@ -27,14 +27,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.BasicUserInfo
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ExtraUserInfo
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.NoContent
 import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.live
 import fr.outadoc.justchatting.utils.presentation.formatDate
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -130,7 +131,7 @@ internal fun TimelineContent(
                         ) {
                             if (schedule.live.isNotEmpty()) {
                                 SectionHeader(
-                                    title = { Text(stringResource(MR.strings.live)) },
+                                    title = { Text(stringResource(Res.string.live)) },
                                 )
                             }
                         }

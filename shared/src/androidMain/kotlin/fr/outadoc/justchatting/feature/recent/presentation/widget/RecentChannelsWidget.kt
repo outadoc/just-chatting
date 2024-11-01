@@ -62,7 +62,7 @@ internal class RecentChannelsWidget : GlanceAppWidget() {
                     titleBar = {
                         TitleBar(
                             startIcon = ImageProvider(R.drawable.ic_notif),
-                            title = LocalContext.current.getString(R.string.chat_header_recent),
+                            title = LocalContext.current.getString(R.string.widget_recent_title),
                         )
                     },
                 ) {

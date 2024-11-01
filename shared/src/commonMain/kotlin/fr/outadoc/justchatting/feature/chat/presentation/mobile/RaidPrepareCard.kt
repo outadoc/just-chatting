@@ -19,13 +19,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.raid_prepare_message
+import fr.outadoc.justchatting.shared.raid_prepare_title
+import fr.outadoc.justchatting.shared.viewers
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.asString
 import fr.outadoc.justchatting.utils.presentation.formatNumber
+import fr.outadoc.justchatting.utils.resources.desc2
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -60,7 +64,7 @@ internal fun RaidPrepareCard(
                 modifier = Modifier.weight(1f, fill = true),
             ) {
                 Text(
-                    text = stringResource(MR.strings.raid_prepare_title),
+                    text = stringResource(Res.string.raid_prepare_title),
                     style = MaterialTheme.typography.titleLarge,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -68,14 +72,14 @@ internal fun RaidPrepareCard(
 
                 Text(
                     text = stringResource(
-                        MR.strings.raid_prepare_message,
+                        Res.string.raid_prepare_message,
                         raid.targetDisplayName,
-                        MR.plurals.viewers
-                            .format(
+                        Res.plurals.viewers
+                            .desc2(
                                 number = raid.viewerCount,
                                 raid.viewerCount.formatNumber(),
                             )
-                            .asString(),
+                            .localized(),
                     ),
                     style = MaterialTheme.typography.bodyMedium,
                 )

@@ -19,8 +19,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.shared.MR
+import org.jetbrains.compose.resources.stringResource
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.poll_status_winner_cd
 import fr.outadoc.justchatting.utils.presentation.customColors
 import fr.outadoc.justchatting.utils.presentation.formatPercent
 
@@ -65,7 +66,7 @@ internal fun PollChoice(
                     Icon(
                         modifier = Modifier.padding(end = 8.dp),
                         imageVector = Icons.Default.CheckCircle,
-                        contentDescription = stringResource(MR.strings.poll_status_winner_cd),
+                        contentDescription = stringResource(Res.string.poll_status_winner_cd),
                     )
                 }
 

@@ -27,11 +27,13 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.TagList
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.all_showDetails_cd
+import fr.outadoc.justchatting.shared.chat_open_action
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 import fr.outadoc.justchatting.utils.presentation.formatTimeSince
@@ -65,12 +67,12 @@ internal fun LiveStreamCard(
                 modifier = Modifier
                     .combinedClickable(
                         onClick = onClick,
-                        onClickLabel = stringResource(MR.strings.chat_open_action),
+                        onClickLabel = stringResource(Res.string.chat_open_action),
                         onLongClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             onLongClick()
                         },
-                        onLongClickLabel = stringResource(MR.strings.all_showDetails_cd),
+                        onLongClickLabel = stringResource(Res.string.all_showDetails_cd),
                     ),
             ) {
                 LiveStream(

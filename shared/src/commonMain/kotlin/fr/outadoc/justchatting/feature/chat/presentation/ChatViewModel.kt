@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.feature.chat.presentation
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.icerock.moko.resources.desc.desc
 import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
@@ -30,7 +29,9 @@ import fr.outadoc.justchatting.feature.shared.domain.model.MessageNotSentExcepti
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.chat_header_recent
+import fr.outadoc.justchatting.shared.chat_send_msg_error
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.flatListOf
 import fr.outadoc.justchatting.utils.core.isOdd
@@ -179,7 +180,7 @@ internal class ChatViewModel(
             val pickableEmotesWithRecent: ImmutableList<EmoteSetItem>
                 get() = flatListOf(
                     EmoteSetItem.Header(
-                        title = MR.strings.chat_header_recent.desc(),
+                        title = Res.string.chat_header_recent.desc2(),
                         source = null,
                     ),
                     recentEmotes
@@ -970,7 +971,7 @@ internal class ChatViewModel(
                                 ChatListItem.Message.Highlighted(
                                     timestamp = clock.now(),
                                     metadata = ChatListItem.Message.Highlighted.Metadata(
-                                        title = MR.strings.chat_send_msg_error.desc2(),
+                                        title = Res.string.chat_send_msg_error.desc2(),
                                         subtitle = (exception as? MessageNotSentException)
                                             ?.dropReasonMessage?.desc2(),
                                     ),

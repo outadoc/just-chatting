@@ -11,10 +11,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.SwipeActionBox
 import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.stream_info
 
 @Composable
 internal fun LiveTimelineSegment(
@@ -32,7 +33,7 @@ internal fun LiveTimelineSegment(
         icon = {
             Icon(
                 Icons.Default.MoreHoriz,
-                contentDescription = stringResource(MR.strings.stream_info),
+                contentDescription = stringResource(Res.string.stream_info),
             )
         },
     ) {

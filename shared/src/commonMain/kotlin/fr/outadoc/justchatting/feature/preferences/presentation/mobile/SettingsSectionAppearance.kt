@@ -16,9 +16,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.all_goBack
+import fr.outadoc.justchatting.shared.settings_appearance_animations_action
+import fr.outadoc.justchatting.shared.settings_appearance_animations_subtitle
+import fr.outadoc.justchatting.shared.settings_appearance_animations_title
+import fr.outadoc.justchatting.shared.settings_appearance_header
+import fr.outadoc.justchatting.shared.settings_appearance_timestamps_title
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -35,12 +41,12 @@ internal fun SettingsSectionAppearance(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(MR.strings.settings_appearance_header)) },
+                title = { Text(stringResource(Res.string.settings_appearance_header)) },
                 navigationIcon = {
                     if (canNavigateUp) {
                         AccessibleIconButton(
                             onClick = onNavigateUp,
-                            onClickLabel = stringResource(MR.strings.all_goBack),
+                            onClickLabel = stringResource(Res.string.all_goBack),
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -85,7 +91,7 @@ private fun SettingsSectionAppearanceContent(
                     viewModel.updatePreferences(appPreferences.copy(showTimestamps = checked))
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_appearance_timestamps_title))
+                    Text(stringResource(Res.string.settings_appearance_timestamps_title))
                 },
             )
         }
@@ -94,12 +100,12 @@ private fun SettingsSectionAppearanceContent(
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = onOpenAccessibilityPreferences,
-                onClickLabel = stringResource(MR.strings.settings_appearance_animations_action),
+                onClickLabel = stringResource(Res.string.settings_appearance_animations_action),
                 title = {
-                    Text(stringResource(MR.strings.settings_appearance_animations_title))
+                    Text(stringResource(Res.string.settings_appearance_animations_title))
                 },
                 subtitle = {
-                    Text(stringResource(MR.strings.settings_appearance_animations_subtitle))
+                    Text(stringResource(Res.string.settings_appearance_animations_subtitle))
                 },
                 trailingIcon = {
                     Icon(

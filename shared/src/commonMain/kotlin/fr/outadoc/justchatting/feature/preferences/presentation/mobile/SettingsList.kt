@@ -28,14 +28,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.BasicUserInfo
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ExtraUserInfo
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.core.PlaceholderHighlight
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.material3.placeholder
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.material3.shimmer
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.logout_msg
+import fr.outadoc.justchatting.shared.logout_title
+import fr.outadoc.justchatting.shared.no
+import fr.outadoc.justchatting.shared.settings_about_header
+import fr.outadoc.justchatting.shared.settings_account_logout_action
+import fr.outadoc.justchatting.shared.settings_appearance_header
+import fr.outadoc.justchatting.shared.settings_dependencies_header
+import fr.outadoc.justchatting.shared.settings_notifications_header
+import fr.outadoc.justchatting.shared.settings_thirdparty_section_title
+import fr.outadoc.justchatting.shared.yes
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.areBubblesSupported
 import fr.outadoc.justchatting.utils.presentation.plus
@@ -105,7 +115,7 @@ internal fun SettingsList(
                         CompositionLocalProvider(
                             LocalContentColor provides MaterialTheme.colorScheme.error,
                         ) {
-                            Text(text = stringResource(MR.strings.settings_account_logout_action))
+                            Text(text = stringResource(Res.string.settings_account_logout_action))
                         }
                     },
                 )
@@ -114,18 +124,18 @@ internal fun SettingsList(
             if (showLogoutDialog) {
                 AlertDialog(
                     onDismissRequest = { showLogoutDialog = false },
-                    title = { Text(text = stringResource(MR.strings.logout_title)) },
+                    title = { Text(text = stringResource(Res.string.logout_title)) },
                     text = {
                         Text(
                             text = stringResource(
-                                MR.strings.logout_msg,
+                                Res.string.logout_msg,
                                 loggedInUser?.displayName ?: "",
                             ),
                         )
                     },
                     dismissButton = {
                         TextButton(onClick = { showLogoutDialog = false }) {
-                            Text(text = stringResource(MR.strings.no))
+                            Text(text = stringResource(Res.string.no))
                         }
                     },
                     confirmButton = {
@@ -135,7 +145,7 @@ internal fun SettingsList(
                                 showLogoutDialog = false
                             },
                         ) {
-                            Text(text = stringResource(MR.strings.yes))
+                            Text(text = stringResource(Res.string.yes))
                         }
                     },
                 )
@@ -157,7 +167,7 @@ internal fun SettingsList(
                     )
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_section_title))
+                    Text(stringResource(Res.string.settings_thirdparty_section_title))
                 },
             )
         }
@@ -178,7 +188,7 @@ internal fun SettingsList(
                         )
                     },
                     title = {
-                        Text(stringResource(MR.strings.settings_notifications_header))
+                        Text(stringResource(Res.string.settings_notifications_header))
                     },
                 )
             }
@@ -199,7 +209,7 @@ internal fun SettingsList(
                     )
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_appearance_header))
+                    Text(stringResource(Res.string.settings_appearance_header))
                 },
             )
         }
@@ -219,7 +229,7 @@ internal fun SettingsList(
                     )
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_dependencies_header))
+                    Text(stringResource(Res.string.settings_dependencies_header))
                 },
             )
         }
@@ -235,7 +245,7 @@ internal fun SettingsList(
                     )
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_about_header))
+                    Text(stringResource(Res.string.settings_about_header))
                 },
             )
         }

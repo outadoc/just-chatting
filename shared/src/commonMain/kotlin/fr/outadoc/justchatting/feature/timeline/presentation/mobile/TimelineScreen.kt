@@ -22,12 +22,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil3.PlatformContext
 import coil3.compose.LocalPlatformContext
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainNavigation
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.Screen
 import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.timeline_refresh_action_cd
+import fr.outadoc.justchatting.shared.timeline_title
+import fr.outadoc.justchatting.shared.timeline_today_action_cd
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -71,10 +74,10 @@ internal fun TimelineScreen(
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
             ) {
                 TopAppBar(
-                    title = { Text(stringResource(MR.strings.timeline_title)) },
+                    title = { Text(stringResource(Res.string.timeline_title)) },
                     actions = {
                         AccessibleIconButton(
-                            onClickLabel = stringResource(MR.strings.timeline_today_action_cd),
+                            onClickLabel = stringResource(Res.string.timeline_today_action_cd),
                             onClick = {
                                 coroutineScope.launch {
                                     val currentPage = pagerState.currentPage
@@ -101,7 +104,7 @@ internal fun TimelineScreen(
                         }
 
                         AccessibleIconButton(
-                            onClickLabel = stringResource(MR.strings.timeline_refresh_action_cd),
+                            onClickLabel = stringResource(Res.string.timeline_refresh_action_cd),
                             onClick = { viewModel.syncEverythingNow() },
                         ) {
                             if (state.isLoading) {

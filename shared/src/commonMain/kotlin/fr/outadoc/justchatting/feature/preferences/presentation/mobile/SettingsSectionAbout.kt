@@ -18,9 +18,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.all_goBack
+import fr.outadoc.justchatting.shared.app_license_name
+import fr.outadoc.justchatting.shared.app_license_url
+import fr.outadoc.justchatting.shared.app_name
+import fr.outadoc.justchatting.shared.app_repo_name
+import fr.outadoc.justchatting.shared.app_repo_url
+import fr.outadoc.justchatting.shared.settings_about_header
+import fr.outadoc.justchatting.shared.settings_about_license_cd
+import fr.outadoc.justchatting.shared.settings_about_license_subtitle
+import fr.outadoc.justchatting.shared.settings_about_license_title
+import fr.outadoc.justchatting.shared.settings_about_repo_cd
+import fr.outadoc.justchatting.shared.settings_about_repo_title
+import fr.outadoc.justchatting.shared.settings_about_version
+import fr.outadoc.justchatting.shared.settings_about_xtra_subtitle
+import fr.outadoc.justchatting.shared.settings_about_xtra_title
+import fr.outadoc.justchatting.shared.settings_logs_subtitle
+import fr.outadoc.justchatting.shared.settings_logs_title
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -36,12 +53,12 @@ internal fun SettingsSectionAbout(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(MR.strings.settings_about_header)) },
+                title = { Text(stringResource(Res.string.settings_about_header)) },
                 navigationIcon = {
                     if (canNavigateUp) {
                         AccessibleIconButton(
                             onClick = onNavigateUp,
-                            onClickLabel = stringResource(MR.strings.all_goBack),
+                            onClickLabel = stringResource(Res.string.all_goBack),
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -80,11 +97,11 @@ private fun SettingsSectionAboutContent(
         item {
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.app_name)) },
+                title = { Text(text = stringResource(Res.string.app_name)) },
                 subtitle = {
                     Text(
                         text = stringResource(
-                            MR.strings.settings_about_version,
+                            Res.string.settings_about_version,
                             state.appVersionName.orEmpty(),
                         ),
                     )
@@ -93,18 +110,18 @@ private fun SettingsSectionAboutContent(
         }
 
         item {
-            val licenseUrl = stringResource(MR.strings.app_license_url)
+            val licenseUrl = stringResource(Res.string.app_license_url)
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = { uriHandler.openUri(licenseUrl) },
-                onClickLabel = stringResource(MR.strings.settings_about_license_cd),
-                title = { Text(text = stringResource(MR.strings.settings_about_license_title)) },
+                onClickLabel = stringResource(Res.string.settings_about_license_cd),
+                title = { Text(text = stringResource(Res.string.settings_about_license_title)) },
                 subtitle = {
                     Text(
                         text = stringResource(
-                            MR.strings.settings_about_license_subtitle,
-                            stringResource(MR.strings.app_name),
-                            stringResource(MR.strings.app_license_name),
+                            Res.string.settings_about_license_subtitle,
+                            stringResource(Res.string.app_name),
+                            stringResource(Res.string.app_license_name),
                         ),
                     )
                 },
@@ -121,13 +138,13 @@ private fun SettingsSectionAboutContent(
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = { uriHandler.openUri("https://github.com/crackededed/Xtra") },
-                onClickLabel = stringResource(MR.strings.settings_about_license_cd),
-                title = { Text(text = stringResource(MR.strings.settings_about_xtra_title)) },
+                onClickLabel = stringResource(Res.string.settings_about_license_cd),
+                title = { Text(text = stringResource(Res.string.settings_about_xtra_title)) },
                 subtitle = {
                     Text(
                         text = stringResource(
-                            MR.strings.settings_about_xtra_subtitle,
-                            stringResource(MR.strings.app_name),
+                            Res.string.settings_about_xtra_subtitle,
+                            stringResource(Res.string.app_name),
                         ),
                     )
                 },
@@ -141,13 +158,13 @@ private fun SettingsSectionAboutContent(
         }
 
         item {
-            val repoUrl = stringResource(MR.strings.app_repo_url)
+            val repoUrl = stringResource(Res.string.app_repo_url)
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = { uriHandler.openUri(repoUrl) },
-                onClickLabel = stringResource(MR.strings.settings_about_repo_cd),
-                title = { Text(text = stringResource(MR.strings.settings_about_repo_title)) },
-                subtitle = { Text(text = stringResource(MR.strings.app_repo_name)) },
+                onClickLabel = stringResource(Res.string.settings_about_repo_cd),
+                title = { Text(text = stringResource(Res.string.settings_about_repo_title)) },
+                subtitle = { Text(text = stringResource(Res.string.app_repo_name)) },
                 trailingIcon = {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.OpenInNew,
@@ -160,9 +177,9 @@ private fun SettingsSectionAboutContent(
         item {
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.settings_logs_title)) },
+                title = { Text(text = stringResource(Res.string.settings_logs_title)) },
                 onClick = viewModel::onShareLogsClick,
-                subtitle = { Text(text = stringResource(MR.strings.settings_logs_subtitle)) },
+                subtitle = { Text(text = stringResource(Res.string.settings_logs_subtitle)) },
                 trailingIcon = {
                     Icon(
                         imageVector = Icons.Default.Share,

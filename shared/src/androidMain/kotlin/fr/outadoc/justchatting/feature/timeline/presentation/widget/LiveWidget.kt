@@ -40,6 +40,9 @@ import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainActivity
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
 import fr.outadoc.justchatting.shared.R
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.timeline_refresh_action_cd
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 internal class LiveWidget : GlanceAppWidget() {
@@ -59,12 +62,12 @@ internal class LiveWidget : GlanceAppWidget() {
                     titleBar = {
                         TitleBar(
                             startIcon = ImageProvider(R.drawable.ic_notif),
-                            title = LocalContext.current.getString(R.string.live),
+                            title = LocalContext.current.getString(R.string.widget_live_title),
                             actions = {
                                 CircleIconButton(
                                     modifier = GlanceModifier.padding(8.dp),
                                     imageProvider = ImageProvider(R.drawable.ic_sync),
-                                    contentDescription = LocalContext.current.getString(R.string.timeline_refresh_action_cd),
+                                    contentDescription = stringResource(Res.string.timeline_refresh_action_cd),
                                     backgroundColor = null,
                                     key = "refresh",
                                     onClick = viewModel::syncLiveStreamsNow,

@@ -44,13 +44,19 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.chat_input_clear_cd
+import fr.outadoc.justchatting.shared.chat_input_emote_cd
+import fr.outadoc.justchatting.shared.chat_input_hint
+import fr.outadoc.justchatting.shared.chat_input_replyClear
+import fr.outadoc.justchatting.shared.chat_input_reuseLastMessage_cd
+import fr.outadoc.justchatting.shared.chat_input_send_cd
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.collections.immutable.ImmutableList
@@ -108,7 +114,7 @@ internal fun ChatInput(
 
                         AccessibleIconButton(
                             onClick = onClearReplyingTo,
-                            onClickLabel = stringResource(MR.strings.chat_input_replyClear),
+                            onClickLabel = stringResource(Res.string.chat_input_replyClear),
                         ) {
                             Icon(
                                 Icons.Default.Clear,
@@ -171,7 +177,7 @@ internal fun ChatInput(
                     ) {
                         Icon(
                             Icons.AutoMirrored.Filled.Send,
-                            contentDescription = stringResource(MR.strings.chat_input_send_cd),
+                            contentDescription = stringResource(Res.string.chat_input_send_cd),
                         )
                     }
                 }
@@ -227,7 +233,7 @@ internal fun ChatTextField(
             onSend = { onSubmit() },
         ),
         placeholder = {
-            Text(text = stringResource(MR.strings.chat_input_hint))
+            Text(text = stringResource(Res.string.chat_input_hint))
         },
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
@@ -239,7 +245,7 @@ internal fun ChatTextField(
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     onToggleEmotePicker()
                 },
-                onClickLabel = stringResource(MR.strings.chat_input_emote_cd),
+                onClickLabel = stringResource(Res.string.chat_input_emote_cd),
             ) {
                 Icon(
                     Icons.Default.Mood,
@@ -255,7 +261,7 @@ internal fun ChatTextField(
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             onMessageChange(TextFieldValue(""))
                         },
-                        onClickLabel = stringResource(MR.strings.chat_input_clear_cd),
+                        onClickLabel = stringResource(Res.string.chat_input_clear_cd),
                     ) {
                         Icon(
                             Icons.Filled.Cancel,
@@ -270,7 +276,7 @@ internal fun ChatTextField(
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             onReuseLastMessageClicked()
                         },
-                        onClickLabel = stringResource(MR.strings.chat_input_reuseLastMessage_cd),
+                        onClickLabel = stringResource(Res.string.chat_input_reuseLastMessage_cd),
                     ) {
                         Icon(
                             Icons.Default.SubdirectoryArrowLeft,

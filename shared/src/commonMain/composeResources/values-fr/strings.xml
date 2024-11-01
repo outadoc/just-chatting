@@ -233,11 +233,6 @@
     <string name="no">Non</string>
     <string name="nothing_here">Rien pour l\'instant</string>
     <string name="notification_action_disconnect">Déconnecter</string>
-    <string name="notification_action_reply">Répondre</string>
-    <string name="notification_action_reply_hint">Répondre dans le tchat…</string>
-    <string name="notification_channel_bubbles_message">Permet d\'afficher le tchat Twitch dans des bulles de notification.</string>
-    <string name="notification_channel_bubbles_openPrompt">Gardez un œil sur le tchat en ouvrant cette notification dans une bulle.</string>
-    <string name="notification_channel_bubbles_title">Bulles de tchat</string>
     <string name="onboarding_login_action">Continuer avec Twitch</string>
     <string name="onboarding_message">Pour parcourir vos chaînes suivies et poster dans le tchat, vous devez lier votre compte Twitch.</string>
     <string name="onboarding_title">Bienvenue dans</string>
@@ -320,8 +315,5 @@
     <string name="timeline_today_action_cd">Sauter au contenu en direct</string>
     <string name="uptime">En direct depuis %s</string>
     <string name="watch_live">Regarder en direct</string>
-    <string name="widget_description_followed">Affiche vos chaînes suivies.</string>
-    <string name="widget_description_live">Affiche vos chaînes suivies actuellement en direct.</string>
-    <string name="widget_description_recent">Affiche les chaînes que vous avez visitées récemment.</string>
     <string name="yes">Oui</string>
 </resources>

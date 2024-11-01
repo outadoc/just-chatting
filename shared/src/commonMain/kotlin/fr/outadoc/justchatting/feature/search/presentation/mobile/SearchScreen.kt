@@ -22,13 +22,14 @@ import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.search.presentation.ChannelSearchViewModel
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainNavigation
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.Screen
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.UserItemCard
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.search_recentChannels_remove_action
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.plus
 import kotlinx.collections.immutable.ImmutableList
@@ -116,7 +117,7 @@ private fun RecentUsersList(
                 trailingActions = {
                     AccessibleIconButton(
                         onClick = { onRemoveChannelClick(user) },
-                        onClickLabel = stringResource(MR.strings.search_recentChannels_remove_action),
+                        onClickLabel = stringResource(Res.string.search_recentChannels_remove_action),
                     ) {
                         Icon(
                             Icons.Default.Cancel,

@@ -64,8 +64,6 @@ internal sealed interface StringDesc {
     }
 }
 
-// Moko
-
 internal fun String.desc(): StringDesc {
     return StringDesc.Raw(this)
 }

@@ -18,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.all_goBack
@@ -39,6 +38,7 @@ import fr.outadoc.justchatting.shared.settings_about_xtra_title
 import fr.outadoc.justchatting.shared.settings_logs_subtitle
 import fr.outadoc.justchatting.shared.settings_logs_title
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 

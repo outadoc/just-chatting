@@ -22,12 +22,12 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.channels
 import fr.outadoc.justchatting.shared.search
 import fr.outadoc.justchatting.shared.settings
 import fr.outadoc.justchatting.shared.timeline_title
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun MainNavigation(

@@ -30,7 +30,6 @@ import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
-import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.followed.presentation.FollowedChannelsViewModel
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainNavigation
@@ -43,6 +42,7 @@ import fr.outadoc.justchatting.shared.channels
 import fr.outadoc.justchatting.shared.timeline_refresh_action_cd
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.plus
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 

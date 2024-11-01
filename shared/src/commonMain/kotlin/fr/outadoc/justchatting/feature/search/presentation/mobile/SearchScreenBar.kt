@@ -27,13 +27,13 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.window.core.layout.WindowHeightSizeClass
 import app.cash.paging.compose.LazyPagingItems
-import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.all_goBack
 import fr.outadoc.justchatting.shared.search_clear_cd
 import fr.outadoc.justchatting.shared.search_hint
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun SearchScreenBar(

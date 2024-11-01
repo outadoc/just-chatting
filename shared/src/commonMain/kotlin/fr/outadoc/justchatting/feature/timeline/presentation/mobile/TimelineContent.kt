@@ -27,7 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.BasicUserInfo
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ExtraUserInfo
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
@@ -37,6 +36,7 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.live
 import fr.outadoc.justchatting.utils.presentation.formatDate
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable

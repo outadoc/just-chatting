@@ -14,11 +14,11 @@ internal class AndroidReadExternalDependenciesList : ReadExternalDependenciesLis
     override suspend operator fun invoke(): List<Dependency> =
         withContext(DispatchersProvider.io) {
             val deps: DependencyList = Json.decodeFromStream(
-                Res.readBytes("files/dependencies.json").inputStream()
+                Res.readBytes("files/dependencies.json").inputStream(),
             )
 
             val extraDeps: DependencyList = Json.decodeFromStream(
-                Res.readBytes("files/dependencies-extra.json").inputStream()
+                Res.readBytes("files/dependencies-extra.json").inputStream(),
             )
 
             (extraDeps.dependencies + deps.dependencies)

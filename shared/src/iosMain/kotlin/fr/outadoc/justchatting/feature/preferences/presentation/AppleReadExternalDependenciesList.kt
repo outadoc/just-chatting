@@ -15,11 +15,11 @@ internal class AppleReadExternalDependenciesList : ReadExternalDependenciesList 
     override suspend fun invoke(): List<Dependency> = withContext(DispatchersProvider.io) {
         withContext(DispatchersProvider.io) {
             val deps: DependencyList = Json.decodeFromSource(
-                Res.readBytes("files/dependencies.json").inputStream().asSource().buffered()
+                Res.readBytes("files/dependencies.json").inputStream().asSource().buffered(),
             )
 
             val extraDeps: DependencyList = Json.decodeFromSource(
-                Res.readBytes("files/dependencies-extra.json").inputStream().asSource().buffered()
+                Res.readBytes("files/dependencies-extra.json").inputStream().asSource().buffered(),
             )
 
             (extraDeps.dependencies + deps.dependencies)

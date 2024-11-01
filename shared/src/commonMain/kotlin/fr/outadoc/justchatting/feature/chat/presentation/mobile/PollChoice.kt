@@ -19,11 +19,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.poll_status_winner_cd
 import fr.outadoc.justchatting.utils.presentation.customColors
 import fr.outadoc.justchatting.utils.presentation.formatPercent
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun PollChoice(

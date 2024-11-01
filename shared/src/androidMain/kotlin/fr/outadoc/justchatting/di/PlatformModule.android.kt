@@ -15,9 +15,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChanne
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.AndroidChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.AndroidCreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.preferences.presentation.AndroidLogRepository
-import fr.outadoc.justchatting.feature.preferences.presentation.AndroidReadExternalDependenciesList
 import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
-import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.AndroidAppVersionNameProvider
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.AppVersionNameProvider
 import fr.outadoc.justchatting.utils.core.AndroidNetworkStateObserver
@@ -63,6 +61,5 @@ internal actual val platformModule: Module
         single<BaseHttpClientProvider> { AndroidHttpClientProvider(get(), get()) }
 
         single<LogRepository> { AndroidLogRepository(get()) }
-        single<ReadExternalDependenciesList> { AndroidReadExternalDependenciesList() }
         single<AppVersionNameProvider> { AndroidAppVersionNameProvider(get()) }
     }

@@ -11,10 +11,8 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.NoopChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.NoopCreateShortcutForChannelUseCase
-import fr.outadoc.justchatting.feature.preferences.presentation.AppleReadExternalDependenciesList
 import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.NoopLogRepository
-import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.AppVersionNameProvider
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.AppleAppVersionNameProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
@@ -63,7 +61,6 @@ internal actual val platformModule: Module
 
         single<LogRepository> { NoopLogRepository() }
         single<AppVersionNameProvider> { AppleAppVersionNameProvider() }
-        single<ReadExternalDependenciesList> { AppleReadExternalDependenciesList() }
     }
 
 @OptIn(ExperimentalForeignApi::class)

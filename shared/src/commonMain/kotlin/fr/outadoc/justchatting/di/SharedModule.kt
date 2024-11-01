@@ -55,6 +55,8 @@ import fr.outadoc.justchatting.feature.followed.presentation.FollowedChannelsVie
 import fr.outadoc.justchatting.feature.preferences.data.DataStorePreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.presentation.DefaultReadExternalDependenciesList
+import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsApi
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsClient
@@ -226,4 +228,6 @@ public val sharedModule: Module
         single<BttvEmotesApi> { BttvEmotesServer(get()) }
         single<StvEmotesApi> { StvEmotesServer(get()) }
         single<RecentMessagesApi> { RecentMessagesServer(get()) }
+
+        single<ReadExternalDependenciesList> { DefaultReadExternalDependenciesList() }
     }

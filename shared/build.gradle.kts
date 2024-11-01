@@ -53,6 +53,7 @@ kotlin {
             api(libs.ktor.client.core)
             api(libs.moko.resources.core)
 
+            implementation(compose.components.resources)
             implementation(compose.material)
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
@@ -136,6 +137,10 @@ kotlin {
 
 multiplatformResources {
     resourcesPackage.set("fr.outadoc.justchatting.shared")
+}
+
+compose.resources {
+    packageOfResClass = "fr.outadoc.justchatting.shared"
 }
 
 android {

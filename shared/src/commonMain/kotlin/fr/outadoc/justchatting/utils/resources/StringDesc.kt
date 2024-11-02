@@ -36,7 +36,18 @@ internal sealed interface StringDesc {
 
         @Composable
         override fun localized(): String {
-            return stringResource(resource, *args)
+            val formattedArgs: Array<Any> =
+                args.map { desc ->
+                    when (desc) {
+                        is StringDesc -> desc.localized()
+                        else -> desc
+                    }
+                }.toTypedArray()
+
+            return stringResource(
+                resource = resource,
+                *formattedArgs,
+            )
         }
     }
 
@@ -47,7 +58,10 @@ internal sealed interface StringDesc {
 
         @Composable
         override fun localized(): String {
-            return pluralStringResource(resource, number)
+            return pluralStringResource(
+                resource = resource,
+                quantity = number,
+            )
         }
     }
 
@@ -59,7 +73,19 @@ internal sealed interface StringDesc {
 
         @Composable
         override fun localized(): String {
-            return pluralStringResource(resource, number, *args)
+            val formattedArgs: Array<Any> =
+                args.map { desc ->
+                    when (desc) {
+                        is StringDesc -> desc.localized()
+                        else -> desc
+                    }
+                }.toTypedArray()
+
+            return pluralStringResource(
+                resource = resource,
+                quantity = number,
+                *formattedArgs,
+            )
         }
     }
 }

@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.licenseReport)
-    alias(libs.plugins.moko.resources)
     alias(libs.plugins.sqldelight)
 }
 
@@ -51,8 +50,8 @@ kotlin {
             api(libs.kotlinx.datetime)
             api(libs.kotlinx.serialization.json)
             api(libs.ktor.client.core)
-            api(libs.moko.resources.core)
 
+            implementation(compose.components.resources)
             implementation(compose.material)
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
@@ -88,7 +87,6 @@ kotlin {
             implementation(libs.kmpalette.core)
             implementation(libs.kmpalette.extensions.network)
             implementation(libs.material.kolor)
-            implementation(libs.moko.resources.compose)
             implementation(libs.okio)
             implementation(libs.sqldelight.coroutines)
             implementation(libs.stately.common)
@@ -134,8 +132,8 @@ kotlin {
     }
 }
 
-multiplatformResources {
-    resourcesPackage.set("fr.outadoc.justchatting.shared")
+compose.resources {
+    packageOfResClass = "fr.outadoc.justchatting.shared"
 }
 
 android {
@@ -156,7 +154,7 @@ android {
 }
 
 licenseReport {
-    outputDir = file("src/commonMain/moko-resources/files").path
+    outputDir = file("src/commonMain/composeResources/files").path
     configurations = arrayOf("releaseRuntimeClasspath")
     renderers = arrayOf(JsonReportRenderer("dependencies.json"))
 }

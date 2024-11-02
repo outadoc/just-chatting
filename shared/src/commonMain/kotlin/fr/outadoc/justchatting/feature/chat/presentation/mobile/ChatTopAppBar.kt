@@ -28,11 +28,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.all_goBack
+import fr.outadoc.justchatting.shared.stream_info
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,7 +82,7 @@ internal fun ChatTopAppBar(
                 if (showBackButton) {
                     AccessibleIconButton(
                         onClick = onNavigateUp,
-                        onClickLabel = stringResource(MR.strings.all_goBack),
+                        onClickLabel = stringResource(Res.string.all_goBack),
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -117,7 +119,7 @@ internal fun ChatTopAppBar(
         actions = {
             AccessibleIconButton(
                 onClick = { onStreamInfoClicked() },
-                onClickLabel = stringResource(MR.strings.stream_info),
+                onClickLabel = stringResource(Res.string.stream_info),
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Info,

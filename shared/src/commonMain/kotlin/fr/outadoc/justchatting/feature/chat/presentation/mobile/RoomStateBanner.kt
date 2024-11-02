@@ -3,10 +3,16 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.RoomState
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.room_emote
+import fr.outadoc.justchatting.shared.room_followers
+import fr.outadoc.justchatting.shared.room_followers_min
+import fr.outadoc.justchatting.shared.room_slow
+import fr.outadoc.justchatting.shared.room_subs
+import fr.outadoc.justchatting.shared.room_unique
 import fr.outadoc.justchatting.utils.presentation.format
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration
 
 @Composable
@@ -17,15 +23,15 @@ internal fun RoomStateBanner(
     SlimSnackbar(modifier = modifier) {
         with(roomState) {
             if (isEmoteOnly) {
-                Text(text = stringResource(MR.strings.room_emote))
+                Text(text = stringResource(Res.string.room_emote))
             }
 
             if (!minFollowDuration.isNegative()) {
                 Text(
                     text = when (minFollowDuration) {
-                        Duration.ZERO -> stringResource(MR.strings.room_followers)
+                        Duration.ZERO -> stringResource(Res.string.room_followers)
                         else -> stringResource(
-                            MR.strings.room_followers_min,
+                            Res.string.room_followers_min,
                             minFollowDuration.format(),
                         )
                     },
@@ -33,20 +39,20 @@ internal fun RoomStateBanner(
             }
 
             if (uniqueMessagesOnly) {
-                Text(text = stringResource(MR.strings.room_unique))
+                Text(text = stringResource(Res.string.room_unique))
             }
 
             if (slowModeDuration.isPositive()) {
                 Text(
                     text = stringResource(
-                        MR.strings.room_slow,
+                        Res.string.room_slow,
                         slowModeDuration.format(),
                     ),
                 )
             }
 
             if (isSubOnly) {
-                Text(text = stringResource(MR.strings.room_subs))
+                Text(text = stringResource(Res.string.room_subs))
             }
         }
     }

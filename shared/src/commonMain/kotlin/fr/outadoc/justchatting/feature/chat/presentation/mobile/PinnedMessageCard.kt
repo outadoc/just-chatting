@@ -21,16 +21,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatMessagePreviewProvider
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.poll_collapse_action
+import fr.outadoc.justchatting.shared.poll_expand_action
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
@@ -77,12 +79,12 @@ internal fun PinnedMessageCard(
             if (isExpanded) {
                 Icon(
                     Icons.Default.ArrowDropUp,
-                    contentDescription = stringResource(MR.strings.poll_collapse_action),
+                    contentDescription = stringResource(Res.string.poll_collapse_action),
                 )
             } else {
                 Icon(
                     Icons.Default.ArrowDropDown,
-                    contentDescription = stringResource(MR.strings.poll_expand_action),
+                    contentDescription = stringResource(Res.string.poll_expand_action),
                 )
             }
         }

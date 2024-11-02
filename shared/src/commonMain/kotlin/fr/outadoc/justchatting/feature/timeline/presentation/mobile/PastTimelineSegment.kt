@@ -32,15 +32,18 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.BasicUserInfo
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.SwipeActionBox
 import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.all_showDetails_cd
+import fr.outadoc.justchatting.shared.stream_info
+import fr.outadoc.justchatting.shared.timeline_openVod_action
 import fr.outadoc.justchatting.utils.core.createVideoExternalLink
 import fr.outadoc.justchatting.utils.presentation.format
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -59,7 +62,7 @@ internal fun PastTimelineSegment(
         icon = {
             Icon(
                 Icons.Default.MoreHoriz,
-                contentDescription = stringResource(MR.strings.stream_info),
+                contentDescription = stringResource(Res.string.stream_info),
             )
         },
     ) {
@@ -75,12 +78,12 @@ internal fun PastTimelineSegment(
                                     createVideoExternalLink(segment.id),
                                 )
                             },
-                            onClickLabel = stringResource(MR.strings.timeline_openVod_action),
+                            onClickLabel = stringResource(Res.string.timeline_openVod_action),
                             onLongClick = {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 showDetailsDialog = true
                             },
-                            onLongClickLabel = stringResource(MR.strings.all_showDetails_cd),
+                            onLongClickLabel = stringResource(Res.string.all_showDetails_cd),
                         ),
                 ) {
                     TimelineSegmentContent(
@@ -166,7 +169,7 @@ internal fun PastTimelineSegment(
                             contentDescription = null,
                         )
                     },
-                    text = stringResource(MR.strings.timeline_openVod_action),
+                    text = stringResource(Res.string.timeline_openVod_action),
                 )
             },
         )

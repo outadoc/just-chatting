@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.localized
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.NoticeMessagePreviewProvider
 import fr.outadoc.justchatting.utils.presentation.AppTheme

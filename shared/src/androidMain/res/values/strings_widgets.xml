@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_action_reply">Reply</string>
+    <string name="notification_action_reply_hint">Reply in chat…</string>
+    <string name="notification_channel_bubbles_message">Used to show the Twitch chat in notification bubbles.</string>
+    <string name="notification_channel_bubbles_openPrompt">Keep an eye on this chat by opening this notification in a bubble.</string>
+    <string name="notification_channel_bubbles_title">Chat bubbles</string>
+    <string name="widget_channels_title">Followed</string>
+    <string name="widget_description_followed">Shows your followed channels.</string>
+    <string name="widget_description_live">Shows your followed channels that are currently live.</string>
+    <string name="widget_description_recent">Shows your recently visited channels.</string>
+    <string name="widget_live_title">Currently live</string>
+    <string name="widget_recent_title">Recent</string>
+</resources>

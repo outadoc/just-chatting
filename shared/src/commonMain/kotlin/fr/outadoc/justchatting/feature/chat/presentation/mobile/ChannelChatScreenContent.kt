@@ -47,16 +47,17 @@ import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
-import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.MessagePostConstraint
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.timeline.presentation.mobile.LiveDetailsDialog
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.chat_copiedToClipboard
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalHazeMaterialsApi::class)
@@ -129,7 +130,7 @@ internal fun ChannelChatScreenContent(
         content = { insets ->
             val clipboard = LocalClipboardManager.current
             val scope = rememberCoroutineScope()
-            val snackbarCopiedMessage = stringResource(MR.strings.chat_copiedToClipboard)
+            val snackbarCopiedMessage = stringResource(Res.string.chat_copiedToClipboard)
 
             ChatScreen(
                 modifier = Modifier

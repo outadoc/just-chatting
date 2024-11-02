@@ -7,9 +7,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import dev.icerock.moko.resources.compose.stringResource
-import dev.icerock.moko.resources.format
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.date_today_earlier
+import fr.outadoc.justchatting.shared.date_today_later
+import fr.outadoc.justchatting.shared.date_tomorrow
+import fr.outadoc.justchatting.shared.date_yesterday
+import fr.outadoc.justchatting.shared.duration_days
+import fr.outadoc.justchatting.shared.duration_hours
+import fr.outadoc.justchatting.shared.duration_minutes
+import fr.outadoc.justchatting.shared.duration_seconds
+import fr.outadoc.justchatting.utils.resources.desc
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.datetime.Clock
@@ -20,6 +27,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
@@ -75,19 +83,21 @@ internal fun Duration.format(
         listOfNotNull(
             days
                 .takeIf { it > 0 }
-                ?.let { MR.strings.duration_days.format(it).asString() },
+                ?.let { Res.string.duration_days.desc(it) },
             hours
                 .takeIf { it > 0 }
-                ?.let { MR.strings.duration_hours.format(it).asString() },
+                ?.let { Res.string.duration_hours.desc(it) },
             minutes
                 .takeIf { it > 0 }
-                ?.let { MR.strings.duration_minutes.format(it).asString() },
+                ?.let { Res.string.duration_minutes.desc(it) },
             seconds
                 .takeIf { it > 0 }
                 .takeIf { showSeconds }
-                ?.let { MR.strings.duration_seconds.format(it).asString() },
+                ?.let { Res.string.duration_seconds.desc(it) },
         )
-    }.joinToString(" ")
+    }
+        .map { desc -> desc.localized() }
+        .joinToString(" ")
 }
 
 @Composable
@@ -131,19 +141,19 @@ internal fun LocalDate.formatDate(
 
     return when {
         isYesterday -> {
-            stringResource(MR.strings.date_yesterday)
+            stringResource(Res.string.date_yesterday)
         }
 
         isToday && !isFuture -> {
-            stringResource(MR.strings.date_today_earlier)
+            stringResource(Res.string.date_today_earlier)
         }
 
         isToday && isFuture -> {
-            stringResource(MR.strings.date_today_later)
+            stringResource(Res.string.date_today_later)
         }
 
         isTomorrow -> {
-            stringResource(MR.strings.date_tomorrow)
+            stringResource(Res.string.date_tomorrow)
         }
 
         isCurrentYear -> {

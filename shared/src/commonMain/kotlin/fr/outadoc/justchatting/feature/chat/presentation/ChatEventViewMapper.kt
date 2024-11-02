@@ -1,15 +1,200 @@
 package fr.outadoc.justchatting.feature.chat.presentation
 
-import dev.icerock.moko.resources.desc.StringDesc
-import dev.icerock.moko.resources.desc.desc
-import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Icon
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.chat_ban
+import fr.outadoc.justchatting.shared.chat_clear
+import fr.outadoc.justchatting.shared.chat_first
+import fr.outadoc.justchatting.shared.chat_join
+import fr.outadoc.justchatting.shared.chat_massSubGift_header
+import fr.outadoc.justchatting.shared.chat_raid_header
+import fr.outadoc.justchatting.shared.chat_reward
+import fr.outadoc.justchatting.shared.chat_send_msg_error
+import fr.outadoc.justchatting.shared.chat_subConversion_header
+import fr.outadoc.justchatting.shared.chat_subGift_header
+import fr.outadoc.justchatting.shared.chat_subGift_payForward
+import fr.outadoc.justchatting.shared.chat_subGift_payForwardAnonymous
+import fr.outadoc.justchatting.shared.chat_subGift_tier1
+import fr.outadoc.justchatting.shared.chat_subGift_tier2
+import fr.outadoc.justchatting.shared.chat_subGift_tier3
+import fr.outadoc.justchatting.shared.chat_sub_header_withDuration
+import fr.outadoc.justchatting.shared.chat_sub_header_withDurationAndStreak
+import fr.outadoc.justchatting.shared.chat_sub_prime
+import fr.outadoc.justchatting.shared.chat_sub_tier1
+import fr.outadoc.justchatting.shared.chat_sub_tier2
+import fr.outadoc.justchatting.shared.chat_sub_tier3
+import fr.outadoc.justchatting.shared.chat_timeout
+import fr.outadoc.justchatting.shared.chat_unraid_subtitle
+import fr.outadoc.justchatting.shared.irc_msgid_announcement
+import fr.outadoc.justchatting.shared.irc_msgid_highlighted_message
+import fr.outadoc.justchatting.shared.irc_notice_already_banned
+import fr.outadoc.justchatting.shared.irc_notice_already_emote_only_off
+import fr.outadoc.justchatting.shared.irc_notice_already_emote_only_on
+import fr.outadoc.justchatting.shared.irc_notice_already_followers_off
+import fr.outadoc.justchatting.shared.irc_notice_already_followers_on
+import fr.outadoc.justchatting.shared.irc_notice_already_r9k_off
+import fr.outadoc.justchatting.shared.irc_notice_already_r9k_on
+import fr.outadoc.justchatting.shared.irc_notice_already_slow_off
+import fr.outadoc.justchatting.shared.irc_notice_already_slow_on
+import fr.outadoc.justchatting.shared.irc_notice_already_subs_off
+import fr.outadoc.justchatting.shared.irc_notice_already_subs_on
+import fr.outadoc.justchatting.shared.irc_notice_autohost_receive
+import fr.outadoc.justchatting.shared.irc_notice_bad_ban_admin
+import fr.outadoc.justchatting.shared.irc_notice_bad_ban_anon
+import fr.outadoc.justchatting.shared.irc_notice_bad_ban_broadcaster
+import fr.outadoc.justchatting.shared.irc_notice_bad_ban_mod
+import fr.outadoc.justchatting.shared.irc_notice_bad_ban_self
+import fr.outadoc.justchatting.shared.irc_notice_bad_ban_staff
+import fr.outadoc.justchatting.shared.irc_notice_bad_commercial_error
+import fr.outadoc.justchatting.shared.irc_notice_bad_delete_message_broadcaster
+import fr.outadoc.justchatting.shared.irc_notice_bad_delete_message_mod
+import fr.outadoc.justchatting.shared.irc_notice_bad_host_error
+import fr.outadoc.justchatting.shared.irc_notice_bad_host_hosting
+import fr.outadoc.justchatting.shared.irc_notice_bad_host_rate_exceeded
+import fr.outadoc.justchatting.shared.irc_notice_bad_host_rejected
+import fr.outadoc.justchatting.shared.irc_notice_bad_host_self
+import fr.outadoc.justchatting.shared.irc_notice_bad_mod_banned
+import fr.outadoc.justchatting.shared.irc_notice_bad_mod_mod
+import fr.outadoc.justchatting.shared.irc_notice_bad_slow_duration
+import fr.outadoc.justchatting.shared.irc_notice_bad_timeout_admin
+import fr.outadoc.justchatting.shared.irc_notice_bad_timeout_anon
+import fr.outadoc.justchatting.shared.irc_notice_bad_timeout_broadcaster
+import fr.outadoc.justchatting.shared.irc_notice_bad_timeout_duration
+import fr.outadoc.justchatting.shared.irc_notice_bad_timeout_mod
+import fr.outadoc.justchatting.shared.irc_notice_bad_timeout_self
+import fr.outadoc.justchatting.shared.irc_notice_bad_timeout_staff
+import fr.outadoc.justchatting.shared.irc_notice_bad_unban_no_ban
+import fr.outadoc.justchatting.shared.irc_notice_bad_unhost_error
+import fr.outadoc.justchatting.shared.irc_notice_bad_unmod_mod
+import fr.outadoc.justchatting.shared.irc_notice_bad_unvip_grantee_not_vip
+import fr.outadoc.justchatting.shared.irc_notice_bad_vip_achievement_incomplete
+import fr.outadoc.justchatting.shared.irc_notice_bad_vip_grantee_already_vip
+import fr.outadoc.justchatting.shared.irc_notice_bad_vip_grantee_banned
+import fr.outadoc.justchatting.shared.irc_notice_bad_vip_max_vips_reached
+import fr.outadoc.justchatting.shared.irc_notice_ban_success
+import fr.outadoc.justchatting.shared.irc_notice_cmds_available
+import fr.outadoc.justchatting.shared.irc_notice_color_changed
+import fr.outadoc.justchatting.shared.irc_notice_commercial_success
+import fr.outadoc.justchatting.shared.irc_notice_delete_message_success
+import fr.outadoc.justchatting.shared.irc_notice_delete_staff_message_success
+import fr.outadoc.justchatting.shared.irc_notice_emote_only_off
+import fr.outadoc.justchatting.shared.irc_notice_emote_only_on
+import fr.outadoc.justchatting.shared.irc_notice_followers_off
+import fr.outadoc.justchatting.shared.irc_notice_followers_on
+import fr.outadoc.justchatting.shared.irc_notice_followers_on_zero
+import fr.outadoc.justchatting.shared.irc_notice_host_off
+import fr.outadoc.justchatting.shared.irc_notice_host_on
+import fr.outadoc.justchatting.shared.irc_notice_host_receive
+import fr.outadoc.justchatting.shared.irc_notice_host_receive_no_count
+import fr.outadoc.justchatting.shared.irc_notice_host_target_went_offline
+import fr.outadoc.justchatting.shared.irc_notice_hosts_remaining
+import fr.outadoc.justchatting.shared.irc_notice_invalid_user
+import fr.outadoc.justchatting.shared.irc_notice_mod_success
+import fr.outadoc.justchatting.shared.irc_notice_msg_bad_characters
+import fr.outadoc.justchatting.shared.irc_notice_msg_banned
+import fr.outadoc.justchatting.shared.irc_notice_msg_channel_blocked
+import fr.outadoc.justchatting.shared.irc_notice_msg_channel_suspended
+import fr.outadoc.justchatting.shared.irc_notice_msg_duplicate
+import fr.outadoc.justchatting.shared.irc_notice_msg_emoteonly
+import fr.outadoc.justchatting.shared.irc_notice_msg_followersonly
+import fr.outadoc.justchatting.shared.irc_notice_msg_followersonly_followed
+import fr.outadoc.justchatting.shared.irc_notice_msg_followersonly_zero
+import fr.outadoc.justchatting.shared.irc_notice_msg_r9k
+import fr.outadoc.justchatting.shared.irc_notice_msg_ratelimit
+import fr.outadoc.justchatting.shared.irc_notice_msg_rejected
+import fr.outadoc.justchatting.shared.irc_notice_msg_rejected_mandatory
+import fr.outadoc.justchatting.shared.irc_notice_msg_slowmode
+import fr.outadoc.justchatting.shared.irc_notice_msg_subsonly
+import fr.outadoc.justchatting.shared.irc_notice_msg_suspended
+import fr.outadoc.justchatting.shared.irc_notice_msg_timedout
+import fr.outadoc.justchatting.shared.irc_notice_msg_verified_email
+import fr.outadoc.justchatting.shared.irc_notice_no_help
+import fr.outadoc.justchatting.shared.irc_notice_no_mods
+import fr.outadoc.justchatting.shared.irc_notice_no_permission
+import fr.outadoc.justchatting.shared.irc_notice_no_vips
+import fr.outadoc.justchatting.shared.irc_notice_not_hosting
+import fr.outadoc.justchatting.shared.irc_notice_r9k_off
+import fr.outadoc.justchatting.shared.irc_notice_r9k_on
+import fr.outadoc.justchatting.shared.irc_notice_raid_error_already_raiding
+import fr.outadoc.justchatting.shared.irc_notice_raid_error_forbidden
+import fr.outadoc.justchatting.shared.irc_notice_raid_error_self
+import fr.outadoc.justchatting.shared.irc_notice_raid_error_too_many_viewers
+import fr.outadoc.justchatting.shared.irc_notice_raid_error_unexpected
+import fr.outadoc.justchatting.shared.irc_notice_raid_notice_mature
+import fr.outadoc.justchatting.shared.irc_notice_raid_notice_restricted_chat
+import fr.outadoc.justchatting.shared.irc_notice_room_mods
+import fr.outadoc.justchatting.shared.irc_notice_slow_off
+import fr.outadoc.justchatting.shared.irc_notice_slow_on
+import fr.outadoc.justchatting.shared.irc_notice_subs_off
+import fr.outadoc.justchatting.shared.irc_notice_subs_on
+import fr.outadoc.justchatting.shared.irc_notice_timeout_no_timeout
+import fr.outadoc.justchatting.shared.irc_notice_timeout_success
+import fr.outadoc.justchatting.shared.irc_notice_tos_ban
+import fr.outadoc.justchatting.shared.irc_notice_turbo_only_color
+import fr.outadoc.justchatting.shared.irc_notice_unavailable_command
+import fr.outadoc.justchatting.shared.irc_notice_unban_success
+import fr.outadoc.justchatting.shared.irc_notice_unmod_success
+import fr.outadoc.justchatting.shared.irc_notice_unraid_error_no_active_raid
+import fr.outadoc.justchatting.shared.irc_notice_unraid_error_unexpected
+import fr.outadoc.justchatting.shared.irc_notice_unraid_success
+import fr.outadoc.justchatting.shared.irc_notice_unrecognized_cmd
+import fr.outadoc.justchatting.shared.irc_notice_untimeout_banned
+import fr.outadoc.justchatting.shared.irc_notice_untimeout_success
+import fr.outadoc.justchatting.shared.irc_notice_unvip_success
+import fr.outadoc.justchatting.shared.irc_notice_usage_ban
+import fr.outadoc.justchatting.shared.irc_notice_usage_clear
+import fr.outadoc.justchatting.shared.irc_notice_usage_color
+import fr.outadoc.justchatting.shared.irc_notice_usage_commercial
+import fr.outadoc.justchatting.shared.irc_notice_usage_delete
+import fr.outadoc.justchatting.shared.irc_notice_usage_disconnect
+import fr.outadoc.justchatting.shared.irc_notice_usage_emote_only_off
+import fr.outadoc.justchatting.shared.irc_notice_usage_emote_only_on
+import fr.outadoc.justchatting.shared.irc_notice_usage_followers_off
+import fr.outadoc.justchatting.shared.irc_notice_usage_followers_on
+import fr.outadoc.justchatting.shared.irc_notice_usage_help
+import fr.outadoc.justchatting.shared.irc_notice_usage_host
+import fr.outadoc.justchatting.shared.irc_notice_usage_marker
+import fr.outadoc.justchatting.shared.irc_notice_usage_me
+import fr.outadoc.justchatting.shared.irc_notice_usage_mod
+import fr.outadoc.justchatting.shared.irc_notice_usage_mods
+import fr.outadoc.justchatting.shared.irc_notice_usage_r9k_off
+import fr.outadoc.justchatting.shared.irc_notice_usage_r9k_on
+import fr.outadoc.justchatting.shared.irc_notice_usage_raid
+import fr.outadoc.justchatting.shared.irc_notice_usage_slow_off
+import fr.outadoc.justchatting.shared.irc_notice_usage_slow_on
+import fr.outadoc.justchatting.shared.irc_notice_usage_subs_off
+import fr.outadoc.justchatting.shared.irc_notice_usage_subs_on
+import fr.outadoc.justchatting.shared.irc_notice_usage_timeout
+import fr.outadoc.justchatting.shared.irc_notice_usage_unban
+import fr.outadoc.justchatting.shared.irc_notice_usage_unhost
+import fr.outadoc.justchatting.shared.irc_notice_usage_unmod
+import fr.outadoc.justchatting.shared.irc_notice_usage_unraid
+import fr.outadoc.justchatting.shared.irc_notice_usage_untimeout
+import fr.outadoc.justchatting.shared.irc_notice_usage_unvip
+import fr.outadoc.justchatting.shared.irc_notice_usage_user
+import fr.outadoc.justchatting.shared.irc_notice_usage_vip
+import fr.outadoc.justchatting.shared.irc_notice_usage_vips
+import fr.outadoc.justchatting.shared.irc_notice_usage_whisper
+import fr.outadoc.justchatting.shared.irc_notice_vip_success
+import fr.outadoc.justchatting.shared.irc_notice_vips_success
+import fr.outadoc.justchatting.shared.irc_notice_whisper_banned
+import fr.outadoc.justchatting.shared.irc_notice_whisper_banned_recipient
+import fr.outadoc.justchatting.shared.irc_notice_whisper_invalid_login
+import fr.outadoc.justchatting.shared.irc_notice_whisper_invalid_self
+import fr.outadoc.justchatting.shared.irc_notice_whisper_limit_per_min
+import fr.outadoc.justchatting.shared.irc_notice_whisper_limit_per_sec
+import fr.outadoc.justchatting.shared.irc_notice_whisper_restricted
+import fr.outadoc.justchatting.shared.irc_notice_whisper_restricted_recipient
+import fr.outadoc.justchatting.shared.months
+import fr.outadoc.justchatting.shared.user_redeemed
+import fr.outadoc.justchatting.shared.viewers
 import fr.outadoc.justchatting.utils.presentation.formatNumber
+import fr.outadoc.justchatting.utils.resources.StringDesc
+import fr.outadoc.justchatting.utils.resources.desc
 import kotlinx.collections.immutable.toImmutableList
 
 internal class ChatEventViewMapper {
@@ -53,7 +238,7 @@ internal class ChatEventViewMapper {
                                 metadata = ChatListItem.Message.Highlighted.Metadata(
                                     title = command.targetUserLogin.desc(),
                                     titleIcon = Icon.Gavel,
-                                    subtitle = MR.strings.chat_ban.desc(),
+                                    subtitle = Res.string.chat_ban.desc(),
                                 ),
                                 body = null,
                             )
@@ -63,7 +248,7 @@ internal class ChatEventViewMapper {
                                 metadata = ChatListItem.Message.Highlighted.Metadata(
                                     title = command.targetUserLogin.desc(),
                                     titleIcon = Icon.Gavel,
-                                    subtitle = MR.strings.chat_timeout.format(command.duration),
+                                    subtitle = Res.string.chat_timeout.desc(command.duration),
                                 ),
                                 body = null,
                             )
@@ -71,7 +256,7 @@ internal class ChatEventViewMapper {
                     } else {
                         ChatListItem.Message.Notice(
                             timestamp = command.timestamp,
-                            text = MR.strings.chat_clear.desc(),
+                            text = Res.string.chat_clear.desc(),
                         )
                     },
                 )
@@ -108,9 +293,9 @@ internal class ChatEventViewMapper {
                     metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.CallReceived,
-                        subtitle = MR.strings.chat_raid_header
-                            .format(
-                                MR.plurals.viewers.format(
+                        subtitle = Res.string.chat_raid_header
+                            .desc(
+                                Res.plurals.viewers.desc(
                                     number = raidersCount,
                                     raidersCount,
                                 ),
@@ -126,7 +311,7 @@ internal class ChatEventViewMapper {
                     metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.Cancel,
-                        subtitle = MR.strings.chat_unraid_subtitle.desc(),
+                        subtitle = Res.string.chat_unraid_subtitle.desc(),
                     ),
                     body = null,
                 )
@@ -136,7 +321,7 @@ internal class ChatEventViewMapper {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
                     metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = MR.strings.irc_msgid_highlighted_message.desc(),
+                        title = Res.string.irc_msgid_highlighted_message.desc(),
                         titleIcon = Icon.Highlight,
                         subtitle = null,
                     ),
@@ -148,7 +333,7 @@ internal class ChatEventViewMapper {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
                     metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = MR.strings.irc_msgid_announcement.desc(),
+                        title = Res.string.irc_msgid_announcement.desc(),
                         titleIcon = Icon.Campaign,
                         subtitle = null,
                     ),
@@ -167,10 +352,10 @@ internal class ChatEventViewMapper {
                         },
                         subtitle = when (streakMonths) {
                             0 -> {
-                                MR.strings.chat_sub_header_withDuration
-                                    .format(
+                                Res.string.chat_sub_header_withDuration
+                                    .desc(
                                         parseSubscriptionTier(subscriptionPlan),
-                                        MR.plurals.months.format(
+                                        Res.plurals.months.desc(
                                             number = cumulativeMonths,
                                             cumulativeMonths.formatNumber(),
                                         ),
@@ -178,13 +363,13 @@ internal class ChatEventViewMapper {
                             }
 
                             else -> {
-                                MR.strings.chat_sub_header_withDurationAndStreak.format(
+                                Res.string.chat_sub_header_withDurationAndStreak.desc(
                                     parseSubscriptionTier(subscriptionPlan),
-                                    MR.plurals.months.format(
+                                    Res.plurals.months.desc(
                                         number = cumulativeMonths,
                                         cumulativeMonths.formatNumber(),
                                     ),
-                                    MR.plurals.months.format(
+                                    Res.plurals.months.desc(
                                         number = streakMonths,
                                         streakMonths.formatNumber(),
                                     ),
@@ -202,8 +387,8 @@ internal class ChatEventViewMapper {
                     metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.Star,
-                        subtitle = MR.strings.chat_subConversion_header
-                            .format(parseSubscriptionTierWithArticle(subscriptionPlan)),
+                        subtitle = Res.string.chat_subConversion_header
+                            .desc(parseSubscriptionTierWithArticle(subscriptionPlan)),
                     ),
                     body = userMessage?.map(),
                 )
@@ -215,8 +400,8 @@ internal class ChatEventViewMapper {
                     metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.VolunteerActivism,
-                        subtitle = MR.strings.chat_massSubGift_header
-                            .format(
+                        subtitle = Res.string.chat_massSubGift_header
+                            .desc(
                                 giftCount.formatNumber(),
                                 parseSubscriptionTierWithArticle(subscriptionPlan),
                                 totalChannelGiftCount.formatNumber(),
@@ -233,11 +418,11 @@ internal class ChatEventViewMapper {
                     metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.Redeem,
-                        subtitle = MR.strings.chat_subGift_header
-                            .format(
+                        subtitle = Res.string.chat_subGift_header
+                            .desc(
                                 parseSubscriptionTier(subscriptionPlan),
                                 recipientDisplayName,
-                                MR.plurals.months.format(
+                                Res.plurals.months.desc(
                                     number = cumulativeMonths,
                                     cumulativeMonths.formatNumber(),
                                 ),
@@ -254,11 +439,11 @@ internal class ChatEventViewMapper {
                         titleIcon = Icon.FastForward,
                         subtitle = when (priorGifterDisplayName) {
                             null -> {
-                                MR.strings.chat_subGift_payForwardAnonymous.desc()
+                                Res.string.chat_subGift_payForwardAnonymous.desc()
                             }
 
                             else -> {
-                                MR.strings.chat_subGift_payForward.format(priorGifterDisplayName)
+                                Res.string.chat_subGift_payForward.desc(priorGifterDisplayName)
                             }
                         },
                     ),
@@ -282,7 +467,7 @@ internal class ChatEventViewMapper {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
                     metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = MR.strings.chat_join.format(channelLogin),
+                        title = Res.string.chat_join.desc(channelLogin),
                         subtitle = null,
                     ),
                     body = null,
@@ -293,7 +478,7 @@ internal class ChatEventViewMapper {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
                     metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = MR.strings.chat_send_msg_error.desc(),
+                        title = Res.string.chat_send_msg_error.desc(),
                         subtitle = null,
                     ),
                     body = null,
@@ -304,7 +489,7 @@ internal class ChatEventViewMapper {
                 val metadata = when {
                     isFirstMessageByUser -> {
                         ChatListItem.Message.Highlighted.Metadata(
-                            title = MR.strings.chat_first.desc(),
+                            title = Res.string.chat_first.desc(),
                             titleIcon = Icon.WavingHand,
                             subtitle = null,
                         )
@@ -312,7 +497,7 @@ internal class ChatEventViewMapper {
 
                     rewardId != null -> {
                         ChatListItem.Message.Highlighted.Metadata(
-                            title = MR.strings.chat_reward.desc(),
+                            title = Res.string.chat_reward.desc(),
                             titleIcon = Icon.Toll,
                             subtitle = null,
                         )
@@ -375,8 +560,8 @@ internal class ChatEventViewMapper {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
                     metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = MR.plurals.user_redeemed
-                            .format(
+                        title = Res.plurals.user_redeemed
+                            .desc(
                                 number = redemption.reward.cost,
                                 redemption.userDisplayName,
                                 redemption.reward.title,
@@ -410,19 +595,19 @@ internal class ChatEventViewMapper {
 
     private fun parseSubscriptionTier(planId: String): StringDesc {
         return when (planId) {
-            SUB_T1 -> MR.strings.chat_sub_tier1.desc()
-            SUB_T2 -> MR.strings.chat_sub_tier2.desc()
-            SUB_T3 -> MR.strings.chat_sub_tier3.desc()
-            SUB_PRIME -> MR.strings.chat_sub_prime.desc()
+            SUB_T1 -> Res.string.chat_sub_tier1.desc()
+            SUB_T2 -> Res.string.chat_sub_tier2.desc()
+            SUB_T3 -> Res.string.chat_sub_tier3.desc()
+            SUB_PRIME -> Res.string.chat_sub_prime.desc()
             else -> planId.desc()
         }
     }
 
     private fun parseSubscriptionTierWithArticle(planId: String): StringDesc {
         return when (planId) {
-            SUB_T1 -> MR.strings.chat_subGift_tier1.desc()
-            SUB_T2 -> MR.strings.chat_subGift_tier2.desc()
-            SUB_T3 -> MR.strings.chat_subGift_tier3.desc()
+            SUB_T1 -> Res.string.chat_subGift_tier1.desc()
+            SUB_T2 -> Res.string.chat_subGift_tier2.desc()
+            SUB_T3 -> Res.string.chat_subGift_tier3.desc()
             else -> planId.desc()
         }
     }
@@ -463,45 +648,45 @@ internal class ChatEventViewMapper {
     private fun getLabelForNotice(messageId: String?, message: String?): StringDesc? {
         return when (messageId) {
             "already_banned" -> {
-                MR.strings.irc_notice_already_banned
-                    .format(
+                Res.string.irc_notice_already_banned
+                    .desc(
                         message?.substringBefore(" is already banned", "") ?: "",
                     )
             }
 
             "already_emote_only_off" -> {
-                MR.strings.irc_notice_already_emote_only_off.desc()
+                Res.string.irc_notice_already_emote_only_off.desc()
             }
 
             "already_emote_only_on" -> {
-                MR.strings.irc_notice_already_emote_only_on.desc()
+                Res.string.irc_notice_already_emote_only_on.desc()
             }
 
             "already_followers_off" -> {
-                MR.strings.irc_notice_already_followers_off.desc()
+                Res.string.irc_notice_already_followers_off.desc()
             }
 
             "already_followers_on" -> {
-                MR.strings.irc_notice_already_followers_on.format(
+                Res.string.irc_notice_already_followers_on.desc(
                     message?.substringAfter("is already in ", "")
                         ?.substringBefore(" followers-only mode", "") ?: "",
                 )
             }
 
             "already_r9k_off" -> {
-                MR.strings.irc_notice_already_r9k_off.desc()
+                Res.string.irc_notice_already_r9k_off.desc()
             }
 
             "already_r9k_on" -> {
-                MR.strings.irc_notice_already_r9k_on.desc()
+                Res.string.irc_notice_already_r9k_on.desc()
             }
 
             "already_slow_off" -> {
-                MR.strings.irc_notice_already_slow_off.desc()
+                Res.string.irc_notice_already_slow_off.desc()
             }
 
             "already_slow_on" -> {
-                MR.strings.irc_notice_already_slow_on.format(
+                Res.string.irc_notice_already_slow_on.desc(
                     message?.substringAfter("is already in ", "")
                         ?.substringBefore("-second slow", "")
                         ?: "",
@@ -509,15 +694,15 @@ internal class ChatEventViewMapper {
             }
 
             "already_subs_off" -> {
-                MR.strings.irc_notice_already_subs_off.desc()
+                Res.string.irc_notice_already_subs_off.desc()
             }
 
             "already_subs_on" -> {
-                MR.strings.irc_notice_already_subs_on.desc()
+                Res.string.irc_notice_already_subs_on.desc()
             }
 
             "autohost_receive" -> {
-                MR.strings.irc_notice_autohost_receive.format(
+                Res.string.irc_notice_autohost_receive.desc(
                     message?.substringBefore(" is now auto hosting", "") ?: "",
                     message?.substringAfter("you for up to ", "")?.substringBefore(" viewers", "")
                         ?: "",
@@ -525,48 +710,48 @@ internal class ChatEventViewMapper {
             }
 
             "bad_ban_admin" -> {
-                MR.strings.irc_notice_bad_ban_admin.format(
+                Res.string.irc_notice_bad_ban_admin.desc(
                     message?.substringAfter("cannot ban admin", "")
                         ?.substringBefore(". Please email", "") ?: "",
                 )
             }
 
             "bad_ban_anon" -> {
-                MR.strings.irc_notice_bad_ban_anon.desc()
+                Res.string.irc_notice_bad_ban_anon.desc()
             }
 
             "bad_ban_broadcaster" -> {
-                MR.strings.irc_notice_bad_ban_broadcaster.desc()
+                Res.string.irc_notice_bad_ban_broadcaster.desc()
             }
 
             "bad_ban_mod" -> {
-                MR.strings.irc_notice_bad_ban_mod.format(
+                Res.string.irc_notice_bad_ban_mod.desc(
                     message?.substringAfter("cannot ban moderator", "")
                         ?.substringBefore(" unless you are", "") ?: "",
                 )
             }
 
             "bad_ban_self" -> {
-                MR.strings.irc_notice_bad_ban_self.desc()
+                Res.string.irc_notice_bad_ban_self.desc()
             }
 
             "bad_ban_staff" -> {
-                MR.strings.irc_notice_bad_ban_staff.format(
+                Res.string.irc_notice_bad_ban_staff.desc(
                     message?.substringAfter("cannot ban staff", "")
                         ?.substringBefore(". Please email", "") ?: "",
                 )
             }
 
             "bad_commercial_error" -> {
-                MR.strings.irc_notice_bad_commercial_error.desc()
+                Res.string.irc_notice_bad_commercial_error.desc()
             }
 
             "bad_delete_message_broadcaster" -> {
-                MR.strings.irc_notice_bad_delete_message_broadcaster.desc()
+                Res.string.irc_notice_bad_delete_message_broadcaster.desc()
             }
 
             "bad_delete_message_mod" -> {
-                MR.strings.irc_notice_bad_delete_message_mod.format(
+                Res.string.irc_notice_bad_delete_message_mod.desc(
                     message?.substringAfter("from another moderator ", "")
                         ?.substringBeforeLast(".", "")
                         ?: "",
@@ -574,208 +759,208 @@ internal class ChatEventViewMapper {
             }
 
             "bad_host_error" -> {
-                MR.strings.irc_notice_bad_host_error.format(
+                Res.string.irc_notice_bad_host_error.desc(
                     message?.substringAfter("a problem hosting ", "")
                         ?.substringBefore(". Please try", "") ?: "",
                 )
             }
 
             "bad_host_hosting" -> {
-                MR.strings.irc_notice_bad_host_hosting.format(
+                Res.string.irc_notice_bad_host_hosting.desc(
                     message?.substringAfter("is already hosting ", "")?.substringBeforeLast(".", "")
                         ?: "",
                 )
             }
 
             "bad_host_rate_exceeded" -> {
-                MR.strings.irc_notice_bad_host_rate_exceeded.format(
+                Res.string.irc_notice_bad_host_rate_exceeded.desc(
                     message?.substringAfter("changed more than ", "")
                         ?.substringBefore(" times every half", "") ?: "",
                 )
             }
 
             "bad_host_rejected" -> {
-                MR.strings.irc_notice_bad_host_rejected.desc()
+                Res.string.irc_notice_bad_host_rejected.desc()
             }
 
             "bad_host_self" -> {
-                MR.strings.irc_notice_bad_host_self.desc()
+                Res.string.irc_notice_bad_host_self.desc()
             }
 
             "bad_mod_banned" -> {
-                MR.strings.irc_notice_bad_mod_banned.format(
+                Res.string.irc_notice_bad_mod_banned.desc(
                     message?.substringBefore(" is banned", "") ?: "",
                 )
             }
 
             "bad_mod_mod" -> {
-                MR.strings.irc_notice_bad_mod_mod.format(
+                Res.string.irc_notice_bad_mod_mod.desc(
                     message?.substringBefore(" is already", "") ?: "",
                 )
             }
 
             "bad_slow_duration" -> {
-                MR.strings.irc_notice_bad_slow_duration.format(
+                Res.string.irc_notice_bad_slow_duration.desc(
                     message?.substringAfter("to more than ", "")?.substringBefore(" seconds.", "")
                         ?: "",
                 )
             }
 
             "bad_timeout_admin" -> {
-                MR.strings.irc_notice_bad_timeout_admin.format(
+                Res.string.irc_notice_bad_timeout_admin.desc(
                     message?.substringAfter("cannot timeout admin ", "")
                         ?.substringBefore(". Please email", "") ?: "",
                 )
             }
 
             "bad_timeout_anon" -> {
-                MR.strings.irc_notice_bad_timeout_anon.desc()
+                Res.string.irc_notice_bad_timeout_anon.desc()
             }
 
             "bad_timeout_broadcaster" -> {
-                MR.strings.irc_notice_bad_timeout_broadcaster.desc()
+                Res.string.irc_notice_bad_timeout_broadcaster.desc()
             }
 
             "bad_timeout_duration" -> {
-                MR.strings.irc_notice_bad_timeout_duration.format(
+                Res.string.irc_notice_bad_timeout_duration.desc(
                     message?.substringAfter("for more than ", "")?.substringBeforeLast(".", "")
                         ?: "",
                 )
             }
 
             "bad_timeout_mod" -> {
-                MR.strings.irc_notice_bad_timeout_mod.format(
+                Res.string.irc_notice_bad_timeout_mod.desc(
                     message?.substringAfter("cannot timeout moderator ", "")
                         ?.substringBefore(" unless you are", "") ?: "",
                 )
             }
 
             "bad_timeout_self" -> {
-                MR.strings.irc_notice_bad_timeout_self.desc()
+                Res.string.irc_notice_bad_timeout_self.desc()
             }
 
             "bad_timeout_staff" -> {
-                MR.strings.irc_notice_bad_timeout_staff.format(
+                Res.string.irc_notice_bad_timeout_staff.desc(
                     message?.substringAfter("cannot timeout staff ", "")
                         ?.substringBefore(". Please email", "") ?: "",
                 )
             }
 
             "bad_unban_no_ban" -> {
-                MR.strings.irc_notice_bad_unban_no_ban.format(
+                Res.string.irc_notice_bad_unban_no_ban.desc(
                     message?.substringBefore(" is not banned", "") ?: "",
                 )
             }
 
             "bad_unhost_error" -> {
-                MR.strings.irc_notice_bad_unhost_error.desc()
+                Res.string.irc_notice_bad_unhost_error.desc()
             }
 
             "bad_unmod_mod" -> {
-                MR.strings.irc_notice_bad_unmod_mod.format(
+                Res.string.irc_notice_bad_unmod_mod.desc(
                     message?.substringBefore(" is not a", "") ?: "",
                 )
             }
 
             "bad_vip_grantee_banned" -> {
-                MR.strings.irc_notice_bad_vip_grantee_banned.format(
+                Res.string.irc_notice_bad_vip_grantee_banned.desc(
                     message?.substringBefore(" is banned in", "") ?: "",
                 )
             }
 
             "bad_vip_grantee_already_vip" -> {
-                MR.strings.irc_notice_bad_vip_grantee_already_vip.format(
+                Res.string.irc_notice_bad_vip_grantee_already_vip.desc(
                     message?.substringBefore(" is already a", "") ?: "",
                 )
             }
 
             "bad_vip_max_vips_reached" -> {
-                MR.strings.irc_notice_bad_vip_max_vips_reached.desc()
+                Res.string.irc_notice_bad_vip_max_vips_reached.desc()
             }
 
             "bad_vip_achievement_incomplete" -> {
-                MR.strings.irc_notice_bad_vip_achievement_incomplete.desc()
+                Res.string.irc_notice_bad_vip_achievement_incomplete.desc()
             }
 
             "bad_unvip_grantee_not_vip" -> {
-                MR.strings.irc_notice_bad_unvip_grantee_not_vip.format(
+                Res.string.irc_notice_bad_unvip_grantee_not_vip.desc(
                     message?.substringBefore(" is not a", "") ?: "",
                 )
             }
 
             "ban_success" -> {
-                MR.strings.irc_notice_ban_success.format(
+                Res.string.irc_notice_ban_success.desc(
                     message?.substringBefore(" is now banned", "") ?: "",
                 )
             }
 
             "cmds_available" -> {
-                MR.strings.irc_notice_cmds_available.format(
+                Res.string.irc_notice_cmds_available.desc(
                     message?.substringAfter("details): ", "")?.substringBefore(" More help:", "")
                         ?: "",
                 )
             }
 
             "color_changed" -> {
-                MR.strings.irc_notice_color_changed.desc()
+                Res.string.irc_notice_color_changed.desc()
             }
 
             "commercial_success" -> {
-                MR.strings.irc_notice_commercial_success.format(
+                Res.string.irc_notice_commercial_success.desc(
                     message?.substringAfter("Initiating ", "")
                         ?.substringBefore(" second commercial break.", "") ?: "",
                 )
             }
 
             "delete_message_success" -> {
-                MR.strings.irc_notice_delete_message_success.format(
+                Res.string.irc_notice_delete_message_success.desc(
                     message?.substringAfter("The message from ", "")
                         ?.substringBefore(" is now deleted.", "") ?: "",
                 )
             }
 
             "delete_staff_message_success" -> {
-                MR.strings.irc_notice_delete_staff_message_success.format(
+                Res.string.irc_notice_delete_staff_message_success.desc(
                     message?.substringAfter("message from staff ", "")
                         ?.substringBefore(". Please email", "") ?: "",
                 )
             }
 
             "emote_only_off" -> {
-                MR.strings.irc_notice_emote_only_off.desc()
+                Res.string.irc_notice_emote_only_off.desc()
             }
 
             "emote_only_on" -> {
-                MR.strings.irc_notice_emote_only_on.desc()
+                Res.string.irc_notice_emote_only_on.desc()
             }
 
             "followers_off" -> {
-                MR.strings.irc_notice_followers_off.desc()
+                Res.string.irc_notice_followers_off.desc()
             }
 
             "followers_on" -> {
-                MR.strings.irc_notice_followers_on.format(
+                Res.string.irc_notice_followers_on.desc(
                     message?.substringAfter("is now in ", "")
                         ?.substringBefore(" followers-only mode", "") ?: "",
                 )
             }
 
             "followers_on_zero" -> {
-                MR.strings.irc_notice_followers_on_zero.desc()
+                Res.string.irc_notice_followers_on_zero.desc()
             }
 
             "host_off" -> {
-                MR.strings.irc_notice_host_off.desc()
+                Res.string.irc_notice_host_off.desc()
             }
 
             "host_on" -> {
-                MR.strings.irc_notice_host_on.format(
+                Res.string.irc_notice_host_on.desc(
                     message?.substringAfter("Now hosting ", "")?.substringBeforeLast(".", "") ?: "",
                 )
             }
 
             "host_receive" -> {
-                MR.strings.irc_notice_host_receive.format(
+                Res.string.irc_notice_host_receive.desc(
                     message?.substringBefore(" is now hosting", "") ?: "",
                     message?.substringAfter("you for up to ", "")?.substringBefore(" viewers", "")
                         ?: "",
@@ -783,65 +968,65 @@ internal class ChatEventViewMapper {
             }
 
             "host_receive_no_count" -> {
-                MR.strings.irc_notice_host_receive_no_count.format(
+                Res.string.irc_notice_host_receive_no_count.desc(
                     message?.substringBefore(" is now hosting", "") ?: "",
                 )
             }
 
             "host_target_went_offline" -> {
-                MR.strings.irc_notice_host_target_went_offline.format(
+                Res.string.irc_notice_host_target_went_offline.desc(
                     message?.substringBefore(" has gone offline", "") ?: "",
                 )
             }
 
             "hosts_remaining" -> {
-                MR.strings.irc_notice_hosts_remaining.format(
+                Res.string.irc_notice_hosts_remaining.desc(
                     message?.substringBefore(" host commands", "") ?: "",
                 )
             }
 
             "invalid_user" -> {
-                MR.strings.irc_notice_invalid_user.format(
+                Res.string.irc_notice_invalid_user.desc(
                     message?.substringAfter("Invalid username: ", "") ?: "",
                 )
             }
 
             "mod_success" -> {
-                MR.strings.irc_notice_mod_success.format(
+                Res.string.irc_notice_mod_success.desc(
                     message?.substringAfter("You have added ", "")
                         ?.substringBefore(" as a moderator", "") ?: "",
                 )
             }
 
             "msg_banned" -> {
-                MR.strings.irc_notice_msg_banned.format(
+                Res.string.irc_notice_msg_banned.desc(
                     message?.substringAfter("from talking in ", "")?.substringBeforeLast(".", "")
                         ?: "",
                 )
             }
 
             "msg_bad_characters" -> {
-                MR.strings.irc_notice_msg_bad_characters.desc()
+                Res.string.irc_notice_msg_bad_characters.desc()
             }
 
             "msg_channel_blocked" -> {
-                MR.strings.irc_notice_msg_channel_blocked.desc()
+                Res.string.irc_notice_msg_channel_blocked.desc()
             }
 
             "msg_channel_suspended" -> {
-                MR.strings.irc_notice_msg_channel_suspended.desc()
+                Res.string.irc_notice_msg_channel_suspended.desc()
             }
 
             "msg_duplicate" -> {
-                MR.strings.irc_notice_msg_duplicate.desc()
+                Res.string.irc_notice_msg_duplicate.desc()
             }
 
             "msg_emoteonly" -> {
-                MR.strings.irc_notice_msg_emoteonly.desc()
+                Res.string.irc_notice_msg_emoteonly.desc()
             }
 
             "msg_followersonly" -> {
-                MR.strings.irc_notice_msg_followersonly.format(
+                Res.string.irc_notice_msg_followersonly.desc(
                     message?.substringAfter("This room is in ", "")
                         ?.substringBefore(" followers-only mode", "") ?: "",
                     message?.substringAfter("Follow ", "")?.substringBefore(" to join", "") ?: "",
@@ -849,7 +1034,7 @@ internal class ChatEventViewMapper {
             }
 
             "msg_followersonly_followed" -> {
-                MR.strings.irc_notice_msg_followersonly_followed.format(
+                Res.string.irc_notice_msg_followersonly_followed.desc(
                     message?.substringAfter("This room is in ", "")
                         ?.substringBefore(" followers-only mode", "") ?: "",
                     message?.substringAfter("following for ", "")?.substringBefore(". Continue", "")
@@ -858,48 +1043,48 @@ internal class ChatEventViewMapper {
             }
 
             "msg_followersonly_zero" -> {
-                MR.strings.irc_notice_msg_followersonly_zero.format(
+                Res.string.irc_notice_msg_followersonly_zero.desc(
                     message?.substringAfter(". Follow ", "")?.substringBefore(" to join the", "")
                         ?: "",
                 )
             }
 
             "msg_r9k" -> {
-                MR.strings.irc_notice_msg_r9k.desc()
+                Res.string.irc_notice_msg_r9k.desc()
             }
 
             "msg_ratelimit" -> {
-                MR.strings.irc_notice_msg_ratelimit.desc()
+                Res.string.irc_notice_msg_ratelimit.desc()
             }
 
             "msg_rejected" -> {
-                MR.strings.irc_notice_msg_rejected.desc()
+                Res.string.irc_notice_msg_rejected.desc()
             }
 
             "msg_rejected_mandatory" -> {
-                MR.strings.irc_notice_msg_rejected_mandatory.desc()
+                Res.string.irc_notice_msg_rejected_mandatory.desc()
             }
 
             "msg_slowmode" -> {
-                MR.strings.irc_notice_msg_slowmode.format(
+                Res.string.irc_notice_msg_slowmode.desc(
                     message?.substringAfter("talk again in ", "")?.substringBefore(" seconds.", "")
                         ?: "",
                 )
             }
 
             "msg_subsonly" -> {
-                MR.strings.irc_notice_msg_subsonly.format(
+                Res.string.irc_notice_msg_subsonly.desc(
                     message?.substringAfter("/products/", "")?.substringBefore("/ticket?ref", "")
                         ?: "",
                 )
             }
 
             "msg_suspended" -> {
-                MR.strings.irc_notice_msg_suspended.desc()
+                Res.string.irc_notice_msg_suspended.desc()
             }
 
             "msg_timedout" -> {
-                MR.strings.irc_notice_msg_timedout.format(
+                Res.string.irc_notice_msg_timedout.desc(
                     message?.substringAfter("timed out for ", "")
                         ?.substringBefore(" more seconds.", "")
                         ?: "",
@@ -907,101 +1092,101 @@ internal class ChatEventViewMapper {
             }
 
             "msg_verified_email" -> {
-                MR.strings.irc_notice_msg_verified_email.desc()
+                Res.string.irc_notice_msg_verified_email.desc()
             }
 
             "no_help" -> {
-                MR.strings.irc_notice_no_help.desc()
+                Res.string.irc_notice_no_help.desc()
             }
 
             "no_mods" -> {
-                MR.strings.irc_notice_no_mods.desc()
+                Res.string.irc_notice_no_mods.desc()
             }
 
             "no_vips" -> {
-                MR.strings.irc_notice_no_vips.desc()
+                Res.string.irc_notice_no_vips.desc()
             }
 
             "not_hosting" -> {
-                MR.strings.irc_notice_not_hosting.desc()
+                Res.string.irc_notice_not_hosting.desc()
             }
 
             "no_permission" -> {
-                MR.strings.irc_notice_no_permission.desc()
+                Res.string.irc_notice_no_permission.desc()
             }
 
             "r9k_off" -> {
-                MR.strings.irc_notice_r9k_off.desc()
+                Res.string.irc_notice_r9k_off.desc()
             }
 
             "r9k_on" -> {
-                MR.strings.irc_notice_r9k_on.desc()
+                Res.string.irc_notice_r9k_on.desc()
             }
 
             "raid_error_already_raiding" -> {
-                MR.strings.irc_notice_raid_error_already_raiding.desc()
+                Res.string.irc_notice_raid_error_already_raiding.desc()
             }
 
             "raid_error_forbidden" -> {
-                MR.strings.irc_notice_raid_error_forbidden.desc()
+                Res.string.irc_notice_raid_error_forbidden.desc()
             }
 
             "raid_error_self" -> {
-                MR.strings.irc_notice_raid_error_self.desc()
+                Res.string.irc_notice_raid_error_self.desc()
             }
 
             "raid_error_too_many_viewers" -> {
-                MR.strings.irc_notice_raid_error_too_many_viewers.desc()
+                Res.string.irc_notice_raid_error_too_many_viewers.desc()
             }
 
             "raid_error_unexpected" -> {
-                MR.strings.irc_notice_raid_error_unexpected.format(
+                Res.string.irc_notice_raid_error_unexpected.desc(
                     message?.substringAfter("a problem raiding ", "")
                         ?.substringBefore(". Please try", "") ?: "",
                 )
             }
 
             "raid_notice_mature" -> {
-                MR.strings.irc_notice_raid_notice_mature.desc()
+                Res.string.irc_notice_raid_notice_mature.desc()
             }
 
             "raid_notice_restricted_chat" -> {
-                MR.strings.irc_notice_raid_notice_restricted_chat.desc()
+                Res.string.irc_notice_raid_notice_restricted_chat.desc()
             }
 
             "room_mods" -> {
-                MR.strings.irc_notice_room_mods.format(
+                Res.string.irc_notice_room_mods.desc(
                     message?.substringAfter("this channel are: ", "") ?: "",
                 )
             }
 
             "slow_off" -> {
-                MR.strings.irc_notice_slow_off.desc()
+                Res.string.irc_notice_slow_off.desc()
             }
 
             "slow_on" -> {
-                MR.strings.irc_notice_slow_on.format(
+                Res.string.irc_notice_slow_on.desc(
                     message?.substringAfter("send messages every ", "")
                         ?.substringBefore(" seconds.", "") ?: "",
                 )
             }
 
             "subs_off" -> {
-                MR.strings.irc_notice_subs_off.desc()
+                Res.string.irc_notice_subs_off.desc()
             }
 
             "subs_on" -> {
-                MR.strings.irc_notice_subs_on.desc()
+                Res.string.irc_notice_subs_on.desc()
             }
 
             "timeout_no_timeout" -> {
-                MR.strings.irc_notice_timeout_no_timeout.format(
+                Res.string.irc_notice_timeout_no_timeout.desc(
                     message?.substringBefore(" is not timed", "") ?: "",
                 )
             }
 
             "timeout_success" -> {
-                MR.strings.irc_notice_timeout_success.format(
+                Res.string.irc_notice_timeout_success.desc(
                     message?.substringBefore(" has been", "") ?: "",
                     message?.substringAfter("timed out for ", "")?.substringBeforeLast(".", "")
                         ?: "",
@@ -1009,20 +1194,20 @@ internal class ChatEventViewMapper {
             }
 
             "tos_ban" -> {
-                MR.strings.irc_notice_tos_ban.format(
+                Res.string.irc_notice_tos_ban.desc(
                     message?.substringAfter("has closed channel ", "")
                         ?.substringBefore(" due to Terms", "") ?: "",
                 )
             }
 
             "turbo_only_color" -> {
-                MR.strings.irc_notice_turbo_only_color.format(
+                Res.string.irc_notice_turbo_only_color.desc(
                     message?.substringAfter("following instead: ", "") ?: "",
                 )
             }
 
             "unavailable_command" -> {
-                MR.strings.irc_notice_unavailable_command.format(
+                Res.string.irc_notice_unavailable_command.desc(
                     message?.substringAfter("Sorry, “", "")
                         ?.substringBefore("” is not available", "")
                         ?: "",
@@ -1030,50 +1215,50 @@ internal class ChatEventViewMapper {
             }
 
             "unban_success" -> {
-                MR.strings.irc_notice_unban_success.format(
+                Res.string.irc_notice_unban_success.desc(
                     message?.substringBefore(" is no longer", "") ?: "",
                 )
             }
 
             "unmod_success" -> {
-                MR.strings.irc_notice_unmod_success.format(
+                Res.string.irc_notice_unmod_success.desc(
                     message?.substringAfter("You have removed ", "")
                         ?.substringBefore(" as a moderator", "") ?: "",
                 )
             }
 
             "unraid_error_no_active_raid" -> {
-                MR.strings.irc_notice_unraid_error_no_active_raid.desc()
+                Res.string.irc_notice_unraid_error_no_active_raid.desc()
             }
 
             "unraid_error_unexpected" -> {
-                MR.strings.irc_notice_unraid_error_unexpected.desc()
+                Res.string.irc_notice_unraid_error_unexpected.desc()
             }
 
             "unraid_success" -> {
-                MR.strings.irc_notice_unraid_success.desc()
+                Res.string.irc_notice_unraid_success.desc()
             }
 
             "unrecognized_cmd" -> {
-                MR.strings.irc_notice_unrecognized_cmd.format(
+                Res.string.irc_notice_unrecognized_cmd.desc(
                     message?.substringAfter("Unrecognized command: ", "") ?: "",
                 )
             }
 
             "untimeout_banned" -> {
-                MR.strings.irc_notice_untimeout_banned.format(
+                Res.string.irc_notice_untimeout_banned.desc(
                     message?.substringBefore(" is permanently banned", "") ?: "",
                 )
             }
 
             "untimeout_success" -> {
-                MR.strings.irc_notice_untimeout_success.format(
+                Res.string.irc_notice_untimeout_success.desc(
                     message?.substringBefore(" is no longer", "") ?: "",
                 )
             }
 
             "unvip_success" -> {
-                MR.strings.irc_notice_unvip_success.format(
+                Res.string.irc_notice_unvip_success.desc(
                     message?.substringAfter("You have removed ", "")
                         ?.substringBefore(" as a VIP", "")
                         ?: "",
@@ -1081,147 +1266,147 @@ internal class ChatEventViewMapper {
             }
 
             "usage_ban" -> {
-                MR.strings.irc_notice_usage_ban.desc()
+                Res.string.irc_notice_usage_ban.desc()
             }
 
             "usage_clear" -> {
-                MR.strings.irc_notice_usage_clear.desc()
+                Res.string.irc_notice_usage_clear.desc()
             }
 
             "usage_color" -> {
-                MR.strings.irc_notice_usage_color.format(
+                Res.string.irc_notice_usage_color.desc(
                     message?.substringAfter("following: ", "")?.substringBeforeLast(".", "") ?: "",
                 )
             }
 
             "usage_commercial" -> {
-                MR.strings.irc_notice_usage_commercial.desc()
+                Res.string.irc_notice_usage_commercial.desc()
             }
 
             "usage_disconnect" -> {
-                MR.strings.irc_notice_usage_disconnect.desc()
+                Res.string.irc_notice_usage_disconnect.desc()
             }
 
             "usage_delete" -> {
-                MR.strings.irc_notice_usage_delete.desc()
+                Res.string.irc_notice_usage_delete.desc()
             }
 
             "usage_emote_only_off" -> {
-                MR.strings.irc_notice_usage_emote_only_off.desc()
+                Res.string.irc_notice_usage_emote_only_off.desc()
             }
 
             "usage_emote_only_on" -> {
-                MR.strings.irc_notice_usage_emote_only_on.desc()
+                Res.string.irc_notice_usage_emote_only_on.desc()
             }
 
             "usage_followers_off" -> {
-                MR.strings.irc_notice_usage_followers_off.desc()
+                Res.string.irc_notice_usage_followers_off.desc()
             }
 
             "usage_followers_on" -> {
-                MR.strings.irc_notice_usage_followers_on.desc()
+                Res.string.irc_notice_usage_followers_on.desc()
             }
 
             "usage_help" -> {
-                MR.strings.irc_notice_usage_help.desc()
+                Res.string.irc_notice_usage_help.desc()
             }
 
             "usage_host" -> {
-                MR.strings.irc_notice_usage_host.desc()
+                Res.string.irc_notice_usage_host.desc()
             }
 
             "usage_marker" -> {
-                MR.strings.irc_notice_usage_marker.desc()
+                Res.string.irc_notice_usage_marker.desc()
             }
 
             "usage_me" -> {
-                MR.strings.irc_notice_usage_me.desc()
+                Res.string.irc_notice_usage_me.desc()
             }
 
             "usage_mod" -> {
-                MR.strings.irc_notice_usage_mod.desc()
+                Res.string.irc_notice_usage_mod.desc()
             }
 
             "usage_mods" -> {
-                MR.strings.irc_notice_usage_mods.desc()
+                Res.string.irc_notice_usage_mods.desc()
             }
 
             "usage_r9k_off" -> {
-                MR.strings.irc_notice_usage_r9k_off.desc()
+                Res.string.irc_notice_usage_r9k_off.desc()
             }
 
             "usage_r9k_on" -> {
-                MR.strings.irc_notice_usage_r9k_on.desc()
+                Res.string.irc_notice_usage_r9k_on.desc()
             }
 
             "usage_raid" -> {
-                MR.strings.irc_notice_usage_raid.desc()
+                Res.string.irc_notice_usage_raid.desc()
             }
 
             "usage_slow_off" -> {
-                MR.strings.irc_notice_usage_slow_off.desc()
+                Res.string.irc_notice_usage_slow_off.desc()
             }
 
             "usage_slow_on" -> {
-                MR.strings.irc_notice_usage_slow_on.format(
+                Res.string.irc_notice_usage_slow_on.desc(
                     message?.substringAfter("default=", "")?.substringBefore(")", "") ?: "",
                 )
             }
 
             "usage_subs_off" -> {
-                MR.strings.irc_notice_usage_subs_off.desc()
+                Res.string.irc_notice_usage_subs_off.desc()
             }
 
             "usage_subs_on" -> {
-                MR.strings.irc_notice_usage_subs_on.desc()
+                Res.string.irc_notice_usage_subs_on.desc()
             }
 
             "usage_timeout" -> {
-                MR.strings.irc_notice_usage_timeout.desc()
+                Res.string.irc_notice_usage_timeout.desc()
             }
 
             "usage_unban" -> {
-                MR.strings.irc_notice_usage_unban.desc()
+                Res.string.irc_notice_usage_unban.desc()
             }
 
             "usage_unhost" -> {
-                MR.strings.irc_notice_usage_unhost.desc()
+                Res.string.irc_notice_usage_unhost.desc()
             }
 
             "usage_unmod" -> {
-                MR.strings.irc_notice_usage_unmod.desc()
+                Res.string.irc_notice_usage_unmod.desc()
             }
 
             "usage_unraid" -> {
-                MR.strings.irc_notice_usage_unraid.desc()
+                Res.string.irc_notice_usage_unraid.desc()
             }
 
             "usage_untimeout" -> {
-                MR.strings.irc_notice_usage_untimeout.desc()
+                Res.string.irc_notice_usage_untimeout.desc()
             }
 
             "usage_unvip" -> {
-                MR.strings.irc_notice_usage_unvip.desc()
+                Res.string.irc_notice_usage_unvip.desc()
             }
 
             "usage_user" -> {
-                MR.strings.irc_notice_usage_user.desc()
+                Res.string.irc_notice_usage_user.desc()
             }
 
             "usage_vip" -> {
-                MR.strings.irc_notice_usage_vip.desc()
+                Res.string.irc_notice_usage_vip.desc()
             }
 
             "usage_vips" -> {
-                MR.strings.irc_notice_usage_vips.desc()
+                Res.string.irc_notice_usage_vips.desc()
             }
 
             "usage_whisper" -> {
-                MR.strings.irc_notice_usage_whisper.desc()
+                Res.string.irc_notice_usage_whisper.desc()
             }
 
             "vip_success" -> {
-                MR.strings.irc_notice_vip_success.format(
+                Res.string.irc_notice_vip_success.desc(
                     message?.substringAfter("You have added ", "")
                         ?.substringBeforeLast(" as a vip", "")
                         ?: "",
@@ -1229,42 +1414,42 @@ internal class ChatEventViewMapper {
             }
 
             "vips_success" -> {
-                MR.strings.irc_notice_vips_success.format(
+                Res.string.irc_notice_vips_success.desc(
                     message?.substringAfter("channel are: ", "")?.substringBeforeLast(".", "")
                         ?: "",
                 )
             }
 
             "whisper_banned" -> {
-                MR.strings.irc_notice_whisper_banned.desc()
+                Res.string.irc_notice_whisper_banned.desc()
             }
 
             "whisper_banned_recipient" -> {
-                MR.strings.irc_notice_whisper_banned_recipient.desc()
+                Res.string.irc_notice_whisper_banned_recipient.desc()
             }
 
             "whisper_invalid_login" -> {
-                MR.strings.irc_notice_whisper_invalid_login.desc()
+                Res.string.irc_notice_whisper_invalid_login.desc()
             }
 
             "whisper_invalid_self" -> {
-                MR.strings.irc_notice_whisper_invalid_self.desc()
+                Res.string.irc_notice_whisper_invalid_self.desc()
             }
 
             "whisper_limit_per_min" -> {
-                MR.strings.irc_notice_whisper_limit_per_min.desc()
+                Res.string.irc_notice_whisper_limit_per_min.desc()
             }
 
             "whisper_limit_per_sec" -> {
-                MR.strings.irc_notice_whisper_limit_per_sec.desc()
+                Res.string.irc_notice_whisper_limit_per_sec.desc()
             }
 
             "whisper_restricted" -> {
-                MR.strings.irc_notice_whisper_restricted.desc()
+                Res.string.irc_notice_whisper_restricted.desc()
             }
 
             "whisper_restricted_recipient" -> {
-                MR.strings.irc_notice_whisper_restricted_recipient.desc()
+                Res.string.irc_notice_whisper_restricted_recipient.desc()
             }
 
             else -> {

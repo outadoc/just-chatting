@@ -22,8 +22,12 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.channels
+import fr.outadoc.justchatting.shared.search
+import fr.outadoc.justchatting.shared.settings
+import fr.outadoc.justchatting.shared.timeline_title
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun MainNavigation(
@@ -52,7 +56,7 @@ internal fun MainNavigation(
                                     contentDescription = null,
                                 )
                             },
-                            label = { Text(stringResource(MR.strings.timeline_title)) },
+                            label = { Text(stringResource(Res.string.timeline_title)) },
                         )
 
                         NavigationRailItem(
@@ -64,7 +68,7 @@ internal fun MainNavigation(
                                     contentDescription = null,
                                 )
                             },
-                            label = { Text(stringResource(MR.strings.channels)) },
+                            label = { Text(stringResource(Res.string.channels)) },
                         )
 
                         NavigationRailItem(
@@ -76,7 +80,7 @@ internal fun MainNavigation(
                                     contentDescription = null,
                                 )
                             },
-                            label = { Text(stringResource(MR.strings.search)) },
+                            label = { Text(stringResource(Res.string.search)) },
                         )
 
                         NavigationRailItem(
@@ -88,7 +92,7 @@ internal fun MainNavigation(
                                     contentDescription = null,
                                 )
                             },
-                            label = { Text(stringResource(MR.strings.settings)) },
+                            label = { Text(stringResource(Res.string.settings)) },
                         )
 
                         Spacer(Modifier.weight(1f))
@@ -109,7 +113,7 @@ internal fun MainNavigation(
                                         contentDescription = null,
                                     )
                                 },
-                                label = { Text(stringResource(MR.strings.timeline_title)) },
+                                label = { Text(stringResource(Res.string.timeline_title)) },
                             )
 
                             item(
@@ -121,7 +125,7 @@ internal fun MainNavigation(
                                         contentDescription = null,
                                     )
                                 },
-                                label = { Text(stringResource(MR.strings.channels)) },
+                                label = { Text(stringResource(Res.string.channels)) },
                             )
 
                             item(
@@ -133,7 +137,7 @@ internal fun MainNavigation(
                                         contentDescription = null,
                                     )
                                 },
-                                label = { Text(stringResource(MR.strings.search)) },
+                                label = { Text(stringResource(Res.string.search)) },
                             )
 
                             item(
@@ -145,7 +149,7 @@ internal fun MainNavigation(
                                         contentDescription = null,
                                     )
                                 },
-                                label = { Text(stringResource(MR.strings.settings)) },
+                                label = { Text(stringResource(Res.string.settings)) },
                             )
                         },
                     )

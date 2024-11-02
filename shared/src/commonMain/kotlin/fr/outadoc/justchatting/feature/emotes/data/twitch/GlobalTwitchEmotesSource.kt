@@ -1,10 +1,11 @@
 package fr.outadoc.justchatting.feature.emotes.data.twitch
 
-import dev.icerock.moko.resources.desc.desc
 import fr.outadoc.justchatting.feature.emotes.domain.CachedEmoteListSource
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteSetItem
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.chat_source_twitch
 import fr.outadoc.justchatting.utils.core.flatListOf
+import fr.outadoc.justchatting.utils.resources.desc
 
 internal class GlobalTwitchEmotesSource(
     private val delegateTwitchEmotesSource: DelegateTwitchEmotesSource,
@@ -24,7 +25,7 @@ internal class GlobalTwitchEmotesSource(
                     flatListOf(
                         EmoteSetItem.Header(
                             title = owner?.displayName?.desc(),
-                            source = MR.strings.chat_source_twitch.desc(),
+                            source = Res.string.chat_source_twitch.desc(),
                             iconUrl = owner?.profileImageUrl,
                         ),
                         emotes.map { emote -> EmoteSetItem.Emote(emote) },

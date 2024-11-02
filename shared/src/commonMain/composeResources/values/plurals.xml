@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="viewers">
-        <item quantity="one">%s viewer</item>
-        <item quantity="other">%s viewers</item>
+        <item quantity="one">%1$s viewer</item>
+        <item quantity="other">%1$s viewers</item>
     </plurals>
 
     <plurals name="months">
-        <item quantity="one">%s month</item>
-        <item quantity="other">%s months</item>
+        <item quantity="one">%1$s month</item>
+        <item quantity="other">%1$s months</item>
     </plurals>
 
     <plurals name="user_redeemed">

@@ -7,17 +7,9 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.emotes.data.twitch.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import kotlinx.datetime.Instant
-import kotlin.collections.List
-import kotlin.collections.Map
-import kotlin.collections.asSequence
-import kotlin.collections.buildMap
 import kotlin.collections.component1
 import kotlin.collections.component2
-import kotlin.collections.dropLastWhile
-import kotlin.collections.flatMap
 import kotlin.collections.map
-import kotlin.collections.mapNotNull
-import kotlin.collections.orEmpty
 import kotlin.collections.set
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes

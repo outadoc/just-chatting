@@ -27,10 +27,13 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.window.core.layout.WindowHeightSizeClass
 import app.cash.paging.compose.LazyPagingItems
-import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.all_goBack
+import fr.outadoc.justchatting.shared.search_clear_cd
+import fr.outadoc.justchatting.shared.search_hint
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun SearchScreenBar(
@@ -101,7 +104,7 @@ private fun CompactSearchBar(
                 onExpandedChange = onSearchExpandedChange,
                 placeholder = {
                     Text(
-                        stringResource(MR.strings.search_hint),
+                        stringResource(Res.string.search_hint),
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                     )
@@ -114,7 +117,7 @@ private fun CompactSearchBar(
                         if (isActive) {
                             AccessibleIconButton(
                                 onClick = onDismissSearchBar,
-                                onClickLabel = stringResource(MR.strings.all_goBack),
+                                onClickLabel = stringResource(Res.string.all_goBack),
                             ) {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
@@ -142,7 +145,7 @@ private fun CompactSearchBar(
                         AnimatedVisibility(visible = query.isNotEmpty()) {
                             AccessibleIconButton(
                                 onClick = onClearSearchBar,
-                                onClickLabel = stringResource(MR.strings.search_clear_cd),
+                                onClickLabel = stringResource(Res.string.search_clear_cd),
                             ) {
                                 Icon(
                                     Icons.Filled.Cancel,
@@ -196,7 +199,7 @@ private fun FullHeightSearchBar(
                 onExpandedChange = onSearchExpandedChange,
                 placeholder = {
                     Text(
-                        stringResource(MR.strings.search_hint),
+                        stringResource(Res.string.search_hint),
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                     )
@@ -209,7 +212,7 @@ private fun FullHeightSearchBar(
                         if (isActive) {
                             AccessibleIconButton(
                                 onClick = onDismissSearchBar,
-                                onClickLabel = stringResource(MR.strings.all_goBack),
+                                onClickLabel = stringResource(Res.string.all_goBack),
                             ) {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
@@ -228,7 +231,7 @@ private fun FullHeightSearchBar(
                     AnimatedVisibility(visible = query.isNotEmpty()) {
                         AccessibleIconButton(
                             onClick = onClearSearchBar,
-                            onClickLabel = stringResource(MR.strings.search_clear_cd),
+                            onClickLabel = stringResource(Res.string.search_clear_cd),
                         ) {
                             Icon(
                                 Icons.Filled.Cancel,

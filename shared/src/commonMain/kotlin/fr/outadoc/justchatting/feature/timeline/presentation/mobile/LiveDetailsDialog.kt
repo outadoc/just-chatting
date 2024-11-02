@@ -11,7 +11,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.BasicUserInfo
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.StreamInfo
@@ -20,9 +19,13 @@ import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.chat_openBubble_action
+import fr.outadoc.justchatting.shared.chat_open_action
+import fr.outadoc.justchatting.shared.watch_live
 import fr.outadoc.justchatting.utils.core.createChannelExternalLink
 import fr.outadoc.justchatting.utils.presentation.areBubblesSupported
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,7 +71,7 @@ internal fun LiveDetailsDialog(
                             contentDescription = null,
                         )
                     },
-                    text = stringResource(MR.strings.chat_open_action),
+                    text = stringResource(Res.string.chat_open_action),
                 )
             }
 
@@ -85,7 +88,7 @@ internal fun LiveDetailsDialog(
                             contentDescription = null,
                         )
                     },
-                    text = stringResource(MR.strings.chat_openBubble_action),
+                    text = stringResource(Res.string.chat_openBubble_action),
                 )
             }
 
@@ -103,7 +106,7 @@ internal fun LiveDetailsDialog(
                         contentDescription = null,
                     )
                 },
-                text = stringResource(MR.strings.watch_live),
+                text = stringResource(Res.string.watch_live),
             )
         },
     )

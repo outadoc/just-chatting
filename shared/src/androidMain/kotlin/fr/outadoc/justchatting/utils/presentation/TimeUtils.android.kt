@@ -7,8 +7,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.minus
-import kotlinx.datetime.plus
 import kotlinx.datetime.toJavaInstant
 import kotlinx.datetime.toJavaLocalDate
 import java.time.format.DateTimeFormatter

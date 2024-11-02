@@ -11,4 +11,5 @@
     <string name="widget_description_recent">Shows your recently visited channels.</string>
     <string name="widget_live_title">Currently live</string>
     <string name="widget_recent_title">Recent</string>
+    <string name="widget_refresh_action_cd">Refresh</string>
 </resources>

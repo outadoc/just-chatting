@@ -29,9 +29,6 @@ import fr.outadoc.justchatting.feature.shared.presentation.glance.GlanceUserItem
 import fr.outadoc.justchatting.feature.shared.presentation.glance.adaptiveGridCellsCompat
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainActivity
 import fr.outadoc.justchatting.shared.R
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.timeline_refresh_action_cd
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 internal class FollowedChannelsWidget : GlanceAppWidget() {
@@ -68,7 +65,7 @@ internal class FollowedChannelsWidget : GlanceAppWidget() {
                                 CircleIconButton(
                                     modifier = GlanceModifier.padding(8.dp),
                                     imageProvider = ImageProvider(R.drawable.ic_sync),
-                                    contentDescription = stringResource(Res.string.timeline_refresh_action_cd),
+                                    contentDescription = LocalContext.current.getString(R.string.widget_refresh_action_cd),
                                     backgroundColor = null,
                                     key = "refresh",
                                     onClick = viewModel::synchronize,

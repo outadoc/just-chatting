@@ -11,4 +11,5 @@
     <string name="widget_description_recent">Affiche les chaînes que vous avez visitées récemment.</string>
     <string name="widget_live_title">En direct</string>
     <string name="widget_recent_title">Chaînes récentes</string>
+    <string name="widget_refresh_action_cd">Rafraîchir les données</string>
 </resources>

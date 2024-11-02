@@ -24,7 +24,7 @@
     <string name="chat_input_reuseLastMessage_cd">Reuse the last message sent</string>
     <string name="chat_input_send_cd">Send</string>
     <string name="chat_join">Connected to %1$s</string>
-    <string name="chat_massSubGift_header">is gifting %1$s %2$s subs to the community! They\'ve gifted a total of %3$s subs in the channel.</string>
+    <string name="chat_massSubGift_header">is gifting %1$s %2$s subs to the community! They've gifted a total of %3$s subs in the channel.</string>
     <string name="chat_message_actionSeparator">&#160;</string>
     <string name="chat_message_standardSeparator">:&#160;</string>
     <string name="chat_open_action">Open chat</string>
@@ -39,14 +39,14 @@
     <string name="chat_source_stv">7TV</string>
     <string name="chat_source_twitch">Twitch</string>
     <string name="chat_subConversion_header">converted to a %1$s subscription!</string>
-    <string name="chat_subGift_header">gifted a %1$s sub to %2$s! They\'ve subscribed for %3$s.</string>
+    <string name="chat_subGift_header">gifted a %1$s sub to %2$s! They've subscribed for %3$s.</string>
     <string name="chat_subGift_payForward">is paying forward the gift they got from %1$s to the community!</string>
     <string name="chat_subGift_payForwardAnonymous">is paying forward the gift they got to the community!</string>
     <string name="chat_subGift_tier1">Tier 1</string>
     <string name="chat_subGift_tier2">Tier 2</string>
     <string name="chat_subGift_tier3">Tier 3</string>
-    <string name="chat_sub_header_withDuration">subscribed %1$s! They\'ve subscribed for %2$s.</string>
-    <string name="chat_sub_header_withDurationAndStreak">subscribed %1$s. They\'ve subscribed for %2$s, currently on a %3$s streak!</string>
+    <string name="chat_sub_header_withDuration">subscribed %1$s! They've subscribed for %2$s.</string>
+    <string name="chat_sub_header_withDurationAndStreak">subscribed %1$s. They've subscribed for %2$s, currently on a %3$s streak!</string>
     <string name="chat_sub_prime">with Prime</string>
     <string name="chat_sub_tier1">at Tier 1</string>
     <string name="chat_sub_tier2">at Tier 2</string>
@@ -279,7 +279,7 @@
     <string name="settings_about_xtra_title">Based on Xtra for Twitch</string>
     <string name="settings_account_logout_action">Log out…</string>
     <string name="settings_appearance_animations_action">Open system accessibility settings</string>
-    <string name="settings_appearance_animations_subtitle">You can disable animated emotes by enabling "Reduce motion" in your device\'s accessibility settings.</string>
+    <string name="settings_appearance_animations_subtitle">You can disable animated emotes by enabling "Reduce motion" in your device's accessibility settings.</string>
     <string name="settings_appearance_animations_title">Show animated emotes</string>
     <string name="settings_appearance_header">Appearance</string>
     <string name="settings_appearance_timestamps_title">Show message timestamps</string>

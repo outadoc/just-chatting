@@ -1,23 +1,19 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
+  "extends": ["config:recommended"],
   "packageRules": [
     {
-      "groupName": "kotlin-monorepo",
       "matchPackageNames": [
         "/^androidx.compose.compiler/",
         "/^com.google.devtools.ksp/",
         "/^org.jetbrains.compose/",
         "/^org.jetbrains.kotlin[^x]/"
-      ]
+      ],
+      "groupName": "kotlin-monorepo"
     },
     {
-      "groupName": "koin",
-      "matchPackageNames": [
-        "/^io.insert-koin/"
-      ]
+      "matchPackageNames": ["/^io.insert-koin/"],
+      "groupName": "koin"
     },
     {
       "automerge": true,

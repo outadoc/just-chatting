@@ -56,7 +56,7 @@ coil-core = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 coil-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coil" }
 coil-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 compose-material-adaptive-core = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version = "1.0.0" }
-compose-material-adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version = "1.0.0" }
+compose-material-adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version = "1.0.1" }
 compose-material-adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version = "1.0.1" }
 compose-material-adaptive-navigationSuite = { module = "org.jetbrains.compose.material3:material3-adaptive-navigation-suite", version.ref = "compose-multiplatform" }
 compose-material-windowSizeClass = { module = "org.jetbrains.compose.material3:material3-window-size-class", version.ref = "compose-multiplatform" }

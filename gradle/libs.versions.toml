@@ -2,7 +2,7 @@
 accompanist = "0.36.0"
 android = "8.7.2"
 coil = "3.0.2"
-compose-multiplatform = "1.7.0"
+compose-multiplatform = "1.7.1"
 emoji = "1.5.0"
 glance = "1.1.1"
 haze = "1.0.1"
@@ -28,7 +28,7 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version = "2.0.21-1.0.26" }
+ksp = { id = "com.google.devtools.ksp", version = "2.0.21-1.0.27" }
 licenseReport = { id = "com.github.jk1.dependency-license-report", version = "2.9" }
 spotless = { id = "com.diffplug.spotless", version = "6.25.0" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
@@ -57,7 +57,7 @@ coil-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coil" }
 coil-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 compose-material-adaptive-core = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version = "1.0.0" }
 compose-material-adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version = "1.0.0" }
-compose-material-adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version = "1.0.0" }
+compose-material-adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version = "1.0.1" }
 compose-material-adaptive-navigationSuite = { module = "org.jetbrains.compose.material3:material3-adaptive-navigation-suite", version.ref = "compose-multiplatform" }
 compose-material-windowSizeClass = { module = "org.jetbrains.compose.material3:material3-window-size-class", version.ref = "compose-multiplatform" }
 compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.8.0-alpha10" }

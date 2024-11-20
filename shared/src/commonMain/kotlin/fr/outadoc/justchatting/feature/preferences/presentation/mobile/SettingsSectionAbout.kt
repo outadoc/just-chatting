@@ -40,7 +40,6 @@ import fr.outadoc.justchatting.shared.settings_logs_title
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,7 +77,6 @@ internal fun SettingsSectionAbout(
     }
 }
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 private fun SettingsSectionAboutContent(
     modifier: Modifier = Modifier,

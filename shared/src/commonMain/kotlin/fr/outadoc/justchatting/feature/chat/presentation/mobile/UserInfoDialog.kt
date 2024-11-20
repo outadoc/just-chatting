@@ -19,9 +19,8 @@ import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.info_loadError
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(KoinExperimentalAPI::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun UserInfoDialog(
     modifier: Modifier = Modifier,

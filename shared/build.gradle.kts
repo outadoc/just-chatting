@@ -100,7 +100,6 @@ kotlin {
             implementation(libs.compose.navigation)
 
             implementation(libs.accompanist.permissions)
-            implementation(libs.accompanist.systemuicontroller)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)
             implementation(libs.androidx.browser)

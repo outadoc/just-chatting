@@ -18,8 +18,6 @@ import fr.outadoc.justchatting.feature.preferences.presentation.AndroidLogReposi
 import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.AndroidAppVersionNameProvider
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.AppVersionNameProvider
-import fr.outadoc.justchatting.utils.core.AndroidNetworkStateObserver
-import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.http.AndroidHttpClientProvider
 import fr.outadoc.justchatting.utils.http.BaseHttpClientProvider
 import okio.Path.Companion.toPath
@@ -57,7 +55,6 @@ internal actual val platformModule: Module
         }
 
         single<ConnectivityManager> { get<Context>().getSystemService()!! }
-        single<NetworkStateObserver> { AndroidNetworkStateObserver(get()) }
         single<BaseHttpClientProvider> { AndroidHttpClientProvider(get(), get()) }
 
         single<LogRepository> { AndroidLogRepository(get()) }

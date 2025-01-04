@@ -15,8 +15,6 @@ import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.NoopLogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.AppVersionNameProvider
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.AppleAppVersionNameProvider
-import fr.outadoc.justchatting.utils.core.NetworkStateObserver
-import fr.outadoc.justchatting.utils.core.NoopNetworkStateObserver
 import fr.outadoc.justchatting.utils.http.AppleHttpClientProvider
 import fr.outadoc.justchatting.utils.http.BaseHttpClientProvider
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -56,7 +54,6 @@ internal actual val platformModule: Module
             )
         }
 
-        single<NetworkStateObserver> { NoopNetworkStateObserver() }
         single<BaseHttpClientProvider> { AppleHttpClientProvider(get(), get()) }
 
         single<LogRepository> { NoopLogRepository() }

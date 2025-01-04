@@ -78,7 +78,9 @@ import fr.outadoc.justchatting.feature.shared.domain.TwitchRepositoryImpl
 import fr.outadoc.justchatting.feature.shared.presentation.DeeplinkReceiver
 import fr.outadoc.justchatting.feature.shared.presentation.MainRouterViewModel
 import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
+import fr.outadoc.justchatting.utils.core.ConnectivityNetworkStateObserver
 import fr.outadoc.justchatting.utils.core.DefaultJson
+import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.http.BaseHttpClientProvider
 import fr.outadoc.justchatting.utils.http.TwitchHttpClientProvider
 import kotlinx.datetime.Clock
@@ -230,4 +232,5 @@ public val sharedModule: Module
         single<RecentMessagesApi> { RecentMessagesServer(get()) }
 
         single<ReadExternalDependenciesList> { DefaultReadExternalDependenciesList() }
+        single<NetworkStateObserver> { ConnectivityNetworkStateObserver() }
     }

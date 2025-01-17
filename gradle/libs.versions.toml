@@ -67,7 +67,7 @@ compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 connectivity-core = { module = "dev.jordond.connectivity:connectivity-core", version.ref = "connectivity" }
 connectivity-device = { module = "dev.jordond.connectivity:connectivity-device", version.ref = "connectivity" }
 desugar = "com.android.tools:desugar_jdk_libs:2.1.4"
-firebase-bom = "com.google.firebase:firebase-bom:33.7.0"
+firebase-bom = "com.google.firebase:firebase-bom:33.8.0"
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 haze-core = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 haze-materials = { module = "dev.chrisbanes.haze:haze-materials", version.ref = "haze" }

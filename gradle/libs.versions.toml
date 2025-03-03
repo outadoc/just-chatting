@@ -1,5 +1,5 @@
 [versions]
-accompanist = "0.37.0"
+accompanist = "0.37.2"
 android = "8.8.2"
 coil = "3.0.4"
 compose-multiplatform = "1.7.3"

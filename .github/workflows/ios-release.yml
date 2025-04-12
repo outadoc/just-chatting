@@ -1,0 +1,63 @@
+name: Release - Deploy iOS
+
+on:
+  release:
+    types:
+      - released
+
+jobs:
+  deploy:
+    name: Build and upload to Testflight
+    environment: deploy
+    runs-on: macos-latest
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y.%m')"
+
+      - name: Compute unique version code
+        id: version
+        run: echo "::set-output name=version::$(git rev-list HEAD --count)"
+
+      - name: Set up Mise
+        uses: jdx/mise-action@v2
+        with:
+          install: false
+
+      - name: Install Mise dependencies
+        run: mise install
+        working-directory: app-ios
+
+      - name: Generate Xcode project
+        run: tuist generate
+        working-directory: app-ios
+        env:
+          # CFBundleVersion is the commit count
+          TUIST_VERSION_CODE: "${{ steps.version.outputs.version }}"
+          # CFBundleShortVersionString is based on the date and commit count
+          TUIST_VERSION_NAME: "${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}"
+
+      - name: Build iOS app
+        run: fastlane beta
+        working-directory: app-ios
+        env:
+          MATCH_PASSWORD: ${{ secrets.FASTLANE_MATCH_PASSWORD }}

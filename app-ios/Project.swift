@@ -64,6 +64,7 @@ let project = Project(
                         name: "Debug",
                         settings: SettingsDictionary()
                             .otherLinkerFlags(["$(inherited)", "-lsqlite3"])
+                            .automaticCodeSigning(devTeam: "C38RDC5QNT")
                             .manualCodeSigning(
                                 identity: "Apple Development",
                                 provisioningProfileSpecifier: "match Development fr.outadoc.justchatting"
@@ -73,6 +74,7 @@ let project = Project(
                         name: "Release",
                         settings: SettingsDictionary()
                             .otherLinkerFlags(["$(inherited)", "-lsqlite3"])
+                            .automaticCodeSigning(devTeam: "C38RDC5QNT")
                             .manualCodeSigning(
                                 identity: "Apple Distribution",
                                 provisioningProfileSpecifier: "match AppStore fr.outadoc.justchatting"

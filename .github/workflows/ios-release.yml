@@ -61,7 +61,10 @@ jobs:
         env:
           MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
 
-      - name: Build iOS app
+      - name: Build shared framework
+        run: ./gradlew :shared:embedAndSignAppleFrameworkForXcode
+
+      - name: Run Fastlane
         run: fastlane beta
         working-directory: app-ios
         env:

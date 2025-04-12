@@ -39,7 +39,7 @@ accompanist-permissions = { module = "com.google.accompanist:accompanist-permiss
 androidx-activity-compose = "androidx.activity:activity-compose:1.10.0"
 androidx-appcompat = "androidx.appcompat:appcompat:1.7.0"
 androidx-browser = "androidx.browser:browser:1.8.0"
-androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.1.2"
+androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.1.4"
 androidx-emoji2-core = { module = "androidx.emoji2:emoji2", version.ref = "emoji" }
 androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
 androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }

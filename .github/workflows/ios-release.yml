@@ -57,7 +57,7 @@ jobs:
           TUIST_VERSION_NAME: "${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}"
 
       - name: Setup Match repository credentials
-        run: ssh-add - <<< "${MATCH_DEPLOY_KEY}"
+        run: echo "${MATCH_DEPLOY_KEY}" | ssh-add -
         env:
           MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
 

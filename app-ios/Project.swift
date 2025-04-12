@@ -59,11 +59,28 @@ let project = Project(
             ],
             dependencies: [],
             settings: .settings(
-                base: SettingsDictionary()
-                    .automaticCodeSigning(devTeam: "C38RDC5QNT")
-                    .otherLinkerFlags(["$(inherited)", "-lsqlite3"]),
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        settings: SettingsDictionary()
+                            .otherLinkerFlags(["$(inherited)", "-lsqlite3"])
+                            .manualCodeSigning(
+                                identity: "Apple Development",
+                                provisioningProfileSpecifier: "match Development fr.outadoc.justchatting"
+                            )
+                    ),
+                    .release(
+                        name: "Release",
+                        settings: SettingsDictionary()
+                            .otherLinkerFlags(["$(inherited)", "-lsqlite3"])
+                            .manualCodeSigning(
+                                identity: "Apple Distribution",
+                                provisioningProfileSpecifier: "match AppStore fr.outadoc.justchatting"
+                            )
+                    )
+                ],
                 defaultSettings: .recommended
             )
-        ),
+        )
     ]
 )

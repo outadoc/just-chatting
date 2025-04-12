@@ -18,8 +18,9 @@ default_platform(:ios)
 platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
-    sync_code_signing(type: "appstore")
+    setup_ci if ENV["CI"]
+    match(type: "appstore")
     build_app(workspace: "JustChatting.xcworkspace", scheme: "JustChatting")
-    upload_to_testflight
+    upload_to_testflight(skip_waiting_for_build_processing: true)
   end
 end

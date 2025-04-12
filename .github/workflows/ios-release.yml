@@ -56,6 +56,11 @@ jobs:
           # CFBundleShortVersionString is based on the date and commit count
           TUIST_VERSION_NAME: "${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}"
 
+      - name: Setup Match repository credentials
+        run: ssh-add - <<< "${MATCH_DEPLOY_KEY}"
+        env:
+          MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
+
       - name: Build iOS app
         run: fastlane beta
         working-directory: app-ios

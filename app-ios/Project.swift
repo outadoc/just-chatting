@@ -16,7 +16,7 @@ let project = Project(
             product: .app,
             productName: "JustChatting",
             bundleId: "fr.outadoc.justchatting",
-            deploymentTargets: .iOS("17.6"),
+            deploymentTargets: .iOS("18.0"),
             infoPlist: .extendingDefault(
                 with: [
                     "CFBundleDisplayName": "Just Chatting",

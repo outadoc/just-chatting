@@ -19,6 +19,11 @@ platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
     setup_ci if ENV["CI"]
+    app_store_connect_api_key(
+      key_id: "4P9X38CWMP",
+      issuer_id: "4e1b2fcf-856f-4f4d-997f-553d50891d07",
+      key_filepath: "/tmp/appstore-api-key.p8"
+    )
     match(type: "appstore")
     build_app(workspace: "JustChatting.xcworkspace", scheme: "JustChatting")
     upload_to_testflight(skip_waiting_for_build_processing: true)

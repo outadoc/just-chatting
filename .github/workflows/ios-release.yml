@@ -62,7 +62,12 @@ jobs:
           MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
 
       - name: Build shared framework
-        run: ./gradlew :shared:iosArm64MainBinaries
+        run: ./gradlew :shared:linkReleaseFrameworkIosArm64
+
+      - name: Download App Store Connect API key
+        run: echo "$APPLE_DEV_PORTAL_API_KEY" > /tmp/appstore-api-key.p8
+        env:
+          APPLE_DEV_PORTAL_API_KEY: ${{ secrets.APPLE_DEV_PORTAL_API_KEY }}
 
       - name: Run Fastlane
         run: fastlane beta

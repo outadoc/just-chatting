@@ -8,6 +8,7 @@ import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -26,6 +27,7 @@ import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsS
 import fr.outadoc.justchatting.feature.search.presentation.mobile.SearchScreen
 import fr.outadoc.justchatting.feature.timeline.presentation.mobile.TimelineScreen
 import fr.outadoc.justchatting.utils.presentation.BackHandler
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -39,8 +41,12 @@ internal fun MainRouter(
     onShareLogs: (Uri) -> Unit = {},
     onChannelClick: (String) -> Unit = {},
 ) {
+    val scope = rememberCoroutineScope()
+
     BackHandler(navigator.canNavigateBack()) {
-        navigator.navigateBack()
+        scope.launch {
+            navigator.navigateBack()
+        }
     }
 
     ListDetailPaneScaffold(
@@ -88,10 +94,12 @@ internal fun MainRouter(
                         SettingsContent(
                             onNavigate = { navController.navigate(it.route) },
                             onNavigateDetails = { screen ->
-                                navigator.navigateTo(
-                                    pane = ListDetailPaneScaffoldRole.Detail,
-                                    content = screen,
-                                )
+                                scope.launch {
+                                    navigator.navigateTo(
+                                        pane = ListDetailPaneScaffoldRole.Detail,
+                                        contentKey = screen,
+                                    )
+                                }
                             },
                             onShareLogs = onShareLogs,
                         )
@@ -100,28 +108,41 @@ internal fun MainRouter(
             }
         },
         detailPane = {
+            val coroutineScope = rememberCoroutineScope()
             AnimatedPane {
-                when (val screen = navigator.currentDestination?.content) {
+                when (val screen = navigator.currentDestination?.contentKey) {
                     is DetailScreen.Chat -> {
                         ChannelChatScreen(
                             userId = screen.id,
                             isStandalone = false,
                             canNavigateUp = navigator.canNavigateBack(),
-                            onNavigateUp = { navigator.navigateBack() },
+                            onNavigateUp = {
+                                coroutineScope.launch {
+                                    navigator.navigateBack()
+                                }
+                            },
                         )
                     }
 
                     DetailScreen.About -> {
                         SettingsSectionAbout(
                             canNavigateUp = navigator.canNavigateBack(),
-                            onNavigateUp = { navigator.navigateBack() },
+                            onNavigateUp = {
+                                coroutineScope.launch {
+                                    navigator.navigateBack()
+                                }
+                            },
                         )
                     }
 
                     DetailScreen.Appearance -> {
                         SettingsSectionAppearance(
                             canNavigateUp = navigator.canNavigateBack(),
-                            onNavigateUp = { navigator.navigateBack() },
+                            onNavigateUp = {
+                                coroutineScope.launch {
+                                    navigator.navigateBack()
+                                }
+                            },
                             onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
                         )
                     }
@@ -129,14 +150,22 @@ internal fun MainRouter(
                     DetailScreen.DependencyCredits -> {
                         SettingsSectionDependencies(
                             canNavigateUp = navigator.canNavigateBack(),
-                            onNavigateUp = { navigator.navigateBack() },
+                            onNavigateUp = {
+                                coroutineScope.launch {
+                                    navigator.navigateBack()
+                                }
+                            },
                         )
                     }
 
                     DetailScreen.Notifications -> {
                         SettingsSectionNotifications(
                             canNavigateUp = navigator.canNavigateBack(),
-                            onNavigateUp = { navigator.navigateBack() },
+                            onNavigateUp = {
+                                coroutineScope.launch {
+                                    navigator.navigateBack()
+                                }
+                            },
                             onOpenNotificationPreferences = onOpenNotificationPreferences,
                             onOpenBubblePreferences = onOpenBubblePreferences,
                         )
@@ -145,7 +174,11 @@ internal fun MainRouter(
                     DetailScreen.ThirdParties -> {
                         SettingsSectionThirdParties(
                             canNavigateUp = navigator.canNavigateBack(),
-                            onNavigateUp = { navigator.navigateBack() },
+                            onNavigateUp = {
+                                coroutineScope.launch {
+                                    navigator.navigateBack()
+                                }
+                            },
                         )
                     }
 

@@ -77,7 +77,7 @@ kotlin {
             implementation(libs.compose.material.adaptive.core)
             implementation(libs.compose.material.adaptive.layout)
             implementation(libs.compose.material.adaptive.navigation)
-            implementation(libs.compose.material.adaptive.navigationSuite)
+            implementation(compose.material3AdaptiveNavigationSuite)
             implementation(libs.compose.material.windowSizeClass)
             implementation(libs.connectivity.core)
             implementation(libs.haze.core)

@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
@@ -22,6 +23,7 @@ import fr.outadoc.justchatting.feature.shared.presentation.MainRouterViewModel
 import fr.outadoc.justchatting.utils.coil.ImageLoaderFactory
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.OnLifecycleEvent
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
@@ -38,18 +40,22 @@ public fun App(
 
     val navController = rememberNavController()
     val navigator = rememberListDetailPaneScaffoldNavigator<DetailScreen>()
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         // Initialize Coil
         SingletonImageLoader.setSafe(ImageLoaderFactory)
     }
 
-    val onChannelClick = { userId: String ->
-        navigator.navigateTo(
-            pane = ListDetailPaneScaffoldRole.Detail,
-            content = DetailScreen.Chat(userId),
-        )
-    }
+    val onChannelClick: (String) -> Unit =
+        { userId: String ->
+            scope.launch {
+                navigator.navigateTo(
+                    pane = ListDetailPaneScaffoldRole.Detail,
+                    contentKey = DetailScreen.Chat(userId),
+                )
+            }
+        }
 
     LaunchedEffect(viewModel.events) {
         viewModel.events.collect { event ->

@@ -2,7 +2,7 @@
 accompanist = "0.37.2"
 android = "8.9.1"
 coil = "3.0.4"
-compose-multiplatform = "1.8.0+check"
+compose-multiplatform = "1.8.0-beta02"
 connectivity = "1.2.0"
 coroutines = "1.10.2"
 emoji = "1.5.0"

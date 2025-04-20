@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.feature.emotes.data.stv.model
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
-import fr.outadoc.justchatting.feature.shared.data.ApiEndpoints
 
 private const val FLAG_IS_ZERO_WIDTH = 1 shl 8
 
@@ -12,15 +11,25 @@ internal fun StvEmote.map(): Emote {
         name = name,
         ownerId = null,
         isZeroWidth = flags.hasFlag(FLAG_IS_ZERO_WIDTH),
+        ratio = supportedFiles.first().let { file ->
+            file.width.toFloat() / file.height.toFloat()
+        },
         urls = EmoteUrls(
             anyTheme = mapOf(
-                formatUrl(density = 1f, versionId = "1x", emoteId = id),
-                formatUrl(density = 2f, versionId = "2x", emoteId = id),
-                formatUrl(density = 4f, versionId = "4x", emoteId = id),
+                0f to Uri.parse("https:${data.host.baseUrl}")
+                    .buildUpon()
+                    .appendPath(supportedFiles.first().name)
+                    .build()
+                    .toString()
             ),
         ),
     )
 }
+
+private val StvEmote.supportedFiles: List<StvEmoteFiles>
+    get() = data.host.files
+        .filter { file -> file.format == "WEBP" }
+        .sortedByDescending { file -> file.width }
 
 /**
  * Checks if the given bit position is set on the bitfield.
@@ -30,13 +39,4 @@ internal fun StvEmote.map(): Emote {
  */
 private fun Int.hasFlag(flag: Int): Boolean {
     return this and flag == flag
-}
-
-private fun formatUrl(density: Float, versionId: String, emoteId: String): Pair<Float, String> {
-    return density to Uri.parse(ApiEndpoints.STV_EMOTE_CDN)
-        .buildUpon()
-        .appendPath(emoteId)
-        .appendPath("$versionId.webp")
-        .build()
-        .toString()
 }

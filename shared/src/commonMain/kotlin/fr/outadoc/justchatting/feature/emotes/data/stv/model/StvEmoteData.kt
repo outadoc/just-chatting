@@ -7,4 +7,6 @@ import kotlinx.serialization.Serializable
 internal data class StvEmoteData(
     @SerialName("animated")
     val animated: Boolean,
+    @SerialName("host")
+    val host: StvEmoteHost,
 )

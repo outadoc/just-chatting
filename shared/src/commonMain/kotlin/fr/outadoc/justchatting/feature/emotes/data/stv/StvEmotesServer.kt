@@ -35,7 +35,13 @@ internal class StvEmotesServer(httpClient: HttpClient) : StvEmotesApi {
                 .get { url { path("v3/users/twitch", channelId) } }
                 .body<StvChannelResponse>()
         }.map { response ->
-            response.emoteSet.emotes
-                .map { emote -> emote.map() }
+            if (response.emoteSet == null) {
+                return Result.failure(
+                    NoSuchElementException("No 7tv emote set found for channel $channelId")
+                )
+            } else {
+                response.emoteSet.emotes
+                    .map { emote -> emote.map() }
+            }
         }
 }

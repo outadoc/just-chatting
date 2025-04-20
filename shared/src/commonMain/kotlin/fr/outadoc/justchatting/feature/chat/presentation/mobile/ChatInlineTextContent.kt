@@ -14,11 +14,12 @@ import fr.outadoc.justchatting.utils.presentation.formatNumber
 private const val emoteSizeFloat = 1.8
 internal val emoteSize = emoteSizeFloat.em
 
-private val emotePlaceholder = Placeholder(
-    width = emoteSize,
-    height = emoteSize,
-    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
-)
+private fun getEmotePlaceholder(ratio: Float = 1f) =
+    Placeholder(
+        width = emoteSize * ratio,
+        height = emoteSize,
+        placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
+    )
 
 private val badgePlaceholder = Placeholder(
     width = 1.4.em,
@@ -27,7 +28,7 @@ private val badgePlaceholder = Placeholder(
 )
 
 internal fun emoteTextContent(emote: Emote): InlineTextContent =
-    InlineTextContent(emotePlaceholder) {
+    InlineTextContent(getEmotePlaceholder(ratio = emote.ratio)) {
         EmoteItem(
             emote = emote,
         )

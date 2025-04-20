@@ -10,4 +10,5 @@ internal data class Emote(
     val isZeroWidth: Boolean = false,
     val bitsValue: Int? = null,
     val colorHex: String? = null,
+    val ratio: Float = 1f,
 )

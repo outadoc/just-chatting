@@ -137,6 +137,9 @@ kotlin {
         named("desktopMain").dependencies {
             implementation(libs.appdirs)
             implementation(libs.connectivity.http)
+            implementation(libs.ktor.client.java)
+
+            api(libs.sqldelight.driver.jvm)
         }
 
         val androidUnitTest by getting {

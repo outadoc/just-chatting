@@ -8,7 +8,10 @@ import fr.outadoc.justchatting.feature.shared.presentation.mobile.App
 public fun startApp() {
     startSharedKoin()
     application {
-        Window(onCloseRequest = ::exitApplication) {
+        Window(
+            title = "Just Chatting",
+            onCloseRequest = ::exitApplication
+        ) {
             App()
         }
     }

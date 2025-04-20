@@ -4,12 +4,19 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import fr.outadoc.justchatting.data.db.AppDatabase
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
+import fr.outadoc.justchatting.feature.chat.presentation.NoopChatNotifier
+import fr.outadoc.justchatting.feature.chat.presentation.NoopCreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
+import fr.outadoc.justchatting.feature.preferences.presentation.NoopLogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.AppVersionNameProvider
+import fr.outadoc.justchatting.feature.preferences.presentation.mobile.DesktopAppVersionNameProvider
 import fr.outadoc.justchatting.utils.http.BaseHttpClientProvider
+import fr.outadoc.justchatting.utils.http.DesktopHttpClientProvider
 import net.harawata.appdirs.AppDirsFactory
 import okio.Path.Companion.toPath
 import org.koin.core.module.Module
@@ -17,6 +24,15 @@ import org.koin.dsl.module
 
 internal actual val platformModule: Module
     get() = module {
+        val appDir = AppDirsFactory.getInstance()
+            .getUserConfigDir(
+                "JustChatting",
+                "1.0.0",
+                "outadoc",
+                true,
+            )
+            .toPath()
+
         single {
             OAuthAppCredentials(
                 clientId = "l9klwmh97qgn0s0me276ezsft5szp2",
@@ -24,30 +40,29 @@ internal actual val platformModule: Module
             )
         }
 
-        single<ChatNotifier> { TODO() }
-        single<CreateShortcutForChannelUseCase> { TODO() }
+        single<ChatNotifier> { NoopChatNotifier() }
+        single<CreateShortcutForChannelUseCase> { NoopCreateShortcutForChannelUseCase() }
 
-        single<SqlDriver> { TODO() }
+        single<SqlDriver> {
+            val dbPath = appDir.resolve("database.db").toString()
+            JdbcSqliteDriver("jdbc:sqlite:${dbPath}")
+                .also { driver ->
+                    AppDatabase.Schema.create(driver)
+                }
+        }
 
         single<DataStore<Preferences>> {
             PreferenceDataStoreFactory.createWithPath(
                 produceFile = {
-                    AppDirsFactory.getInstance()
-                        .getUserConfigDir(
-                            "JustChatting",
-                            "1.0.0",
-                            "outadoc",
-                            true,
-                        )
-                        .toPath()
+                    appDir
                         .resolve("datastore")
                         .resolve("fr.outadoc.justchatting.preferences_pb")
                 },
             )
         }
 
-        single<BaseHttpClientProvider> { TODO() }
+        single<BaseHttpClientProvider> { DesktopHttpClientProvider(get(), get()) }
 
-        single<LogRepository> { TODO() }
-        single<AppVersionNameProvider> { TODO() }
+        single<LogRepository> { NoopLogRepository() }
+        single<AppVersionNameProvider> { DesktopAppVersionNameProvider() }
     }

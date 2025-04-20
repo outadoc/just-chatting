@@ -2,8 +2,6 @@
 
 package fr.outadoc.justchatting
 
-import androidx.compose.ui.window.application
-
-fun main() = application {
-    
+fun main() {
+    startApp()
 }

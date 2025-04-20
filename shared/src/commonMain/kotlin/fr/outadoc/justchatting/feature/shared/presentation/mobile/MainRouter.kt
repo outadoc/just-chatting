@@ -108,7 +108,6 @@ internal fun MainRouter(
             }
         },
         detailPane = {
-            val coroutineScope = rememberCoroutineScope()
             AnimatedPane {
                 when (val screen = navigator.currentDestination?.contentKey) {
                     is DetailScreen.Chat -> {
@@ -117,7 +116,7 @@ internal fun MainRouter(
                             isStandalone = false,
                             canNavigateUp = navigator.canNavigateBack(),
                             onNavigateUp = {
-                                coroutineScope.launch {
+                                scope.launch {
                                     navigator.navigateBack()
                                 }
                             },
@@ -128,7 +127,7 @@ internal fun MainRouter(
                         SettingsSectionAbout(
                             canNavigateUp = navigator.canNavigateBack(),
                             onNavigateUp = {
-                                coroutineScope.launch {
+                                scope.launch {
                                     navigator.navigateBack()
                                 }
                             },
@@ -139,7 +138,7 @@ internal fun MainRouter(
                         SettingsSectionAppearance(
                             canNavigateUp = navigator.canNavigateBack(),
                             onNavigateUp = {
-                                coroutineScope.launch {
+                                scope.launch {
                                     navigator.navigateBack()
                                 }
                             },
@@ -151,7 +150,7 @@ internal fun MainRouter(
                         SettingsSectionDependencies(
                             canNavigateUp = navigator.canNavigateBack(),
                             onNavigateUp = {
-                                coroutineScope.launch {
+                                scope.launch {
                                     navigator.navigateBack()
                                 }
                             },
@@ -162,7 +161,7 @@ internal fun MainRouter(
                         SettingsSectionNotifications(
                             canNavigateUp = navigator.canNavigateBack(),
                             onNavigateUp = {
-                                coroutineScope.launch {
+                                scope.launch {
                                     navigator.navigateBack()
                                 }
                             },
@@ -175,7 +174,7 @@ internal fun MainRouter(
                         SettingsSectionThirdParties(
                             canNavigateUp = navigator.canNavigateBack(),
                             onNavigateUp = {
-                                coroutineScope.launch {
+                                scope.launch {
                                     navigator.navigateBack()
                                 }
                             },

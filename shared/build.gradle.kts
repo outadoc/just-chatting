@@ -66,6 +66,7 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.ui)
             implementation(compose.components.uiToolingPreview)
+            implementation(compose.material3AdaptiveNavigationSuite)
 
             implementation(libs.androidx.datastore.preferences)
             implementation(libs.androidx.lifecycle.viewmodel)
@@ -77,7 +78,6 @@ kotlin {
             implementation(libs.compose.material.adaptive.core)
             implementation(libs.compose.material.adaptive.layout)
             implementation(libs.compose.material.adaptive.navigation)
-            implementation(compose.material3AdaptiveNavigationSuite)
             implementation(libs.compose.material.windowSizeClass)
             implementation(libs.connectivity.core)
             implementation(libs.haze.core)

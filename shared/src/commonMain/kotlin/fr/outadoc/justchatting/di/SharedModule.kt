@@ -41,6 +41,7 @@ import fr.outadoc.justchatting.feature.emotes.data.bttv.ChannelFfzEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.bttv.GlobalBttvEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.bttv.GlobalFfzEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.db.RecentEmotesDb
+import fr.outadoc.justchatting.feature.emotes.data.stv.ChannelStvEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.stv.GlobalStvEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesApi
 import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesServer
@@ -185,6 +186,7 @@ public val sharedModule: Module
 
         single { ChannelBttvEmotesSource(get(), get()) }
         single { ChannelFfzEmotesSource(get(), get()) }
+        single { ChannelStvEmotesSource(get(), get()) }
         single { ChannelTwitchEmotesSource(get()) }
         single { GlobalBttvEmotesSource(get(), get()) }
         single { GlobalFfzEmotesSource(get(), get()) }
@@ -198,6 +200,7 @@ public val sharedModule: Module
                     get<ChannelTwitchEmotesSource>(),
                     get<ChannelBttvEmotesSource>(),
                     get<ChannelFfzEmotesSource>(),
+                    get<ChannelStvEmotesSource>(),
                     get<GlobalTwitchEmotesSource>(),
                     get<GlobalBttvEmotesSource>(),
                     get<GlobalFfzEmotesSource>(),

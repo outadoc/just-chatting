@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.emotes.data.stv
 
+import fr.outadoc.justchatting.feature.emotes.data.stv.model.StvChannelResponse
 import fr.outadoc.justchatting.feature.emotes.data.stv.model.StvEmoteResponse
 import fr.outadoc.justchatting.feature.emotes.data.stv.model.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
@@ -25,6 +26,16 @@ internal class StvEmotesServer(httpClient: HttpClient) : StvEmotesApi {
                 .body<StvEmoteResponse>()
         }.map { response ->
             response.emotes
+                .map { emote -> emote.map() }
+        }
+
+    override suspend fun getStvEmotes(channelId: String): Result<List<Emote>> =
+        runCatching {
+            client
+                .get { url { path("v3/users/twitch", channelId) } }
+                .body<StvChannelResponse>()
+        }.map { response ->
+            response.emoteSet.emotes
                 .map { emote -> emote.map() }
         }
 }

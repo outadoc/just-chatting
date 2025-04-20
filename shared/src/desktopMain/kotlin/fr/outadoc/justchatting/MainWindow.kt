@@ -6,11 +6,10 @@ import fr.outadoc.justchatting.di.startSharedKoin
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.App
 
 public fun startApp() {
-    startSharedKoin {
-        application {
-            Window(onCloseRequest = ::exitApplication) {
-                App()
-            }
+    startSharedKoin()
+    application {
+        Window(onCloseRequest = ::exitApplication) {
+            App()
         }
     }
 }

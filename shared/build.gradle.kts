@@ -135,6 +135,7 @@ kotlin {
         }
 
         named("desktopMain").dependencies {
+            implementation(libs.appdirs)
             implementation(libs.connectivity.http)
         }
 

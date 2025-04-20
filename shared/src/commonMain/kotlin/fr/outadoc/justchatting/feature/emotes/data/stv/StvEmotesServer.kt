@@ -37,7 +37,7 @@ internal class StvEmotesServer(httpClient: HttpClient) : StvEmotesApi {
         }.map { response ->
             if (response.emoteSet == null) {
                 return Result.failure(
-                    NoSuchElementException("No 7tv emote set found for channel $channelId")
+                    NoSuchElementException("No 7tv emote set found for channel $channelId"),
                 )
             } else {
                 response.emoteSet.emotes

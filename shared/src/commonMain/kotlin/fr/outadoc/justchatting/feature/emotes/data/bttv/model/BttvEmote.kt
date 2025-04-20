@@ -13,4 +13,8 @@ internal data class BttvEmote(
     val imageType: String,
     @SerialName("animated")
     val animated: Boolean,
+    @SerialName("width")
+    val width: Int? = null,
+    @SerialName("height")
+    val height: Int? = null,
 )

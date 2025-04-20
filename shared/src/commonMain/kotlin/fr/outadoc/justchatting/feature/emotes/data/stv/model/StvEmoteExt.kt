@@ -20,7 +20,7 @@ internal fun StvEmote.map(): Emote {
                     .buildUpon()
                     .appendPath(supportedFiles.first().name)
                     .build()
-                    .toString()
+                    .toString(),
             ),
         ),
     )

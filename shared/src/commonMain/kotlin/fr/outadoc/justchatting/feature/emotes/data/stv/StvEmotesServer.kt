@@ -21,7 +21,7 @@ internal class StvEmotesServer(httpClient: HttpClient) : StvEmotesApi {
     override suspend fun getGlobalStvEmotes(): Result<List<Emote>> =
         runCatching {
             client
-                .get { url { path("v3/emote-sets/62cdd34e72a832540de95857") } }
+                .get { url { path("v3/emote-sets/global") } }
                 .body<StvEmoteResponse>()
         }.map { response ->
             response.emotes

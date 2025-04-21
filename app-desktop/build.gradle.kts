@@ -18,8 +18,10 @@ compose.desktop {
         mainClass = "fr.outadoc.justchatting.Main"
 
         nativeDistributions {
+            val versionCode = findProperty("externalVersionCode") as String?
+
             packageName = "Just Chatting"
-            packageVersion = (findProperty("externalVersionName") as String?) ?: "1.0.0"
+            packageVersion = versionCode?.let { "1.0.$versionCode" } ?: "1.0.0"
 
             targetFormats(
                 TargetFormat.Dmg,

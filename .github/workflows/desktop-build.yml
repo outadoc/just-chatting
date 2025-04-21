@@ -31,10 +31,15 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date +'%Y.%m')"
 
+      - name: Compute unique version code
+        id: version
+        run: echo "::set-output name=version::$(git rev-list HEAD --count)"
+
       - name: Build packages
         run: |
           ./gradlew app-desktop:package \
-          "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ github.event.pull_request.number }}"
+          "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
+          "-PexternalVersionName=pr-${{ steps.date.outputs.date }}-${{ github.event.pull_request.number }}-${{ github.sha }}"
 
       - name: Upload packages to GitHub
         uses: actions/upload-artifact@v4.6.2

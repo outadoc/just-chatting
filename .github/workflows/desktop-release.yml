@@ -41,6 +41,7 @@ jobs:
       - name: Build packages
         run: |
           ./gradlew app-desktop:package \
+          "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
           "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" \
           "-PenableLogging=false"
 

@@ -1,4 +1,5 @@
 import com.github.jk1.license.render.JsonReportRenderer
+import java.io.FileOutputStream
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -135,16 +136,18 @@ kotlin {
             api(libs.sqldelight.driver.native)
         }
 
-        named("desktopMain").dependencies {
-            implementation(libs.appdirs)
-            implementation(libs.connectivity.http)
-            implementation(libs.ktor.client.java)
-            implementation(libs.ktor.server.cors)
-            implementation(libs.ktor.server.netty)
-            implementation(libs.kotlinx.coroutines.swing)
-            implementation(libs.logback)
+        named("desktopMain") {
+            dependencies {
+                implementation(libs.appdirs)
+                implementation(libs.connectivity.http)
+                implementation(libs.ktor.client.java)
+                implementation(libs.ktor.server.cors)
+                implementation(libs.ktor.server.netty)
+                implementation(libs.kotlinx.coroutines.swing)
+                implementation(libs.logback)
 
-            api(libs.sqldelight.driver.jvm)
+                api(libs.sqldelight.driver.jvm)
+            }
         }
 
         val androidUnitTest by getting {

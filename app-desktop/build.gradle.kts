@@ -1,9 +1,16 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import java.io.FileOutputStream
 
 plugins {
     kotlin("jvm")
     kotlin("plugin.compose")
     alias(libs.plugins.compose.multiplatform)
+}
+
+sourceSets {
+    main {
+        resources.srcDir("$buildDir/generated/lib_version")
+    }
 }
 
 compose.desktop {
@@ -12,7 +19,7 @@ compose.desktop {
 
         nativeDistributions {
             packageName = "Just Chatting"
-            packageVersion = "1.0.0"
+            packageVersion = (findProperty("externalVersionName") as String?) ?: "1.0.0"
 
             targetFormats(
                 TargetFormat.Dmg,
@@ -38,4 +45,26 @@ dependencies {
     implementation(project(":shared"))
     implementation(platform(libs.kotlin.bom))
     implementation(compose.desktop.currentOs)
+}
+
+tasks.register("generateVersionProperties") {
+    doLast {
+        val propertiesFile = file("$buildDir/generated/lib_version/version.txt").apply {
+            parentFile.mkdirs()
+        }
+
+        val version = findProperty("externalVersionName") as String?
+
+        FileOutputStream(propertiesFile)
+            .bufferedWriter()
+            .use { bw ->
+                if (version != null) {
+                    bw.appendLine(version)
+                }
+            }
+    }
+}
+
+tasks.named("processResources") {
+    dependsOn("generateVersionProperties")
 }

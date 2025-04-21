@@ -48,10 +48,10 @@ internal actual val platformModule: Module
 
         single<SqlDriver> {
             val dbPath = appDir.resolve("database.db").toString()
-            JdbcSqliteDriver("jdbc:sqlite:$dbPath")
-                .also { driver ->
-                    AppDatabase.Schema.create(driver)
-                }
+            JdbcSqliteDriver(
+                url = "jdbc:sqlite:$dbPath",
+                schema = AppDatabase.Schema
+            )
         }
 
         single<DataStore<Preferences>> {

@@ -37,7 +37,6 @@ internal actual val platformModule: Module
             .toPath()
 
         single {
-            // TODO register new keys for desktop
             OAuthAppCredentials(
                 clientId = "5anb90p2a94rcgb9w3xw28nhl2ue5y",
                 redirectUri = "https://just-chatting.app/auth/callback.html",

@@ -13,7 +13,7 @@ public fun startApp() {
     application {
         Window(
             title = "Just Chatting",
-            onCloseRequest = ::exitApplication
+            onCloseRequest = ::exitApplication,
         ) {
             App()
         }

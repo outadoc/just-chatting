@@ -29,7 +29,7 @@ internal actual object ImageLoaderFactory : SingletonImageLoader.Factory {
                                 AppInfo.APP_AUTHOR,
                             )
                             .toPath()
-                            .resolve("image_cache")
+                            .resolve("image_cache"),
                     )
                     .maxSizePercent(0.02)
                     .build()

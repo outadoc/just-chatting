@@ -35,6 +35,7 @@ internal actual val platformModule: Module
             .toPath()
 
         single {
+            // TODO register new keys for desktop
             OAuthAppCredentials(
                 clientId = "l9klwmh97qgn0s0me276ezsft5szp2",
                 redirectUri = "https://just-chatting.app/auth/callback.html",
@@ -46,7 +47,7 @@ internal actual val platformModule: Module
 
         single<SqlDriver> {
             val dbPath = appDir.resolve("database.db").toString()
-            JdbcSqliteDriver("jdbc:sqlite:${dbPath}")
+            JdbcSqliteDriver("jdbc:sqlite:$dbPath")
                 .also { driver ->
                     AppDatabase.Schema.create(driver)
                 }

@@ -1,9 +1,9 @@
 package fr.outadoc.justchatting.utils.presentation
 
-internal actual fun Float.formatPercent(): String {
-    TODO("Not yet implemented")
-}
+import java.text.NumberFormat
+import java.util.Locale
 
-internal actual fun Int.formatNumber(): String {
-    TODO("Not yet implemented")
-}
+internal actual fun Float.formatPercent(): String =
+    NumberFormat.getPercentInstance(Locale.getDefault()).format(this)
+
+internal actual fun Int.formatNumber(): String = "%,d".format(this)

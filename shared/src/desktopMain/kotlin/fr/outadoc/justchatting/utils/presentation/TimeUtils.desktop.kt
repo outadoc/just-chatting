@@ -8,15 +8,18 @@ import kotlinx.datetime.LocalDate
 @Composable
 @Stable
 internal actual fun Instant.formatHourMinute(): String? {
-    TODO("Not yet implemented")
+    // TODO
+    return toString()
 }
 
 @Stable
 internal actual fun LocalDate.formatWithoutYear(): String {
-    TODO("Not yet implemented")
+    // TODO
+    return toString()
 }
 
 @Stable
 internal actual fun LocalDate.formatWithYear(): String {
-    TODO("Not yet implemented")
+    // TODO
+    return toString()
 }

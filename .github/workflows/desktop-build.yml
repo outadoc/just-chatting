@@ -34,7 +34,7 @@ jobs:
       - name: Build packages
         run: |
           ./gradlew app-desktop:package \
-          "-PexternalVersionName=pr-${{ steps.date.outputs.date }}-${{ github.event.pull_request.number }}-${{ github.sha }}"
+          "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ github.event.pull_request.number }}"
 
       - name: Upload packages to GitHub
         uses: actions/upload-artifact@v4.6.2

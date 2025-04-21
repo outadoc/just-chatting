@@ -22,8 +22,7 @@ compose.desktop {
 
             windows {
                 menu = true
-                // see https://wixtoolset.org/documentation/manual/v3/howtos/general/generate_guids.html
-                upgradeUuid = "61DAB35E-17CB-43B0-81D5-B30E1C0830FA"
+                upgradeUuid = "4C55AF4A-F39A-4E6F-B753-DE647A8F8BE2"
             }
         }
     }

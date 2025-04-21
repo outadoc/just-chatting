@@ -24,6 +24,12 @@ compose.desktop {
                 menu = true
                 upgradeUuid = "4C55AF4A-F39A-4E6F-B753-DE647A8F8BE2"
             }
+
+            modules(
+                "java.net.http",
+                "java.sql",
+                "jdk.unsupported",
+            )
         }
     }
 }

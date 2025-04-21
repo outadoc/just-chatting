@@ -9,7 +9,7 @@ function redirect() {
 
 function callLocalServer() {
   const localServer = new XMLHttpRequest();
-  const uri = "http://localhost:3000/auth/callback" + window.location.search + window.location.hash;
+  const uri = "http://localhost:45563/auth/callback" + window.location.search + window.location.hash;
 
   localServer.open("GET", uri, true);
   localServer.onreadystatechange = function () {

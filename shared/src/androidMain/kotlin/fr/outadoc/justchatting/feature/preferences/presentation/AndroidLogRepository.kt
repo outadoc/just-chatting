@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.preferences.presentation
 
 import android.content.Context
 import com.eygraber.uri.Uri
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.withContext
 import okio.BufferedSource
 import okio.Path

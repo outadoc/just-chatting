@@ -16,6 +16,7 @@ import coil3.request.ImageResult
 import coil3.request.transformations
 import coil3.transform.CircleCropTransformation
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logDebug
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking

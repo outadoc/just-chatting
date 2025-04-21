@@ -4,6 +4,7 @@ android = "8.9.1"
 coil = "3.0.4"
 compose-multiplatform = "1.7.3"
 connectivity = "1.2.0"
+coroutines = "1.10.2"
 emoji = "1.5.0"
 glance = "1.1.1"
 haze = "1.2.2"
@@ -51,6 +52,7 @@ androidx-paging-runtime-android = { module = "androidx.paging:paging-runtime", v
 androidx-paging-runtime-ios = { module = "app.cash.paging:paging-runtime-uikit", version.ref = "paging-multiplatform" }
 androidx-palette = "androidx.palette:palette:1.0.0"
 androidx-splashscreen = "androidx.core:core-splashscreen:1.0.1"
+appdirs = { module = "net.harawata:appdirs", version = "1.4.0" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-core = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 coil-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coil" }
@@ -65,7 +67,9 @@ compose-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata
 compose-ui-core = { module = "androidx.compose.ui:ui" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 connectivity-core = { module = "dev.jordond.connectivity:connectivity-core", version.ref = "connectivity" }
-connectivity-device = { module = "dev.jordond.connectivity:connectivity-device", version.ref = "connectivity" }
+connectivity-apple = { module = "dev.jordond.connectivity:connectivity-apple", version.ref = "connectivity" }
+connectivity-android = { module = "dev.jordond.connectivity:connectivity-android", version.ref = "connectivity" }
+connectivity-http = { module = "dev.jordond.connectivity:connectivity-http", version.ref = "connectivity" }
 desugar = "com.android.tools:desugar_jdk_libs:2.1.5"
 firebase-bom = "com.google.firebase:firebase-bom:33.8.0"
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
@@ -82,22 +86,28 @@ koin-core = { module = "io.insert-koin:koin-core", version = "3.5.6" }
 konsist = { module = "com.lemonappdev:konsist", version.ref = "konsist" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.8"
-kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2"
+kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.6.2"
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1"
 ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-java = { module = "io.ktor:ktor-client-java", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
 ktor-contentNegociation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
+ktor-server-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor" }
+logback = "ch.qos.logback:logback-classic:1.5.18"
 material-core = "com.google.android.material:material:1.12.0"
 material-kolor = "com.materialkolor:material-kolor:2.0.0"
 okio = "com.squareup.okio:okio:3.10.2"
 okhttp = "com.squareup.okhttp3:okhttp:4.12.0"
 sqldelight-driver-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-driver-jvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
 sqldelight-driver-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
 stately-common = { module = "co.touchlab:stately-common", version.ref = "stately" }

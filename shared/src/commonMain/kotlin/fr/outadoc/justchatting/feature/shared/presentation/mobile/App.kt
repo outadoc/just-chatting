@@ -26,7 +26,7 @@ import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-internal fun App(
+public fun App(
     onOpenNotificationPreferences: () -> Unit = {},
     onOpenBubblePreferences: () -> Unit = {},
     onOpenAccessibilityPreferences: () -> Unit = {},

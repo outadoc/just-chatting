@@ -1,0 +1,51 @@
+name: Release - Deploy Desktop
+
+on:
+  release:
+    types:
+      - released
+
+jobs:
+  deploy:
+    name: Build and upload to GitHub
+    runs-on: ubuntu-latest
+    environment: deploy
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y.%m')"
+
+      - name: Compute unique version code
+        id: version
+        run: echo "::set-output name=version::$(git rev-list HEAD --count)"
+
+      - name: Build packages
+        run: |
+          ./gradlew app-desktop:package \
+          "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
+          "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" \
+          "-PenableLogging=false"
+
+      - name: Upload packages to GitHub
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          path: app-desktop/build/compose/binaries/main

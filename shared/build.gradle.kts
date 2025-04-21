@@ -44,6 +44,14 @@ kotlin {
         }
     }
 
+    jvm("desktop") {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "17"
+            }
+        }
+    }
+
     sourceSets {
         commonMain.dependencies {
             api(libs.kotlinx.coroutines)
@@ -72,7 +80,6 @@ kotlin {
             implementation(libs.compose.material.adaptive.navigationSuite)
             implementation(libs.compose.material.windowSizeClass)
             implementation(libs.connectivity.core)
-            implementation(libs.connectivity.device)
             implementation(libs.haze.core)
             implementation(libs.haze.materials)
             implementation(libs.koin.core)
@@ -111,6 +118,7 @@ kotlin {
             implementation(libs.androidx.paging.runtime.android)
             implementation(libs.androidx.splashscreen)
             implementation(libs.coil.gif)
+            implementation(libs.connectivity.android)
             implementation(libs.koin.android)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.material.core)
@@ -120,9 +128,25 @@ kotlin {
         }
 
         iosMain.dependencies {
-            api(libs.sqldelight.driver.native)
             implementation(libs.androidx.paging.runtime.ios)
+            implementation(libs.connectivity.apple)
             implementation(libs.ktor.client.darwin)
+
+            api(libs.sqldelight.driver.native)
+        }
+
+        named("desktopMain") {
+            dependencies {
+                implementation(libs.appdirs)
+                implementation(libs.connectivity.http)
+                implementation(libs.ktor.client.java)
+                implementation(libs.ktor.server.cors)
+                implementation(libs.ktor.server.netty)
+                implementation(libs.kotlinx.coroutines.swing)
+                implementation(libs.logback)
+
+                api(libs.sqldelight.driver.jvm)
+            }
         }
 
         val androidUnitTest by getting {

@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import fr.outadoc.justchatting.AppInfo
 import fr.outadoc.justchatting.data.db.AppDatabase
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
@@ -26,9 +27,9 @@ internal actual val platformModule: Module
     get() = module {
         val appDir = AppDirsFactory.getInstance()
             .getUserConfigDir(
-                "JustChatting",
-                "1.0.0",
-                "outadoc",
+                AppInfo.APP_ID,
+                AppInfo.APP_VERSION,
+                AppInfo.APP_AUTHOR,
                 true,
             )
             .toPath()

@@ -4,6 +4,7 @@ android = "8.9.1"
 coil = "3.0.4"
 compose-multiplatform = "1.7.3"
 connectivity = "1.2.0"
+coroutines = "1.10.2"
 emoji = "1.5.0"
 glance = "1.1.1"
 haze = "1.2.2"
@@ -85,7 +86,8 @@ koin-core = { module = "io.insert-koin:koin-core", version = "3.5.6" }
 konsist = { module = "com.lemonappdev:konsist", version.ref = "konsist" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.8"
-kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2"
+kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.6.2"
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1"
 ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
@@ -97,6 +99,7 @@ ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.re
 ktor-contentNegociation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+logback = "ch.qos.logback:logback-classic:1.5.18"
 material-core = "com.google.android.material:material:1.12.0"
 material-kolor = "com.materialkolor:material-kolor:2.0.0"
 okio = "com.squareup.okio:okio:3.10.2"

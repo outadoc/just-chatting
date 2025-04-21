@@ -138,6 +138,7 @@ kotlin {
             implementation(libs.appdirs)
             implementation(libs.connectivity.http)
             implementation(libs.ktor.client.java)
+            implementation(libs.logback)
 
             api(libs.sqldelight.driver.jvm)
         }

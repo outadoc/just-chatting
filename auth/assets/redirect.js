@@ -8,19 +8,24 @@ function redirect() {
 }
 
 function callLocalServer() {
-  const localServer = new XMLHttpRequest();
-  const uri = "http://localhost:45563/auth/callback" + window.location.search + window.location.hash;
+  // Take the URI fragment (hash) and convert it to a query string
+  const hash = window.location.hash.substring(1);
+  const params = new URLSearchParams(hash);
+  const queryString = params.toString();
+  const url = new URL("http://localhost:45563/auth/callback");
+  url.search = queryString;
 
-  localServer.open("GET", uri, true);
-  localServer.onreadystatechange = function () {
-    if (localServer.readyState === 4 && localServer.status === 200) {
-      console.log("Local server called successfully.");
-    } else if (localServer.readyState === 4) {
-      console.error("Failed to call local server.");
-    }
-  };
-
-  localServer.send();
+  // Make a GET request to the local server with the query string
+  fetch(url, {
+    method: "GET",
+  })
+    .then((response) => response.text())
+    .then((data) => {
+      console.log("Success:", data);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 }
 
 callLocalServer();

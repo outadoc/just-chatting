@@ -1,5 +1,4 @@
 import com.github.jk1.license.render.JsonReportRenderer
-import java.io.FileOutputStream
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)

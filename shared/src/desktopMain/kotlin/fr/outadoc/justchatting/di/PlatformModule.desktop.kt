@@ -50,7 +50,7 @@ internal actual val platformModule: Module
             val dbPath = appDir.resolve("database.db").toString()
             JdbcSqliteDriver(
                 url = "jdbc:sqlite:$dbPath",
-                schema = AppDatabase.Schema
+                schema = AppDatabase.Schema,
             )
         }
 

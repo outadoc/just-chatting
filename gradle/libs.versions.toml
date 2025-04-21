@@ -99,6 +99,8 @@ ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.re
 ktor-contentNegociation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
+ktor-server-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor" }
 logback = "ch.qos.logback:logback-classic:1.5.18"
 material-core = "com.google.android.material:material:1.12.0"
 material-kolor = "com.materialkolor:material-kolor:2.0.0"

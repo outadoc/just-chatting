@@ -11,6 +11,7 @@ import fr.outadoc.justchatting.utils.logging.Logger
 public fun startApp() {
     Logger.logStrategy = JvmLogStrategy
     startSharedKoin()
+
     application {
         Window(
             title = "Just Chatting",

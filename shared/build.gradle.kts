@@ -128,16 +128,19 @@ kotlin {
         }
 
         iosMain.dependencies {
-            api(libs.sqldelight.driver.native)
             implementation(libs.androidx.paging.runtime.ios)
             implementation(libs.connectivity.apple)
             implementation(libs.ktor.client.darwin)
+
+            api(libs.sqldelight.driver.native)
         }
 
         named("desktopMain").dependencies {
             implementation(libs.appdirs)
             implementation(libs.connectivity.http)
             implementation(libs.ktor.client.java)
+            implementation(libs.ktor.server.cors)
+            implementation(libs.ktor.server.netty)
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.logback)
 

@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.shared.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eygraber.uri.Uri
+import fr.outadoc.justchatting.feature.auth.data.AuthCallbackWebServer
 import fr.outadoc.justchatting.feature.deeplink.Deeplink
 import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
@@ -14,7 +15,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
@@ -22,6 +25,7 @@ import kotlin.time.Duration.Companion.seconds
 internal class MainRouterViewModel(
     private val authRepository: AuthRepository,
     private val deeplinkParser: DeeplinkParser,
+    private val authCallbackWebServer: AuthCallbackWebServer,
 ) : ViewModel(),
     DeeplinkReceiver {
 
@@ -46,6 +50,19 @@ internal class MainRouterViewModel(
                     is AppUser.NotLoggedIn -> State.LoggedOut
                 }
             }
+            .onEach { state ->
+                when (state) {
+                    is State.LoggedOut -> {
+                        authCallbackWebServer.start()
+                    }
+
+                    is State.Loading,
+                    is State.LoggedIn,
+                    -> {
+                        authCallbackWebServer.stop()
+                    }
+                }
+            }
             .stateIn(
                 viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
@@ -56,6 +73,11 @@ internal class MainRouterViewModel(
     val events = _events.asSharedFlow()
 
     fun onStart() {
+        viewModelScope.launch {
+            authCallbackWebServer.receivedUris.collect { uri ->
+                onDeeplinkReceived(uri)
+            }
+        }
     }
 
     fun onLoginClick() = viewModelScope.launch {

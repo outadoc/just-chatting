@@ -7,6 +7,8 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import fr.outadoc.justchatting.AppInfo
 import fr.outadoc.justchatting.data.db.AppDatabase
+import fr.outadoc.justchatting.feature.auth.data.AuthCallbackWebServer
+import fr.outadoc.justchatting.feature.auth.data.KtorAuthCallbackWebServer
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
@@ -37,7 +39,7 @@ internal actual val platformModule: Module
         single {
             // TODO register new keys for desktop
             OAuthAppCredentials(
-                clientId = "l9klwmh97qgn0s0me276ezsft5szp2",
+                clientId = "5anb90p2a94rcgb9w3xw28nhl2ue5y",
                 redirectUri = "https://just-chatting.app/auth/callback.html",
             )
         }
@@ -64,7 +66,7 @@ internal actual val platformModule: Module
         }
 
         single<BaseHttpClientProvider> { DesktopHttpClientProvider(get(), get()) }
-
         single<LogRepository> { NoopLogRepository() }
         single<AppVersionNameProvider> { DesktopAppVersionNameProvider() }
+        single<AuthCallbackWebServer> { KtorAuthCallbackWebServer(get()) }
     }

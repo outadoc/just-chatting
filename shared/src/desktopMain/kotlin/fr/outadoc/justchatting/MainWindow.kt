@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting
 
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import fr.outadoc.justchatting.di.startSharedKoin
@@ -15,7 +16,16 @@ public fun startApp() {
             title = "Just Chatting",
             onCloseRequest = ::exitApplication,
         ) {
-            App()
+            val uriHandler = LocalUriHandler.current
+            App(
+                onOpenNotificationPreferences = {},
+                onOpenBubblePreferences = {},
+                onOpenAccessibilityPreferences = {},
+                onShareLogs = {},
+                onShowAuthPage = { uri ->
+                    uriHandler.openUri(uri.toString())
+                },
+            )
         }
     }
 }

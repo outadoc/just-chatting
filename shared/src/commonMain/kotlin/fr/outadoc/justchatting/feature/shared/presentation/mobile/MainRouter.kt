@@ -89,7 +89,7 @@ internal fun MainRouter(
                                 scope.launch {
                                     navigator.navigateTo(
                                         pane = ListDetailPaneScaffoldRole.Detail,
-                                        content = screen,
+                                        contentKey = screen,
                                     )
                                 }
                             },
@@ -101,7 +101,7 @@ internal fun MainRouter(
         },
         detailPane = {
             AnimatedPane {
-                when (val screen = navigator.currentDestination?.content) {
+                when (val screen = navigator.currentDestination?.contentKey) {
                     is DetailScreen.Chat -> {
                         ChannelChatScreen(
                             userId = screen.id,

@@ -4,31 +4,17 @@ import kotlinx.serialization.Serializable
 
 internal sealed interface Screen {
 
-    val route: String
+    @Serializable
+    data object Followed : Screen
 
     @Serializable
-    data object Followed : Screen {
-        override val route: String
-            get() = "followed"
-    }
+    data object Timeline : Screen
 
     @Serializable
-    data object Timeline : Screen {
-        override val route: String
-            get() = "timeline"
-    }
+    data object Search : Screen
 
     @Serializable
-    data object Search : Screen {
-        override val route: String
-            get() = "search"
-    }
-
-    @Serializable
-    data object Settings : Screen {
-        override val route: String
-            get() = "settings"
-    }
+    data object Settings : Screen
 }
 
 internal val DefaultScreen = Screen.Timeline

@@ -59,45 +59,37 @@ internal fun MainRouter(
             ) {
                 NavHost(
                     navController = navController,
-                    startDestination = DefaultScreen.route,
+                    startDestination = DefaultScreen,
                 ) {
-                    composable(
-                        route = Screen.Followed.route,
-                    ) {
+                    composable<Screen.Followed> {
                         FollowedChannelsList(
-                            onNavigate = { navController.navigate(it.route) },
+                            onNavigate = { navController.navigate(it) },
                             onItemClick = onChannelClick,
                         )
                     }
 
-                    composable(
-                        route = Screen.Timeline.route,
-                    ) {
+                    composable<Screen.Timeline> {
                         TimelineScreen(
-                            onNavigate = { navController.navigate(it.route) },
+                            onNavigate = { navController.navigate(it) },
                             onChannelClick = onChannelClick,
                         )
                     }
 
-                    composable(
-                        route = Screen.Search.route,
-                    ) {
+                    composable<Screen.Search> {
                         SearchScreen(
-                            onNavigate = { navController.navigate(it.route) },
+                            onNavigate = { navController.navigate(it) },
                             onChannelClick = onChannelClick,
                         )
                     }
 
-                    composable(
-                        route = Screen.Settings.route,
-                    ) {
+                    composable<Screen.Settings> {
                         SettingsContent(
-                            onNavigate = { navController.navigate(it.route) },
+                            onNavigate = { navController.navigate(it) },
                             onNavigateDetails = { screen ->
                                 scope.launch {
                                     navigator.navigateTo(
                                         pane = ListDetailPaneScaffoldRole.Detail,
-                                        contentKey = screen,
+                                        content = screen,
                                     )
                                 }
                             },
@@ -109,7 +101,7 @@ internal fun MainRouter(
         },
         detailPane = {
             AnimatedPane {
-                when (val screen = navigator.currentDestination?.contentKey) {
+                when (val screen = navigator.currentDestination?.content) {
                     is DetailScreen.Chat -> {
                         ChannelChatScreen(
                             userId = screen.id,

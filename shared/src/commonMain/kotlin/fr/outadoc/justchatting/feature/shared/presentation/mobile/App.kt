@@ -52,7 +52,7 @@ public fun App(
             scope.launch {
                 navigator.navigateTo(
                     pane = ListDetailPaneScaffoldRole.Detail,
-                    contentKey = DetailScreen.Chat(userId),
+                    content = DetailScreen.Chat(userId),
                 )
             }
         }

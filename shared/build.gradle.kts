@@ -79,6 +79,7 @@ kotlin {
             implementation(libs.compose.material.adaptive.layout)
             implementation(libs.compose.material.adaptive.navigation)
             implementation(libs.compose.material.windowSizeClass)
+            implementation(libs.compose.navigation)
             implementation(libs.connectivity.core)
             implementation(libs.haze.core)
             implementation(libs.haze.materials)
@@ -104,8 +105,6 @@ kotlin {
         }
 
         androidMain.dependencies {
-            implementation(libs.compose.navigation)
-
             implementation(libs.accompanist.permissions)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)

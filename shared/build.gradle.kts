@@ -66,6 +66,7 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.ui)
             implementation(compose.components.uiToolingPreview)
+            implementation(compose.material3AdaptiveNavigationSuite)
 
             implementation(libs.androidx.datastore.preferences)
             implementation(libs.androidx.lifecycle.viewmodel)
@@ -74,14 +75,14 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.core)
             implementation(libs.coil.ktor)
-            implementation(libs.compose.material.adaptive.core)
-            implementation(libs.compose.material.adaptive.layout)
-            implementation(libs.compose.material.adaptive.navigation)
-            implementation(libs.compose.material.adaptive.navigationSuite)
-            implementation(libs.compose.material.windowSizeClass)
             implementation(libs.connectivity.core)
             implementation(libs.haze.core)
             implementation(libs.haze.materials)
+            implementation(libs.jetbrains.compose.material.adaptive.core)
+            implementation(libs.jetbrains.compose.material.adaptive.layout)
+            implementation(libs.jetbrains.compose.material.adaptive.navigation)
+            implementation(libs.jetbrains.compose.material.windowSizeClass)
+            implementation(libs.jetbrains.compose.navigation)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
@@ -104,8 +105,6 @@ kotlin {
         }
 
         androidMain.dependencies {
-            implementation(libs.compose.navigation)
-
             implementation(libs.accompanist.permissions)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)

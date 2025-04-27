@@ -53,6 +53,9 @@ internal fun MainRouter(
         modifier = modifier,
         directive = navigator.scaffoldDirective,
         value = navigator.scaffoldValue,
+        paneExpansionDragHandle = { state ->
+            DragHandle(state = state)
+        },
         listPane = {
             AnimatedPane(
                 modifier = Modifier.preferredWidth(500.dp),

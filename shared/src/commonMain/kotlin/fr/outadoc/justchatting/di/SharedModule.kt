@@ -235,5 +235,5 @@ public val sharedModule: Module
         single<RecentMessagesApi> { RecentMessagesServer(get()) }
 
         single<ReadExternalDependenciesList> { DefaultReadExternalDependenciesList() }
-        single<NetworkStateObserver> { ConnectivityNetworkStateObserver() }
+        single<NetworkStateObserver> { ConnectivityNetworkStateObserver(get()) }
     }

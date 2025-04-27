@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
@@ -157,7 +156,6 @@ internal fun ChatMessageBody(
 
 @Stable
 @Composable
-@OptIn(ExperimentalTextApi::class)
 internal fun ChatListItem.Message.Body.toAnnotatedString(
     appUser: AppUser.LoggedIn,
     inlineContent: ImmutableMap<String, InlineTextContent>,
@@ -268,7 +266,6 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
     }
 }
 
-@OptIn(ExperimentalTextApi::class)
 private fun AnnotatedString.Builder.appendUrl(url: String, urlColor: Color) {
     val validUrl: String = if (url.startsWith("http")) url else "https://$url"
     withStyle(SpanStyle(color = urlColor)) {

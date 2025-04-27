@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.feature.shared.presentation.mobile
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -55,7 +54,6 @@ internal fun UserItemCard(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun UserItem(
     modifier: Modifier = Modifier,

@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.timeline.presentation.mobile
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,7 +37,7 @@ import fr.outadoc.justchatting.shared.live
 import fr.outadoc.justchatting.utils.presentation.formatDate
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TimelineContent(
     modifier: Modifier = Modifier,

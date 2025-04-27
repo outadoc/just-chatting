@@ -4,11 +4,9 @@ import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 internal class DefaultReadExternalDependenciesList : ReadExternalDependenciesList {
 
-    @OptIn(ExperimentalResourceApi::class)
     override suspend fun invoke(): List<Dependency> = withContext(DispatchersProvider.io) {
         withContext(DispatchersProvider.io) {
             val deps: DependencyList = Json.decodeFromString(

@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.timeline.presentation.mobile
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -42,7 +41,6 @@ import kotlinx.datetime.Instant
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun LiveStreamCard(
     modifier: Modifier = Modifier,

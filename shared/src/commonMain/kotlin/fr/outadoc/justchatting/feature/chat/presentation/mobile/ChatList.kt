@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -52,7 +51,6 @@ import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun ChatList(
     modifier: Modifier = Modifier,

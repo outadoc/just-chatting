@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
+import dev.jordond.connectivity.Connectivity
 import fr.outadoc.justchatting.data.db.AppDatabase
 import fr.outadoc.justchatting.feature.auth.data.AuthCallbackWebServer
 import fr.outadoc.justchatting.feature.auth.data.NoopAuthCallbackWebServer
@@ -28,7 +29,6 @@ import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 
-@OptIn(ExperimentalForeignApi::class)
 internal actual val platformModule: Module
     get() = module {
         single {
@@ -61,6 +61,11 @@ internal actual val platformModule: Module
         single<LogRepository> { NoopLogRepository() }
         single<AppVersionNameProvider> { AppleAppVersionNameProvider() }
         single<AuthCallbackWebServer> { NoopAuthCallbackWebServer() }
+        single<Connectivity> {
+            Connectivity {
+                autoStart = true
+            }
+        }
     }
 
 @OptIn(ExperimentalForeignApi::class)

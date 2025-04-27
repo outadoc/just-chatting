@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import dev.jordond.connectivity.Connectivity
 import fr.outadoc.justchatting.AppInfo
 import fr.outadoc.justchatting.data.db.AppDatabase
 import fr.outadoc.justchatting.feature.auth.data.AuthCallbackWebServer
@@ -68,4 +69,9 @@ internal actual val platformModule: Module
         single<LogRepository> { NoopLogRepository() }
         single<AppVersionNameProvider> { DesktopAppVersionNameProvider() }
         single<AuthCallbackWebServer> { KtorAuthCallbackWebServer(get()) }
+        single<Connectivity> {
+            Connectivity {
+                autoStart = true
+            }
+        }
     }

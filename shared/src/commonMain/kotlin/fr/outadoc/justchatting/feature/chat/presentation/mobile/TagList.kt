@@ -1,7 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -10,7 +9,6 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.StreamTagChip
 import kotlinx.collections.immutable.ImmutableSet
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun TagList(
     modifier: Modifier = Modifier,

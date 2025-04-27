@@ -53,88 +53,100 @@ kotlin {
     }
 
     sourceSets {
-        commonMain.dependencies {
-            api(libs.kotlinx.coroutines)
-            api(libs.kotlinx.datetime)
-            api(libs.kotlinx.serialization.json)
-            api(libs.ktor.client.core)
+        commonMain {
+            dependencies {
+                api(libs.kotlinx.coroutines)
+                api(libs.kotlinx.datetime)
+                api(libs.kotlinx.serialization.json)
+                api(libs.ktor.client.core)
 
-            implementation(compose.components.resources)
-            implementation(compose.material)
-            implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.runtime)
-            implementation(compose.ui)
-            implementation(compose.components.uiToolingPreview)
-            implementation(compose.material3AdaptiveNavigationSuite)
+                implementation(compose.components.resources)
+                implementation(compose.material)
+                implementation(compose.material3)
+                implementation(compose.materialIconsExtended)
+                implementation(compose.runtime)
+                implementation(compose.ui)
+                implementation(compose.components.uiToolingPreview)
+                implementation(compose.material3AdaptiveNavigationSuite)
 
-            implementation(libs.androidx.datastore.preferences)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.paging.common)
-            implementation(libs.androidx.paging.compose.common)
-            implementation(libs.coil.compose)
-            implementation(libs.coil.core)
-            implementation(libs.coil.ktor)
-            implementation(libs.connectivity.core)
-            implementation(libs.haze.core)
-            implementation(libs.haze.materials)
-            implementation(libs.jetbrains.compose.material.adaptive.core)
-            implementation(libs.jetbrains.compose.material.adaptive.layout)
-            implementation(libs.jetbrains.compose.material.adaptive.navigation)
-            implementation(libs.jetbrains.compose.material.windowSizeClass)
-            implementation(libs.jetbrains.compose.navigation)
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-            implementation(libs.kotlinx.collections.immutable)
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.kotlinx.serialization.json)
-            implementation(libs.ktor.client.auth)
-            implementation(libs.ktor.client.websockets)
-            implementation(libs.ktor.contentNegociation)
-            implementation(libs.ktor.logging)
-            implementation(libs.ktor.serialization)
-            implementation(libs.kmpalette.core)
-            implementation(libs.kmpalette.extensions.network)
-            implementation(libs.material.kolor)
-            implementation(libs.okio)
-            implementation(libs.sqldelight.coroutines)
-            implementation(libs.stately.common)
-            implementation(libs.uri.kmp)
-            implementation(libs.unicode.codepoints)
+                implementation(libs.androidx.datastore.preferences)
+                implementation(libs.androidx.lifecycle.viewmodel)
+                implementation(libs.androidx.paging.common)
+                implementation(libs.androidx.paging.compose.common)
+                implementation(libs.coil.compose)
+                implementation(libs.coil.core)
+                implementation(libs.coil.ktor)
+                implementation(libs.connectivity.core)
+                implementation(libs.haze.core)
+                implementation(libs.haze.materials)
+                implementation(libs.jetbrains.compose.material.adaptive.core)
+                implementation(libs.jetbrains.compose.material.adaptive.layout)
+                implementation(libs.jetbrains.compose.material.adaptive.navigation)
+                implementation(libs.jetbrains.compose.material.windowSizeClass)
+                implementation(libs.jetbrains.compose.navigation)
+                implementation(libs.koin.core)
+                implementation(libs.koin.compose)
+                implementation(libs.koin.compose.viewmodel)
+                implementation(libs.kotlinx.collections.immutable)
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.ktor.client.auth)
+                implementation(libs.ktor.client.websockets)
+                implementation(libs.ktor.contentNegociation)
+                implementation(libs.ktor.logging)
+                implementation(libs.ktor.serialization)
+                implementation(libs.kmpalette.core)
+                implementation(libs.kmpalette.extensions.network)
+                implementation(libs.material.kolor)
+                implementation(libs.okio)
+                implementation(libs.sqldelight.coroutines)
+                implementation(libs.stately.common)
+                implementation(libs.uri.kmp)
+                implementation(libs.unicode.codepoints)
+            }
         }
 
-        androidMain.dependencies {
-            implementation(libs.accompanist.permissions)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.androidx.appcompat)
-            implementation(libs.androidx.browser)
-            implementation(libs.androidx.emoji2.core)
-            implementation(libs.androidx.glance.appwidget)
-            implementation(libs.androidx.glance.material3)
-            implementation(libs.androidx.lifecycle.service)
-            implementation(libs.androidx.palette)
-            implementation(libs.androidx.paging.runtime.android)
-            implementation(libs.androidx.splashscreen)
-            implementation(libs.coil.gif)
-            implementation(libs.connectivity.android)
-            implementation(libs.koin.android)
-            implementation(libs.ktor.client.okhttp)
-            implementation(libs.material.core)
-            implementation(libs.okhttp)
+        androidMain {
+            dependencies {
+                implementation(libs.accompanist.permissions)
+                implementation(libs.androidx.activity.compose)
+                implementation(libs.androidx.appcompat)
+                implementation(libs.androidx.browser)
+                implementation(libs.androidx.emoji2.core)
+                implementation(libs.androidx.glance.appwidget)
+                implementation(libs.androidx.glance.material3)
+                implementation(libs.androidx.lifecycle.service)
+                implementation(libs.androidx.palette)
+                implementation(libs.androidx.paging.runtime.android)
+                implementation(libs.androidx.splashscreen)
+                implementation(libs.coil.gif)
+                implementation(libs.connectivity.android)
+                implementation(libs.koin.android)
+                implementation(libs.ktor.client.okhttp)
+                implementation(libs.material.core)
+                implementation(libs.okhttp)
 
-            api(libs.sqldelight.driver.android)
+                api(libs.sqldelight.driver.android)
+            }
         }
 
-        iosMain.dependencies {
-            implementation(libs.androidx.paging.runtime.ios)
-            implementation(libs.connectivity.apple)
-            implementation(libs.ktor.client.darwin)
-
-            api(libs.sqldelight.driver.native)
+        val skiaMain by creating {
+            dependsOn(commonMain.get())
         }
 
-        named("desktopMain") {
+        iosMain {
+            dependsOn(skiaMain)
+            dependencies {
+                implementation(libs.androidx.paging.runtime.ios)
+                implementation(libs.connectivity.apple)
+                implementation(libs.ktor.client.darwin)
+
+                api(libs.sqldelight.driver.native)
+            }
+        }
+
+        val desktopMain by getting {
+            dependsOn(skiaMain)
             dependencies {
                 implementation(libs.appdirs)
                 implementation(libs.connectivity.http)
@@ -148,7 +160,7 @@ kotlin {
             }
         }
 
-        val androidUnitTest by getting {
+        androidUnitTest {
             dependencies {
                 implementation(libs.junit)
             }

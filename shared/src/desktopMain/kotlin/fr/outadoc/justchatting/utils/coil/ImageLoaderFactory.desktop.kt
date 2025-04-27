@@ -35,8 +35,7 @@ internal actual object ImageLoaderFactory : SingletonImageLoader.Factory {
                     .build()
             }
             .components {
-                // TODO move AnimatedSkiaImageDecoder
-                // add(AnimatedSkiaImageDecoder.Factory(prerenderFrames = true))
+                add(AnimatedSkiaImageDecoder.Factory(prerenderFrames = true))
             }
             .logger(CoilCustomLogger())
             .build()

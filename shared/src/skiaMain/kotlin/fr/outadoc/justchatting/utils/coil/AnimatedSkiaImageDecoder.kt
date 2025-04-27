@@ -50,7 +50,10 @@ internal class AnimatedSkiaImageDecoder(
             options: Options,
             imageLoader: ImageLoader,
         ): Decoder? {
-            if (!isGif(result.source.source())) return null
+            if (!isGif(result.source.source()) && !isWebP(result.source.source())) {
+                return null
+            }
+
             return AnimatedSkiaImageDecoder(
                 source = result.source,
                 prerenderFrames = prerenderFrames,
@@ -197,10 +200,23 @@ private const val DEFAULT_FRAME_DURATION = 100
 private val GIF_HEADER_87A = "GIF87a".encodeUtf8()
 private val GIF_HEADER_89A = "GIF89a".encodeUtf8()
 
+// https://developers.google.com/speed/webp/docs/riff_container
+private val WEBP_HEADER_RIFF = "RIFF".encodeUtf8()
+private val WEBP_HEADER_WEBP = "WEBP".encodeUtf8()
+private val WEBP_HEADER_VPX8 = "VP8X".encodeUtf8()
+
 /**
  * Return 'true' if the [source] contains a GIF image. The [source] is not consumed.
  */
 private fun isGif(source: BufferedSource): Boolean {
     return source.rangeEquals(0, GIF_HEADER_89A) ||
         source.rangeEquals(0, GIF_HEADER_87A)
+}
+
+/**
+ * Return 'true' if the [source] contains a WebP image. The [source] is not consumed.
+ */
+private fun isWebP(source: BufferedSource): Boolean {
+    return source.rangeEquals(0, WEBP_HEADER_RIFF) &&
+        source.rangeEquals(8, WEBP_HEADER_WEBP)
 }

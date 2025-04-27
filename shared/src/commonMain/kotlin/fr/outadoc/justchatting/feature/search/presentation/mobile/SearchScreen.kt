@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.collectAsLazyPagingItems
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import fr.outadoc.justchatting.feature.search.presentation.ChannelSearchViewModel
@@ -60,7 +60,7 @@ internal fun SearchScreen(
             Surface {
                 SearchBar(
                     modifier = Modifier
-                        .hazeChild(
+                        .hazeEffect(
                             state = hazeState,
                             style = HazeMaterials.regular(),
                         ),

@@ -44,7 +44,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
@@ -112,7 +112,7 @@ internal fun ChannelChatScreenContent(
         topBar = {
             ChatTopAppBar(
                 modifier = Modifier
-                    .hazeChild(
+                    .hazeEffect(
                         state = hazeState,
                         style = HazeMaterials.regular(),
                     ),
@@ -174,7 +174,7 @@ internal fun ChannelChatScreenContent(
 
                 Surface(
                     modifier = Modifier
-                        .hazeChild(
+                        .hazeEffect(
                             state = hazeState,
                             style = HazeMaterials.regular(
                                 MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),

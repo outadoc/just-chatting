@@ -27,7 +27,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
@@ -76,7 +76,7 @@ internal fun FollowedChannelsList(
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
                 modifier = Modifier
-                    .hazeChild(
+                    .hazeEffect(
                         state = hazeState,
                         style = HazeMaterials.regular(),
                     ),

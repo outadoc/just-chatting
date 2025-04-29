@@ -86,6 +86,7 @@ kotlin {
                 implementation(libs.jetbrains.compose.material.adaptive.navigation)
                 implementation(libs.jetbrains.compose.material.windowSizeClass)
                 implementation(libs.jetbrains.compose.navigation)
+                implementation(libs.jetbrains.compose.ui.backhandler)
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
                 implementation(libs.koin.compose.viewmodel)

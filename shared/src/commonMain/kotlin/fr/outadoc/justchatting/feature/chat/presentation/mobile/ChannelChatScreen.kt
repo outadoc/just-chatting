@@ -8,7 +8,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.platform.LocalDensity
 import coil3.compose.LocalPlatformContext
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
@@ -16,7 +18,6 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.utils.http.toUri
-import fr.outadoc.justchatting.utils.presentation.BackHandler
 import fr.outadoc.justchatting.utils.presentation.OnLifecycleEvent
 import fr.outadoc.justchatting.utils.presentation.areBubblesSupported
 import fr.outadoc.justchatting.utils.presentation.isDark
@@ -24,7 +25,7 @@ import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(KoinExperimentalAPI::class)
+@OptIn(KoinExperimentalAPI::class, ExperimentalComposeUiApi::class)
 @Composable
 internal fun ChannelChatScreen(
     modifier: Modifier = Modifier,

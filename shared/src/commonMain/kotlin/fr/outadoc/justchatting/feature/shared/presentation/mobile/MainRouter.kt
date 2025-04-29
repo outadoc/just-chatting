@@ -9,7 +9,9 @@ import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -26,10 +28,9 @@ import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsS
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionThirdParties
 import fr.outadoc.justchatting.feature.search.presentation.mobile.SearchScreen
 import fr.outadoc.justchatting.feature.timeline.presentation.mobile.TimelineScreen
-import fr.outadoc.justchatting.utils.presentation.BackHandler
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalComposeUiApi::class)
 @Composable
 internal fun MainRouter(
     modifier: Modifier = Modifier,

@@ -1,9 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.InlineTextContent
@@ -16,17 +13,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.Hyphens
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withAnnotation
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
@@ -62,7 +60,6 @@ internal fun ChatMessageBody(
     maxLines: Int = Int.MAX_VALUE,
     onShowInfoForUserId: (String) -> Unit = {},
 ) {
-    val uriHandler = LocalUriHandler.current
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
 
     val fullInlineContent =
@@ -85,6 +82,7 @@ internal fun ChatMessageBody(
         inlineContent = fullInlineContent,
         pronouns = pronouns,
         backgroundHint = backgroundHint,
+        onShowInfoForUserId = onShowInfoForUserId,
     )
 
     Column(modifier = modifier) {
@@ -98,40 +96,6 @@ internal fun ChatMessageBody(
         }
 
         Text(
-            modifier = Modifier
-                .pointerInput(annotatedString) {
-                    awaitEachGesture {
-                        // Wait for tap
-                        awaitFirstDown().also { down ->
-                            // Check that text has been laid out (it should be)
-                            val layoutRes = layoutResult.value ?: return@also
-
-                            val position = layoutRes.getOffsetForPosition(down.position)
-
-                            annotatedString
-                                .getStringAnnotations(position, position)
-                                .forEach { annotation ->
-                                    when (annotation.tag) {
-                                        URL_ANNOTATION_TAG -> {
-                                            down.consume()
-                                            waitForUpOrCancellation()?.also { up ->
-                                                up.consume()
-                                                uriHandler.openUri(annotation.item)
-                                            }
-                                        }
-
-                                        CHATTER_ID_ANNOTATION_TAG -> {
-                                            down.consume()
-                                            waitForUpOrCancellation()?.also { up ->
-                                                up.consume()
-                                                onShowInfoForUserId(annotation.item)
-                                            }
-                                        }
-                                    }
-                                }
-                        }
-                    }
-                },
             onTextLayout = { layoutResult.value = it },
             text = annotatedString,
             inlineContent = fullInlineContent,
@@ -164,6 +128,7 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
     mentionBackground: Color = MaterialTheme.colorScheme.onBackground,
     mentionColor: Color = MaterialTheme.colorScheme.background,
+    onShowInfoForUserId: (String) -> Unit,
 ): AnnotatedString {
     val accessibleChatterColor: Color? =
         color?.parseHexColor()?.let { rawColor ->
@@ -204,13 +169,18 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
                 ),
             ),
         ) {
-            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                withAnnotation(
+            withLink(
+                LinkAnnotation.Clickable(
                     tag = CHATTER_ID_ANNOTATION_TAG,
-                    annotation = chatter.id,
-                ) {
-                    append(chatter.displayName)
-                }
+                    styles = TextLinkStyles(
+                        style = SpanStyle(fontWeight = FontWeight.Bold),
+                    ),
+                    linkInteractionListener = {
+                        onShowInfoForUserId(chatter.id)
+                    },
+                ),
+            ) {
+                append(chatter.displayName)
             }
 
             if (chatter.hasLocalizedDisplayName) {
@@ -251,7 +221,7 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
                             mention = word,
                             appUser = appUser,
                             mentionBackground = mentionBackground,
-                            mentionColor = mentionColor,
+                            mentionColor = mentionColor
                         )
                     }
 
@@ -268,10 +238,18 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
 
 private fun AnnotatedString.Builder.appendUrl(url: String, urlColor: Color) {
     val validUrl: String = if (url.startsWith("http")) url else "https://$url"
-    withStyle(SpanStyle(color = urlColor)) {
-        withAnnotation(tag = URL_ANNOTATION_TAG, annotation = validUrl) {
-            append(url)
-        }
+    withLink(
+        LinkAnnotation.Url(
+            validUrl,
+            TextLinkStyles(
+                style = SpanStyle(
+                    color = urlColor,
+                    textDecoration = TextDecoration.Underline
+                )
+            ),
+        ),
+    ) {
+        append(url)
     }
 }
 
@@ -281,22 +259,19 @@ private fun AnnotatedString.Builder.appendMention(
     mentionBackground: Color,
     mentionColor: Color,
 ) {
-    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-        withStyle(
-            getMentionStyle(
-                // TODO also check for userDisplayName
-                mentioned = mention.contentEquals(appUser.userLogin, ignoreCase = true),
-                mentionBackground = mentionBackground,
-                mentionColor = mentionColor,
-            ),
-        ) {
-            append(mention)
-        }
+    withStyle(
+        getMentionStyle(
+            // TODO also check for userDisplayName
+            mentioned = mention.contentEquals(appUser.userLogin, ignoreCase = true),
+            mentionBackground = mentionBackground,
+            mentionColor = mentionColor,
+        )
+    ) {
+        append(mention)
     }
 }
 
 private val Badge.inlineContentId: String
     get() = "badge_${id}_$version"
 
-private const val URL_ANNOTATION_TAG = "URL"
 private const val CHATTER_ID_ANNOTATION_TAG = "USER_ID"

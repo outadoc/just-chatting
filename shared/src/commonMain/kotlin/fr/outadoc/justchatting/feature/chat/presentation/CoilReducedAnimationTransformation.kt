@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.presentation
 
-import android.graphics.Bitmap
+import coil3.Bitmap
 import coil3.size.Size
 import coil3.transform.Transformation
 

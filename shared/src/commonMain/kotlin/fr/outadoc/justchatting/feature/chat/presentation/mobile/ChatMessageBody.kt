@@ -221,7 +221,7 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
                             mention = word,
                             appUser = appUser,
                             mentionBackground = mentionBackground,
-                            mentionColor = mentionColor
+                            mentionColor = mentionColor,
                         )
                     }
 
@@ -244,8 +244,8 @@ private fun AnnotatedString.Builder.appendUrl(url: String, urlColor: Color) {
             TextLinkStyles(
                 style = SpanStyle(
                     color = urlColor,
-                    textDecoration = TextDecoration.Underline
-                )
+                    textDecoration = TextDecoration.Underline,
+                ),
             ),
         ),
     ) {
@@ -265,7 +265,7 @@ private fun AnnotatedString.Builder.appendMention(
             mentioned = mention.contentEquals(appUser.userLogin, ignoreCase = true),
             mentionBackground = mentionBackground,
             mentionColor = mentionColor,
-        )
+        ),
     ) {
         append(mention)
     }

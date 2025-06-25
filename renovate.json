@@ -4,9 +4,7 @@
   "packageRules": [
     {
       "matchPackageNames": [
-        "/^androidx.compose.compiler/",
         "/^com.google.devtools.ksp/",
-        "/^org.jetbrains.compose/",
         "/^org.jetbrains.kotlin[^x]/"
       ],
       "groupName": "kotlin-monorepo"

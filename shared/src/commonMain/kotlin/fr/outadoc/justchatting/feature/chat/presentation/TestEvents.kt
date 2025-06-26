@@ -8,9 +8,9 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Poll
 import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 
 internal object TestEvents {
 

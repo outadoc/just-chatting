@@ -2,8 +2,8 @@ package fr.outadoc.justchatting.feature.chat.domain.model
 
 import androidx.compose.runtime.Immutable
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
-import kotlinx.datetime.Instant
 import kotlin.time.Duration
+import kotlin.time.Instant
 
 internal sealed interface ChatEvent {
 

@@ -30,10 +30,10 @@ import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.connectionLost_error
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentMap
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Instant
 
 @Composable
 internal fun ChatEvents(

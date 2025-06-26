@@ -4,9 +4,9 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.Redemption
 import fr.outadoc.justchatting.feature.chat.domain.model.Reward
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 internal class PubSubChannelPointsPlugin(
     private val clock: Clock,

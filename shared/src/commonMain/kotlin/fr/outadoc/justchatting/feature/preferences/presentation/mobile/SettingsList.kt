@@ -48,9 +48,9 @@ import fr.outadoc.justchatting.shared.yes
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.areBubblesSupported
 import fr.outadoc.justchatting.utils.presentation.plus
-import kotlinx.datetime.Instant
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.time.Instant
 
 @Composable
 internal fun SettingsList(

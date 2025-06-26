@@ -8,7 +8,7 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.RecentEmote
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 internal class RecentEmotesDb(
     private val recentEmoteQueries: RecentEmoteQueries,

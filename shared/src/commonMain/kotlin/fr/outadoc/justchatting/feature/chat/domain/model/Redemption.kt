@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.domain.model
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 internal data class Redemption(
     val id: String,

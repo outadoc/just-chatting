@@ -8,7 +8,7 @@ import fr.outadoc.justchatting.feature.shared.domain.model.Pagination
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 internal class SearchChannelsDataSource(
     private val query: String,

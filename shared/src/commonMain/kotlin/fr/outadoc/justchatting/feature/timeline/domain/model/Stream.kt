@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.feature.timeline.domain.model
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentSetOf
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 @Immutable
 internal data class Stream(

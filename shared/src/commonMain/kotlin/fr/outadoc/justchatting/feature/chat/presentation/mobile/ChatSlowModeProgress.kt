@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.StrokeCap
 import fr.outadoc.justchatting.feature.chat.presentation.MessagePostConstraint
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 
 @Composable
 internal fun ChatSlowModeProgress(

@@ -31,11 +31,11 @@ import fr.outadoc.justchatting.shared.poll_status_progress
 import fr.outadoc.justchatting.shared.poll_status_voterCount
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatNumber
-import kotlinx.datetime.Instant
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 
 @Composable
 internal fun PollCard(

@@ -2,8 +2,8 @@ package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.prediction
 
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
-import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
+import kotlin.time.Instant
 
 internal class PubSubPredictionPlugin(
     private val json: Json,

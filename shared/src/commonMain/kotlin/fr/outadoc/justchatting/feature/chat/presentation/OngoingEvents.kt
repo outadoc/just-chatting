@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Poll
 import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 @Immutable
 internal data class OngoingEvents(

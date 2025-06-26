@@ -22,7 +22,7 @@ import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 internal class TwitchApiImpl(
     private val twitchClient: TwitchClient,

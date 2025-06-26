@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegm
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.feature.timeline.domain.model.Video
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 internal interface LocalStreamsApi {
 

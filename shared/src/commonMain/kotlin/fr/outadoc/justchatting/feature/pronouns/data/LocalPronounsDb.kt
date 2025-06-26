@@ -16,9 +16,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Instant
 
 internal class LocalPronounsDb(
     private val db: PronounQueries,

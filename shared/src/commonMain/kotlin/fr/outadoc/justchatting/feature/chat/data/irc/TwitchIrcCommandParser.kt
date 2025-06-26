@@ -6,7 +6,7 @@ import fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.message.rfc1459.
 import fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.message.rfc1459.PrivMsgMessage
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.utils.logging.logWarning
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 
 internal class TwitchIrcCommandParser(private val clock: Clock) {
 

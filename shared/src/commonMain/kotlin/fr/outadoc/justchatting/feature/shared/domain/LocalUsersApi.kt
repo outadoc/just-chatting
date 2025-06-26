@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.feature.shared.domain
 import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 internal interface LocalUsersApi {
 

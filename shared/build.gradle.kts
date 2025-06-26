@@ -55,6 +55,10 @@ kotlin {
     applyDefaultHierarchyTemplate()
 
     sourceSets {
+        all {
+            languageSettings.optIn("kotlin.time.ExperimentalTime")
+        }
+
         commonMain {
             dependencies {
                 api(libs.kotlinx.coroutines)

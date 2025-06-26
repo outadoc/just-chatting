@@ -5,13 +5,13 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEmote
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.emotes.data.twitch.map
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 
 internal class TwitchIrcCommandParserTest {
 

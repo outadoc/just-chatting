@@ -3,14 +3,14 @@ package fr.outadoc.justchatting.utils.presentation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.toJavaInstant
 import kotlinx.datetime.toJavaLocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
+import kotlin.time.Instant
+import kotlin.time.toJavaInstant
 
 @Composable
 @Stable

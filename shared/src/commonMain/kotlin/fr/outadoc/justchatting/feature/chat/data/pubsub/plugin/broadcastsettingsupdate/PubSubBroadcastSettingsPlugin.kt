@@ -2,8 +2,8 @@ package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.broadcastsetting
 
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
-import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
+import kotlin.time.Clock
 
 internal class PubSubBroadcastSettingsPlugin(
     private val json: Json,

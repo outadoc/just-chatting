@@ -1,9 +1,9 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.poll
 
 import fr.outadoc.justchatting.feature.chat.domain.model.Poll
-import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 
 internal fun PubSubPollMessage.Data.Poll.map(): Poll =
     Poll(

@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.emotes.domain.model
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 internal data class RecentEmote(
     val name: String,

@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.shared.domain.model
 
 import androidx.compose.runtime.Immutable
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 @Immutable
 internal data class User(

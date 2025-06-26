@@ -6,7 +6,6 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatEmote
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.emotes.data.twitch.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
-import kotlinx.datetime.Instant
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.map
@@ -14,6 +13,7 @@ import kotlin.collections.set
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 
 internal fun Map<String, String?>.parseEmotes(message: String): List<Emote>? {
     return this["emotes"]

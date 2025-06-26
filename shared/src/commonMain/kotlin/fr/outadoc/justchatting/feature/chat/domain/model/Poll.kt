@@ -1,8 +1,8 @@
 package fr.outadoc.justchatting.feature.chat.domain.model
 
 import androidx.compose.runtime.Immutable
-import kotlinx.datetime.Instant
 import kotlin.time.Duration
+import kotlin.time.Instant
 
 @Immutable
 internal data class Poll(

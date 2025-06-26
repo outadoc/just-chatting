@@ -1,9 +1,9 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.pinnedmessage
 
 import fr.outadoc.justchatting.utils.core.InstantUnixEpochSerializer
-import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.time.Instant
 
 @Serializable
 internal sealed class PubSubPinnedMessage {

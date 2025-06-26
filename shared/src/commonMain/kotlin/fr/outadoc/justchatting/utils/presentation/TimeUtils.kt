@@ -2,8 +2,8 @@ package fr.outadoc.justchatting.utils.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlin.time.Instant
 
 @Stable
 @Composable

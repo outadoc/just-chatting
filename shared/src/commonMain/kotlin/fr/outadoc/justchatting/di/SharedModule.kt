@@ -84,12 +84,12 @@ import fr.outadoc.justchatting.utils.core.DefaultJson
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.http.BaseHttpClientProvider
 import fr.outadoc.justchatting.utils.http.TwitchHttpClientProvider
-import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 import org.koin.compose.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import kotlin.time.Clock
 
 public val sharedModule: Module
     get() = module {

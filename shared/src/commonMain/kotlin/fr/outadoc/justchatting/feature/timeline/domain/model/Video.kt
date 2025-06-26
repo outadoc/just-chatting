@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.timeline.domain.model
 
-import kotlinx.datetime.Instant
 import kotlin.time.Duration
+import kotlin.time.Instant
 
 internal data class Video(
     val id: String,

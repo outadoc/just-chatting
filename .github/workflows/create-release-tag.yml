@@ -30,23 +30,23 @@ jobs:
         run: |
           if [[ $(git tag --points-at HEAD) ]]; then
             echo "Last commit is tagged"
-            exit 0
+            echo "tagged=yes" >> $GITHUB_STATE
           else
             echo "Last commit is not tagged"
-            exit 1
+            echo "tagged=no" >> $GITHUB_STATE
           fi
 
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date +'%Y.%m')"
+        run: echo "date=$(date +'%Y.%m')" >> $GITHUB_STATE
 
       - name: Compute unique version code
         id: version
-        run: echo "::set-output name=version::$(git rev-list HEAD --count)"
+        run: echo "version=$(git rev-list HEAD --count)" >> $GITHUB_STATE
 
       - name: Create GitHub release
         uses: ncipollo/release-action@v1.18.0
-        if: steps.check-tagged-commit.outputs.result == '1'
+        if: steps.check-tagged-commit.outputs.tagged == 'yes'
         with:
           tag: "v${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}"
           commit: main

@@ -1,6 +1,7 @@
 name: Release - Create tag
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 1 * * *"
 

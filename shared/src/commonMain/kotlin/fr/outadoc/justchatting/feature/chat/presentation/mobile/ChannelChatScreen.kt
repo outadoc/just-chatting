@@ -23,9 +23,8 @@ import fr.outadoc.justchatting.utils.presentation.areBubblesSupported
 import fr.outadoc.justchatting.utils.presentation.isDark
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(KoinExperimentalAPI::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun ChannelChatScreen(
     modifier: Modifier = Modifier,

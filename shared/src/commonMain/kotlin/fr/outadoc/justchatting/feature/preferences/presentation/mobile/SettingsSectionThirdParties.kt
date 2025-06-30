@@ -42,7 +42,6 @@ import fr.outadoc.justchatting.shared.settings_thirdparty_stv_title
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,7 +79,6 @@ internal fun SettingsSectionThirdParties(
     }
 }
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 private fun SettingsSectionThirdPartiesContent(
     modifier: Modifier = Modifier,

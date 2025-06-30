@@ -1,9 +1,8 @@
 name: Release - Create tag
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: "0 1 * * *"
 
 jobs:
   create-release:
@@ -22,6 +21,19 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          fetch-tags: true
+
+      - name: Check if last commit is tagged
+        id: check-tagged-commit
+        continue-on-error: true
+        run: |
+          if [[ $(git tag --points-at HEAD) ]]; then
+            echo "Last commit is tagged"
+            exit 0
+          else
+            echo "Last commit is not tagged"
+            exit 1
+          fi
 
       - name: Get current date
         id: date
@@ -33,6 +45,7 @@ jobs:
 
       - name: Create GitHub release
         uses: ncipollo/release-action@v1.18.0
+        if: steps.check-tagged-commit.outputs.result == '1'
         with:
           tag: "v${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}"
           commit: main

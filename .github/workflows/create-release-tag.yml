@@ -46,7 +46,8 @@ jobs:
 
       - name: Create GitHub release
         uses: ncipollo/release-action@v1.18.0
-        if: steps.check-tagged-commit.outputs.tagged == 'yes'
+        # If latest commit is not tagged yet, create a new release
+        if: steps.check-tagged-commit.outputs.tagged == 'no'
         with:
           tag: "v${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}"
           commit: main

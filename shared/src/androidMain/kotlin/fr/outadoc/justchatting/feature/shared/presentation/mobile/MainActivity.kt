@@ -18,7 +18,7 @@ import androidx.glance.action.actionParametersOf
 import androidx.glance.action.actionStartActivity
 import com.eygraber.uri.Uri
 import com.eygraber.uri.toAndroidUri
-import com.eygraber.uri.toUri
+import com.eygraber.uri.toKmpUri
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.createChannelDeeplink
 import fr.outadoc.justchatting.feature.shared.presentation.DeeplinkReceiver
 import org.koin.android.ext.android.inject
@@ -100,7 +100,7 @@ internal class MainActivity : AppCompatActivity() {
             if (userIdFromParams != null) {
                 createChannelDeeplink(userId = userIdFromParams)
             } else {
-                intent.data?.toUri()
+                intent.data?.toKmpUri()
             }
 
         if (uri != null) {

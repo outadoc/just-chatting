@@ -111,4 +111,4 @@ sqldelight-driver-native = { module = "app.cash.sqldelight:native-driver", versi
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
 stately-common = { module = "co.touchlab:stately-common", version.ref = "stately" }
 unicode-codepoints = "de.cketti.unicode:kotlin-codepoints:0.10.0"
-uri-kmp = "com.eygraber:uri-kmp:0.0.19"
+uri-kmp = "com.eygraber:uri-kmp:0.0.20"

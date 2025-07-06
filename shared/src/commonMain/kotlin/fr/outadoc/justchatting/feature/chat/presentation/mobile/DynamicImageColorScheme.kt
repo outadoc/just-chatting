@@ -1,16 +1,19 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MotionScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.eygraber.uri.Uri
 import com.kmpalette.DominantColorState
 import com.kmpalette.loader.rememberNetworkLoader
 import com.kmpalette.rememberDominantColorState
-import com.materialkolor.DynamicMaterialTheme
+import com.materialkolor.DynamicMaterialExpressiveTheme
 import com.materialkolor.PaletteStyle
 import fr.outadoc.justchatting.utils.http.toKtorUrl
 import io.ktor.http.Url
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun DynamicImageColorTheme(
     imageUrl: Uri?,
@@ -27,9 +30,10 @@ internal fun DynamicImageColorTheme(
         }
     }
 
-    DynamicMaterialTheme(
+    DynamicMaterialExpressiveTheme(
         seedColor = dominantColorState.color,
-        style = PaletteStyle.Vibrant,
+        style = PaletteStyle.Expressive,
+        motionScheme = MotionScheme.expressive(),
         animate = true,
         content = content,
     )

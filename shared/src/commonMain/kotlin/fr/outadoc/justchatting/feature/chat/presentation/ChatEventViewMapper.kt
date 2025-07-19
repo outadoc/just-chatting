@@ -614,7 +614,7 @@ internal class ChatEventViewMapper {
 
     private fun ChatEvent.Message.ChatMessage.map(): ChatListItem.Message.Body {
         val mentions = message.orEmpty().getMentionsPrefix()
-        val mentionsLength = mentions.sumOf { mention -> mention.length }
+        val mentionsLength = mentions.sumOf { mention -> mention.length + 1 }
 
         return ChatListItem.Message.Body(
             message = message.orEmpty()

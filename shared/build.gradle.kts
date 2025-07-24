@@ -62,6 +62,7 @@ kotlin {
 
                 implementation(compose.components.resources)
                 implementation(compose.material)
+                implementation(compose.material3)
                 implementation(compose.materialIconsExtended)
                 implementation(compose.runtime)
                 implementation(compose.ui)
@@ -79,7 +80,6 @@ kotlin {
                 implementation(libs.connectivity.core)
                 implementation(libs.haze.core)
                 implementation(libs.haze.materials)
-                implementation(libs.jetbrains.compose.material3)
                 implementation(libs.jetbrains.compose.material.adaptive.core)
                 implementation(libs.jetbrains.compose.material.adaptive.layout)
                 implementation(libs.jetbrains.compose.material.adaptive.navigation)

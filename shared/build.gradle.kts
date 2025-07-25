@@ -66,7 +66,6 @@ kotlin {
                 implementation(compose.materialIconsExtended)
                 implementation(compose.runtime)
                 implementation(compose.ui)
-                implementation(compose.uiTooling)
                 implementation(compose.components.uiToolingPreview)
                 implementation(compose.material3AdaptiveNavigationSuite)
 

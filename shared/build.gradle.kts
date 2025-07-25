@@ -66,6 +66,7 @@ kotlin {
                 implementation(compose.materialIconsExtended)
                 implementation(compose.runtime)
                 implementation(compose.ui)
+                implementation(compose.components.uiToolingPreview)
                 implementation(compose.material3AdaptiveNavigationSuite)
 
                 implementation(libs.androidx.datastore.preferences)
@@ -108,9 +109,6 @@ kotlin {
 
         androidMain {
             dependencies {
-                implementation(compose.uiTooling)
-                implementation(compose.components.uiToolingPreview)
-
                 implementation(libs.accompanist.permissions)
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.androidx.appcompat)
@@ -151,9 +149,6 @@ kotlin {
         val desktopMain by getting {
             dependsOn(skiaMain)
             dependencies {
-                implementation(compose.uiTooling)
-                implementation(compose.components.uiToolingPreview)
-
                 implementation(libs.appdirs)
                 implementation(libs.connectivity.http)
                 implementation(libs.ktor.client.java)

@@ -1,0 +1,219 @@
+name: Deploy apps
+
+on:
+  release:
+    types:
+      - released
+
+jobs:
+  deploy-ios:
+    name: Deploy iOS app
+    environment: deploy
+    runs-on: macos-latest
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Select Xcode version
+        run: sudo xcode-select -s '/Applications/Xcode_16.2.app/Contents/Developer'
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y.%m')"
+
+      - name: Compute unique version code
+        id: version
+        run: echo "::set-output name=version::$(git rev-list HEAD --count)"
+
+      - name: Set up Mise
+        uses: jdx/mise-action@v2
+        with:
+          install: false
+
+      - name: Install Mise dependencies
+        run: mise install
+        working-directory: app-ios
+
+      - name: Generate Xcode project
+        run: tuist generate
+        working-directory: app-ios
+        env:
+          # CFBundleVersion is the commit count
+          TUIST_VERSION_CODE: "${{ steps.version.outputs.version }}"
+          # CFBundleShortVersionString is based on the date and commit count
+          TUIST_VERSION_NAME: "${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}"
+
+      - name: Setup Match repository credentials
+        run: echo "${MATCH_DEPLOY_KEY}" | ssh-add -
+        env:
+          MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
+
+      - name: Build shared framework
+        run: ./gradlew :shared:linkReleaseFrameworkIosArm64
+
+      - name: Download App Store Connect API key
+        run: echo "$APPLE_DEV_PORTAL_API_KEY" > /tmp/appstore-api-key.p8
+        env:
+          APPLE_DEV_PORTAL_API_KEY: ${{ secrets.APPLE_DEV_PORTAL_API_KEY }}
+
+      - name: Run Fastlane
+        run: fastlane beta
+        working-directory: app-ios
+        env:
+          MATCH_PASSWORD: ${{ secrets.FASTLANE_MATCH_PASSWORD }}
+
+  deploy-desktop:
+    name: Deploy desktop app - ${{ matrix.target }} ${{ matrix.arch }}
+    runs-on: ${{ matrix.os }}
+    environment: deploy
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: aarch64
+            os: macos-latest
+            target: macos
+            path: app-desktop/build/compose/binaries/main/dmg
+          - arch: amd64
+            os: windows-latest
+            target: windows
+            path: app-desktop/build/compose/binaries/main/msi
+          - arch: amd64
+            os: ubuntu-latest
+            target: linux
+            path: app-desktop/build/compose/binaries/main/deb
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y.%m')"
+
+      - name: Compute unique version code
+        id: version
+        run: echo "::set-output name=version::$(git rev-list HEAD --count)"
+
+      - name: Build packages
+        run: |
+          ./gradlew app-desktop:package "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
+
+      - name: Compress output
+        uses: thedoctor0/zip-release@0.7.5
+        with:
+          type: 'zip'
+          filename: "JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
+          directory: "${{ matrix.path }}"
+
+      - name: Upload packages to GitHub
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          path: "${{ matrix.path }}/JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
+          name: build-${{ matrix.target }}-${{ matrix.arch }}
+
+      - name: Update release
+        uses: johnwbyrd/update-release@v1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release: ${{ github.event.release.name }}
+          files: "${{ matrix.path }}/JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
+
+  deploy-android:
+    name: Deploy Android app
+    runs-on: ubuntu-latest
+    environment: deploy
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y.%m')"
+
+      - name: Compute unique version code
+        id: version
+        run: echo "::set-output name=version::$(git rev-list HEAD --count)"
+
+      - name: Build app bundle
+        run: |
+          ./gradlew bundleRelease \
+          "-PreleaseKeystorePassword=${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" \
+          "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" \
+          "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
+          "-PenableLogging=false"
+
+      - name: Upload app bundle to GitHub
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: apk
+          path: app-android/build/outputs/bundle/release/app-android-release.aab
+
+      - name: Publish nightly build to internal track
+        uses: r0adkll/upload-google-play@v1
+        with:
+          track: internal
+          status: completed
+          packageName: fr.outadoc.justchatting
+          releaseFiles: app-android/build/outputs/bundle/release/app-android-release.aab
+          mappingFile: app-android/build/outputs/mapping/release/mapping.txt
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+
+      - name: Update release
+        uses: johnwbyrd/update-release@v1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: app-android/build/outputs/bundle/release/app-android-release.aab
+          release: ${{ github.event.release.name }}

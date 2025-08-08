@@ -18,9 +18,8 @@ jobs:
           - arch: aarch64
             os: macos-latest
             target: macos
-            lipo-arch: arm64
           - arch: amd64
-            os: windows-2019
+            os: windows-latest
             target: windows
           - arch: amd64
             os: ubuntu-latest
@@ -67,7 +66,7 @@ jobs:
           name: build-${{ matrix.target }}-${{ matrix.arch }}
 
       - name: Update release
-        uses: johnwbyrd/update-release@v1
+        uses: johnwbyrd/update-release@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           files: app-desktop/build/compose/binaries/main/*

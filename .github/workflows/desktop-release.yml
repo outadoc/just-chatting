@@ -62,9 +62,17 @@ jobs:
           path: app-desktop/build/compose/binaries/main
           name: build-${{ matrix.target }}-${{ matrix.arch }}
 
+      - name: List artifacts
+        id: list-files
+        uses: mirko-felice/list-files-action@v3.0.5
+        with:
+          repo: ${{ github.repository }}
+          ref: ${{ github.ref }}
+          path: "app-desktop/build/compose/binaries/main"
+
       - name: Update release
         uses: johnwbyrd/update-release@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          files: app-desktop/build/compose/binaries/main/*
+          files: ${{ fromJson(steps.list-files.outputs.paths) }}
           release: ${{ github.event.release.name }}

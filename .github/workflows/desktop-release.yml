@@ -26,7 +26,7 @@ jobs:
           - arch: amd64
             os: ubuntu-latest
             target: linux
-            path: app-desktop/build/compose/binaries/main/appimage
+            path: app-desktop/build/compose/binaries/main/deb
 
     steps:
       - uses: actions/checkout@v4
@@ -60,8 +60,11 @@ jobs:
           ./gradlew app-desktop:package "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
 
       - name: Compress output
-        run: |
-          zip "JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip" "${{ matrix.path }}/*"
+        uses: thedoctor0/zip-release@0.7.5
+        with:
+          type: 'zip'
+          filename: "JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
+          directory: "${{ matrix.path }}"
 
       - name: Upload packages to GitHub
         uses: actions/upload-artifact@v4.6.2

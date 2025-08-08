@@ -60,7 +60,7 @@ jobs:
           ./gradlew app-desktop:package "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
 
       - name: Compress output
-        uses: thedoctor0/zip-release@0.7.5
+        uses: thedoctor0/zip-release@0.7.6
         with:
           type: 'zip'
           filename: "JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"

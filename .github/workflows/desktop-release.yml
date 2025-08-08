@@ -18,12 +18,15 @@ jobs:
           - arch: aarch64
             os: macos-latest
             target: macos
+            path: app-desktop/build/compose/binaries/main/dmg
           - arch: amd64
             os: windows-latest
             target: windows
+            path: app-desktop/build/compose/binaries/main/msi
           - arch: amd64
             os: ubuntu-latest
             target: linux
+            path: app-desktop/build/compose/binaries/main/deb
 
     steps:
       - uses: actions/checkout@v4
@@ -68,7 +71,7 @@ jobs:
         with:
           repo: ${{ github.repository }}
           ref: ${{ github.ref }}
-          path: "app-desktop/build/compose/binaries/main"
+          path: ${{ matrix.path }}
 
       - name: Update release
         uses: johnwbyrd/update-release@v1.0.0

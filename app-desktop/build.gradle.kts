@@ -7,6 +7,13 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
 }
 
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+        vendor.set(JvmVendorSpec.ADOPTIUM)
+    }
+}
+
 sourceSets {
     main {
         resources.srcDir("$buildDir/generated/lib_version")

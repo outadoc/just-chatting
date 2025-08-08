@@ -26,7 +26,7 @@ jobs:
           - arch: amd64
             os: ubuntu-latest
             target: linux
-            path: app-desktop/build/compose/binaries/main/deb
+            path: app-desktop/build/compose/binaries/main/appimage
 
     steps:
       - uses: actions/checkout@v4
@@ -59,23 +59,19 @@ jobs:
         run: |
           ./gradlew app-desktop:package "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
 
+      - name: Compress output
+        run: |
+          zip "JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip" "${{ matrix.path }}/*"
+
       - name: Upload packages to GitHub
         uses: actions/upload-artifact@v4.6.2
         with:
-          path: app-desktop/build/compose/binaries/main
+          path: "JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
           name: build-${{ matrix.target }}-${{ matrix.arch }}
-
-      - name: List artifacts
-        id: list-files
-        uses: mirko-felice/list-files-action@v3.0.5
-        with:
-          repo: ${{ github.repository }}
-          ref: ${{ github.ref }}
-          path: ${{ matrix.path }}
 
       - name: Update release
         uses: johnwbyrd/update-release@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          files: ${{ fromJson(steps.list-files.outputs.paths) }}
           release: ${{ github.event.release.name }}
+          files: "JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"

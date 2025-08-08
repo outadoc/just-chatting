@@ -7,9 +7,24 @@ on:
 
 jobs:
   deploy:
-    name: Build and upload to GitHub
-    runs-on: ubuntu-latest
+    name: ${{ matrix.target }} ${{ matrix.arch }}
+    runs-on: ${{ matrix.os }}
     environment: deploy
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: aarch64
+            os: macos-latest
+            target: macos
+            lipo-arch: arm64
+          - arch: amd64
+            os: windows-2019
+            target: windows
+          - arch: amd64
+            os: ubuntu-latest
+            target: linux
 
     steps:
       - uses: actions/checkout@v4
@@ -49,3 +64,11 @@ jobs:
         uses: actions/upload-artifact@v4.6.2
         with:
           path: app-desktop/build/compose/binaries/main
+          name: build-${{ matrix.target }}-${{ matrix.arch }}
+
+      - name: Update release
+        uses: johnwbyrd/update-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: app-desktop/build/compose/binaries/main/*
+          release: ${{ github.event.release.name }}

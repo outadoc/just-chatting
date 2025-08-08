@@ -61,3 +61,10 @@ jobs:
           releaseFiles: app-android/build/outputs/bundle/release/app-android-release.aab
           mappingFile: app-android/build/outputs/mapping/release/mapping.txt
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+
+      - name: Update release
+        uses: johnwbyrd/update-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: app-android/build/outputs/bundle/release/app-android-release.aab
+          release: ${{ github.event.release.name }}

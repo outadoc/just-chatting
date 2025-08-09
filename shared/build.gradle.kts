@@ -175,7 +175,7 @@ compose.resources {
 
 android {
     namespace = "fr.outadoc.justchatting.shared"
-    compileSdkVersion = "android-35"
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 23

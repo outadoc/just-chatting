@@ -16,7 +16,7 @@ kotlin {
 
 sourceSets {
     main {
-        resources.srcDir("$buildDir/generated/lib_version")
+        resources.srcDir(layout.buildDirectory.file("generated/lib_version"))
     }
 }
 
@@ -34,11 +34,23 @@ compose.desktop {
                 TargetFormat.Dmg,
                 TargetFormat.Msi,
                 TargetFormat.Deb,
+                TargetFormat.Rpm,
             )
 
             windows {
                 menu = true
                 upgradeUuid = "4C55AF4A-F39A-4E6F-B753-DE647A8F8BE2"
+                iconFile = project.file("assets/icon_windows.ico")
+            }
+
+            macOS {
+                iconFile = project.file("assets/icon_macos.icns")
+                bundleID = "fr.outadoc.justchatting"
+            }
+
+            linux {
+                appCategory = "Chat"
+                iconFile = project.file("assets/icon_linux.svg")
             }
 
             modules(
@@ -57,6 +69,9 @@ dependencies {
 }
 
 tasks.register("generateVersionProperties") {
+    group = "Build"
+    description = "Generate file containing the app version"
+
     doLast {
         val propertiesFile = file("$buildDir/generated/lib_version/version.txt").apply {
             parentFile.mkdirs()

@@ -94,15 +94,12 @@ jobs:
           - arch: aarch64
             os: macos-latest
             target: macos
-            path: app-desktop/build/compose/binaries/main/dmg
           - arch: amd64
             os: windows-latest
             target: windows
-            path: app-desktop/build/compose/binaries/main/msi
           - arch: amd64
             os: ubuntu-latest
             target: linux
-            path: app-desktop/build/compose/binaries/main/deb
 
     steps:
       - uses: actions/checkout@v4
@@ -135,17 +132,21 @@ jobs:
         run: |
           ./gradlew app-desktop:package "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
 
+      - name: Clean up unused output binaries
+        if: matrix.target == 'macos'
+        run: rm -rf app-desktop/build/compose/binaries/main/app
+
       - name: Compress output
         uses: thedoctor0/zip-release@0.7.5
         with:
           type: 'zip'
           filename: "JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
-          directory: "${{ matrix.path }}"
+          directory: "app-desktop/build/compose/binaries/main"
 
       - name: Upload packages to GitHub
         uses: actions/upload-artifact@v4.6.2
         with:
-          path: "${{ matrix.path }}/JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
+          path: "app-desktop/build/compose/binaries/main/JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
           name: build-${{ matrix.target }}-${{ matrix.arch }}
 
       - name: Update release
@@ -153,7 +154,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release: ${{ github.event.release.name }}
-          files: "${{ matrix.path }}/JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
+          files: "app-desktop/build/compose/binaries/main/JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
 
   deploy-android:
     name: Deploy Android app

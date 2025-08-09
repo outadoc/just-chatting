@@ -130,7 +130,7 @@ jobs:
 
       - name: Build packages
         run: |
-          ./gradlew app-desktop:package "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
+          ./gradlew app-desktop:packageReleaseDistributionForCurrentOS "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
 
       - name: Clean up unused output binaries
         if: matrix.target == 'macos'

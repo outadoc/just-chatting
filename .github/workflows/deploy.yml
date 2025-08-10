@@ -134,19 +134,19 @@ jobs:
 
       - name: Clean up unused output binaries
         if: matrix.target == 'macos'
-        run: rm -rf app-desktop/build/compose/binaries/main/app
+        run: rm -rf app-desktop/build/compose/binaries/main-release/app
 
       - name: Compress output
         uses: thedoctor0/zip-release@0.7.6
         with:
           type: 'zip'
           filename: "JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
-          directory: "app-desktop/build/compose/binaries/main"
+          directory: "app-desktop/build/compose/binaries/main-release"
 
       - name: Upload packages to GitHub
         uses: actions/upload-artifact@v4.6.2
         with:
-          path: "app-desktop/build/compose/binaries/main/JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
+          path: "app-desktop/build/compose/binaries/main-release/JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
           name: build-${{ matrix.target }}-${{ matrix.arch }}
 
       - name: Update release
@@ -154,7 +154,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release: ${{ github.event.release.name }}
-          files: "app-desktop/build/compose/binaries/main/JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
+          files: "app-desktop/build/compose/binaries/main-release/JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
 
   deploy-android:
     name: Deploy Android app

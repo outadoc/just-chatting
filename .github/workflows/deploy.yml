@@ -137,7 +137,7 @@ jobs:
         run: rm -rf app-desktop/build/compose/binaries/main/app
 
       - name: Compress output
-        uses: thedoctor0/zip-release@0.7.5
+        uses: thedoctor0/zip-release@0.7.6
         with:
           type: 'zip'
           filename: "JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"

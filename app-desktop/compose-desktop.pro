@@ -2,7 +2,7 @@
 -dontwarn org.codehaus.**
 -dontwarn org.tukaani.**
 -dontwarn okhttp3.internal.**
--dontwarn androidx.compose.material3.**
+-dontwarn kotlin.Deprecated$Container
 
 -keep class ch.qos.logback.**
 
@@ -72,6 +72,5 @@
 ## Coil
 -keep class coil3.network.ktor3.internal.KtorNetworkFetcherServiceLoaderTarget { *; }
 
+## Okio
 -keepnames class okio.** { *; }
-#-keepnames class androidx.compose.** { *; }
--keepnames class com.materialkolor.** { *; }

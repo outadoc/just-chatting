@@ -153,7 +153,7 @@ kotlin {
                 implementation(libs.connectivity.http)
                 implementation(libs.ktor.client.java)
                 implementation(libs.ktor.server.cors)
-                implementation(libs.ktor.server.netty)
+                implementation(libs.ktor.server.cio)
                 implementation(libs.kotlinx.coroutines.swing)
                 implementation(libs.logback)
 

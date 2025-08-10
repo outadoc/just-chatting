@@ -34,7 +34,13 @@ internal fun DynamicImageColorTheme(
         seedColor = dominantColorState.color,
         style = PaletteStyle.Expressive,
         motionScheme = MotionScheme.expressive(),
-        animate = true,
+        animate = enableColorTransitions,
         content = content,
     )
 }
+
+/**
+ * Whether to use transitions when loading a channel's Material theme colors.
+ * Configurable in order to fix a desktop bug.
+ */
+internal expect val enableColorTransitions: Boolean

@@ -24,6 +24,14 @@ compose.desktop {
     application {
         mainClass = "fr.outadoc.justchatting.Main"
 
+        buildTypes {
+            release {
+                proguard {
+                    configurationFiles.from(project.file("compose-desktop.pro"))
+                }
+            }
+        }
+
         nativeDistributions {
             val versionCode = findProperty("externalVersionCode") as String?
 

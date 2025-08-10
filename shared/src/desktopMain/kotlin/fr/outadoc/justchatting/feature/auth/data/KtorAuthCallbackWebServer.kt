@@ -6,8 +6,8 @@ import fr.outadoc.justchatting.utils.http.toUri
 import fr.outadoc.justchatting.utils.logging.logDebug
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.install
+import io.ktor.server.cio.CIO
 import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.request.uri
 import io.ktor.server.response.respond
@@ -22,7 +22,7 @@ internal class KtorAuthCallbackWebServer(
     override val receivedUris = MutableSharedFlow<String>()
 
     private val server =
-        embeddedServer(Netty, 45563) {
+        embeddedServer(CIO, 45563) {
             install(CORS) {
                 allowHost("just-chatting.app")
             }

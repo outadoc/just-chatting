@@ -44,4 +44,4 @@ jobs:
       - name: Upload packages to GitHub
         uses: actions/upload-artifact@v4.6.2
         with:
-          path: app-desktop/build/compose/binaries/main
+          path: app-desktop/build/compose/binaries/main-release

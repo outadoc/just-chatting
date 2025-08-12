@@ -6,6 +6,12 @@
 
 -keep class ch.qos.logback.**
 
+## JNA for appdirs
+-keep class com.sun.jna.** { *; }
+-keep class * implements com.sun.jna.** { *; }
+
+-keep class io.ktor.client.engine.java.** { *; }
+
 ## kotlinx-serialization
 
 # Keep `Companion` object fields of serializable classes.

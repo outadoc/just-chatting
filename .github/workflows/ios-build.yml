@@ -43,5 +43,5 @@ jobs:
         working-directory: app-ios
 
       - name: Build iOS app
-        run: tuist build --platform ios
+        run: tuist build -- -sdk iphoneos18.2
         working-directory: app-ios

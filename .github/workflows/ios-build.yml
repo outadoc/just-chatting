@@ -43,5 +43,5 @@ jobs:
         working-directory: app-ios
 
       - name: Build iOS app
-        run: tuist build
+        run: tuist build --platform ios
         working-directory: app-ios

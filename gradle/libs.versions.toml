@@ -13,7 +13,7 @@ junit-jupiter-engine = "5.13.4"
 kmpalette = "3.1.0"
 koin = "4.1.0"
 konsist = "0.17.3"
-kotlin = "2.2.0"
+kotlin = "2.2.10"
 ktor = "3.2.3"
 lifecycle = "2.9.3"
 paging = "3.3.6"
@@ -32,7 +32,7 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version = "2.2.0-2.0.2" }
+ksp = { id = "com.google.devtools.ksp", version = "2.2.10-2.0.2" }
 licenseReport = { id = "com.github.jk1.dependency-license-report", version = "2.9" }
 spotless = { id = "com.diffplug.spotless", version = "7.2.1" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }

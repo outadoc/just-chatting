@@ -9,7 +9,7 @@ jobs:
   deploy-ios:
     name: Deploy iOS app
     environment: deploy
-    runs-on: macos-latest
+    runs-on: macos-15
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
@@ -92,7 +92,7 @@ jobs:
       matrix:
         include:
           - arch: aarch64
-            os: macos-latest
+            os: macos-15
             target: macos
           - arch: amd64
             os: windows-latest

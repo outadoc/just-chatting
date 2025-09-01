@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: macos-latest
+    runs-on: macos-15
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
@@ -22,7 +22,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Select Xcode version
-        run: sudo xcode-select -s '/Applications/Xcode_16.2.app/Contents/Developer'
+        run: sudo xcode-select -s '/Applications/Xcode_16.4.app/Contents/Developer'
 
       - name: Validate Gradle wrapper
         uses: gradle/actions/wrapper-validation@v4

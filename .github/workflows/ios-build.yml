@@ -22,7 +22,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Select Xcode version
-        run: sudo xcode-select -s '/Applications/Xcode_16.2.app/Contents/Developer'
+        run: sudo xcode-select -s '/Applications/Xcode_16.4.app/Contents/Developer'
 
       - name: List SDKs
         run: xcodebuild -showsdks
@@ -43,5 +43,5 @@ jobs:
         working-directory: app-ios
 
       - name: Build iOS app
-        run: tuist build -- -sdk iphoneos18.2
+        run: tuist build
         working-directory: app-ios

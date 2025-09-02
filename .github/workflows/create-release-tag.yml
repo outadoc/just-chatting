@@ -45,7 +45,7 @@ jobs:
         run: echo "version=$(git rev-list HEAD --count)" >> $GITHUB_OUTPUT
 
       - name: Create GitHub release
-        uses: ncipollo/release-action@v1.19.1
+        uses: ncipollo/release-action@v1.20.0
         # If latest commit is not tagged yet, create a new release
         if: steps.check-tagged-commit.outputs.tagged == 'no'
         with:

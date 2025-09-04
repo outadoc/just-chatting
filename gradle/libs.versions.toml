@@ -101,7 +101,7 @@ ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", versi
 ktor-server-cio = { module = "io.ktor:ktor-server-cio", version.ref = "ktor" }
 ktor-server-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor" }
 logback = "ch.qos.logback:logback-classic:1.5.18"
-material-core = "com.google.android.material:material:1.12.0"
+material-core = "com.google.android.material:material:1.13.0"
 material-kolor = "com.materialkolor:material-kolor:3.0.1"
 okio = "com.squareup.okio:okio:3.16.0"
 okhttp = "com.squareup.okhttp3:okhttp:4.12.0"

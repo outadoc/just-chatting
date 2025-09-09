@@ -1,0 +1,23 @@
+id: fr.outadoc.justchatting
+runtime: org.freedesktop.Platform
+runtime-version: '25.08'
+sdk: org.freedesktop.Sdk
+command: "/app/bin/Just Chatting"
+finish-args:
+  - --socket=x11
+  - --share=network
+modules:
+  - name: app
+    buildsystem: simple
+    build-commands:
+      - cp -R bin ${FLATPAK_DEST}/bin
+      - cp -R lib ${FLATPAK_DEST}/lib
+      - install -Dm644 ${FLATPAK_ID}.desktop ${FLATPAK_DEST}/share/applications/${FLATPAK_ID}.desktop
+      - install -Dm644 icon_linux.svg ${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/${FLATPAK_ID}.svg
+    sources:
+      - type: file
+        path: fr.outadoc.justchatting.desktop
+      - type: file
+        path: ../assets/icon_linux.svg
+      - type: dir
+        path: ../build/compose/binaries/main-release/app/Just Chatting

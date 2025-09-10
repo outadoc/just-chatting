@@ -116,19 +116,22 @@ jobs:
 
       - name: Build packages
         run: |
-          ./gradlew app-desktop:packageDistributionForCurrentOS "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
+          ./gradlew app-desktop:packageMsi \
+            "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
+            "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" \
+            "-PenableLogging=false"
 
       - name: Compress output
         uses: thedoctor0/zip-release@0.7.6
         with:
           type: 'zip'
           filename: "JustChatting-windows-amd64-${{ steps.version.outputs.version }}.zip"
-          directory: "app-desktop/build/compose/binaries/main"
+          directory: "app-desktop/build/compose/binaries/main/msi"
 
       - name: Upload packages to GitHub
         uses: actions/upload-artifact@v4.6.2
         with:
-          path: "app-desktop/build/compose/binaries/main/JustChatting-windows-amd64-${{ steps.version.outputs.version }}.zip"
+          path: "app-desktop/build/compose/binaries/main/msi/JustChatting-windows-amd64-${{ steps.version.outputs.version }}.zip"
           name: build-windows-amd64
 
       - name: Update release
@@ -136,7 +139,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release: ${{ github.event.release.name }}
-          files: "app-desktop/build/compose/binaries/main/JustChatting-windows-amd64-${{ steps.version.outputs.version }}.zip"
+          files: "app-desktop/build/compose/binaries/main/msi/JustChatting-windows-amd64-${{ steps.version.outputs.version }}.zip"
 
   deploy-desktop-macos:
     name: Deploy macOS
@@ -172,22 +175,22 @@ jobs:
 
       - name: Build packages
         run: |
-          ./gradlew app-desktop:packageDistributionForCurrentOS "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
-
-      - name: Clean up unused output binaries
-        run: rm -rf app-desktop/build/compose/binaries/main/app
+          ./gradlew app-desktop:packageDmg \
+            "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
+            "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" \
+            "-PenableLogging=false"
 
       - name: Compress output
         uses: thedoctor0/zip-release@0.7.6
         with:
           type: 'zip'
           filename: "JustChatting-macos-aarch64-${{ steps.version.outputs.version }}.zip"
-          directory: "app-desktop/build/compose/binaries/main"
+          directory: "app-desktop/build/compose/binaries/main/dmg"
 
       - name: Upload packages to GitHub
         uses: actions/upload-artifact@v4.6.2
         with:
-          path: "app-desktop/build/compose/binaries/main/JustChatting-macos-aarch64-${{ steps.version.outputs.version }}.zip"
+          path: "app-desktop/build/compose/binaries/main/dmg/JustChatting-macos-aarch64-${{ steps.version.outputs.version }}.zip"
           name: build-macos-aarch64
 
       - name: Update release
@@ -195,7 +198,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release: ${{ github.event.release.name }}
-          files: "app-desktop/build/compose/binaries/main/JustChatting-macos-aarch64-${{ steps.version.outputs.version }}.zip"
+          files: "app-desktop/build/compose/binaries/main/dmg/JustChatting-macos-aarch64-${{ steps.version.outputs.version }}.zip"
 
   deploy-desktop-linux:
     name: Deploy Linux app
@@ -231,7 +234,10 @@ jobs:
 
       - name: Build packages
         run: |
-          ./gradlew app-desktop:packageDistributionForCurrentOS "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
+          ./gradlew app-desktop:createDistributable \
+            "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
+            "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" \
+            "-PenableLogging=false"
 
       - name: Install Flatpak tools
         run: |

@@ -116,10 +116,7 @@ jobs:
 
       - name: Build packages
         run: |
-          ./gradlew app-desktop:packageMsi \
-            "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
-            "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" \
-            "-PenableLogging=false"
+          ./gradlew app-desktop:packageMsi "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
 
       - name: Compress output
         uses: thedoctor0/zip-release@0.7.6

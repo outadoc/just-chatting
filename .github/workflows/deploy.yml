@@ -233,6 +233,9 @@ jobs:
         run: |
           ./gradlew app-desktop:packageDistributionForCurrentOS "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
 
+      - name: Install Flatpak tools
+        run: sudo apt install -y flatpak flatpak-builder
+
       - name: Build Flatpak app
         run: |
           flatpak-builder \

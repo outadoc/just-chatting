@@ -233,17 +233,30 @@ jobs:
         run: |
           ./gradlew app-desktop:packageDistributionForCurrentOS "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
 
-      - name: Compress output
-        uses: thedoctor0/zip-release@0.7.6
-        with:
-          type: 'zip'
-          filename: "JustChatting-linux-amd64-${{ steps.version.outputs.version }}.zip"
-          directory: "app-desktop/build/compose/binaries/main"
+      - name: Build Flatpak app
+        run: |
+          flatpak-builder \
+            --force-clean \
+            --user \
+            --install-deps-from=flathub \
+            --repo=repo \
+            --install \
+            builddir \
+            app-desktop/flatpak/fr.outadoc.justchatting.yml
+
+      - name: Build Flatpak build
+        run: |
+          flatpak \
+            build-bundle \
+            repo \
+            "JustChatting-linux-${{ steps.version.outputs.version }}.flatpak" \
+            fr.outadoc.justchatting \
+            --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
 
       - name: Upload packages to GitHub
         uses: actions/upload-artifact@v4.6.2
         with:
-          path: "app-desktop/build/compose/binaries/main/JustChatting-linux-amd64-${{ steps.version.outputs.version }}.zip"
+          path: "JustChatting-linux-${{ steps.version.outputs.version }}.flatpak"
           name: build-linux-amd64
 
       - name: Update release
@@ -251,7 +264,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release: ${{ github.event.release.name }}
-          files: "app-desktop/build/compose/binaries/main/JustChatting-linux-amd64-${{ steps.version.outputs.version }}.zip"
+          files: "JustChatting-linux-${{ steps.version.outputs.version }}.flatpak"
 
   deploy-android:
     name: Deploy Android app

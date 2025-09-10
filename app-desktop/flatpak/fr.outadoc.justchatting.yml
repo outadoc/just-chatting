@@ -20,4 +20,4 @@ modules:
       - type: file
         path: ../assets/icon_linux.svg
       - type: dir
-        path: ../build/compose/binaries/main-release/app/Just Chatting
+        path: ../build/compose/binaries/main/app/Just Chatting

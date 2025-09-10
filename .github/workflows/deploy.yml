@@ -82,24 +82,66 @@ jobs:
         env:
           MATCH_PASSWORD: ${{ secrets.FASTLANE_MATCH_PASSWORD }}
 
-  deploy-desktop:
-    name: Deploy desktop app - ${{ matrix.target }} ${{ matrix.arch }}
-    runs-on: ${{ matrix.os }}
+  deploy-windows:
+    name: Deploy Windows
+    runs-on: windows-latest
     environment: deploy
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - arch: aarch64
-            os: macos-15
-            target: macos
-          - arch: amd64
-            os: windows-latest
-            target: windows
-          - arch: amd64
-            os: ubuntu-latest
-            target: linux
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y.%m')"
+
+      - name: Compute unique version code
+        id: version
+        run: echo "::set-output name=version::$(git rev-list HEAD --count)"
+
+      - name: Build packages
+        run: |
+          ./gradlew app-desktop:packageDistributionForCurrentOS "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
+
+      - name: Compress output
+        uses: thedoctor0/zip-release@0.7.6
+        with:
+          type: 'zip'
+          filename: "JustChatting-windows-amd64-${{ steps.version.outputs.version }}.zip"
+          directory: "app-desktop/build/compose/binaries/main"
+
+      - name: Upload packages to GitHub
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          path: "app-desktop/build/compose/binaries/main/JustChatting-windows-amd64-${{ steps.version.outputs.version }}.zip"
+          name: build-windows-amd64
+
+      - name: Update release
+        uses: johnwbyrd/update-release@v1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release: ${{ github.event.release.name }}
+          files: "app-desktop/build/compose/binaries/main/JustChatting-windows-amd64-${{ steps.version.outputs.version }}.zip"
+
+  deploy-desktop-macos:
+    name: Deploy macOS
+    runs-on: macos-15
+    environment: deploy
 
     steps:
       - uses: actions/checkout@v5
@@ -133,28 +175,83 @@ jobs:
           ./gradlew app-desktop:packageDistributionForCurrentOS "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
 
       - name: Clean up unused output binaries
-        if: matrix.target == 'macos'
         run: rm -rf app-desktop/build/compose/binaries/main/app
 
       - name: Compress output
         uses: thedoctor0/zip-release@0.7.6
         with:
           type: 'zip'
-          filename: "JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
+          filename: "JustChatting-macos-aarch64-${{ steps.version.outputs.version }}.zip"
           directory: "app-desktop/build/compose/binaries/main"
 
       - name: Upload packages to GitHub
         uses: actions/upload-artifact@v4.6.2
         with:
-          path: "app-desktop/build/compose/binaries/main/JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
-          name: build-${{ matrix.target }}-${{ matrix.arch }}
+          path: "app-desktop/build/compose/binaries/main/JustChatting-macos-aarch64-${{ steps.version.outputs.version }}.zip"
+          name: build-macos-aarch64
 
       - name: Update release
         uses: johnwbyrd/update-release@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release: ${{ github.event.release.name }}
-          files: "app-desktop/build/compose/binaries/main/JustChatting-${{ matrix.target }}-${{ matrix.arch }}-${{ steps.version.outputs.version }}.zip"
+          files: "app-desktop/build/compose/binaries/main/JustChatting-macos-aarch64-${{ steps.version.outputs.version }}.zip"
+
+  deploy-desktop-linux:
+    name: Deploy Linux app
+    runs-on: ubuntu-latest
+    environment: deploy
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y.%m')"
+
+      - name: Compute unique version code
+        id: version
+        run: echo "::set-output name=version::$(git rev-list HEAD --count)"
+
+      - name: Build packages
+        run: |
+          ./gradlew app-desktop:packageDistributionForCurrentOS "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
+
+      - name: Compress output
+        uses: thedoctor0/zip-release@0.7.6
+        with:
+          type: 'zip'
+          filename: "JustChatting-linux-amd64-${{ steps.version.outputs.version }}.zip"
+          directory: "app-desktop/build/compose/binaries/main"
+
+      - name: Upload packages to GitHub
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          path: "app-desktop/build/compose/binaries/main/JustChatting-linux-amd64-${{ steps.version.outputs.version }}.zip"
+          name: build-linux-amd64
+
+      - name: Update release
+        uses: johnwbyrd/update-release@v1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release: ${{ github.event.release.name }}
+          files: "app-desktop/build/compose/binaries/main/JustChatting-linux-amd64-${{ steps.version.outputs.version }}.zip"
 
   deploy-android:
     name: Deploy Android app

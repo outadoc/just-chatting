@@ -53,4 +53,5 @@ jobs:
           commit: main
           makeLatest: true
           generateReleaseNotes: true
+          draft: false
           token: ${{ secrets.RELEASE_GITHUB_TOKEN }}

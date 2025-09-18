@@ -23,16 +23,18 @@ public fun startApp() {
             onCloseRequest = ::exitApplication,
             icon = painterResource(Res.drawable.icon_masked),
         ) {
-            val uriHandler = LocalUriHandler.current
-            App(
-                onOpenNotificationPreferences = {},
-                onOpenBubblePreferences = {},
-                onOpenAccessibilityPreferences = {},
-                onShareLogs = {},
-                onShowAuthPage = { uri ->
-                    uriHandler.openUri(uri.toString())
-                },
-            )
+            WithScaling {
+                val uriHandler = LocalUriHandler.current
+                App(
+                    onOpenNotificationPreferences = {},
+                    onOpenBubblePreferences = {},
+                    onOpenAccessibilityPreferences = {},
+                    onShareLogs = {},
+                    onShowAuthPage = { uri ->
+                        uriHandler.openUri(uri.toString())
+                    },
+                )
+            }
         }
     }
 }

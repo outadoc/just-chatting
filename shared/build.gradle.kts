@@ -79,6 +79,7 @@ kotlin {
                 implementation(libs.connectivity.core)
                 implementation(libs.haze.core)
                 implementation(libs.haze.materials)
+                implementation(libs.jetbrains.compose.material3)
                 implementation(libs.jetbrains.compose.material.adaptive.core)
                 implementation(libs.jetbrains.compose.material.adaptive.layout)
                 implementation(libs.jetbrains.compose.material.adaptive.navigation)

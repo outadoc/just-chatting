@@ -7,7 +7,7 @@ coroutines = "1.10.2"
 emoji = "1.6.0"
 glance = "1.1.1"
 haze = "1.6.10"
-jetbrains-compose = "1.9.0-alpha03"
+jetbrains-compose = "1.9.0"
 jetbrains-navigation = "1.2.0-alpha06"
 junit-jupiter-engine = "5.13.4"
 kmpalette = "3.1.0"
@@ -69,10 +69,11 @@ firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 haze-core = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 haze-materials = { module = "dev.chrisbanes.haze:haze-materials", version.ref = "haze" }
 jetbrains-compose-ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "jetbrains-compose" }
+jetbrains-compose-material3 = { module = "org.jetbrains.compose.material3:material3", version = "1.10.0-alpha01" }
 jetbrains-compose-material-adaptive-core = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "jetbrains-navigation" }
 jetbrains-compose-material-adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version.ref = "jetbrains-navigation" }
 jetbrains-compose-material-adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "jetbrains-navigation" }
-jetbrains-compose-material-windowSizeClass = { module = "org.jetbrains.compose.material3:material3-window-size-class", version.ref = "jetbrains-compose" }
+jetbrains-compose-material-windowSizeClass = { module = "org.jetbrains.compose.material3:material3-window-size-class", version = "1.8.2" }
 jetbrains-compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.0" }
 junit = "junit:junit:4.13.2"
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }

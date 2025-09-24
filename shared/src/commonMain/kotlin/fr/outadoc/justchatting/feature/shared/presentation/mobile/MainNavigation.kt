@@ -1,6 +1,8 @@
 package fr.outadoc.justchatting.feature.shared.presentation.mobile
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
@@ -8,8 +10,12 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import fr.outadoc.justchatting.shared.Res
@@ -27,8 +33,14 @@ internal fun MainNavigation(
     topBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
+    val navSuiteType: NavigationSuiteType =
+        NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(
+            currentWindowAdaptiveInfo(),
+        )
+
     NavigationSuiteScaffold(
         modifier = modifier,
+        layoutType = navSuiteType,
         navigationSuiteItems = {
             item(
                 selected = selectedScreen == Screen.Timeline,
@@ -79,9 +91,15 @@ internal fun MainNavigation(
             )
         },
         content = {
+            // Workaround for iPad-specific status bar padding issue
+            // Remove if it ever gets fixed in Compose
             Scaffold(
                 topBar = topBar,
                 content = content,
+                contentWindowInsets = when (navSuiteType) {
+                    NavigationSuiteType.NavigationBar -> WindowInsets.statusBars
+                    else -> ScaffoldDefaults.contentWindowInsets
+                },
             )
         },
     )

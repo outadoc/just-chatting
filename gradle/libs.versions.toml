@@ -2,7 +2,7 @@
 accompanist = "0.37.3"
 android = "8.13.0"
 coil = "3.3.0"
-connectivity = "2.2.1"
+connectivity = "2.3.0"
 coroutines = "1.10.2"
 emoji = "1.6.0"
 glance = "1.1.1"

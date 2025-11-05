@@ -53,7 +53,7 @@ androidx-paging-compose-common = { module = "app.cash.paging:paging-compose-comm
 androidx-paging-runtime-android = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
 androidx-paging-runtime-ios = { module = "app.cash.paging:paging-runtime-uikit", version.ref = "paging-multiplatform" }
 androidx-palette = "androidx.palette:palette:1.0.0"
-androidx-splashscreen = "androidx.core:core-splashscreen:1.0.1"
+androidx-splashscreen = "androidx.core:core-splashscreen:1.2.0"
 appdirs = { module = "net.harawata:appdirs", version = "1.5.0" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-core = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }

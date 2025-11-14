@@ -61,52 +61,52 @@ internal fun TimelineContent(
         ),
     ) { page: Int ->
         when (page) {
-            TimelinePages.Past -> {
-                if (schedule.past.isEmpty()) {
-                    NoContent(
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                }
-
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    state = pastListState,
-                    contentPadding = PaddingValues(
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 16.dp,
-                    ),
-                    reverseLayout = true,
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    schedule.past.keys.forEach { date ->
-                        stickyHeader(
-                            key = "header-${date.toEpochDays()}",
-                            contentType = "header",
-                        ) {
-                            SectionHeader(
-                                title = { Text(date.formatDate(isFuture = false)) },
-                            )
-                        }
-
-                        items(
-                            items = schedule.past[date].orEmpty(),
-                            key = { segment -> segment.id },
-                            contentType = { "segment" },
-                        ) { segment ->
-                            PastTimelineSegment(
-                                modifier = Modifier
-                                    .animateItem()
-                                    .fillMaxWidth(),
-                                segment = segment,
-                                onUserClick = {
-                                    showUserDetails = segment.user
-                                },
-                            )
-                        }
-                    }
-                }
-            }
+//            TimelinePages.Past -> {
+//                if (schedule.past.isEmpty()) {
+//                    NoContent(
+//                        modifier = Modifier.fillMaxSize(),
+//                    )
+//                }
+//
+//                LazyColumn(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    state = pastListState,
+//                    contentPadding = PaddingValues(
+//                        start = 16.dp,
+//                        end = 16.dp,
+//                        bottom = 16.dp,
+//                    ),
+//                    reverseLayout = true,
+//                    verticalArrangement = Arrangement.spacedBy(8.dp),
+//                ) {
+//                    schedule.past.keys.forEach { date ->
+//                        stickyHeader(
+//                            key = "header-${date.toEpochDays()}",
+//                            contentType = "header",
+//                        ) {
+//                            SectionHeader(
+//                                title = { Text(date.formatDate(isFuture = false)) },
+//                            )
+//                        }
+//
+//                        items(
+//                            items = schedule.past[date].orEmpty(),
+//                            key = { segment -> segment.id },
+//                            contentType = { "segment" },
+//                        ) { segment ->
+//                            PastTimelineSegment(
+//                                modifier = Modifier
+//                                    .animateItem()
+//                                    .fillMaxWidth(),
+//                                segment = segment,
+//                                onUserClick = {
+//                                    showUserDetails = segment.user
+//                                },
+//                            )
+//                        }
+//                    }
+//                }
+//            }
 
             TimelinePages.Live -> {
                 if (schedule.live.isEmpty()) {

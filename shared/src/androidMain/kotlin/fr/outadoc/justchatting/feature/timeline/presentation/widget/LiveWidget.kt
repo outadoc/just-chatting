@@ -38,7 +38,7 @@ import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.glance.GlanceCard
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainActivity
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
-import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
+import fr.outadoc.justchatting.feature.timeline.presentation.LiveTimelineViewModel
 import fr.outadoc.justchatting.shared.R
 import org.koin.compose.koinInject
 
@@ -46,7 +46,7 @@ internal class LiveWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
-            val viewModel: TimelineViewModel = koinInject()
+            val viewModel: LiveTimelineViewModel = koinInject()
             val state by viewModel.state.collectAsState()
 
             LaunchedEffect(Unit) {
@@ -74,7 +74,7 @@ internal class LiveWidget : GlanceAppWidget() {
                     },
                 ) {
                     LazyColumn {
-                        items(state.schedule.live) { userStream ->
+                        items(state.live) { userStream ->
                             Column {
                                 GlanceCard(
                                     modifier = GlanceModifier

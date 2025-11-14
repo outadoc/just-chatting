@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Upcoming
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
@@ -22,7 +23,8 @@ import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.channels
 import fr.outadoc.justchatting.shared.search
 import fr.outadoc.justchatting.shared.settings
-import fr.outadoc.justchatting.shared.timeline_title
+import fr.outadoc.justchatting.shared.timeline_future
+import fr.outadoc.justchatting.shared.timeline_live
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -43,15 +45,27 @@ internal fun MainNavigation(
         layoutType = navSuiteType,
         navigationSuiteItems = {
             item(
-                selected = selectedScreen == Screen.Timeline,
-                onClick = { onSelectedTabChange(Screen.Timeline) },
+                selected = selectedScreen == Screen.Live,
+                onClick = { onSelectedTabChange(Screen.Live) },
                 icon = {
                     Icon(
                         imageVector = Icons.Filled.Home,
                         contentDescription = null,
                     )
                 },
-                label = { Text(stringResource(Res.string.timeline_title)) },
+                label = { Text(stringResource(Res.string.timeline_live)) },
+            )
+
+            item(
+                selected = selectedScreen == Screen.Future,
+                onClick = { onSelectedTabChange(Screen.Future) },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.Upcoming,
+                        contentDescription = null,
+                    )
+                },
+                label = { Text(stringResource(Res.string.timeline_future)) },
             )
 
             item(

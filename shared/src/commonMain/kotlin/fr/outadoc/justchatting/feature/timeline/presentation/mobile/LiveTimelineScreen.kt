@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.feature.timeline.presentation.mobile
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Today
@@ -25,10 +24,10 @@ import coil3.compose.LocalPlatformContext
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainNavigation
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.Screen
-import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
+import fr.outadoc.justchatting.feature.timeline.presentation.LiveTimelineViewModel
 import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.timeline_live
 import fr.outadoc.justchatting.shared.timeline_refresh_action_cd
-import fr.outadoc.justchatting.shared.timeline_title
 import fr.outadoc.justchatting.shared.timeline_today_action_cd
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import kotlinx.coroutines.launch
@@ -38,12 +37,12 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun TimelineScreen(
+internal fun LiveTimelineScreen(
     modifier: Modifier = Modifier,
     onNavigate: (Screen) -> Unit,
     onChannelClick: (userId: String) -> Unit,
 ) {
-    val viewModel: TimelineViewModel = koinViewModel()
+    val viewModel: LiveTimelineViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
 
     val notifier: ChatNotifier = koinInject()
@@ -56,43 +55,23 @@ internal fun TimelineScreen(
         viewModel.syncLiveStreamsPeriodically()
     }
 
-    val pastListState = rememberLazyListState()
-    val liveListState = rememberLazyListState()
-    val futureListState = rememberLazyListState()
-
-    val pagerState = rememberPagerState(
-        pageCount = { 3 },
-        initialPage = TimelinePages.Live,
-    )
+    val listState = rememberLazyListState()
 
     MainNavigation(
-        selectedScreen = Screen.Timeline,
+        selectedScreen = Screen.Live,
         onSelectedTabChange = onNavigate,
         topBar = {
             Surface(
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
             ) {
                 TopAppBar(
-                    title = { Text(stringResource(Res.string.timeline_title)) },
+                    title = { Text(stringResource(Res.string.timeline_live)) },
                     actions = {
                         AccessibleIconButton(
                             onClickLabel = stringResource(Res.string.timeline_today_action_cd),
                             onClick = {
                                 coroutineScope.launch {
-                                    val currentPage = pagerState.currentPage
-
-                                    liveListState.scrollToItem(index = 0)
-
-                                    if (currentPage != TimelinePages.Live) {
-                                        pagerState.animateScrollToPage(
-                                            page = TimelinePages.Live,
-                                        )
-                                    }
-
-                                    launch {
-                                        pastListState.scrollToItem(index = 0)
-                                        futureListState.scrollToItem(index = 0)
-                                    }
+                                    listState.scrollToItem(index = 0)
                                 }
                             },
                         ) {
@@ -122,14 +101,11 @@ internal fun TimelineScreen(
             }
         },
         content = { insets ->
-            TimelineContent(
+            LiveTimelineContent(
                 modifier = modifier,
-                schedule = state.schedule,
                 insets = insets,
-                pastListState = pastListState,
-                liveListState = liveListState,
-                futureListState = futureListState,
-                pagerState = pagerState,
+                live = state.live,
+                listState = listState,
                 onChannelClick = { user ->
                     onChannelClick(user.id)
                 },

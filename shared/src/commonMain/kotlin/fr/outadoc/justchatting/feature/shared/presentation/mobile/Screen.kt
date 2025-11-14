@@ -8,7 +8,10 @@ internal sealed interface Screen {
     data object Followed : Screen
 
     @Serializable
-    data object Timeline : Screen
+    data object Live : Screen
+
+    @Serializable
+    data object Future : Screen
 
     @Serializable
     data object Search : Screen
@@ -17,4 +20,4 @@ internal sealed interface Screen {
     data object Settings : Screen
 }
 
-internal val DefaultScreen = Screen.Timeline
+internal val DefaultScreen = Screen.Live

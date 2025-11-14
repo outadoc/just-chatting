@@ -330,13 +330,13 @@ internal class TwitchRepositoryImpl(
             logDebug<TwitchRepositoryImpl> { "Starting full sync for ${followedUsers.size} users" }
 
             awaitAll(
-                async {
-                    syncPastStreams(
-                        followedUsers = followedUsers,
-                        notBefore = notBefore,
-                        notAfter = notAfter,
-                    )
-                },
+//                async {
+//                    syncPastStreams(
+//                        followedUsers = followedUsers,
+//                        notBefore = notBefore,
+//                        notAfter = notAfter,
+//                    )
+//                },
                 async {
                     syncLiveStreams(
                         appUserId = appUserId,

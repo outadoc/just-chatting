@@ -78,7 +78,8 @@ import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepositoryImpl
 import fr.outadoc.justchatting.feature.shared.presentation.DeeplinkReceiver
 import fr.outadoc.justchatting.feature.shared.presentation.MainRouterViewModel
-import fr.outadoc.justchatting.feature.timeline.presentation.TimelineViewModel
+import fr.outadoc.justchatting.feature.timeline.presentation.FutureTimelineViewModel
+import fr.outadoc.justchatting.feature.timeline.presentation.LiveTimelineViewModel
 import fr.outadoc.justchatting.utils.core.ConnectivityNetworkStateObserver
 import fr.outadoc.justchatting.utils.core.DefaultJson
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
@@ -110,7 +111,8 @@ public val sharedModule: Module
         viewModel { ChannelSearchViewModel(get()) }
         viewModel { FollowedChannelsViewModel(get()) }
         viewModel { RecentChannelsViewModel(get()) }
-        viewModel { TimelineViewModel(get(), get()) }
+        viewModel { LiveTimelineViewModel(get(), get()) }
+        viewModel { FutureTimelineViewModel(get(), get()) }
         viewModel { UserInfoViewModel(get()) }
         viewModel {
             ChatViewModel(

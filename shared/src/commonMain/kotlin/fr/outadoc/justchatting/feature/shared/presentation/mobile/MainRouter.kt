@@ -27,7 +27,8 @@ import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsS
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionNotifications
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionThirdParties
 import fr.outadoc.justchatting.feature.search.presentation.mobile.SearchScreen
-import fr.outadoc.justchatting.feature.timeline.presentation.mobile.TimelineScreen
+import fr.outadoc.justchatting.feature.timeline.presentation.mobile.FutureTimelineScreen
+import fr.outadoc.justchatting.feature.timeline.presentation.mobile.LiveTimelineScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalComposeUiApi::class)
@@ -71,10 +72,16 @@ internal fun MainRouter(
                         )
                     }
 
-                    composable<Screen.Timeline> {
-                        TimelineScreen(
+                    composable<Screen.Live> {
+                        LiveTimelineScreen(
                             onNavigate = { navController.navigate(it) },
                             onChannelClick = onChannelClick,
+                        )
+                    }
+
+                    composable<Screen.Future> {
+                        FutureTimelineScreen(
+                            onNavigate = { navController.navigate(it) },
                         )
                     }
 

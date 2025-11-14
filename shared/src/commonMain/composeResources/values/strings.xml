@@ -225,7 +225,6 @@
     <string name="irc_notice_whisper_limit_per_sec">You are sending whispers too fast. Try again in a second.</string>
     <string name="irc_notice_whisper_restricted">Your settings prevent you from sending this whisper.</string>
     <string name="irc_notice_whisper_restricted_recipient">That user’s settings prevent them from receiving this whisper.</string>
-    <string name="live">Currently live</string>
     <string name="logout_msg">You are currently logged in as %1$s.</string>
     <string name="logout_title">Log out?</string>
     <string name="menu_item_openInBubble">Open in bubble</string>
@@ -309,9 +308,10 @@
     <string name="settings_thirdparty_stv_subtitle">Data provided by 7tv.app</string>
     <string name="settings_thirdparty_stv_title">Show 7TV Emotes</string>
     <string name="stream_info">Stream Info</string>
+    <string name="timeline_future">Up Next</string>
+    <string name="timeline_live">Live</string>
     <string name="timeline_openVod_action">Watch video</string>
     <string name="timeline_refresh_action_cd">Refresh data</string>
-    <string name="timeline_title">Timeline</string>
     <string name="timeline_today_action_cd">Jump to live content</string>
     <string name="uptime">Live since %1$s</string>
     <string name="watch_live">Watch live</string>

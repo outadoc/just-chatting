@@ -19,6 +19,7 @@ import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.components.TitleBar
 import androidx.glance.appwidget.lazy.LazyColumn
+import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
@@ -73,7 +74,7 @@ internal class LiveWidget : GlanceAppWidget() {
                     },
                 ) {
                     LazyColumn {
-                        items(state.schedule.live) { userStream ->
+                        items(state.live) { userStream ->
                             Column {
                                 GlanceCard(
                                     modifier = GlanceModifier

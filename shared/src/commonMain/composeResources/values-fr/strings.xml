@@ -225,7 +225,6 @@
     <string name="irc_notice_whisper_limit_per_sec">Vous envoyez des chuchotements trop rapidement. Réessayez dans une seconde.</string>
     <string name="irc_notice_whisper_restricted">Vos paramètres vous empêchent d'envoyer ce chuchotement.</string>
     <string name="irc_notice_whisper_restricted_recipient">Les paramètres de cet·te utilisateur·rice l'empêchent de recevoir ce chuchotement.</string>
-    <string name="live">Actuellement en direct</string>
     <string name="logout_msg">Vous êtes actuellement connecté·e en tant que %1$s.</string>
     <string name="logout_title">Se déconnecter ?</string>
     <string name="menu_item_openInBubble">Ouvrir dans une bulle</string>
@@ -309,9 +308,10 @@
     <string name="settings_thirdparty_stv_subtitle">Données fournies par 7tv.app</string>
     <string name="settings_thirdparty_stv_title">Afficher les émotes 7TV</string>
     <string name="stream_info">Infos du stream</string>
+    <string name="timeline_future">À venir</string>
+    <string name="timeline_live">En direct</string>
     <string name="timeline_openVod_action">Regarder la vidéo</string>
     <string name="timeline_refresh_action_cd">Rafraîchir les données</string>
-    <string name="timeline_title">Chronologie</string>
     <string name="timeline_today_action_cd">Sauter au contenu en direct</string>
     <string name="uptime">En direct depuis %1$s</string>
     <string name="watch_live">Regarder en direct</string>

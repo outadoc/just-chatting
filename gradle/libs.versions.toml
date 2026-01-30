@@ -39,7 +39,7 @@ sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
-androidx-activity-compose = "androidx.activity:activity-compose:1.12.2"
+androidx-activity-compose = "androidx.activity:activity-compose:1.12.3"
 androidx-appcompat = "androidx.appcompat:appcompat:1.7.1"
 androidx-browser = "androidx.browser:browser:1.9.0"
 androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.2.0"

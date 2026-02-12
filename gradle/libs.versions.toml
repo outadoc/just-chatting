@@ -103,7 +103,7 @@ ktor-server-cio = { module = "io.ktor:ktor-server-cio", version.ref = "ktor" }
 ktor-server-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor" }
 logback = "ch.qos.logback:logback-classic:1.5.29"
 material-core = "com.google.android.material:material:1.13.0"
-material-kolor = "com.materialkolor:material-kolor:3.0.1"
+material-kolor = "com.materialkolor:material-kolor:4.1.1"
 okio = "com.squareup.okio:okio:3.16.4"
 okhttp = "com.squareup.okhttp3:okhttp:5.3.2"
 sqldelight-driver-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }

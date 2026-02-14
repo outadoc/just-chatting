@@ -38,35 +38,38 @@ https://github.com/user-attachments/assets/0f107cee-6294-4fbf-aa15-5466b57a548f
 3. Move to the `app-ios` directory, and run `tuist generate` to generate and open the Xcode project.
 
 ## Build the project locally
+```bash
+# Android
+./gradlew :app-android:assembleDebug       # Build debug APK
+./gradlew :app-android:installDebug        # Install on connected device
 
-### Android
+# Desktop (JVM)
+./gradlew :app-desktop:run                 # Run desktop app
 
-Build the Android app:
-
-```shell
-./gradlew :app-android:assembleDebug
+# iOS (requires macOS + Xcode + Tuist)
+cd app-ios && tuist generate               # Generate Xcode project, then build in Xcode
 ```
 
-### Desktop
+## Testing
 
-Run the desktop app:
-
-```shell
-./gradlew :app-desktop:run
+```bash
+./gradlew :shared:testDebugUnitTest         # Run shared module unit tests (Android)
+./gradlew :konsist-checks:test              # Run architecture validation tests
+./gradlew :shared:verifySqlDelightMigration # Validate SQLDelight migrations
 ```
 
-### iOS
+Unit tests are located in `shared/src/androidUnitTest/kotlin/`.
 
-Build and run the iOS app on a macOS machine using Xcode, once the project has been generated with
-the command above.
+## Code Formatting
 
-## Useful commands
+Use **Spotless** with ktlint:
 
-### Reformat the code
-
-```shell
-./gradlew spotlessApply
+```bash
+./gradlew spotlessCheck    # Check formatting
+./gradlew spotlessApply    # Auto-format
 ```
+
+Always run `spotlessApply` before committing. CI enforces formatting on PRs.
 
 ## Architecture
 
@@ -79,13 +82,25 @@ The common code (both logic and UI) is included in the `shared` module.
 
 Platform-specific code is kept to an absolute minimum.
 
-Code is split by feature, under `fr.outadoc.justchatting.feature`, and split in layers following
-the "clean architecture" design pattern.
+### Layers (Clean Architecture, enforced by Konsist)
+
+Code is organized by feature under `fr.outadoc.justchatting.feature.*`, with each feature split into:
+
+- **domain** — Business logic, interfaces, use cases. No dependencies on other layers.
+- **presentation** — ViewModels, UI state. Depends only on domain.
+- **data** — Repositories, API clients, database. Depends only on domain.
+
+### Source Sets (shared module)
+
+- `commonMain` — Cross-platform code (vast majority of logic and UI)
+- `androidMain`, `iosMain`, `desktopMain` — Platform-specific implementations
+- `skiaMain` — Shared between iOS and Desktop (Skia renderer)
+- `appleMain` — Shared Apple platform code
 
 ## Main dependencies
 
-- The UI is written with Compose Multiplatform and shared between all targets.
-- Koin is used for dependency injection. DI modules are kept in the `fr.outadoc.justchatting.di`
-package.
-- SQLDelight is used to manage the SQLite database.
-- Network operations are handled by ktor-client.
+- **Compose Multiplatform** — Shared UI across all platforms
+- **Koin** — Dependency injection. DI modules in `fr.outadoc.justchatting.di`
+- **SQLDelight** — Database. Schema files in `shared/src/commonMain/sqldelight/`
+- **Ktor** — HTTP client and WebSocket connections
+- **kotlinx-serialization** — JSON serialization

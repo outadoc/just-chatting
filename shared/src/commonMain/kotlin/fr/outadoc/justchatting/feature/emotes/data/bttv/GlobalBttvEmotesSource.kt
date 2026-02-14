@@ -18,23 +18,22 @@ internal class GlobalBttvEmotesSource(
 
     override fun shouldUseCache(previous: Params, next: Params): Boolean = true
 
-    override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> =
-        withContext(DispatchersProvider.io) {
-            val prefs = preferencesRepository.currentPreferences.first()
-            if (!prefs.enableBttvEmotes) {
-                return@withContext Result.success(emptyList())
-            }
-
-            bttvEmotesApi
-                .getGlobalBttvEmotes()
-                .map { emotes ->
-                    flatListOf(
-                        EmoteSetItem.Header(
-                            title = null,
-                            source = Res.string.chat_source_bttv.desc(),
-                        ),
-                        emotes.map { emote -> EmoteSetItem.Emote(emote) },
-                    )
-                }
+    override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> = withContext(DispatchersProvider.io) {
+        val prefs = preferencesRepository.currentPreferences.first()
+        if (!prefs.enableBttvEmotes) {
+            return@withContext Result.success(emptyList())
         }
+
+        bttvEmotesApi
+            .getGlobalBttvEmotes()
+            .map { emotes ->
+                flatListOf(
+                    EmoteSetItem.Header(
+                        title = null,
+                        source = Res.string.chat_source_bttv.desc(),
+                    ),
+                    emotes.map { emote -> EmoteSetItem.Emote(emote) },
+                )
+            }
+    }
 }

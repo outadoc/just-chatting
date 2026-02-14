@@ -10,8 +10,7 @@ internal class PubSubPollPlugin(
     private val clock: Clock,
 ) : PubSubPlugin<PubSubPollMessage> {
 
-    override fun getTopic(channelId: String): String =
-        "polls.$channelId"
+    override fun getTopic(channelId: String): String = "polls.$channelId"
 
     override fun parseMessage(payload: String): List<ChatEvent> {
         val message = json.decodeFromString<PubSubPollMessage>(payload)

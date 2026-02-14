@@ -16,8 +16,7 @@ internal class ChannelBttvEmotesSource(
     private val preferencesRepository: PreferenceRepository,
 ) : CachedEmoteListSource<List<EmoteSetItem>>() {
 
-    override fun shouldUseCache(previous: Params, next: Params): Boolean =
-        previous.channelId == next.channelId && previous.channelName == next.channelName
+    override fun shouldUseCache(previous: Params, next: Params): Boolean = previous.channelId == next.channelId && previous.channelName == next.channelName
 
     override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> = withContext(
         DispatchersProvider.io,

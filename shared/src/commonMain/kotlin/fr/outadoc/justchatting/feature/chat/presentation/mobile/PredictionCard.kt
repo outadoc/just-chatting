@@ -65,7 +65,9 @@ internal fun PredictionCard(
         Column(modifier = Modifier.padding(16.dp)) {
             val status = when (prediction.status) {
                 Prediction.Status.Active -> Res.string.prediction_status_progress
+
                 Prediction.Status.Locked -> Res.string.prediction_status_locked
+
                 Prediction.Status.ResolvePending,
                 Prediction.Status.Resolved,
                 -> Res.string.prediction_status_ended

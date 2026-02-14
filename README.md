@@ -60,6 +60,14 @@ Run the desktop app:
 Build and run the iOS app on a macOS machine using Xcode, once the project has been generated with
 the command above.
 
+## Useful commands
+
+### Reformat the code
+
+```shell
+./gradlew spotlessApply
+```
+
 ## Architecture
 
 This project is a Kotlin Multiplatform app targeting Android, iOS, and JVM desktop. 

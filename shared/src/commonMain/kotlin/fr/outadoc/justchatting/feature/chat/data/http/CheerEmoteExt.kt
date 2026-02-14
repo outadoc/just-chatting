@@ -15,5 +15,4 @@ internal fun CheerEmoteTier.map(prefix: String): Emote {
     )
 }
 
-private fun Map<String, Map<String, String>>?.map(): Map<Float, String> =
-    this?.get("animated")?.mapKeys { it.key.toFloat() }.orEmpty()
+private fun Map<String, Map<String, String>>?.map(): Map<Float, String> = this?.get("animated")?.mapKeys { it.key.toFloat() }.orEmpty()

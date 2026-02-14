@@ -19,8 +19,7 @@ internal class DelegateTwitchEmotesSource(
         val globalEmotes: Map<User?, List<Emote>>,
     )
 
-    override fun shouldUseCache(previous: Params, next: Params): Boolean =
-        previous.channelId == next.channelId && previous.emoteSets == next.emoteSets
+    override fun shouldUseCache(previous: Params, next: Params): Boolean = previous.channelId == next.channelId && previous.emoteSets == next.emoteSets
 
     override suspend fun getEmotes(params: Params): Result<CachedResult> {
         return coroutineScope {

@@ -39,13 +39,12 @@ internal fun Map<String, String?>.parseEmotes(message: String): List<Emote>? {
         }
 }
 
-internal fun Map<String, String?>.parseBadges(): List<Badge>? =
-    this["badges"]
-        ?.splitAndMakeMap(",", "/")
-        ?.entries
-        ?.mapNotNull { (key, value) ->
-            value?.let { Badge(key, value) }
-        }
+internal fun Map<String, String?>.parseBadges(): List<Badge>? = this["badges"]
+    ?.splitAndMakeMap(",", "/")
+    ?.entries
+    ?.mapNotNull { (key, value) ->
+        value?.let { Badge(key, value) }
+    }
 
 internal fun Map<String, String?>.parseTimestamp(): Instant? {
     val prop = this["tmi-sent-ts"] ?: this["rm-received-ts"]

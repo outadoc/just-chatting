@@ -107,68 +107,65 @@ internal class LocalUsersDb(
             .flowOn(DispatchersProvider.io)
     }
 
-    override suspend fun saveUserInfo(users: List<User>) =
-        withContext(DispatchersProvider.io) {
-            val updatedAt = clock.now()
-            userQueries.transaction {
-                users.forEach { user ->
-                    userQueries.ensureCreated(
-                        id = user.id,
-                        inserted_at = updatedAt.toEpochMilliseconds(),
-                    )
+    override suspend fun saveUserInfo(users: List<User>) = withContext(DispatchersProvider.io) {
+        val updatedAt = clock.now()
+        userQueries.transaction {
+            users.forEach { user ->
+                userQueries.ensureCreated(
+                    id = user.id,
+                    inserted_at = updatedAt.toEpochMilliseconds(),
+                )
 
-                    userQueries.updateUserInfo(
-                        id = user.id,
-                        login = user.login,
-                        display_name = user.displayName,
-                        profile_image_url = user.profileImageUrl,
-                        description = user.description,
-                        created_at = user.createdAt.toEpochMilliseconds(),
-                        updated_at = updatedAt.toEpochMilliseconds(),
-                    )
-                }
+                userQueries.updateUserInfo(
+                    id = user.id,
+                    login = user.login,
+                    display_name = user.displayName,
+                    profile_image_url = user.profileImageUrl,
+                    description = user.description,
+                    created_at = user.createdAt.toEpochMilliseconds(),
+                    updated_at = updatedAt.toEpochMilliseconds(),
+                )
             }
         }
+    }
 
-    override suspend fun saveUser(userId: String, visitedAt: Instant?) =
-        withContext(DispatchersProvider.io) {
-            val now = clock.now()
-            userQueries.transaction {
-                userQueries.ensureCreated(
+    override suspend fun saveUser(userId: String, visitedAt: Instant?) = withContext(DispatchersProvider.io) {
+        val now = clock.now()
+        userQueries.transaction {
+            userQueries.ensureCreated(
+                id = userId,
+                inserted_at = now.toEpochMilliseconds(),
+            )
+
+            visitedAt?.let { usedAt ->
+                userQueries.updateVisitedAt(
                     id = userId,
+                    used_at = usedAt.toEpochMilliseconds(),
+                )
+            }
+        }
+    }
+
+    override suspend fun saveAndReplaceFollowedChannels(follows: List<ChannelFollow>) = withContext(DispatchersProvider.io) {
+        val now = clock.now()
+        userQueries.transaction {
+            follows.forEach { channelFollow ->
+                userQueries.ensureCreated(
+                    id = channelFollow.user.id,
                     inserted_at = now.toEpochMilliseconds(),
                 )
 
-                visitedAt?.let { usedAt ->
-                    userQueries.updateVisitedAt(
-                        id = userId,
-                        used_at = usedAt.toEpochMilliseconds(),
-                    )
-                }
-            }
-        }
-
-    override suspend fun saveAndReplaceFollowedChannels(follows: List<ChannelFollow>) =
-        withContext(DispatchersProvider.io) {
-            val now = clock.now()
-            userQueries.transaction {
-                follows.forEach { channelFollow ->
-                    userQueries.ensureCreated(
-                        id = channelFollow.user.id,
-                        inserted_at = now.toEpochMilliseconds(),
-                    )
-
-                    userQueries.updateFollowedAt(
-                        id = channelFollow.user.id,
-                        followed_at = channelFollow.followedAt.toEpochMilliseconds(),
-                    )
-                }
-
-                userQueries.setFollowedUsersUpdated(
-                    last_updated = now.toEpochMilliseconds(),
+                userQueries.updateFollowedAt(
+                    id = channelFollow.user.id,
+                    followed_at = channelFollow.followedAt.toEpochMilliseconds(),
                 )
             }
+
+            userQueries.setFollowedUsersUpdated(
+                last_updated = now.toEpochMilliseconds(),
+            )
         }
+    }
 
     override fun getUserIdsToUpdate(): Flow<List<String>> {
         val minAcceptableCacheDate = clock.now() - MaxUserCacheLife
@@ -185,15 +182,14 @@ internal class LocalUsersDb(
             .flowOn(DispatchersProvider.io)
     }
 
-    override suspend fun isFollowedUsersCacheExpired(): Boolean =
-        withContext(DispatchersProvider.io) {
-            val minAcceptableCacheDate = clock.now() - MaxFollowedUsersCacheLife
-            val updatedAt = userQueries
-                .getFollowedUsersUpdatedAt()
-                .executeAsOneOrNull()
+    override suspend fun isFollowedUsersCacheExpired(): Boolean = withContext(DispatchersProvider.io) {
+        val minAcceptableCacheDate = clock.now() - MaxFollowedUsersCacheLife
+        val updatedAt = userQueries
+            .getFollowedUsersUpdatedAt()
+            .executeAsOneOrNull()
 
-            updatedAt == null || updatedAt < minAcceptableCacheDate.toEpochMilliseconds()
-        }
+        updatedAt == null || updatedAt < minAcceptableCacheDate.toEpochMilliseconds()
+    }
 
     private companion object {
         val MaxUserCacheLife = 1.days

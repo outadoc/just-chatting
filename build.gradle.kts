@@ -19,7 +19,7 @@ group = "fr.outadoc"
 spotless {
     kotlin {
         target("**/*.kt", "**/*.kts")
-        ktlint("1.3.0")
+        ktlint("1.8.0")
             .editorConfigOverride(
                 mapOf(
                     "max_line_length" to "off",

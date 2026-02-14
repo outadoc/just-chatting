@@ -10,8 +10,7 @@ internal class PubSubRichEmbedPlugin(
     private val clock: Clock,
 ) : PubSubPlugin<PubSubRichEmbedMessage> {
 
-    override fun getTopic(channelId: String): String =
-        "stream-chat-room-v1.$channelId"
+    override fun getTopic(channelId: String): String = "stream-chat-room-v1.$channelId"
 
     override fun parseMessage(payload: String): List<ChatEvent> {
         val message = json.decodeFromString<PubSubRichEmbedMessage>(payload)

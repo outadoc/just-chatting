@@ -10,20 +10,18 @@ internal class PubSubBroadcastSettingsPlugin(
     private val clock: Clock,
 ) : PubSubPlugin<PubSubBroadcastSettingsMessage> {
 
-    override fun getTopic(channelId: String): String =
-        "broadcast-settings-update.$channelId"
+    override fun getTopic(channelId: String): String = "broadcast-settings-update.$channelId"
 
-    override fun parseMessage(payload: String): List<ChatEvent> =
-        when (val message = json.decodeFromString<PubSubBroadcastSettingsMessage>(payload)) {
-            is PubSubBroadcastSettingsMessage.Update -> {
-                listOf(
-                    ChatEvent.Message.BroadcastSettingsUpdate(
-                        timestamp = clock.now(),
-                        streamTitle = message.status,
-                        categoryId = message.gameId.toString(),
-                        categoryName = message.game,
-                    ),
-                )
-            }
+    override fun parseMessage(payload: String): List<ChatEvent> = when (val message = json.decodeFromString<PubSubBroadcastSettingsMessage>(payload)) {
+        is PubSubBroadcastSettingsMessage.Update -> {
+            listOf(
+                ChatEvent.Message.BroadcastSettingsUpdate(
+                    timestamp = clock.now(),
+                    streamTitle = message.status,
+                    categoryId = message.gameId.toString(),
+                    categoryName = message.game,
+                ),
+            )
         }
+    }
 }

@@ -133,14 +133,11 @@ public class UserProfileImageContentProvider : ContentProvider() {
         selection: String?,
         selectionArgs: Array<out String>?,
         sortOrder: String?,
-    ): Cursor =
-        error("Not implemented")
+    ): Cursor = error("Not implemented")
 
-    override fun insert(uri: Uri, values: ContentValues?): Uri =
-        error("Not implemented")
+    override fun insert(uri: Uri, values: ContentValues?): Uri = error("Not implemented")
 
-    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int =
-        error("Not implemented")
+    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int = error("Not implemented")
 
     override fun update(
         uri: Uri,

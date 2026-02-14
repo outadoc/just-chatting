@@ -9,8 +9,7 @@ internal class PubSubPredictionPlugin(
     private val json: Json,
 ) : PubSubPlugin<PubSubPredictionMessage> {
 
-    override fun getTopic(channelId: String): String =
-        "predictions-channel-v1.$channelId"
+    override fun getTopic(channelId: String): String = "predictions-channel-v1.$channelId"
 
     override fun parseMessage(payload: String): List<ChatEvent> {
         val message = json.decodeFromString<PubSubPredictionMessage>(payload)

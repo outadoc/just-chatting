@@ -33,6 +33,7 @@ internal class AuthRepository(
             .map { token ->
                 when (token) {
                     null -> AppUser.NotLoggedIn
+
                     else -> {
                         authApi
                             .validateToken(token)

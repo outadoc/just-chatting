@@ -15,8 +15,7 @@ internal class SearchChannelsDataSource(
     private val twitchClient: TwitchClient,
 ) : PagingSource<Pagination, List<ChannelSearchResult>>() {
 
-    override fun getRefreshKey(state: PagingState<Pagination, List<ChannelSearchResult>>): Pagination? =
-        null
+    override fun getRefreshKey(state: PagingState<Pagination, List<ChannelSearchResult>>): Pagination? = null
 
     override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, List<ChannelSearchResult>> {
         if (query.isBlank()) {

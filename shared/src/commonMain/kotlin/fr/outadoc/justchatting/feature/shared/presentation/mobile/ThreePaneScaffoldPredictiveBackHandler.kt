@@ -78,13 +78,12 @@ internal fun <T> ThreePaneScaffoldPredictiveBackHandler(
 private fun backProgressToStateProgress(
     progress: Float,
     scaffoldValue: ThreePaneScaffoldValue,
-): Float =
-    ThreePaneScaffoldPredictiveBackEasing.transform(progress) *
-        when (scaffoldValue.expandedCount) {
-            1 -> SinglePaneProgressRatio
-            2 -> DualPaneProgressRatio
-            else -> TriplePaneProgressRatio
-        }
+): Float = ThreePaneScaffoldPredictiveBackEasing.transform(progress) *
+    when (scaffoldValue.expandedCount) {
+        1 -> SinglePaneProgressRatio
+        2 -> DualPaneProgressRatio
+        else -> TriplePaneProgressRatio
+    }
 
 private val ThreePaneScaffoldPredictiveBackEasing: Easing = CubicBezierEasing(0.1f, 0.1f, 0f, 1f)
 private const val SinglePaneProgressRatio: Float = 0.1f

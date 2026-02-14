@@ -30,6 +30,7 @@ internal fun RoomStateBanner(
                 Text(
                     text = when (minFollowDuration) {
                         Duration.ZERO -> stringResource(Res.string.room_followers)
+
                         else -> stringResource(
                             Res.string.room_followers_min,
                             minFollowDuration.format(),

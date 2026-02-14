@@ -12,11 +12,11 @@ import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.ma
 internal fun UserItemCardPlaceholder(modifier: Modifier = Modifier) {
     UserItemCard(
         modifier =
-            modifier.placeholder(
-                visible = true,
-                shape = CardDefaults.shape,
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                highlight = PlaceholderHighlight.shimmer(),
-            ),
+        modifier.placeholder(
+            visible = true,
+            shape = CardDefaults.shape,
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            highlight = PlaceholderHighlight.shimmer(),
+        ),
     )
 }

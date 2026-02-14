@@ -26,16 +26,16 @@ internal fun SuggestionChip(
     val haptic = LocalHapticFeedback.current
     Surface(
         modifier =
-            modifier
-                .height(32.dp)
-                .clickable(
-                    role = Role.Button,
-                    onClickLabel = clickLabel,
-                    onClick = {
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        onClick()
-                    },
-                ),
+        modifier
+            .height(32.dp)
+            .clickable(
+                role = Role.Button,
+                onClickLabel = clickLabel,
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onClick()
+                },
+            ),
         color = MaterialTheme.colorScheme.surfaceVariant,
         shape = MaterialTheme.shapes.small,
     ) {

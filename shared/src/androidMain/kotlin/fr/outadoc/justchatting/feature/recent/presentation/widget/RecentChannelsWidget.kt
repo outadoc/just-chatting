@@ -89,18 +89,18 @@ internal class RecentChannelsWidget : GlanceAppWidget() {
                                     Column {
                                         Box(
                                             modifier =
-                                                GlanceModifier
-                                                    .clickable(
-                                                        MainActivity.createGlanceAction(
-                                                            userId = user.id,
-                                                        ),
+                                            GlanceModifier
+                                                .clickable(
+                                                    MainActivity.createGlanceAction(
+                                                        userId = user.id,
                                                     ),
+                                                ),
                                         ) {
                                             GlanceUserItem(
                                                 modifier =
-                                                    GlanceModifier
-                                                        .fillMaxWidth()
-                                                        .padding(8.dp),
+                                                GlanceModifier
+                                                    .fillMaxWidth()
+                                                    .padding(8.dp),
                                                 user = user,
                                             )
                                         }

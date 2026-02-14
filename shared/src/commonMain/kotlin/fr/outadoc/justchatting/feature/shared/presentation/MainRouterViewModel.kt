@@ -83,14 +83,13 @@ internal class MainRouterViewModel(
         }
     }
 
-    fun onLoginClick() =
-        viewModelScope.launch {
-            _events.emit(
-                Event.ShowAuthPage(
-                    uri = authRepository.getExternalAuthorizeUrl(),
-                ),
-            )
-        }
+    fun onLoginClick() = viewModelScope.launch {
+        _events.emit(
+            Event.ShowAuthPage(
+                uri = authRepository.getExternalAuthorizeUrl(),
+            ),
+        )
+    }
 
     override fun onDeeplinkReceived(uriString: String) {
         onDeeplinkReceived(Uri.parse(uriString))

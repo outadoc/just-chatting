@@ -5,7 +5,6 @@ import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFac
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
-import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
@@ -20,15 +19,14 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -44,12 +42,13 @@ import kotlin.time.Duration.Companion.seconds
  */
 internal class LoggedInChatWebSocket(
     private val networkStateObserver: NetworkStateObserver,
-    private val scope: CoroutineScope,
     private val parser: TwitchIrcCommandParser,
     private val httpClient: HttpClient,
-    private val authRepository: AuthRepository,
+    private val appUser: AppUser.LoggedIn,
     private val channelLogin: String,
 ) : ChatEventHandler {
+    private val scope = CoroutineScope(SupervisorJob())
+
     companion object {
         private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
     }
@@ -73,75 +72,58 @@ internal class LoggedInChatWebSocket(
 
     private var isNetworkAvailable: Boolean = false
 
-    private var socketJob: Job? = null
-    private var networkStateJob: Job? = null
-
     override fun start() {
         observeNetworkState()
         observeSocket()
     }
 
     private fun observeNetworkState() {
-        if (networkStateJob?.isActive == true) {
-            return
-        }
-
-        networkStateJob =
-            scope.launch {
-                networkStateObserver.state.collectLatest { state ->
-                    isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
-                }
+        scope.launch {
+            networkStateObserver.state.collectLatest { state ->
+                isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
             }
+        }
     }
 
     private fun observeSocket() {
-        if (socketJob?.isActive == true) {
-            return
-        }
+        scope.launch(DispatchersProvider.io) {
+            logDebug<LoggedInChatWebSocket> { "Starting job" }
 
-        socketJob =
-            scope.launch(DispatchersProvider.io + SupervisorJob()) {
-                logDebug<LoggedInChatWebSocket> { "Starting job" }
+            _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
 
-                _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
-
-                while (isActive) {
-                    if (isNetworkAvailable) {
-                        logDebug<LoggedInChatWebSocket> { "Network is available, listening" }
-                        _connectionStatus.update { status ->
-                            status.copy(
-                                isAlive = true,
-                            )
-                        }
-
-                        try {
-                            listen()
-                        } catch (e: Exception) {
-                            logError<LoggedInChatWebSocket>(e) { "Socket was closed" }
-                        }
-                    } else {
-                        logDebug<LoggedInChatWebSocket> { "Network is out, delay and retry" }
-                        _connectionStatus.update { status ->
-                            status.copy(
-                                isAlive = false,
-                            )
-                        }
+            while (isActive) {
+                if (isNetworkAvailable) {
+                    logDebug<LoggedInChatWebSocket> { "Network is available, listening" }
+                    _connectionStatus.update { status ->
+                        status.copy(
+                            isAlive = true,
+                        )
                     }
 
-                    if (isActive) {
-                        delayWithJitter(1.seconds, maxJitter = 3.seconds)
+                    try {
+                        listen()
+                    } catch (e: Exception) {
+                        logError<LoggedInChatWebSocket>(e) { "Socket was closed" }
+                    }
+                } else {
+                    logDebug<LoggedInChatWebSocket> { "Network is out, delay and retry" }
+                    _connectionStatus.update { status ->
+                        status.copy(
+                            isAlive = false,
+                        )
                     }
                 }
+
+                if (isActive) {
+                    delayWithJitter(1.seconds, maxJitter = 3.seconds)
+                }
             }
+        }
     }
 
     private suspend fun listen() {
         httpClient.webSocket(ENDPOINT) {
             logDebug<LoggedInChatWebSocket> { "Socket open, logging in" }
-
-            val appUser = authRepository.currentUser.first()
-
-            if (appUser !is AppUser.LoggedIn) return@webSocket
 
             send("PASS oauth:${appUser.token}")
             send("NICK ${appUser.userLogin}")
@@ -186,35 +168,26 @@ internal class LoggedInChatWebSocket(
     }
 
     override fun disconnect() {
-        scope.launch {
-            _connectionStatus.update { status -> status.copy(registeredListeners = 0) }
-            doDisconnect()
-        }
-    }
-
-    private fun doDisconnect() {
         logDebug<LoggedInChatWebSocket> { "Disconnecting logged in chat socket" }
-        socketJob?.cancel()
+        _connectionStatus.update { status -> status.copy(registeredListeners = 0) }
+        scope.cancel()
     }
 
     class Factory(
         private val networkStateObserver: NetworkStateObserver,
         private val parser: TwitchIrcCommandParser,
-        private val authRepository: AuthRepository,
         private val httpClient: HttpClient,
     ) : ChatCommandHandlerFactory {
         override fun create(
-            scope: CoroutineScope,
             channelLogin: String,
             channelId: String,
-        ): LoggedInChatWebSocket =
-            LoggedInChatWebSocket(
-                networkStateObserver = networkStateObserver,
-                scope = scope,
-                parser = parser,
-                httpClient = httpClient,
-                authRepository = authRepository,
-                channelLogin = channelLogin,
-            )
+            appUser: AppUser.LoggedIn,
+        ): LoggedInChatWebSocket = LoggedInChatWebSocket(
+            networkStateObserver = networkStateObserver,
+            parser = parser,
+            httpClient = httpClient,
+            appUser = appUser,
+            channelLogin = channelLogin,
+        )
     }
 }

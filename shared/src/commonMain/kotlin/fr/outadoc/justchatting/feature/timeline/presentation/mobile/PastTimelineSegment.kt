@@ -71,20 +71,20 @@ internal fun PastTimelineSegment(
             Column {
                 Card(
                     modifier =
-                        Modifier
-                            .combinedClickable(
-                                onClick = {
-                                    uriHandler.openUri(
-                                        createVideoExternalLink(segment.id),
-                                    )
-                                },
-                                onClickLabel = stringResource(Res.string.timeline_openVod_action),
-                                onLongClick = {
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    showDetailsDialog = true
-                                },
-                                onLongClickLabel = stringResource(Res.string.all_showDetails_cd),
-                            ),
+                    Modifier
+                        .combinedClickable(
+                            onClick = {
+                                uriHandler.openUri(
+                                    createVideoExternalLink(segment.id),
+                                )
+                            },
+                            onClickLabel = stringResource(Res.string.timeline_openVod_action),
+                            onLongClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                showDetailsDialog = true
+                            },
+                            onLongClickLabel = stringResource(Res.string.all_showDetails_cd),
+                        ),
                 ) {
                     TimelineSegmentContent(
                         modifier = Modifier.padding(8.dp),
@@ -98,9 +98,9 @@ internal fun PastTimelineSegment(
 
                 Row(
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
@@ -113,14 +113,14 @@ internal fun PastTimelineSegment(
                     Text(
                         modifier = Modifier.alignByBaseline(),
                         text =
-                            buildAnnotatedString {
-                                append(segment.startTime.formatHourMinute())
+                        buildAnnotatedString {
+                            append(segment.startTime.formatHourMinute())
 
-                                if (segment.endTime != null) {
-                                    append(" - ")
-                                    append(segment.endTime.formatHourMinute())
-                                }
-                            },
+                            if (segment.endTime != null) {
+                                append(" - ")
+                                append(segment.endTime.formatHourMinute())
+                            }
+                        },
                         style = MaterialTheme.typography.bodyMedium,
                     )
 

@@ -77,28 +77,24 @@ internal fun Instant.formatDate(
 
 @Stable
 @Composable
-internal fun Duration.format(
-    showSeconds: Boolean = true,
-): String {
-    return toComponents { days, hours, minutes, seconds, _ ->
-        listOfNotNull(
-            days
-                .takeIf { it > 0 }
-                ?.let { Res.string.duration_days.desc(it) },
-            hours
-                .takeIf { it > 0 }
-                ?.let { Res.string.duration_hours.desc(it) },
-            minutes
-                .takeIf { it > 0 }
-                ?.let { Res.string.duration_minutes.desc(it) },
-            seconds
-                .takeIf { it > 0 }
-                .takeIf { showSeconds }
-                ?.let { Res.string.duration_seconds.desc(it) },
-        )
-    }.map { desc -> desc.localized() }
-        .joinToString(" ")
-}
+internal fun Duration.format(showSeconds: Boolean = true): String = toComponents { days, hours, minutes, seconds, _ ->
+    listOfNotNull(
+        days
+            .takeIf { it > 0 }
+            ?.let { Res.string.duration_days.desc(it) },
+        hours
+            .takeIf { it > 0 }
+            ?.let { Res.string.duration_hours.desc(it) },
+        minutes
+            .takeIf { it > 0 }
+            ?.let { Res.string.duration_minutes.desc(it) },
+        seconds
+            .takeIf { it > 0 }
+            .takeIf { showSeconds }
+            ?.let { Res.string.duration_seconds.desc(it) },
+    )
+}.map { desc -> desc.localized() }
+    .joinToString(" ")
 
 @Composable
 internal fun Instant.formatTimeSince(

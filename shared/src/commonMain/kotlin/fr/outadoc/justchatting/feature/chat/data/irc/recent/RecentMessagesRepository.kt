@@ -12,14 +12,13 @@ internal class RecentMessagesRepository(
     suspend fun loadRecentMessages(
         channelLogin: String,
         limit: Int,
-    ): Result<List<ChatEvent>> =
-        withContext(DispatchersProvider.io) {
-            recentMessagesApi
-                .getRecentMessages(channelLogin, limit)
-                .map { response ->
-                    response.messages
-                        .filterNot { message -> message.isBlank() }
-                        .mapNotNull { message -> parser.parse(message) }
-                }
-        }
+    ): Result<List<ChatEvent>> = withContext(DispatchersProvider.io) {
+        recentMessagesApi
+            .getRecentMessages(channelLogin, limit)
+            .map { response ->
+                response.messages
+                    .filterNot { message -> message.isBlank() }
+                    .mapNotNull { message -> parser.parse(message) }
+            }
+    }
 }

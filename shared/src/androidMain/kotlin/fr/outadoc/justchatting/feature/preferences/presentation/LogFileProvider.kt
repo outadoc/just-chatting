@@ -12,11 +12,10 @@ internal class LogFileProvider : FileProvider(R.xml.log_share) {
         fun getUri(
             context: Context,
             path: Path,
-        ): Uri =
-            getUriForFile(
-                context,
-                "${context.packageName}.logfileprovider",
-                path.toFile(),
-            ).toKmpUri()
+        ): Uri = getUriForFile(
+            context,
+            "${context.packageName}.logfileprovider",
+            path.toFile(),
+        ).toKmpUri()
     }
 }

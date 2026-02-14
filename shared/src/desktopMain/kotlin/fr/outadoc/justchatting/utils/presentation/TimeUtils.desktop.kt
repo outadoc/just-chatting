@@ -30,17 +30,13 @@ internal actual fun Instant.formatHourMinute(): String? {
 }
 
 @Stable
-internal actual fun LocalDate.formatWithoutYear(): String {
-    return toJavaLocalDate()
-        .format(
-            DateTimeFormatter.ofPattern("eeee d MMM", Locale.getDefault()),
-        )
-}
+internal actual fun LocalDate.formatWithoutYear(): String = toJavaLocalDate()
+    .format(
+        DateTimeFormatter.ofPattern("eeee d MMM", Locale.getDefault()),
+    )
 
 @Stable
-internal actual fun LocalDate.formatWithYear(): String {
-    return toJavaLocalDate()
-        .format(
-            DateTimeFormatter.ofPattern("d MMM uuuu", Locale.getDefault()),
-        )
-}
+internal actual fun LocalDate.formatWithYear(): String = toJavaLocalDate()
+    .format(
+        DateTimeFormatter.ofPattern("d MMM uuuu", Locale.getDefault()),
+    )

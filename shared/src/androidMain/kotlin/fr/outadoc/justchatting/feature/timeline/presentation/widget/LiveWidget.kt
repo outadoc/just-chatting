@@ -80,12 +80,12 @@ internal class LiveWidget : GlanceAppWidget() {
                             Column {
                                 GlanceCard(
                                     modifier =
-                                        GlanceModifier
-                                            .clickable(
-                                                MainActivity.createGlanceAction(
-                                                    userId = userStream.user.id,
-                                                ),
+                                    GlanceModifier
+                                        .clickable(
+                                            MainActivity.createGlanceAction(
+                                                userId = userStream.user.id,
                                             ),
+                                        ),
                                 ) {
                                     LiveStream(
                                         modifier = GlanceModifier.fillMaxWidth(),
@@ -117,9 +117,9 @@ internal class LiveWidget : GlanceAppWidget() {
             Text(
                 text = stream.title,
                 style =
-                    TextDefaults.defaultTextStyle.copy(
-                        color = GlanceTheme.colors.onSurfaceVariant,
-                    ),
+                TextDefaults.defaultTextStyle.copy(
+                    color = GlanceTheme.colors.onSurfaceVariant,
+                ),
                 maxLines = 2,
             )
 
@@ -133,9 +133,9 @@ internal class LiveWidget : GlanceAppWidget() {
                 Image(
                     modifier = GlanceModifier.size(20.dp),
                     provider =
-                        ImageProvider(
-                            user.getProfileImageUri(LocalContext.current),
-                        ),
+                    ImageProvider(
+                        user.getProfileImageUri(LocalContext.current),
+                    ),
                     contentDescription = null,
                 )
 
@@ -146,10 +146,10 @@ internal class LiveWidget : GlanceAppWidget() {
                 Text(
                     text = user.displayName,
                     style =
-                        TextDefaults.defaultTextStyle.copy(
-                            color = GlanceTheme.colors.onSurfaceVariant,
-                            fontWeight = FontWeight.Bold,
-                        ),
+                    TextDefaults.defaultTextStyle.copy(
+                        color = GlanceTheme.colors.onSurfaceVariant,
+                        fontWeight = FontWeight.Bold,
+                    ),
                     maxLines = 1,
                 )
 
@@ -157,17 +157,17 @@ internal class LiveWidget : GlanceAppWidget() {
                     Text(
                         text = " • ",
                         style =
-                            TextDefaults.defaultTextStyle.copy(
-                                color = GlanceTheme.colors.onSurfaceVariant,
-                            ),
+                        TextDefaults.defaultTextStyle.copy(
+                            color = GlanceTheme.colors.onSurfaceVariant,
+                        ),
                     )
 
                     Text(
                         text = stream.category.name,
                         style =
-                            TextDefaults.defaultTextStyle.copy(
-                                color = GlanceTheme.colors.onSurfaceVariant,
-                            ),
+                        TextDefaults.defaultTextStyle.copy(
+                            color = GlanceTheme.colors.onSurfaceVariant,
+                        ),
                         maxLines = 1,
                     )
                 }

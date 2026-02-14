@@ -42,9 +42,9 @@ internal fun StreamInfo(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         modifier =
-                            Modifier
-                                .size(24.dp)
-                                .padding(end = 8.dp),
+                        Modifier
+                            .size(24.dp)
+                            .padding(end = 8.dp),
                         imageVector = Icons.Default.Gamepad,
                         contentDescription = null,
                     )
@@ -56,20 +56,20 @@ internal fun StreamInfo(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 modifier =
-                    Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp),
+                Modifier
+                    .size(24.dp)
+                    .padding(end = 8.dp),
                 imageVector = Icons.Default.Visibility,
                 contentDescription = null,
             )
 
             Text(
                 text =
-                    pluralStringResource(
-                        Res.plurals.viewers,
-                        stream.viewerCount.toInt(),
-                        stream.viewerCount.toInt().formatNumber(),
-                    ),
+                pluralStringResource(
+                    Res.plurals.viewers,
+                    stream.viewerCount.toInt(),
+                    stream.viewerCount.toInt().formatNumber(),
+                ),
             )
         }
 
@@ -78,9 +78,9 @@ internal fun StreamInfo(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     modifier =
-                        Modifier
-                            .size(24.dp)
-                            .padding(end = 8.dp),
+                    Modifier
+                        .size(24.dp)
+                        .padding(end = 8.dp),
                     imageVector = Icons.Default.Start,
                     contentDescription = null,
                 )

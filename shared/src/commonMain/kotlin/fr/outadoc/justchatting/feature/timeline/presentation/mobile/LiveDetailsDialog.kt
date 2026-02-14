@@ -55,9 +55,9 @@ internal fun LiveDetailsDialog(
             BasicUserInfo(user = user)
         },
         content =
-            stream?.let {
-                { StreamInfo(stream = stream) }
-            },
+        stream?.let {
+            { StreamInfo(stream = stream) }
+        },
         actions = { padding ->
             if (onOpenChat != null) {
                 ContextualButton(

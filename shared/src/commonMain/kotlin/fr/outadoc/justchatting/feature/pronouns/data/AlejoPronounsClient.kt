@@ -12,19 +12,15 @@ internal class AlejoPronounsClient(
 ) {
     private val client = httpClient
 
-    suspend fun getPronouns(): Result<Map<String, AlejoPronoun>> {
-        return runCatching {
-            client
-                .get { url("https://api.pronouns.alejo.io/v1/pronouns") }
-                .body()
-        }
+    suspend fun getPronouns(): Result<Map<String, AlejoPronoun>> = runCatching {
+        client
+            .get { url("https://api.pronouns.alejo.io/v1/pronouns") }
+            .body()
     }
 
-    suspend fun getPronounsForUser(login: String): Result<List<UserPronounResponse>> {
-        return runCatching {
-            client
-                .get { url("https://pronouns.alejo.io/api/users/$login") }
-                .body()
-        }
+    suspend fun getPronounsForUser(login: String): Result<List<UserPronounResponse>> = runCatching {
+        client
+            .get { url("https://pronouns.alejo.io/api/users/$login") }
+            .body()
     }
 }

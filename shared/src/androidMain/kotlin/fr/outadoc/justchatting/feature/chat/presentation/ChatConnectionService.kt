@@ -6,8 +6,10 @@ import androidx.core.app.RemoteInput
 import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
+import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
 import fr.outadoc.justchatting.utils.logging.logInfo
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
@@ -19,10 +21,8 @@ internal class ChatConnectionService : LifecycleService() {
         fun createReplyIntent(
             context: Context,
             channelId: String,
-        ): Intent {
-            return Intent(context, ChatConnectionService::class.java).apply {
-                data = "ccs://reply/?userId=$channelId".toUri()
-            }
+        ): Intent = Intent(context, ChatConnectionService::class.java).apply {
+            data = "ccs://reply/?userId=$channelId".toUri()
         }
     }
 
@@ -34,6 +34,7 @@ internal class ChatConnectionService : LifecycleService() {
         logInfo<ChatConnectionService> { "Received intent $intent with data=${intent?.data}" }
 
         val repository by inject<TwitchRepository>()
+        val authRepository by inject<AuthRepository>()
 
         val action: String? = intent?.data?.authority
         val userId: String? = intent?.data?.getQueryParameter("userId")
@@ -52,10 +53,12 @@ internal class ChatConnectionService : LifecycleService() {
                     logInfo<ChatConnectionService> { "Replying to $userId's chat with reply: $quickReplyResult" }
 
                     if (userId != null && quickReplyResult != null) {
+                        val appUser = authRepository.currentUser.first()
                         repository.sendChatMessage(
                             channelUserId = userId,
                             message = quickReplyResult,
                             inReplyToMessageId = null,
+                            appUser = appUser,
                         )
                     }
                 }

@@ -13,16 +13,12 @@ private enum class IntentComponent {
 internal fun Intent.toPendingActivityIntent(
     context: Context,
     mutable: Boolean = false,
-): PendingIntent {
-    return toPendingIntent(context, mutable, IntentComponent.Activity)
-}
+): PendingIntent = toPendingIntent(context, mutable, IntentComponent.Activity)
 
 internal fun Intent.toPendingForegroundServiceIntent(
     context: Context,
     mutable: Boolean = false,
-): PendingIntent {
-    return toPendingIntent(context, mutable, IntentComponent.ForegroundService)
-}
+): PendingIntent = toPendingIntent(context, mutable, IntentComponent.ForegroundService)
 
 private fun Intent.toPendingIntent(
     context: Context,

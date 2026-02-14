@@ -16,9 +16,7 @@ internal class FrameLogger : WebSocketExtension<FrameLogger.Config> {
 
     override val protocols: List<WebSocketExtensionHeader> = emptyList()
 
-    override fun clientNegotiation(negotiatedProtocols: List<WebSocketExtensionHeader>): Boolean {
-        return true
-    }
+    override fun clientNegotiation(negotiatedProtocols: List<WebSocketExtensionHeader>): Boolean = true
 
     override fun processIncomingFrame(frame: Frame): Frame {
         logDebug<FrameLogger> {
@@ -50,11 +48,7 @@ internal class FrameLogger : WebSocketExtension<FrameLogger.Config> {
         return frame
     }
 
-    override fun serverNegotiation(
-        requestedProtocols: List<WebSocketExtensionHeader>,
-    ): List<WebSocketExtensionHeader> {
-        return emptyList()
-    }
+    override fun serverNegotiation(requestedProtocols: List<WebSocketExtensionHeader>): List<WebSocketExtensionHeader> = emptyList()
 
     companion object : WebSocketExtensionFactory<Config, FrameLogger> {
         override val key: AttributeKey<FrameLogger> = AttributeKey("frame-logger")

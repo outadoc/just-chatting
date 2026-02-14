@@ -110,10 +110,10 @@ public val sharedModule: Module
             single { MainRouterViewModel(get(), get(), get()) }
             viewModel { SettingsViewModel(get(), get(), get(), get(), get()) }
             viewModel { ChannelSearchViewModel(get()) }
-            viewModel { FollowedChannelsViewModel(get()) }
+            viewModel { FollowedChannelsViewModel(get(), get()) }
             viewModel { RecentChannelsViewModel(get()) }
-            viewModel { LiveTimelineViewModel(get(), get()) }
-            viewModel { FutureTimelineViewModel(get(), get()) }
+            viewModel { LiveTimelineViewModel(get(), get(), get()) }
+            viewModel { FutureTimelineViewModel(get(), get(), get()) }
             viewModel { UserInfoViewModel(get()) }
             viewModel {
                 ChatViewModel(
@@ -134,9 +134,9 @@ public val sharedModule: Module
             single { FilterAutocompleteItemsUseCase() }
 
             single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get()) }
-            single { LoggedInChatWebSocket.Factory(get(), get(), get(), get()) }
+            single { LoggedInChatWebSocket.Factory(get(), get(), get()) }
             single { MockChatWebSocket.Factory(get(), get(), get(), get()) }
-            single { PubSubWebSocket.Factory(get(), get(), get(), get()) }
+            single { PubSubWebSocket.Factory(get(), get(), get()) }
 
             single {
                 ChatCommandHandlerFactoriesProvider {
@@ -228,7 +228,7 @@ public val sharedModule: Module
 
             single<Json> { DefaultJson }
 
-            single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get(), get()) }
+            single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get()) }
             single<TwitchApi> { TwitchApiImpl(get()) }
             single { TwitchClient(get(named("twitch"))) }
 

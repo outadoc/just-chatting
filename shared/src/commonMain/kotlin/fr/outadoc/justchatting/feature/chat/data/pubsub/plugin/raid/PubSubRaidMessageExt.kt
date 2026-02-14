@@ -15,8 +15,8 @@ internal fun PubSubRaidMessage.map(): Raid? {
                 targetLogin = raid.targetLogin,
                 targetDisplayName = raid.targetDisplayName,
                 targetProfileImageUrl =
-                    raid.targetProfileImageUrlTemplate
-                        ?.replace("%s", imageDimensions),
+                raid.targetProfileImageUrlTemplate
+                    ?.replace("%s", imageDimensions),
                 viewerCount = raid.viewerCount,
             )
         }
@@ -27,8 +27,8 @@ internal fun PubSubRaidMessage.map(): Raid? {
                 targetLogin = raid.targetLogin,
                 targetDisplayName = raid.targetDisplayName,
                 targetProfileImageUrl =
-                    raid.targetProfileImageUrlTemplate
-                        ?.replace("%s", imageDimensions),
+                raid.targetProfileImageUrlTemplate
+                    ?.replace("%s", imageDimensions),
                 viewerCount = raid.viewerCount,
             )
         }

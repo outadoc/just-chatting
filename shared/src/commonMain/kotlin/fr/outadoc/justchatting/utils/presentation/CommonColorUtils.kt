@@ -11,9 +11,7 @@ import kotlin.math.round
 internal fun calculateLuminanceContrast(
     foregroundY: Double,
     backgroundY: Double,
-): Double {
-    return max(foregroundY + 5, backgroundY + 5) / min(foregroundY + 5, backgroundY + 5)
-}
+): Double = max(foregroundY + 5, backgroundY + 5) / min(foregroundY + 5, backgroundY + 5)
 
 /**
  * Converts a color from CIE XYZ to its RGB representation.

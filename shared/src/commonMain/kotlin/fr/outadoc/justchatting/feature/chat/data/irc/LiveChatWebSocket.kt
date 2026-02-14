@@ -8,6 +8,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
@@ -21,8 +22,8 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -50,7 +51,6 @@ import kotlin.time.Instant
  */
 internal class LiveChatWebSocket private constructor(
     private val networkStateObserver: NetworkStateObserver,
-    private val scope: CoroutineScope,
     private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
     private val httpClient: HttpClient,
@@ -58,6 +58,8 @@ internal class LiveChatWebSocket private constructor(
     private val preferencesRepository: PreferenceRepository,
     private val channelLogin: String,
 ) : ChatEventHandler {
+    private val scope = CoroutineScope(SupervisorJob())
+
     companion object {
         private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
     }
@@ -83,60 +85,47 @@ internal class LiveChatWebSocket private constructor(
     private var lastMessageReceivedAt: Instant? = null
     private var isNetworkAvailable: Boolean = false
 
-    private var socketJob: Job? = null
-    private var networkStateJob: Job? = null
-
     override fun start() {
         observeNetworkState()
         observeSocket()
     }
 
     private fun observeNetworkState() {
-        if (networkStateJob?.isActive == true) {
-            return
-        }
-
-        networkStateJob =
-            scope.launch {
-                networkStateObserver.state.collectLatest { state ->
-                    isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
-                }
+        scope.launch {
+            networkStateObserver.state.collectLatest { state ->
+                isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
             }
+        }
     }
 
     private fun observeSocket() {
-        if (socketJob?.isActive == true) {
-            return
-        }
+        scope.launch(DispatchersProvider.io) {
+            logDebug<LiveChatWebSocket> { "Starting job" }
 
-        socketJob =
-            scope.launch(DispatchersProvider.io + SupervisorJob()) {
-                logDebug<LiveChatWebSocket> { "Starting job" }
+            _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
 
-                _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
+            while (isActive) {
+                if (isNetworkAvailable) {
+                    logDebug<LiveChatWebSocket> { "Network is available, listening" }
+                    _connectionStatus.update { status -> status.copy(isAlive = true) }
 
-                while (isActive) {
-                    if (isNetworkAvailable) {
-                        logDebug<LiveChatWebSocket> { "Network is available, listening" }
-                        _connectionStatus.update { status -> status.copy(isAlive = true) }
+                    loadRecentMessages()
 
-                        loadRecentMessages()
-
-                        try {
-                            listen()
-                        } catch (e: Exception) {
-                            logError<LiveChatWebSocket>(e) { "Socket was closed" }
-                        }
-                    } else {
-                        logDebug<LiveChatWebSocket> { "Network is out, delay and retry" }
-                        _connectionStatus.update { status -> status.copy(isAlive = false) }
+                    try {
+                        listen()
+                    } catch (e: Exception) {
+                        logError<LiveChatWebSocket>(e) { "Socket was closed" }
                     }
+                } else {
+                    logDebug<LiveChatWebSocket> { "Network is out, delay and retry" }
+                    _connectionStatus.update { status -> status.copy(isAlive = false) }
+                }
 
-                    if (isActive) {
-                        delayWithJitter(1.seconds, maxJitter = 3.seconds)
-                    }
+                if (isActive) {
+                    delayWithJitter(1.seconds, maxJitter = 3.seconds)
                 }
             }
+        }
     }
 
     private suspend fun listen() {
@@ -205,15 +194,9 @@ internal class LiveChatWebSocket private constructor(
     }
 
     override fun disconnect() {
-        scope.launch {
-            _connectionStatus.update { status -> status.copy(registeredListeners = 0) }
-            doDisconnect()
-        }
-    }
-
-    private fun doDisconnect() {
         logDebug<LiveChatWebSocket> { "Disconnecting live chat socket" }
-        socketJob?.cancel()
+        _connectionStatus.update { status -> status.copy(registeredListeners = 0) }
+        scope.cancel()
     }
 
     private suspend fun loadRecentMessages() {
@@ -251,19 +234,17 @@ internal class LiveChatWebSocket private constructor(
         private val httpClient: HttpClient,
     ) : ChatCommandHandlerFactory {
         override fun create(
-            scope: CoroutineScope,
             channelLogin: String,
             channelId: String,
-        ): LiveChatWebSocket =
-            LiveChatWebSocket(
-                networkStateObserver = networkStateObserver,
-                scope = scope,
-                clock = clock,
-                parser = parser,
-                httpClient = httpClient,
-                recentMessagesRepository = recentMessagesRepository,
-                preferencesRepository = preferencesRepository,
-                channelLogin = channelLogin,
-            )
+            appUser: AppUser.LoggedIn,
+        ): LiveChatWebSocket = LiveChatWebSocket(
+            networkStateObserver = networkStateObserver,
+            clock = clock,
+            parser = parser,
+            httpClient = httpClient,
+            recentMessagesRepository = recentMessagesRepository,
+            preferencesRepository = preferencesRepository,
+            channelLogin = channelLogin,
+        )
     }
 }

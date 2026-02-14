@@ -40,35 +40,35 @@ internal fun ChatListPlaceholder(
         ) { index ->
             Box(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .background(
-                            if (index.isOdd) {
-                                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-                            } else {
-                                MaterialTheme.colorScheme.surface
-                            },
-                        ),
+                Modifier
+                    .fillMaxWidth()
+                    .background(
+                        if (index.isOdd) {
+                            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+                        } else {
+                            MaterialTheme.colorScheme.surface
+                        },
+                    ),
             ) {
                 Box(
                     modifier =
-                        Modifier
-                            .padding(
-                                horizontal = 8.dp,
-                                vertical = 10.dp,
-                            ).height(16.dp)
-                            .fillMaxSize(
-                                fraction =
-                                    random
-                                        .nextDouble(
-                                            from = 0.45,
-                                            until = 0.9,
-                                        ).toFloat(),
-                            ).placeholder(
-                                visible = true,
-                                color = MaterialTheme.colorScheme.surfaceVariant,
-                                highlight = PlaceholderHighlight.shimmer(),
-                            ),
+                    Modifier
+                        .padding(
+                            horizontal = 8.dp,
+                            vertical = 10.dp,
+                        ).height(16.dp)
+                        .fillMaxSize(
+                            fraction =
+                            random
+                                .nextDouble(
+                                    from = 0.45,
+                                    until = 0.9,
+                                ).toFloat(),
+                        ).placeholder(
+                            visible = true,
+                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            highlight = PlaceholderHighlight.shimmer(),
+                        ),
                 )
             }
         }

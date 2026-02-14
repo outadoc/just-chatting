@@ -17,66 +17,60 @@ private fun createUrlForEmote(
     format: String = "default",
     theme: String,
     scale: String,
-): String {
-    return templateUrl
-        .replace("{{id}}", id)
-        .replace("{{format}}", format)
-        .replace("{{theme_mode}}", theme)
-        .replace("{{scale}}", scale)
-}
+): String = templateUrl
+    .replace("{{id}}", id)
+    .replace("{{format}}", format)
+    .replace("{{theme_mode}}", theme)
+    .replace("{{scale}}", scale)
 
-internal fun TwitchEmote.map(templateUrl: String): Emote {
-    return Emote(
-        name = name,
-        ownerId = ownerId,
-        isZeroWidth = false,
-        urls =
-            EmoteUrls(
-                light =
-                    scales.associateWith { scale ->
-                        createUrlForEmote(
-                            templateUrl = templateUrl,
-                            id = id,
-                            theme = "light",
-                            scale = scale.toString(),
-                        )
-                    },
-                dark =
-                    scales.associateWith { scale ->
-                        createUrlForEmote(
-                            templateUrl = templateUrl,
-                            id = id,
-                            theme = "dark",
-                            scale = scale.toString(),
-                        )
-                    },
-            ),
-    )
-}
+internal fun TwitchEmote.map(templateUrl: String): Emote = Emote(
+    name = name,
+    ownerId = ownerId,
+    isZeroWidth = false,
+    urls =
+    EmoteUrls(
+        light =
+        scales.associateWith { scale ->
+            createUrlForEmote(
+                templateUrl = templateUrl,
+                id = id,
+                theme = "light",
+                scale = scale.toString(),
+            )
+        },
+        dark =
+        scales.associateWith { scale ->
+            createUrlForEmote(
+                templateUrl = templateUrl,
+                id = id,
+                theme = "dark",
+                scale = scale.toString(),
+            )
+        },
+    ),
+)
 
-internal fun ChatEmote.map(): Emote {
-    return Emote(
-        name = name,
-        ownerId = null,
-        isZeroWidth = false,
-        urls =
-            EmoteUrls(
-                light =
-                    scales.associateWith { scale ->
-                        createUrlForEmote(
-                            id = id,
-                            theme = "light",
-                            scale = scale.toString(),
-                        )
-                    },
-                dark =
-                    scales.associateWith { scale ->
-                        createUrlForEmote(
-                            id = id,
-                            theme = "dark",
-                            scale = scale.toString(),
-                        )
-                    },
-            ),
-    )
-}
+internal fun ChatEmote.map(): Emote = Emote(
+    name = name,
+    ownerId = null,
+    isZeroWidth = false,
+    urls =
+    EmoteUrls(
+        light =
+        scales.associateWith { scale ->
+            createUrlForEmote(
+                id = id,
+                theme = "light",
+                scale = scale.toString(),
+            )
+        },
+        dark =
+        scales.associateWith { scale ->
+            createUrlForEmote(
+                id = id,
+                theme = "dark",
+                scale = scale.toString(),
+            )
+        },
+    ),
+)

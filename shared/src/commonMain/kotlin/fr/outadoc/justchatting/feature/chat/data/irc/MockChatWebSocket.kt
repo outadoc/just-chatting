@@ -5,6 +5,7 @@ import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFac
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
@@ -18,8 +19,8 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -39,12 +40,13 @@ import kotlin.time.Duration.Companion.seconds
  */
 internal class MockChatWebSocket private constructor(
     networkStateObserver: NetworkStateObserver,
-    private val scope: CoroutineScope,
     private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
     private val httpClient: HttpClient,
     private val channelLogin: String,
 ) : ChatEventHandler {
+    private val scope = CoroutineScope(SupervisorJob())
+
     companion object {
         private const val ENDPOINT = "wss://irc.fdgt.dev"
     }
@@ -67,7 +69,6 @@ internal class MockChatWebSocket private constructor(
     override val connectionStatus = _connectionStatus.asStateFlow()
 
     private var isNetworkAvailable: Boolean = false
-    private var socketJob: Job? = null
 
     init {
         scope.launch {
@@ -78,40 +79,39 @@ internal class MockChatWebSocket private constructor(
     }
 
     override fun start() {
-        socketJob =
-            scope.launch(DispatchersProvider.io + SupervisorJob()) {
-                logDebug<LoggedInChatWebSocket> { "Starting job" }
+        scope.launch(DispatchersProvider.io) {
+            logDebug<LoggedInChatWebSocket> { "Starting job" }
 
-                _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
+            _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
 
-                while (isActive) {
-                    if (isNetworkAvailable) {
-                        logDebug<LoggedInChatWebSocket> { "Network is available, listening" }
-                        _connectionStatus.update { status ->
-                            status.copy(
-                                isAlive = true,
-                            )
-                        }
-
-                        try {
-                            listen()
-                        } catch (e: Exception) {
-                            logError<LoggedInChatWebSocket>(e) { "Socket was closed" }
-                        }
-                    } else {
-                        logDebug<LoggedInChatWebSocket> { "Network is out, delay and retry" }
-                        _connectionStatus.update { status ->
-                            status.copy(
-                                isAlive = false,
-                            )
-                        }
+            while (isActive) {
+                if (isNetworkAvailable) {
+                    logDebug<LoggedInChatWebSocket> { "Network is available, listening" }
+                    _connectionStatus.update { status ->
+                        status.copy(
+                            isAlive = true,
+                        )
                     }
 
-                    if (isActive) {
-                        delayWithJitter(1.seconds, maxJitter = 3.seconds)
+                    try {
+                        listen()
+                    } catch (e: Exception) {
+                        logError<LoggedInChatWebSocket>(e) { "Socket was closed" }
+                    }
+                } else {
+                    logDebug<LoggedInChatWebSocket> { "Network is out, delay and retry" }
+                    _connectionStatus.update { status ->
+                        status.copy(
+                            isAlive = false,
+                        )
                     }
                 }
+
+                if (isActive) {
+                    delayWithJitter(1.seconds, maxJitter = 3.seconds)
+                }
             }
+        }
     }
 
     private suspend fun listen() {
@@ -169,15 +169,9 @@ internal class MockChatWebSocket private constructor(
     }
 
     override fun disconnect() {
-        scope.launch {
-            _connectionStatus.update { status -> status.copy(registeredListeners = 0) }
-            doDisconnect()
-        }
-    }
-
-    private fun doDisconnect() {
         logDebug<MockChatWebSocket> { "Disconnecting live chat socket" }
-        socketJob?.cancel()
+        _connectionStatus.update { status -> status.copy(registeredListeners = 0) }
+        scope.cancel()
     }
 
     class Factory(
@@ -187,17 +181,15 @@ internal class MockChatWebSocket private constructor(
         private val httpClient: HttpClient,
     ) : ChatCommandHandlerFactory {
         override fun create(
-            scope: CoroutineScope,
             channelLogin: String,
             channelId: String,
-        ): MockChatWebSocket =
-            MockChatWebSocket(
-                networkStateObserver = networkStateObserver,
-                scope = scope,
-                clock = clock,
-                parser = parser,
-                httpClient = httpClient,
-                channelLogin = channelLogin,
-            )
+            appUser: AppUser.LoggedIn,
+        ): MockChatWebSocket = MockChatWebSocket(
+            networkStateObserver = networkStateObserver,
+            clock = clock,
+            parser = parser,
+            httpClient = httpClient,
+            channelLogin = channelLogin,
+        )
     }
 }

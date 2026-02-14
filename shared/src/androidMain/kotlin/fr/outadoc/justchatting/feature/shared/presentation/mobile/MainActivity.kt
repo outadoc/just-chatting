@@ -30,24 +30,20 @@ internal class MainActivity : AppCompatActivity() {
         fun createIntent(
             context: Context,
             userId: String,
-        ): Intent {
-            return Intent(context, MainActivity::class.java).apply {
-                data = createChannelDeeplink(userId).toAndroidUri()
-                action = Intent.ACTION_VIEW
-                flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT
+        ): Intent = Intent(context, MainActivity::class.java).apply {
+            data = createChannelDeeplink(userId).toAndroidUri()
+            action = Intent.ACTION_VIEW
+            flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT
 
-                putExtra(CHANNEL_USER_ID, userId)
-            }
+            putExtra(CHANNEL_USER_ID, userId)
         }
 
-        fun createGlanceAction(userId: String): Action {
-            return actionStartActivity<MainActivity>(
-                parameters =
-                    actionParametersOf(
-                        ActionParameters.Key<String>(CHANNEL_USER_ID) to userId,
-                    ),
-            )
-        }
+        fun createGlanceAction(userId: String): Action = actionStartActivity<MainActivity>(
+            parameters =
+            actionParametersOf(
+                ActionParameters.Key<String>(CHANNEL_USER_ID) to userId,
+            ),
+        )
     }
 
     private val deeplinkReceiver: DeeplinkReceiver by inject()

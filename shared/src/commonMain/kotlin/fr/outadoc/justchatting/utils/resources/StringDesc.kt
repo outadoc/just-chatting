@@ -14,18 +14,14 @@ internal sealed interface StringDesc {
         val value: String,
     ) : StringDesc {
         @Composable
-        override fun localized(): String {
-            return value
-        }
+        override fun localized(): String = value
     }
 
     class Resource(
         private val resource: StringResource,
     ) : StringDesc {
         @Composable
-        override fun localized(): String {
-            return stringResource(resource)
-        }
+        override fun localized(): String = stringResource(resource)
     }
 
     class Formatted(
@@ -55,12 +51,10 @@ internal sealed interface StringDesc {
         private val number: Int,
     ) : StringDesc {
         @Composable
-        override fun localized(): String {
-            return pluralStringResource(
-                resource = resource,
-                quantity = number,
-            )
-        }
+        override fun localized(): String = pluralStringResource(
+            resource = resource,
+            quantity = number,
+        )
     }
 
     class PluralFormatted(
@@ -88,25 +82,15 @@ internal sealed interface StringDesc {
     }
 }
 
-internal fun String.desc(): StringDesc {
-    return StringDesc.Raw(this)
-}
+internal fun String.desc(): StringDesc = StringDesc.Raw(this)
 
-internal fun StringResource.desc(): StringDesc {
-    return StringDesc.Resource(this)
-}
+internal fun StringResource.desc(): StringDesc = StringDesc.Resource(this)
 
-internal fun StringResource.desc(vararg args: Any): StringDesc {
-    return StringDesc.Formatted(this, args)
-}
+internal fun StringResource.desc(vararg args: Any): StringDesc = StringDesc.Formatted(this, args)
 
-internal fun PluralStringResource.desc(number: Int): StringDesc {
-    return StringDesc.Plural(this, number)
-}
+internal fun PluralStringResource.desc(number: Int): StringDesc = StringDesc.Plural(this, number)
 
 internal fun PluralStringResource.desc(
     number: Int,
     vararg args: Any,
-): StringDesc {
-    return StringDesc.PluralFormatted(this, number, args)
-}
+): StringDesc = StringDesc.PluralFormatted(this, number, args)

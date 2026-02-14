@@ -121,8 +121,8 @@ internal class TwitchIrcCommandParser(
                     timestamp = timestamp,
                     userDisplayName = ircMessage.tags.displayName ?: return null,
                     priorGifterDisplayName =
-                        ircMessage.tags.priorGifterDisplayName
-                            ?.takeUnless { ircMessage.tags.priorGifterAnonymous },
+                    ircMessage.tags.priorGifterDisplayName
+                        ?.takeUnless { ircMessage.tags.priorGifterAnonymous },
                 )
             }
 
@@ -165,23 +165,19 @@ internal class TwitchIrcCommandParser(
         )
     }
 
-    private fun parseClearMessage(ircMessage: IrcMessage): ChatEvent {
-        return ChatEvent.Command.ClearMessage(
-            targetMessage = ircMessage.parameters.getOrNull(1),
-            targetMessageId = ircMessage.tags.targetMessageId,
-            targetUserLogin = ircMessage.tags.login,
-            timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
-        )
-    }
+    private fun parseClearMessage(ircMessage: IrcMessage): ChatEvent = ChatEvent.Command.ClearMessage(
+        targetMessage = ircMessage.parameters.getOrNull(1),
+        targetMessageId = ircMessage.tags.targetMessageId,
+        targetUserLogin = ircMessage.tags.login,
+        timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
+    )
 
-    private fun parseClearChat(ircMessage: IrcMessage): ChatEvent {
-        return ChatEvent.Command.ClearChat(
-            timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
-            targetUserId = ircMessage.tags.targetUserId,
-            targetUserLogin = ircMessage.parameters.getOrNull(1),
-            duration = ircMessage.tags.banDuration,
-        )
-    }
+    private fun parseClearChat(ircMessage: IrcMessage): ChatEvent = ChatEvent.Command.ClearChat(
+        timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
+        targetUserId = ircMessage.tags.targetUserId,
+        targetUserLogin = ircMessage.parameters.getOrNull(1),
+        duration = ircMessage.tags.banDuration,
+    )
 
     private fun parseNotice(ircMessage: IrcMessage): ChatEvent.Message.Notice? {
         val notice =
@@ -195,21 +191,17 @@ internal class TwitchIrcCommandParser(
         )
     }
 
-    private fun parseRoomState(ircMessage: IrcMessage): ChatEvent.Command.RoomStateDelta {
-        return ChatEvent.Command.RoomStateDelta(
-            isEmoteOnly = ircMessage.tags.isEmoteOnly,
-            minFollowDuration = ircMessage.tags.minFollowDuration,
-            uniqueMessagesOnly = ircMessage.tags.uniqueMessagesOnly,
-            slowModeDuration = ircMessage.tags.slowModeDuration,
-            isSubOnly = ircMessage.tags.isSubOnly,
-        )
-    }
+    private fun parseRoomState(ircMessage: IrcMessage): ChatEvent.Command.RoomStateDelta = ChatEvent.Command.RoomStateDelta(
+        isEmoteOnly = ircMessage.tags.isEmoteOnly,
+        minFollowDuration = ircMessage.tags.minFollowDuration,
+        uniqueMessagesOnly = ircMessage.tags.uniqueMessagesOnly,
+        slowModeDuration = ircMessage.tags.slowModeDuration,
+        isSubOnly = ircMessage.tags.isSubOnly,
+    )
 
-    private fun parseUserState(ircMessage: IrcMessage): ChatEvent.Command.UserState {
-        return ChatEvent.Command.UserState(
-            emoteSets = ircMessage.tags.emoteSets.orEmpty(),
-        )
-    }
+    private fun parseUserState(ircMessage: IrcMessage): ChatEvent.Command.UserState = ChatEvent.Command.UserState(
+        emoteSets = ircMessage.tags.emoteSets.orEmpty(),
+    )
 
     companion object {
         private val actionRegex = Regex("^\u0001ACTION (.+)\u0001\$")

@@ -9,7 +9,6 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPluginsProvider
-import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
@@ -25,8 +24,8 @@ import io.ktor.websocket.CloseReason
 import io.ktor.websocket.DefaultWebSocketSession
 import io.ktor.websocket.close
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -35,7 +34,6 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -44,12 +42,13 @@ import kotlin.time.Duration.Companion.seconds
 
 internal class PubSubWebSocket(
     private val networkStateObserver: NetworkStateObserver,
-    private val scope: CoroutineScope,
     private val httpClient: HttpClient,
-    private val authRepository: AuthRepository,
+    private val appUser: AppUser.LoggedIn,
     private val pubSubPluginsProvider: PubSubPluginsProvider,
     private val channelId: String,
 ) : ChatEventHandler {
+    private val scope = CoroutineScope(SupervisorJob())
+
     companion object {
         private const val ENDPOINT = "wss://pubsub-edge.twitch.tv"
     }
@@ -75,79 +74,62 @@ internal class PubSubWebSocket(
 
     private var isNetworkAvailable: Boolean = false
 
-    private var socketJob: Job? = null
-    private var networkStateJob: Job? = null
-
     override fun start() {
         observeNetworkState()
         observeSocket()
     }
 
     private fun observeNetworkState() {
-        if (networkStateJob?.isActive == true) {
-            return
-        }
-
-        networkStateJob =
-            scope.launch {
-                networkStateObserver.state.collectLatest { state ->
-                    isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
-                }
+        scope.launch {
+            networkStateObserver.state.collectLatest { state ->
+                isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
             }
+        }
     }
 
     private fun observeSocket() {
-        if (socketJob?.isActive == true) {
-            return
-        }
+        scope.launch(DispatchersProvider.io) {
+            logDebug<PubSubWebSocket> { "Starting job" }
 
-        socketJob =
-            scope.launch(DispatchersProvider.io + SupervisorJob()) {
-                logDebug<PubSubWebSocket> { "Starting job" }
+            _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
 
-                _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
+            while (isActive) {
+                if (isNetworkAvailable) {
+                    logDebug<PubSubWebSocket> { "Network is available, listening" }
+                    _connectionStatus.update { status -> status.copy(isAlive = true) }
 
-                while (isActive) {
-                    if (isNetworkAvailable) {
-                        logDebug<PubSubWebSocket> { "Network is available, listening" }
-                        _connectionStatus.update { status -> status.copy(isAlive = true) }
-
-                        try {
-                            listen()
-                        } catch (e: Exception) {
-                            logError<PubSubWebSocket>(e) { "Socket was closed" }
-                        }
-                    } else {
-                        logDebug<PubSubWebSocket> { "Network is out, delay and retry" }
-                        _connectionStatus.update { status -> status.copy(isAlive = false) }
+                    try {
+                        listen()
+                    } catch (e: Exception) {
+                        logError<PubSubWebSocket>(e) { "Socket was closed" }
                     }
+                } else {
+                    logDebug<PubSubWebSocket> { "Network is out, delay and retry" }
+                    _connectionStatus.update { status -> status.copy(isAlive = false) }
+                }
 
-                    if (isActive) {
-                        delayWithJitter(1.seconds, maxJitter = 3.seconds)
-                    }
+                if (isActive) {
+                    delayWithJitter(1.seconds, maxJitter = 3.seconds)
                 }
             }
+        }
     }
 
     private suspend fun listen() {
         httpClient.webSocket(ENDPOINT) {
-            val appUser = authRepository.currentUser.first()
-
-            if (appUser !is AppUser.LoggedIn) return@webSocket
-
             logDebug<PubSubWebSocket> { "Socket open, sending the LISTEN message" }
 
             // Tell the server what we want to receive
             sendSerialized<PubSubClientMessage>(
                 PubSubClientMessage.Listen(
                     data =
-                        PubSubClientMessage.Listen.Data(
-                            topics =
-                                pubSubPluginsProvider
-                                    .get()
-                                    .map { plugin -> plugin.getTopic(channelId) },
-                            authToken = appUser.token,
-                        ),
+                    PubSubClientMessage.Listen.Data(
+                        topics =
+                        pubSubPluginsProvider
+                            .get()
+                            .map { plugin -> plugin.getTopic(channelId) },
+                        authToken = appUser.token,
+                    ),
                 ),
             )
 
@@ -202,35 +184,26 @@ internal class PubSubWebSocket(
     }
 
     override fun disconnect() {
-        scope.launch {
-            _connectionStatus.update { status -> status.copy(registeredListeners = 0) }
-            doDisconnect()
-        }
-    }
-
-    private fun doDisconnect() {
         logDebug<PubSubWebSocket> { "Disconnecting PubSub socket" }
-        socketJob?.cancel()
+        _connectionStatus.update { status -> status.copy(registeredListeners = 0) }
+        scope.cancel()
     }
 
     class Factory(
         private val networkStateObserver: NetworkStateObserver,
         private val httpClient: HttpClient,
-        private val authRepository: AuthRepository,
         private val pubSubPluginsProvider: PubSubPluginsProvider,
     ) : ChatCommandHandlerFactory {
         override fun create(
-            scope: CoroutineScope,
             channelLogin: String,
             channelId: String,
-        ): PubSubWebSocket =
-            PubSubWebSocket(
-                networkStateObserver = networkStateObserver,
-                scope = scope,
-                httpClient = httpClient,
-                authRepository = authRepository,
-                pubSubPluginsProvider = pubSubPluginsProvider,
-                channelId = channelId,
-            )
+            appUser: AppUser.LoggedIn,
+        ): PubSubWebSocket = PubSubWebSocket(
+            networkStateObserver = networkStateObserver,
+            httpClient = httpClient,
+            appUser = appUser,
+            pubSubPluginsProvider = pubSubPluginsProvider,
+            channelId = channelId,
+        )
     }
 }

@@ -16,43 +16,41 @@ internal class TwitchHttpClientProvider(
     private val preferenceRepository: PreferenceRepository,
     private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
-    fun get(): HttpClient {
-        return baseHttpClientProvider.get {
-            defaultRequest {
-                header("Client-ID", oAuthAppCredentials.clientId)
-            }
+    fun get(): HttpClient = baseHttpClientProvider.get {
+        defaultRequest {
+            header("Client-ID", oAuthAppCredentials.clientId)
+        }
 
-            install(Auth) {
-                bearer {
-                    loadTokens {
-                        logInfo<TwitchHttpClientProvider> { "Loading bearer token" }
-                        preferenceRepository.currentPreferences
-                            .first()
-                            .apiToken
-                            .also { token ->
-                                logInfo<TwitchHttpClientProvider> { "Most fresh token is $token" }
-                            }?.let { token ->
-                                BearerTokens(
-                                    accessToken = token,
-                                    refreshToken = "",
-                                )
-                            }
-                    }
+        install(Auth) {
+            bearer {
+                loadTokens {
+                    logInfo<TwitchHttpClientProvider> { "Loading bearer token" }
+                    preferenceRepository.currentPreferences
+                        .first()
+                        .apiToken
+                        .also { token ->
+                            logInfo<TwitchHttpClientProvider> { "Most fresh token is $token" }
+                        }?.let { token ->
+                            BearerTokens(
+                                accessToken = token,
+                                refreshToken = "",
+                            )
+                        }
+                }
 
-                    refreshTokens {
-                        logInfo<TwitchHttpClientProvider> { "Refreshing bearer token" }
-                        preferenceRepository.currentPreferences
-                            .first()
-                            .apiToken
-                            .also { token ->
-                                logInfo<TwitchHttpClientProvider> { "Most fresh token is $token" }
-                            }?.let { token ->
-                                BearerTokens(
-                                    accessToken = token,
-                                    refreshToken = "",
-                                )
-                            }
-                    }
+                refreshTokens {
+                    logInfo<TwitchHttpClientProvider> { "Refreshing bearer token" }
+                    preferenceRepository.currentPreferences
+                        .first()
+                        .apiToken
+                        .also { token ->
+                            logInfo<TwitchHttpClientProvider> { "Most fresh token is $token" }
+                        }?.let { token ->
+                            BearerTokens(
+                                accessToken = token,
+                                refreshToken = "",
+                            )
+                        }
                 }
             }
         }

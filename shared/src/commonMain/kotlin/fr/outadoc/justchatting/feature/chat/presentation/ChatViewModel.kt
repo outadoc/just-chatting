@@ -383,11 +383,11 @@ internal class ChatViewModel(
 
         state
             .filterIsInstance<State.Chatting>()
-            .mapNotNull { state -> state.user }
+            .map { state -> Pair(state.user, state.appUser) }
             .distinctUntilChanged()
-            .onEach { user ->
+            .onEach { (user, appUser) ->
                 chatRepository
-                    .getChatEventFlow(user)
+                    .getChatEventFlow(user, appUser)
                     .flatMapConcat { event ->
                         chatEventViewMapper.map(event).asFlow()
                     }.mapNotNull { event ->
@@ -449,12 +449,12 @@ internal class ChatViewModel(
                     .launchIn(defaultScope)
 
                 chatRepository
-                    .getConnectionStatusFlow(user)
+                    .getConnectionStatusFlow(user, appUser)
                     .map { status -> Action.ChangeConnectionStatus(status) }
                     .onEach { action -> actions.emit(action) }
                     .launchIn(defaultScope)
 
-                chatRepository.start(user)
+                chatRepository.start(user, appUser)
             }.launchIn(defaultScope)
 
         state
@@ -474,14 +474,14 @@ internal class ChatViewModel(
                 val action =
                     Action.ChangeRecentEmotes(
                         recentEmotes =
-                            recentEmotes
-                                .filter { recentEmote -> recentEmote.name in allEmotesMap }
-                                .map { recentEmote ->
-                                    Emote(
-                                        name = recentEmote.name,
-                                        urls = EmoteUrls(recentEmote.url),
-                                    )
-                                },
+                        recentEmotes
+                            .filter { recentEmote -> recentEmote.name in allEmotesMap }
+                            .map { recentEmote ->
+                                Emote(
+                                    name = recentEmote.name,
+                                    urls = EmoteUrls(recentEmote.url),
+                                )
+                            },
                     )
 
                 actions.emit(action)
@@ -531,8 +531,8 @@ internal class ChatViewModel(
     }
 
     fun onResume() {
-        (state.value as? State.Chatting)?.user?.let { user ->
-            chatRepository.start(user)
+        (state.value as? State.Chatting)?.let { chattingState ->
+            chatRepository.start(chattingState.user, chattingState.appUser)
         }
     }
 
@@ -748,29 +748,27 @@ internal class ChatViewModel(
         channelId: String,
         channelName: String,
         emoteSets: List<String>,
-    ): PersistentList<EmoteSetItem> {
-        return coroutineScope {
-            emoteListSourcesProvider
-                .getSources()
-                .map { source ->
-                    async {
-                        source
-                            .getEmotes(
-                                channelId = channelId,
-                                channelName = channelName,
-                                emoteSets = emoteSets,
-                            ).fold(
-                                onSuccess = { emotes -> emotes },
-                                onFailure = { exception ->
-                                    logError<ChatViewModel>(exception) { "Failed to load emotes from source $source" }
-                                    emptyList()
-                                },
-                            )
-                    }
-                }.awaitAll()
-                .flatten()
-                .toPersistentList()
-        }
+    ): PersistentList<EmoteSetItem> = coroutineScope {
+        emoteListSourcesProvider
+            .getSources()
+            .map { source ->
+                async {
+                    source
+                        .getEmotes(
+                            channelId = channelId,
+                            channelName = channelName,
+                            emoteSets = emoteSets,
+                        ).fold(
+                            onSuccess = { emotes -> emotes },
+                            onFailure = { exception ->
+                                logError<ChatViewModel>(exception) { "Failed to load emotes from source $source" }
+                                emptyList()
+                            },
+                        )
+                }
+            }.awaitAll()
+            .flatten()
+            .toPersistentList()
     }
 
     private fun Action.AddMessages.reduce(state: State): State {
@@ -807,13 +805,13 @@ internal class ChatViewModel(
 
         return state.copy(
             chatMessages =
-                newMessages
-                    .filterIsInstance<ChatListItem.Message>()
-                    .take(maxCount)
-                    .toPersistentList(),
+            newMessages
+                .filterIsInstance<ChatListItem.Message>()
+                .take(maxCount)
+                .toPersistentList(),
             lastSentMessageInstant =
-                lastSentMessageInstant
-                    ?: state.lastSentMessageInstant,
+            lastSentMessageInstant
+                ?: state.lastSentMessageInstant,
             chatters = state.chatters.addAll(newChatters),
         )
     }
@@ -843,13 +841,13 @@ internal class ChatViewModel(
         if (state !is State.Chatting) return state
         return state.copy(
             roomState =
-                RoomState(
-                    isEmoteOnly = delta.isEmoteOnly ?: state.roomState.isEmoteOnly,
-                    isSubOnly = delta.isSubOnly ?: state.roomState.isSubOnly,
-                    minFollowDuration = delta.minFollowDuration ?: state.roomState.minFollowDuration,
-                    uniqueMessagesOnly = delta.uniqueMessagesOnly ?: state.roomState.uniqueMessagesOnly,
-                    slowModeDuration = delta.slowModeDuration ?: state.roomState.slowModeDuration,
-                ),
+            RoomState(
+                isEmoteOnly = delta.isEmoteOnly ?: state.roomState.isEmoteOnly,
+                isSubOnly = delta.isSubOnly ?: state.roomState.isSubOnly,
+                minFollowDuration = delta.minFollowDuration ?: state.roomState.minFollowDuration,
+                uniqueMessagesOnly = delta.uniqueMessagesOnly ?: state.roomState.uniqueMessagesOnly,
+                slowModeDuration = delta.slowModeDuration ?: state.roomState.slowModeDuration,
+            ),
         )
     }
 
@@ -869,9 +867,9 @@ internal class ChatViewModel(
         if (state !is State.Chatting) return state
         return state.copy(
             ongoingEvents =
-                state.ongoingEvents.copy(
-                    poll = poll,
-                ),
+            state.ongoingEvents.copy(
+                poll = poll,
+            ),
         )
     }
 
@@ -879,9 +877,9 @@ internal class ChatViewModel(
         if (state !is State.Chatting) return state
         return state.copy(
             ongoingEvents =
-                state.ongoingEvents.copy(
-                    prediction = prediction,
-                ),
+            state.ongoingEvents.copy(
+                prediction = prediction,
+            ),
         )
     }
 
@@ -889,11 +887,11 @@ internal class ChatViewModel(
         if (state !is State.Chatting) return state
         return state.copy(
             stream =
-                state.stream?.copy(
-                    title = streamTitle ?: state.stream.title,
-                    category = streamCategory ?: state.stream.category,
-                    viewerCount = viewerCount ?: state.stream.viewerCount,
-                ),
+            state.stream?.copy(
+                title = streamTitle ?: state.stream.title,
+                category = streamCategory ?: state.stream.category,
+                viewerCount = viewerCount ?: state.stream.viewerCount,
+            ),
         )
     }
 
@@ -901,10 +899,10 @@ internal class ChatViewModel(
         if (state !is State.Chatting) return state
         return state.copy(
             richEmbeds =
-                state.richEmbeds.put(
-                    key = richEmbed.messageId,
-                    value = richEmbed,
-                ),
+            state.richEmbeds.put(
+                key = richEmbed.messageId,
+                value = richEmbed,
+            ),
         )
     }
 
@@ -921,9 +919,9 @@ internal class ChatViewModel(
         if (pinnedMessage == null) {
             return state.copy(
                 ongoingEvents =
-                    state.ongoingEvents.copy(
-                        pinnedMessage = null,
-                    ),
+                state.ongoingEvents.copy(
+                    pinnedMessage = null,
+                ),
             )
         }
 
@@ -932,20 +930,20 @@ internal class ChatViewModel(
                 message.body?.messageId == pinnedMessage.message.messageId
             } ?: return state.copy(
                 ongoingEvents =
-                    state.ongoingEvents.copy(
-                        pinnedMessage = null,
-                    ),
+                state.ongoingEvents.copy(
+                    pinnedMessage = null,
+                ),
             )
 
         return state.copy(
             ongoingEvents =
-                state.ongoingEvents.copy(
-                    pinnedMessage =
-                        OngoingEvents.PinnedMessage(
-                            message = matchingMessage,
-                            endsAt = pinnedMessage.message.endsAt,
-                        ),
+            state.ongoingEvents.copy(
+                pinnedMessage =
+                OngoingEvents.PinnedMessage(
+                    message = matchingMessage,
+                    endsAt = pinnedMessage.message.endsAt,
                 ),
+            ),
         )
     }
 
@@ -953,9 +951,9 @@ internal class ChatViewModel(
         if (state !is State.Chatting) return state
         return state.copy(
             ongoingEvents =
-                state.ongoingEvents.copy(
-                    outgoingRaid = raid,
-                ),
+            state.ongoingEvents.copy(
+                outgoingRaid = raid,
+            ),
         )
     }
 
@@ -973,56 +971,52 @@ internal class ChatViewModel(
         )
     }
 
-    private fun Action.UpdateUser.reduce(state: State): State {
-        return when (state) {
-            is State.Initial,
-            is State.Failed,
-            -> {
-                state
-            }
+    private fun Action.UpdateUser.reduce(state: State): State = when (state) {
+        is State.Initial,
+        is State.Failed,
+        -> {
+            state
+        }
 
-            is State.Loading -> {
-                State.Chatting(
-                    user = user,
-                    appUser = state.appUser,
-                    maxAdapterCount = state.maxAdapterCount,
-                    chatters =
-                        persistentSetOf(
-                            Chatter(
-                                id = user.id,
-                                login = user.login,
-                                displayName = user.displayName,
-                            ),
-                        ),
-                )
-            }
+        is State.Loading -> {
+            State.Chatting(
+                user = user,
+                appUser = state.appUser,
+                maxAdapterCount = state.maxAdapterCount,
+                chatters =
+                persistentSetOf(
+                    Chatter(
+                        id = user.id,
+                        login = user.login,
+                        displayName = user.displayName,
+                    ),
+                ),
+            )
+        }
 
-            is State.Chatting -> {
-                state.copy(
-                    user = user,
-                    chatters =
-                        state.chatters.add(
-                            Chatter(
-                                id = user.id,
-                                login = user.login,
-                                displayName = user.displayName,
-                            ),
-                        ),
-                )
-            }
+        is State.Chatting -> {
+            state.copy(
+                user = user,
+                chatters =
+                state.chatters.add(
+                    Chatter(
+                        id = user.id,
+                        login = user.login,
+                        displayName = user.displayName,
+                    ),
+                ),
+            )
         }
     }
 
-    private fun InputAction.reduce(state: InputState): InputState {
-        return when (this) {
-            is InputAction.AppendChatter -> reduce(state)
-            is InputAction.AppendEmote -> reduce(state)
-            is InputAction.ChangeMessageInput -> reduce(state)
-            is InputAction.ReplyToMessage -> reduce(state)
-            is InputAction.Submit -> reduce(state)
-            is InputAction.UpdateAutoCompleteItems -> reduce(state)
-            is InputAction.ReplaceInputWithLastSentMessage -> reduce(state)
-        }
+    private fun InputAction.reduce(state: InputState): InputState = when (this) {
+        is InputAction.AppendChatter -> reduce(state)
+        is InputAction.AppendEmote -> reduce(state)
+        is InputAction.ChangeMessageInput -> reduce(state)
+        is InputAction.ReplyToMessage -> reduce(state)
+        is InputAction.Submit -> reduce(state)
+        is InputAction.UpdateAutoCompleteItems -> reduce(state)
+        is InputAction.ReplaceInputWithLastSentMessage -> reduce(state)
     }
 
     private fun InputAction.Submit.reduce(inputState: InputState): InputState {
@@ -1037,6 +1031,7 @@ internal class ChatViewModel(
                     channelUserId = state.user.id,
                     message = inputState.message,
                     inReplyToMessageId = inputState.replyingTo?.body?.messageId,
+                    appUser = state.appUser,
                 ).onFailure { exception ->
                     actions.emit(
                         Action.AddMessages(
@@ -1044,13 +1039,13 @@ internal class ChatViewModel(
                                 ChatListItem.Message.Highlighted(
                                     timestamp = clock.now(),
                                     metadata =
-                                        ChatListItem.Message.Highlighted.Metadata(
-                                            title = Res.string.chat_send_msg_error.desc(),
-                                            subtitle =
-                                                (exception as? MessageNotSentException)
-                                                    ?.dropReasonMessage
-                                                    ?.desc(),
-                                        ),
+                                    ChatListItem.Message.Highlighted.Metadata(
+                                        title = Res.string.chat_send_msg_error.desc(),
+                                        subtitle =
+                                        (exception as? MessageNotSentException)
+                                            ?.dropReasonMessage
+                                            ?.desc(),
+                                    ),
                                     body = null,
                                 ),
                             ),
@@ -1066,10 +1061,10 @@ internal class ChatViewModel(
                             RecentEmote(
                                 name = word,
                                 url =
-                                    emote.urls.getBestUrl(
-                                        screenDensity = screenDensity,
-                                        isDarkTheme = isDarkTheme,
-                                    ),
+                                emote.urls.getBestUrl(
+                                    screenDensity = screenDensity,
+                                    isDarkTheme = isDarkTheme,
+                                ),
                                 usedAt = currentTime,
                             )
                         }
@@ -1086,36 +1081,26 @@ internal class ChatViewModel(
         )
     }
 
-    private fun InputAction.ChangeMessageInput.reduce(inputState: InputState): InputState {
-        return inputState.copy(
-            message = message,
-            selectionRange = selectionRange,
-        )
-    }
+    private fun InputAction.ChangeMessageInput.reduce(inputState: InputState): InputState = inputState.copy(
+        message = message,
+        selectionRange = selectionRange,
+    )
 
-    private fun InputAction.AppendEmote.reduce(inputState: InputState): InputState {
-        return appendTextToInput(
-            inputState = inputState,
-            text = emote.name,
-            replaceLastWord = autocomplete,
-        )
-    }
+    private fun InputAction.AppendEmote.reduce(inputState: InputState): InputState = appendTextToInput(
+        inputState = inputState,
+        text = emote.name,
+        replaceLastWord = autocomplete,
+    )
 
-    private fun InputAction.AppendChatter.reduce(inputState: InputState): InputState {
-        return appendTextToInput(
-            inputState = inputState,
-            text = "${ChatPrefixConstants.ChatterPrefix}${chatter.displayName}",
-            replaceLastWord = autocomplete,
-        )
-    }
+    private fun InputAction.AppendChatter.reduce(inputState: InputState): InputState = appendTextToInput(
+        inputState = inputState,
+        text = "${ChatPrefixConstants.ChatterPrefix}${chatter.displayName}",
+        replaceLastWord = autocomplete,
+    )
 
-    private fun InputAction.ReplyToMessage.reduce(inputState: InputState): InputState {
-        return inputState.copy(replyingTo = chatListItem)
-    }
+    private fun InputAction.ReplyToMessage.reduce(inputState: InputState): InputState = inputState.copy(replyingTo = chatListItem)
 
-    private fun InputAction.UpdateAutoCompleteItems.reduce(inputState: InputState): InputState {
-        return inputState.copy(autoCompleteItems = items)
-    }
+    private fun InputAction.UpdateAutoCompleteItems.reduce(inputState: InputState): InputState = inputState.copy(autoCompleteItems = items)
 
     @Suppress("UnusedReceiverParameter")
     private fun InputAction.ReplaceInputWithLastSentMessage.reduce(inputState: InputState): InputState {
@@ -1126,10 +1111,10 @@ internal class ChatViewModel(
             message = newMessage,
             lastSentMessage = newMessage,
             selectionRange =
-                IntRange(
-                    start = newMessage.length,
-                    endInclusive = newMessage.length,
-                ),
+            IntRange(
+                start = newMessage.length,
+                endInclusive = newMessage.length,
+            ),
         )
     }
 
@@ -1157,10 +1142,10 @@ internal class ChatViewModel(
         return inputState.copy(
             message = "${textBefore}$text $textAfter",
             selectionRange =
-                IntRange(
-                    start = textBefore.length + text.length + 1,
-                    endInclusive = textBefore.length + text.length + 1,
-                ),
+            IntRange(
+                start = textBefore.length + text.length + 1,
+                endInclusive = textBefore.length + text.length + 1,
+            ),
         )
     }
 

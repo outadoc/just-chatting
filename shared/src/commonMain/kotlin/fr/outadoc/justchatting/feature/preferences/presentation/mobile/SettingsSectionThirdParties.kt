@@ -98,9 +98,9 @@ private fun SettingsSectionThirdPartiesContent(
         item {
             SettingsHeader(
                 modifier =
-                    Modifier
-                        .padding(top = 8.dp)
-                        .padding(itemInsets),
+                Modifier
+                    .padding(top = 8.dp)
+                    .padding(itemInsets),
             ) {
                 Text(stringResource(Res.string.settings_thirdparty_recent_header))
             }
@@ -129,9 +129,9 @@ private fun SettingsSectionThirdPartiesContent(
         item {
             SettingsHeader(
                 modifier =
-                    Modifier
-                        .padding(top = 8.dp)
-                        .padding(itemInsets),
+                Modifier
+                    .padding(top = 8.dp)
+                    .padding(itemInsets),
             ) {
                 Text(stringResource(Res.string.settings_thirdparty_pronouns_header))
             }
@@ -176,9 +176,9 @@ private fun SettingsSectionThirdPartiesContent(
         item {
             SettingsHeader(
                 modifier =
-                    Modifier
-                        .padding(top = 8.dp)
-                        .padding(itemInsets),
+                Modifier
+                    .padding(top = 8.dp)
+                    .padding(itemInsets),
             ) {
                 Text(stringResource(Res.string.settings_thirdparty_emotes_header))
             }

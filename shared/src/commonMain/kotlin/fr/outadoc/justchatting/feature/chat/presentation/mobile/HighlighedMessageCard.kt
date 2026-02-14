@@ -53,11 +53,11 @@ internal fun HighlightedMessageCard(
         Row(modifier = Modifier.height(IntrinsicSize.Min)) {
             Box(
                 modifier =
-                    Modifier
-                        .padding(vertical = 4.dp)
-                        .background(color)
-                        .width(4.dp)
-                        .fillMaxHeight(),
+                Modifier
+                    .padding(vertical = 4.dp)
+                    .background(color)
+                    .width(4.dp)
+                    .fillMaxHeight(),
             )
 
             Card(

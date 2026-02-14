@@ -25,14 +25,14 @@ internal fun ThreePaneScaffoldScope.DragHandle(
 
     VerticalDragHandle(
         modifier =
-            modifier
-                .height(64.dp)
-                .fillMaxWidth()
-                .paneExpansionDraggable(
-                    state = state,
-                    minTouchTargetSize = size,
-                    interactionSource = interactionSource,
-                    semanticsProperties = state.defaultDragHandleSemantics(),
-                ),
+        modifier
+            .height(64.dp)
+            .fillMaxWidth()
+            .paneExpansionDraggable(
+                state = state,
+                minTouchTargetSize = size,
+                interactionSource = interactionSource,
+                semanticsProperties = state.defaultDragHandleSemantics(),
+            ),
     )
 }

@@ -13,21 +13,19 @@ import kotlin.time.Instant
 internal class RecentEmotesDb(
     private val recentEmoteQueries: RecentEmoteQueries,
 ) : RecentEmotesApi {
-    override fun getAll(): Flow<List<RecentEmote>> {
-        return recentEmoteQueries
-            .getAll()
-            .asFlow()
-            .mapToList(DispatchersProvider.io)
-            .map { emotes ->
-                emotes.map { emote ->
-                    RecentEmote(
-                        name = emote.name,
-                        url = emote.url,
-                        usedAt = Instant.fromEpochMilliseconds(emote.used_at),
-                    )
-                }
+    override fun getAll(): Flow<List<RecentEmote>> = recentEmoteQueries
+        .getAll()
+        .asFlow()
+        .mapToList(DispatchersProvider.io)
+        .map { emotes ->
+            emotes.map { emote ->
+                RecentEmote(
+                    name = emote.name,
+                    url = emote.url,
+                    usedAt = Instant.fromEpochMilliseconds(emote.used_at),
+                )
             }
-    }
+        }
 
     override fun insertAll(emotes: Collection<RecentEmote>) {
         recentEmoteQueries.transaction {

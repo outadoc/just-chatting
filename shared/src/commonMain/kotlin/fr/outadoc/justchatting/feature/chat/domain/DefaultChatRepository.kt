@@ -3,9 +3,8 @@ package fr.outadoc.justchatting.feature.chat.domain
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.shared.domain.model.User
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
@@ -13,28 +12,29 @@ import kotlinx.coroutines.flow.getAndUpdate
 internal class DefaultChatRepository(
     private val factory: AggregateChatEventHandler.Factory,
 ) : ChatRepository {
-    private val coroutineScope: CoroutineScope = CoroutineScope(Job())
-
     private val handlerFlow: MutableStateFlow<ChatEventHandler?> = MutableStateFlow(null)
 
-    override fun getChatEventFlow(user: User): Flow<ChatEvent> {
-        return getOrCreateEventHandler(user).eventFlow
-    }
+    override fun getChatEventFlow(
+        user: User,
+        appUser: AppUser.LoggedIn,
+    ): Flow<ChatEvent> = getOrCreateEventHandler(user, appUser).eventFlow
 
     override fun getConnectionStatusFlow(
         user: User,
-    ): Flow<ConnectionStatus> {
-        return getOrCreateEventHandler(user).connectionStatus
-    }
+        appUser: AppUser.LoggedIn,
+    ): Flow<ConnectionStatus> = getOrCreateEventHandler(user, appUser).connectionStatus
 
-    private fun getOrCreateEventHandler(user: User): ChatEventHandler {
+    private fun getOrCreateEventHandler(
+        user: User,
+        appUser: AppUser.LoggedIn,
+    ): ChatEventHandler {
         val handler: ChatEventHandler =
             handlerFlow.value
                 ?: factory
                     .create(
                         channelId = user.id,
                         channelLogin = user.login,
-                        coroutineScope = coroutineScope,
+                        appUser = appUser,
                     ).also { thread ->
                         thread.start()
                     }
@@ -44,8 +44,11 @@ internal class DefaultChatRepository(
         }
     }
 
-    override fun start(user: User) {
-        getOrCreateEventHandler(user).start()
+    override fun start(
+        user: User,
+        appUser: AppUser.LoggedIn,
+    ) {
+        getOrCreateEventHandler(user, appUser).start()
     }
 
     override fun close() {

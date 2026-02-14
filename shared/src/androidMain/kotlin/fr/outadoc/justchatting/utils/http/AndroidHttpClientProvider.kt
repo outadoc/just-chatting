@@ -22,7 +22,6 @@ internal class AndroidHttpClientProvider(
     private val json: Json,
     private val appVersionNameProvider: AppVersionNameProvider,
 ) : BaseHttpClientProvider {
-
     override fun get(block: HttpClientConfig<*>.() -> Unit): HttpClient {
         return HttpClient(OkHttp) {
             install(HttpCache)
@@ -44,9 +43,10 @@ internal class AndroidHttpClientProvider(
 
             install(Logging) {
                 level = LogLevel.ALL
-                logger = object : Logger {
-                    override fun log(message: String) = logDebug<HttpClient> { message }
-                }
+                logger =
+                    object : Logger {
+                        override fun log(message: String) = logDebug<HttpClient> { message }
+                    }
             }
 
             install(WebSockets) {

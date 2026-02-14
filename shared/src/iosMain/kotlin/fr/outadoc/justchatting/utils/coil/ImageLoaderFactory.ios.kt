@@ -14,25 +14,24 @@ import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 
 internal actual object ImageLoaderFactory : SingletonImageLoader.Factory {
-
     override fun newImageLoader(context: PlatformContext): ImageLoader {
-        return ImageLoader.Builder(context)
+        return ImageLoader
+            .Builder(context)
             .crossfade(true)
             .memoryCache {
-                MemoryCache.Builder()
+                MemoryCache
+                    .Builder()
                     .maxSizePercent(context, percent = 0.25)
                     .build()
-            }
-            .diskCache {
-                DiskCache.Builder()
+            }.diskCache {
+                DiskCache
+                    .Builder()
                     .directory(getCachesDirectory().resolve("image_cache"))
                     .maxSizePercent(0.02)
                     .build()
-            }
-            .components {
+            }.components {
                 add(AnimatedSkiaImageDecoder.Factory(prerenderFrames = true))
-            }
-            .logger(CoilCustomLogger())
+            }.logger(CoilCustomLogger())
             .build()
     }
 
@@ -45,8 +44,7 @@ internal actual object ImageLoaderFactory : SingletonImageLoader.Factory {
                 appropriateForURL = null,
                 create = false,
                 error = null,
-            )
-            ?.path
+            )?.path
             ?.toPath()
             ?: error("Could not get caches directory")
     }

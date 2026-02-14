@@ -7,14 +7,12 @@ import kotlin.time.Instant
 
 @Serializable
 internal sealed class PubSubPinnedMessage {
-
     @Serializable
     @SerialName("pin-message")
     data class Pin(
         @SerialName("data")
         val data: Data,
     ) : PubSubPinnedMessage() {
-
         @Serializable
         data class Data(
             @SerialName("id")

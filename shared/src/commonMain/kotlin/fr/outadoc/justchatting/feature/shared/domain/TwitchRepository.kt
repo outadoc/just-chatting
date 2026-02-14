@@ -14,7 +14,6 @@ import kotlinx.datetime.TimeZone
 import kotlin.time.Instant
 
 internal interface TwitchRepository {
-
     suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>>
 
     suspend fun getFollowedChannels(): Flow<List<ChannelFollow>>
@@ -38,7 +37,10 @@ internal interface TwitchRepository {
         timeZone: TimeZone,
     ): Flow<FullSchedule>
 
-    suspend fun markChannelAsVisited(userId: String, visitedAt: Instant)
+    suspend fun markChannelAsVisited(
+        userId: String,
+        visitedAt: Instant,
+    )
 
     suspend fun getGlobalBadges(): Result<List<TwitchBadge>>
 
@@ -50,7 +52,10 @@ internal interface TwitchRepository {
         inReplyToMessageId: String?,
     ): Result<String>
 
-    suspend fun syncFollowedChannelsSchedule(today: LocalDate, timeZone: TimeZone)
+    suspend fun syncFollowedChannelsSchedule(
+        today: LocalDate,
+        timeZone: TimeZone,
+    )
 
     suspend fun syncFollowedStreams()
 

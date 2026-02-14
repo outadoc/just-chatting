@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal sealed class PubSubBroadcastSettingsMessage {
-
     @Serializable
     @SerialName("broadcast_settings_update")
     data class Update(

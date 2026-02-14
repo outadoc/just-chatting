@@ -27,7 +27,6 @@ internal class AndroidChatNotifier(
     private val context: Context,
     private val preferenceRepository: PreferenceRepository,
 ) : ChatNotifier {
-
     companion object {
         private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
         private const val KEY_QUICK_REPLY_TEXT = "quick_reply"
@@ -56,7 +55,10 @@ internal class AndroidChatNotifier(
             }
         }
 
-    override fun notify(context: Context, user: User) {
+    override fun notify(
+        context: Context,
+        user: User,
+    ) {
         if (areNotificationsEnabled) {
             createGenericBubbleChannelIfNeeded(context) ?: return
 
@@ -68,11 +70,11 @@ internal class AndroidChatNotifier(
     private fun createGenericBubbleChannelIfNeeded(context: Context): NotificationChannelCompat? {
         val nm = NotificationManagerCompat.from(context)
         nm.createNotificationChannel(
-            NotificationChannelCompat.Builder(
-                NOTIFICATION_CHANNEL_ID,
-                NotificationManagerCompat.IMPORTANCE_MIN,
-            )
-                .setName(context.getString(R.string.notification_channel_bubbles_title))
+            NotificationChannelCompat
+                .Builder(
+                    NOTIFICATION_CHANNEL_ID,
+                    NotificationManagerCompat.IMPORTANCE_MIN,
+                ).setName(context.getString(R.string.notification_channel_bubbles_title))
                 .setDescription(context.getString(R.string.notification_channel_bubbles_message))
                 .build(),
         )
@@ -81,19 +83,25 @@ internal class AndroidChatNotifier(
     }
 
     @RequiresPermission("android.permission.POST_NOTIFICATIONS")
-    private fun createNotificationForUser(context: Context, user: User) {
+    private fun createNotificationForUser(
+        context: Context,
+        user: User,
+    ) {
         val nm = NotificationManagerCompat.from(context)
         val intent = EmbeddedChatActivity.createIntent(context, user.id)
 
-        val person = Person.Builder()
-            .setKey(user.id)
-            .setName(user.displayName)
-            .setIcon(user.getProfileImageIcon(context))
-            .build()
+        val person =
+            Person
+                .Builder()
+                .setKey(user.id)
+                .setName(user.displayName)
+                .setIcon(user.getProfileImageIcon(context))
+                .build()
 
         nm.notify(
             notificationIdFor(user.id),
-            NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+            NotificationCompat
+                .Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setContentTitle(user.displayName)
                 .setContentIntent(intent.toPendingActivityIntent(context))
                 .setSmallIcon(R.drawable.ic_notif)
@@ -104,39 +112,38 @@ internal class AndroidChatNotifier(
                 .addPerson(person)
                 .setAutoCancel(false)
                 .addAction(
-                    NotificationCompat.Action.Builder(
-                        R.drawable.ic_reply,
-                        context.getString(R.string.notification_action_reply),
-                        ChatConnectionService.createReplyIntent(context, channelId = user.id)
-                            .toPendingForegroundServiceIntent(context, mutable = true),
-                    )
-                        .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_REPLY)
+                    NotificationCompat.Action
+                        .Builder(
+                            R.drawable.ic_reply,
+                            context.getString(R.string.notification_action_reply),
+                            ChatConnectionService
+                                .createReplyIntent(context, channelId = user.id)
+                                .toPendingForegroundServiceIntent(context, mutable = true),
+                        ).setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_REPLY)
                         .addRemoteInput(
-                            RemoteInput.Builder(KEY_QUICK_REPLY_TEXT)
+                            RemoteInput
+                                .Builder(KEY_QUICK_REPLY_TEXT)
                                 .setLabel(context.getString(R.string.notification_action_reply_hint))
                                 .build(),
-                        )
-                        .build(),
-                )
-                .setBubbleMetadata(
-                    NotificationCompat.BubbleMetadata.Builder(
-                        intent.toPendingActivityIntent(context, mutable = true),
-                        user.getProfileImageIcon(context),
-                    )
-                        .setDesiredHeightResId(R.dimen.height_bubbleWindow)
+                        ).build(),
+                ).setBubbleMetadata(
+                    NotificationCompat.BubbleMetadata
+                        .Builder(
+                            intent.toPendingActivityIntent(context, mutable = true),
+                            user.getProfileImageIcon(context),
+                        ).setDesiredHeightResId(R.dimen.height_bubbleWindow)
                         .setAutoExpandBubble(false)
                         .setSuppressNotification(true)
                         .build(),
-                )
-                .setStyle(
-                    NotificationCompat.MessagingStyle(person)
+                ).setStyle(
+                    NotificationCompat
+                        .MessagingStyle(person)
                         .addMessage(
                             context.getString(R.string.notification_channel_bubbles_openPrompt),
                             System.currentTimeMillis(),
                             person,
                         ),
-                )
-                .build(),
+                ).build(),
         )
     }
 

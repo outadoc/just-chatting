@@ -4,7 +4,6 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 internal sealed class Raid {
-
     data class Preparing(
         val targetId: String,
         val targetLogin: String,

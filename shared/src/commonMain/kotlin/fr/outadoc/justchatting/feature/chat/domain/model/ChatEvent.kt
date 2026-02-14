@@ -6,9 +6,7 @@ import kotlin.time.Duration
 import kotlin.time.Instant
 
 internal sealed interface ChatEvent {
-
     sealed interface Message : ChatEvent {
-
         val timestamp: Instant
 
         data class ChatMessage(
@@ -26,7 +24,6 @@ internal sealed interface ChatEvent {
             val rewardId: String?,
             val inReplyTo: InReplyTo?,
         ) : Message {
-
             @Immutable
             data class InReplyTo(
                 val id: String,
@@ -169,7 +166,6 @@ internal sealed interface ChatEvent {
     }
 
     sealed interface Command : ChatEvent {
-
         data object Ping : Command
 
         data class RoomStateDelta(

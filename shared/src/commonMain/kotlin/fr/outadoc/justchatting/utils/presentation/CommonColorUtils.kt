@@ -8,7 +8,10 @@ import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.round
 
-internal fun calculateLuminanceContrast(foregroundY: Double, backgroundY: Double): Double {
+internal fun calculateLuminanceContrast(
+    foregroundY: Double,
+    backgroundY: Double,
+): Double {
     return max(foregroundY + 5, backgroundY + 5) / min(foregroundY + 5, backgroundY + 5)
 }
 

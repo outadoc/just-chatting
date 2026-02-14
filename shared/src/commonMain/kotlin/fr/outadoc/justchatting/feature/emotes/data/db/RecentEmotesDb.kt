@@ -13,7 +13,6 @@ import kotlin.time.Instant
 internal class RecentEmotesDb(
     private val recentEmoteQueries: RecentEmoteQueries,
 ) : RecentEmotesApi {
-
     override fun getAll(): Flow<List<RecentEmote>> {
         return recentEmoteQueries
             .getAll()

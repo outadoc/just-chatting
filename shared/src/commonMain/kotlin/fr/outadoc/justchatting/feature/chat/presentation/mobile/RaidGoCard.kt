@@ -46,22 +46,25 @@ internal fun RaidGoCard(
                 createChannelDeeplink(raid.targetLogin).toString(),
             )
         },
-        colors = CardDefaults.cardColors(
-            containerColor = color,
-        ),
+        colors =
+            CardDefaults.cardColors(
+                containerColor = color,
+            ),
     ) {
         Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AsyncImage(
-                modifier = Modifier
-                    .size(56.dp)
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surface),
+                modifier =
+                    Modifier
+                        .size(56.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surface),
                 model = remoteImageModel(raid.targetProfileImageUrl),
                 contentDescription = null,
             )
@@ -75,10 +78,11 @@ internal fun RaidGoCard(
                 )
 
                 Text(
-                    text = stringResource(
-                        Res.string.raid_go_message,
-                        "${ChatPrefixConstants.ChatterPrefix}${raid.targetDisplayName}",
-                    ),
+                    text =
+                        stringResource(
+                            Res.string.raid_go_message,
+                            "${ChatPrefixConstants.ChatterPrefix}${raid.targetDisplayName}",
+                        ),
                     style = MaterialTheme.typography.titleLarge,
                 )
             }
@@ -96,13 +100,14 @@ internal fun RaidGoCard(
 private fun RaidGoCardPreview() {
     AppTheme {
         RaidGoCard(
-            raid = Raid.Go(
-                targetId = "",
-                targetLogin = "",
-                targetDisplayName = "HortyUnderscore",
-                targetProfileImageUrl = null,
-                viewerCount = 12_000,
-            ),
+            raid =
+                Raid.Go(
+                    targetId = "",
+                    targetLogin = "",
+                    targetDisplayName = "HortyUnderscore",
+                    targetProfileImageUrl = null,
+                    viewerCount = 12_000,
+                ),
         )
     }
 }

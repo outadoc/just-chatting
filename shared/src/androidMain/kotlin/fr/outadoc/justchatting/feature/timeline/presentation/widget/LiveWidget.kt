@@ -43,8 +43,10 @@ import fr.outadoc.justchatting.shared.R
 import org.koin.compose.koinInject
 
 internal class LiveWidget : GlanceAppWidget() {
-
-    override suspend fun provideGlance(context: Context, id: GlanceId) {
+    override suspend fun provideGlance(
+        context: Context,
+        id: GlanceId,
+    ) {
         provideContent {
             val viewModel: LiveTimelineViewModel = koinInject()
             val state by viewModel.state.collectAsState()
@@ -77,12 +79,13 @@ internal class LiveWidget : GlanceAppWidget() {
                         items(state.live) { userStream ->
                             Column {
                                 GlanceCard(
-                                    modifier = GlanceModifier
-                                        .clickable(
-                                            MainActivity.createGlanceAction(
-                                                userId = userStream.user.id,
+                                    modifier =
+                                        GlanceModifier
+                                            .clickable(
+                                                MainActivity.createGlanceAction(
+                                                    userId = userStream.user.id,
+                                                ),
                                             ),
-                                        ),
                                 ) {
                                     LiveStream(
                                         modifier = GlanceModifier.fillMaxWidth(),
@@ -113,9 +116,10 @@ internal class LiveWidget : GlanceAppWidget() {
         ) {
             Text(
                 text = stream.title,
-                style = TextDefaults.defaultTextStyle.copy(
-                    color = GlanceTheme.colors.onSurfaceVariant,
-                ),
+                style =
+                    TextDefaults.defaultTextStyle.copy(
+                        color = GlanceTheme.colors.onSurfaceVariant,
+                    ),
                 maxLines = 2,
             )
 
@@ -128,9 +132,10 @@ internal class LiveWidget : GlanceAppWidget() {
             ) {
                 Image(
                     modifier = GlanceModifier.size(20.dp),
-                    provider = ImageProvider(
-                        user.getProfileImageUri(LocalContext.current),
-                    ),
+                    provider =
+                        ImageProvider(
+                            user.getProfileImageUri(LocalContext.current),
+                        ),
                     contentDescription = null,
                 )
 
@@ -140,26 +145,29 @@ internal class LiveWidget : GlanceAppWidget() {
 
                 Text(
                     text = user.displayName,
-                    style = TextDefaults.defaultTextStyle.copy(
-                        color = GlanceTheme.colors.onSurfaceVariant,
-                        fontWeight = FontWeight.Bold,
-                    ),
+                    style =
+                        TextDefaults.defaultTextStyle.copy(
+                            color = GlanceTheme.colors.onSurfaceVariant,
+                            fontWeight = FontWeight.Bold,
+                        ),
                     maxLines = 1,
                 )
 
                 if (stream.category != null) {
                     Text(
                         text = " • ",
-                        style = TextDefaults.defaultTextStyle.copy(
-                            color = GlanceTheme.colors.onSurfaceVariant,
-                        ),
+                        style =
+                            TextDefaults.defaultTextStyle.copy(
+                                color = GlanceTheme.colors.onSurfaceVariant,
+                            ),
                     )
 
                     Text(
                         text = stream.category.name,
-                        style = TextDefaults.defaultTextStyle.copy(
-                            color = GlanceTheme.colors.onSurfaceVariant,
-                        ),
+                        style =
+                            TextDefaults.defaultTextStyle.copy(
+                                color = GlanceTheme.colors.onSurfaceVariant,
+                            ),
                         maxLines = 1,
                     )
                 }

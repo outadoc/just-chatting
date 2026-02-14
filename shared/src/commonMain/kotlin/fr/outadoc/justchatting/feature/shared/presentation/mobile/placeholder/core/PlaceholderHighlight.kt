@@ -71,10 +71,11 @@ internal interface PlaceholderHighlight {
 internal fun PlaceholderHighlight.Companion.fade(
     highlightColor: Color,
     animationSpec: InfiniteRepeatableSpec<Float> = PlaceholderDefaults.fadeAnimationSpec,
-): PlaceholderHighlight = Fade(
-    highlightColor = highlightColor,
-    animationSpec = animationSpec,
-)
+): PlaceholderHighlight =
+    Fade(
+        highlightColor = highlightColor,
+        animationSpec = animationSpec,
+    )
 
 /**
  * Creates a [PlaceholderHighlight] which 'shimmers', using the given [highlightColor].
@@ -94,11 +95,12 @@ internal fun PlaceholderHighlight.Companion.shimmer(
     highlightColor: Color,
     animationSpec: InfiniteRepeatableSpec<Float> = PlaceholderDefaults.shimmerAnimationSpec,
     @FloatRange(from = 0.0, to = 1.0) progressForMaxAlpha: Float = 0.6f,
-): PlaceholderHighlight = Shimmer(
-    highlightColor = highlightColor,
-    animationSpec = animationSpec,
-    progressForMaxAlpha = progressForMaxAlpha,
-)
+): PlaceholderHighlight =
+    Shimmer(
+        highlightColor = highlightColor,
+        animationSpec = animationSpec,
+        progressForMaxAlpha = progressForMaxAlpha,
+    )
 
 private data class Fade(
     private val highlightColor: Color,
@@ -106,7 +108,11 @@ private data class Fade(
 ) : PlaceholderHighlight {
     private val brush = SolidColor(highlightColor)
 
-    override fun brush(progress: Float, size: Size): Brush = brush
+    override fun brush(
+        progress: Float,
+        size: Size,
+    ): Brush = brush
+
     override fun alpha(progress: Float): Float = progress
 }
 
@@ -118,33 +124,36 @@ private data class Shimmer(
     override fun brush(
         progress: Float,
         size: Size,
-    ): Brush = Brush.radialGradient(
-        colors = listOf(
-            highlightColor.copy(alpha = 0f),
-            highlightColor,
-            highlightColor.copy(alpha = 0f),
-        ),
-        center = Offset(x = 0f, y = 0f),
-        radius = (max(size.width, size.height) * progress * 2).coerceAtLeast(0.01f),
-    )
+    ): Brush =
+        Brush.radialGradient(
+            colors =
+                listOf(
+                    highlightColor.copy(alpha = 0f),
+                    highlightColor,
+                    highlightColor.copy(alpha = 0f),
+                ),
+            center = Offset(x = 0f, y = 0f),
+            radius = (max(size.width, size.height) * progress * 2).coerceAtLeast(0.01f),
+        )
 
-    override fun alpha(progress: Float): Float = when {
-        // From 0f...ProgressForOpaqueAlpha we animate from 0..1
-        progress <= progressForMaxAlpha -> {
-            lerp(
-                start = 0f,
-                stop = 1f,
-                fraction = progress / progressForMaxAlpha,
-            )
-        }
+    override fun alpha(progress: Float): Float =
+        when {
+            // From 0f...ProgressForOpaqueAlpha we animate from 0..1
+            progress <= progressForMaxAlpha -> {
+                lerp(
+                    start = 0f,
+                    stop = 1f,
+                    fraction = progress / progressForMaxAlpha,
+                )
+            }
 
-        // From ProgressForOpaqueAlpha..1f we animate from 1..0
-        else -> {
-            lerp(
-                start = 1f,
-                stop = 0f,
-                fraction = (progress - progressForMaxAlpha) / (1f - progressForMaxAlpha),
-            )
+            // From ProgressForOpaqueAlpha..1f we animate from 1..0
+            else -> {
+                lerp(
+                    start = 1f,
+                    stop = 0f,
+                    fraction = (progress - progressForMaxAlpha) / (1f - progressForMaxAlpha),
+                )
+            }
         }
-    }
 }

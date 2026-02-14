@@ -81,9 +81,10 @@ tasks.register("generateVersionProperties") {
     description = "Generate file containing the app version"
 
     doLast {
-        val propertiesFile = file("$buildDir/generated/lib_version/version.txt").apply {
-            parentFile.mkdirs()
-        }
+        val propertiesFile =
+            file("$buildDir/generated/lib_version/version.txt").apply {
+                parentFile.mkdirs()
+            }
 
         val version = findProperty("externalVersionName") as String?
 

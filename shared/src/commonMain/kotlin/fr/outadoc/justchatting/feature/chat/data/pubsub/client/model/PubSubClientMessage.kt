@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal sealed class PubSubClientMessage {
-
     @Serializable
     @SerialName("LISTEN")
     data class Listen(
@@ -14,7 +13,6 @@ internal sealed class PubSubClientMessage {
         @SerialName("data")
         val data: Data,
     ) : PubSubClientMessage() {
-
         @Serializable
         data class Data(
             @SerialName("topics")

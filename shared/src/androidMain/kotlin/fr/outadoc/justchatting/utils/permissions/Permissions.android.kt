@@ -21,22 +21,22 @@ internal actual fun rememberPermissionState(
 internal class PermissionStateWrapper(
     private val state: com.google.accompanist.permissions.PermissionState,
 ) : PermissionState {
-
     override val permission: String
         get() = state.permission
 
     override val status: PermissionStatus
-        get() = when (val status = state.status) {
-            is com.google.accompanist.permissions.PermissionStatus.Denied -> {
-                PermissionStatus.Denied(
-                    shouldShowRationale = status.shouldShowRationale,
-                )
-            }
+        get() =
+            when (val status = state.status) {
+                is com.google.accompanist.permissions.PermissionStatus.Denied -> {
+                    PermissionStatus.Denied(
+                        shouldShowRationale = status.shouldShowRationale,
+                    )
+                }
 
-            com.google.accompanist.permissions.PermissionStatus.Granted -> {
-                PermissionStatus.Granted
+                com.google.accompanist.permissions.PermissionStatus.Granted -> {
+                    PermissionStatus.Granted
+                }
             }
-        }
 
     override fun launchPermissionRequest() {
         state.launchPermissionRequest()

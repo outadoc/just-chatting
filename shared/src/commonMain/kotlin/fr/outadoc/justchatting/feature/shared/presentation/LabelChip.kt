@@ -24,16 +24,16 @@ internal fun LabelChip(
     content: @Composable () -> Unit,
 ) {
     Box(
-        modifier = modifier
-            .border(
-                width = 1.dp,
-                color = color,
-                shape = MaterialTheme.shapes.small,
-            )
-            .padding(
-                vertical = 4.dp,
-                horizontal = 8.dp,
-            ),
+        modifier =
+            modifier
+                .border(
+                    width = 1.dp,
+                    color = color,
+                    shape = MaterialTheme.shapes.small,
+                ).padding(
+                    vertical = 4.dp,
+                    horizontal = 8.dp,
+                ),
     ) {
         ProvideTextStyle(style) {
             content()

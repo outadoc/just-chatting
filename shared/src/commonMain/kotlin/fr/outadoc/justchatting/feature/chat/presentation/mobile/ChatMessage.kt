@@ -35,20 +35,22 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 internal fun ChatMessagePreview(
     @PreviewParameter(ChatMessagePreviewProvider::class) message: ChatListItem.Message,
 ) {
-    val inlineBadges = previewBadges
-        .associateWith { previewTextContent() }
-        .toPersistentHashMap()
+    val inlineBadges =
+        previewBadges
+            .associateWith { previewTextContent() }
+            .toPersistentHashMap()
 
     AppTheme {
         ChatMessage(
             message = message,
             inlineContent = inlineBadges,
             showTimestamps = true,
-            appUser = AppUser.LoggedIn(
-                userId = "123",
-                userLogin = "outadoc",
-                token = "",
-            ),
+            appUser =
+                AppUser.LoggedIn(
+                    userId = "123",
+                    userLogin = "outadoc",
+                    token = "",
+                ),
         )
     }
 }
@@ -77,11 +79,12 @@ internal fun ChatMessage(
         }
 
     Row(
-        modifier = modifier
-            .redactable(redact = shouldRedactContents)
-            .background(MaterialTheme.colorScheme.surface)
-            .background(background)
-            .padding(4.dp),
+        modifier =
+            modifier
+                .redactable(redact = shouldRedactContents)
+                .background(MaterialTheme.colorScheme.surface)
+                .background(background)
+                .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         message.timestamp
@@ -106,9 +109,10 @@ internal fun ChatMessage(
                 ) {
                     message.body?.let { data ->
                         ChatMessageBody(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(4.dp),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(4.dp),
                             body = data,
                             inlineContent = inlineContent,
                             pronouns = pronouns,
@@ -131,12 +135,13 @@ internal fun ChatMessage(
             is ChatListItem.Message.Simple -> {
                 SimpleMessage {
                     ChatMessageBody(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                horizontal = 4.dp,
-                                vertical = 6.dp,
-                            ),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    horizontal = 4.dp,
+                                    vertical = 6.dp,
+                                ),
                         body = message.body,
                         inlineContent = inlineContent,
                         pronouns = pronouns,

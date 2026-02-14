@@ -13,13 +13,14 @@ import fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.prefix.Prefix
 import fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.prefix.PrefixParser
 
 internal object PrivMsgMessage : ICommand {
-
     override val command = "PRIVMSG"
 
-    data class Message(val source: Prefix, val target: String, val message: String) {
-
+    data class Message(
+        val source: Prefix,
+        val target: String,
+        val message: String,
+    ) {
         object Parser : MessageParser<Message>() {
-
             override fun parseFromComponents(components: IrcMessageComponents): Message? {
                 if (components.parameters.size < 2) {
                     return null

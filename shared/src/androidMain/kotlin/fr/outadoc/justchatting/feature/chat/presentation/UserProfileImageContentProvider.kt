@@ -26,13 +26,15 @@ import java.io.File
 import java.io.FileNotFoundException
 
 public class UserProfileImageContentProvider : ContentProvider() {
-
     internal companion object {
-
         private const val PATH_ID = "id"
 
-        fun createForUser(context: Context, userId: String): Uri {
-            return Uri.Builder()
+        fun createForUser(
+            context: Context,
+            userId: String,
+        ): Uri {
+            return Uri
+                .Builder()
                 .scheme(ContentResolver.SCHEME_CONTENT)
                 .authority("${context.applicationContext.packageName}.user-image-provider")
                 .appendPath(PATH_ID)
@@ -47,7 +49,10 @@ public class UserProfileImageContentProvider : ContentProvider() {
         return true
     }
 
-    override fun openFile(uri: Uri, mode: String): ParcelFileDescriptor? {
+    override fun openFile(
+        uri: Uri,
+        mode: String,
+    ): ParcelFileDescriptor? {
         logDebug<UserProfileImageContentProvider> { "Called openFile($uri, $mode)" }
 
         if (mode != "r") {
@@ -60,8 +65,9 @@ public class UserProfileImageContentProvider : ContentProvider() {
         val segments = uri.pathSegments.toList()
         return when (segments.getOrNull(0)) {
             PATH_ID -> {
-                val userId: String = segments.getOrNull(1)
-                    ?: throw FileNotFoundException("User id was null.")
+                val userId: String =
+                    segments.getOrNull(1)
+                        ?: throw FileNotFoundException("User id was null.")
 
                 val file = getFile(context, userId)
 
@@ -80,7 +86,10 @@ public class UserProfileImageContentProvider : ContentProvider() {
         }
     }
 
-    private fun getFile(context: Context, userId: String): File {
+    private fun getFile(
+        context: Context,
+        userId: String,
+    ): File {
         val directory: File =
             File(context.cacheDir, "user_images").apply {
                 if (!exists()) {
@@ -91,10 +100,14 @@ public class UserProfileImageContentProvider : ContentProvider() {
         return directory.resolve("user_image_$userId.webp")
     }
 
-    private suspend fun downloadImage(context: Context, userId: String) {
+    private suspend fun downloadImage(
+        context: Context,
+        userId: String,
+    ) {
         return withContext(DispatchersProvider.io) {
             val profileImageUrl: String =
-                apiRepository.getUserById(userId)
+                apiRepository
+                    .getUserById(userId)
                     .firstOrNull()
                     ?.getOrNull()
                     ?.profileImageUrl
@@ -102,22 +115,25 @@ public class UserProfileImageContentProvider : ContentProvider() {
 
             val response: ImageResult =
                 context.imageLoader.execute(
-                    ImageRequest.Builder(context)
+                    ImageRequest
+                        .Builder(context)
                         .data(profileImageUrl)
                         .size(128)
                         .transformations(CircleCropTransformation())
                         .build(),
                 )
 
-            val bitmap: Bitmap = (response.image as? BitmapImage)?.bitmap
-                ?: error("Empty bitmap received from Coil")
+            val bitmap: Bitmap =
+                (response.image as? BitmapImage)?.bitmap
+                    ?: error("Empty bitmap received from Coil")
 
-            val format = if (Build.VERSION.SDK_INT >= 30) {
-                Bitmap.CompressFormat.WEBP_LOSSLESS
-            } else {
-                @Suppress("DEPRECATION")
-                Bitmap.CompressFormat.WEBP
-            }
+            val format =
+                if (Build.VERSION.SDK_INT >= 30) {
+                    Bitmap.CompressFormat.WEBP_LOSSLESS
+                } else {
+                    @Suppress("DEPRECATION")
+                    Bitmap.CompressFormat.WEBP
+                }
 
             getFile(context, userId).outputStream().use { os ->
                 bitmap.compress(format, 70, os)
@@ -135,9 +151,16 @@ public class UserProfileImageContentProvider : ContentProvider() {
         sortOrder: String?,
     ): Cursor = error("Not implemented")
 
-    override fun insert(uri: Uri, values: ContentValues?): Uri = error("Not implemented")
+    override fun insert(
+        uri: Uri,
+        values: ContentValues?,
+    ): Uri = error("Not implemented")
 
-    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int = error("Not implemented")
+    override fun delete(
+        uri: Uri,
+        selection: String?,
+        selectionArgs: Array<out String>?,
+    ): Int = error("Not implemented")
 
     override fun update(
         uri: Uri,

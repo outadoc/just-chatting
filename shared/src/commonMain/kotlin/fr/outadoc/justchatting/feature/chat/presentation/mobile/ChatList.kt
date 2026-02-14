@@ -78,32 +78,35 @@ internal fun ChatList(
 
     val inlinesEmotes: PersistentMap<String, InlineTextContent> =
         remember(emotes) {
-            emotes.mapValues { (_, emote) ->
-                emoteTextContent(
-                    emote = emote,
-                )
-            }.toPersistentHashMap()
+            emotes
+                .mapValues { (_, emote) ->
+                    emoteTextContent(
+                        emote = emote,
+                    )
+                }.toPersistentHashMap()
         }
 
     val inlineBadges: PersistentMap<String, InlineTextContent> =
         remember(badges) {
-            badges.associate { badge ->
-                Pair(
-                    badge.inlineContentId,
-                    badgeTextContent(
-                        badge = badge,
-                    ),
-                )
-            }.toPersistentHashMap()
+            badges
+                .associate { badge ->
+                    Pair(
+                        badge.inlineContentId,
+                        badgeTextContent(
+                            badge = badge,
+                        ),
+                    )
+                }.toPersistentHashMap()
         }
 
     val inlineCheerEmotes: PersistentMap<String, InlineTextContent> =
         remember(cheerEmotes) {
-            cheerEmotes.mapValues { (_, cheer) ->
-                cheerEmoteTextContent(
-                    cheer = cheer,
-                )
-            }.toPersistentHashMap()
+            cheerEmotes
+                .mapValues { (_, cheer) ->
+                    cheerEmoteTextContent(
+                        cheer = cheer,
+                    )
+                }.toPersistentHashMap()
         }
 
     val inlineContent: PersistentMap<String, InlineTextContent> =
@@ -121,18 +124,20 @@ internal fun ChatList(
 
     Box {
         LazyColumn(
-            modifier = modifier
-                .onGloballyPositioned { coordinates ->
-                    val newSize = coordinates.size
-                    if (size != newSize) {
-                        size = newSize
-                    }
-                },
+            modifier =
+                modifier
+                    .onGloballyPositioned { coordinates ->
+                        val newSize = coordinates.size
+                        if (size != newSize) {
+                            size = newSize
+                        }
+                    },
             state = listState,
             reverseLayout = true,
-            contentPadding = PaddingValues(
-                bottom = insets.calculateBottomPadding(),
-            ),
+            contentPadding =
+                PaddingValues(
+                    bottom = insets.calculateBottomPadding(),
+                ),
         ) {
             item(key = "visibility_trigger") {
                 // This item will become visible when the list is scrolled to the bottom;
@@ -188,26 +193,27 @@ internal fun ChatList(
                     enabled = canBeRepliedTo,
                 ) {
                     ChatMessage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .combinedClickable(
-                                onClick = {},
-                                onLongClick = {
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    onMessageLongClick(item)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .combinedClickable(
+                                    onClick = {},
+                                    onLongClick = {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        onMessageLongClick(item)
+                                    },
+                                    onLongClickLabel = stringResource(Res.string.chat_copyToClipboard),
+                                ).semantics {
+                                    if (canBeRepliedTo) {
+                                        customActions =
+                                            listOf(
+                                                CustomAccessibilityAction(replyToActionCd) {
+                                                    onReplyToMessage(item)
+                                                    true
+                                                },
+                                            )
+                                    }
                                 },
-                                onLongClickLabel = stringResource(Res.string.chat_copyToClipboard),
-                            )
-                            .semantics {
-                                if (canBeRepliedTo) {
-                                    customActions = listOf(
-                                        CustomAccessibilityAction(replyToActionCd) {
-                                            onReplyToMessage(item)
-                                            true
-                                        },
-                                    )
-                                }
-                            },
                         message = item,
                         inlineContent = inlineContent,
                         removedContent = removedContent,

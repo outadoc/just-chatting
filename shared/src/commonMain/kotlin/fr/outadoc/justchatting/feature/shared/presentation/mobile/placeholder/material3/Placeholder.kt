@@ -99,13 +99,14 @@ internal fun Modifier.placeholder(
     highlight: PlaceholderHighlight? = null,
     placeholderFadeTransitionSpec: @Composable Transition.Segment<Boolean>.() -> FiniteAnimationSpec<Float> = { spring() },
     contentFadeTransitionSpec: @Composable Transition.Segment<Boolean>.() -> FiniteAnimationSpec<Float> = { spring() },
-): Modifier = composed {
-    Modifier.placeholder(
-        visible = visible,
-        color = if (color.isSpecified) color else PlaceholderDefaults.color(),
-        shape = shape ?: MaterialTheme.shapes.small,
-        highlight = highlight,
-        placeholderFadeTransitionSpec = placeholderFadeTransitionSpec,
-        contentFadeTransitionSpec = contentFadeTransitionSpec,
-    )
-}
+): Modifier =
+    composed {
+        Modifier.placeholder(
+            visible = visible,
+            color = if (color.isSpecified) color else PlaceholderDefaults.color(),
+            shape = shape ?: MaterialTheme.shapes.small,
+            highlight = highlight,
+            placeholderFadeTransitionSpec = placeholderFadeTransitionSpec,
+            contentFadeTransitionSpec = contentFadeTransitionSpec,
+        )
+    }

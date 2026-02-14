@@ -90,9 +90,10 @@ internal fun ChatListContainer(
             exit = shrinkVertically(shrinkTowards = Alignment.Bottom) + fadeOut(),
         ) {
             FloatingActionButton(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .padding(insets),
+                modifier =
+                    Modifier
+                        .padding(16.dp)
+                        .padding(insets),
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     scope.launch {

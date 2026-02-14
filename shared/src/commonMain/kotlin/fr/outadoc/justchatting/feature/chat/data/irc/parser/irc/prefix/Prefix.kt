@@ -8,4 +8,8 @@ package fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.prefix
 
 internal fun prefix(nick: String) = Prefix(nick = nick)
 
-internal data class Prefix(val nick: String, val user: String? = null, val host: String? = null)
+internal data class Prefix(
+    val nick: String,
+    val user: String? = null,
+    val host: String? = null,
+)

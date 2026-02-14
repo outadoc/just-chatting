@@ -12,32 +12,31 @@ import okio.Path.Companion.toPath
 
 internal actual object ImageLoaderFactory : SingletonImageLoader.Factory {
     override fun newImageLoader(context: PlatformContext): ImageLoader {
-        return ImageLoader.Builder(context)
+        return ImageLoader
+            .Builder(context)
             .crossfade(true)
             .memoryCache {
-                MemoryCache.Builder()
+                MemoryCache
+                    .Builder()
                     .maxSizePercent(context, percent = 0.25)
                     .build()
-            }
-            .diskCache {
-                DiskCache.Builder()
+            }.diskCache {
+                DiskCache
+                    .Builder()
                     .directory(
-                        AppDirsFactory.getInstance()
+                        AppDirsFactory
+                            .getInstance()
                             .getUserCacheDir(
                                 AppInfo.APP_ID,
                                 AppInfo.APP_VERSION,
                                 AppInfo.APP_AUTHOR,
-                            )
-                            .toPath()
+                            ).toPath()
                             .resolve("image_cache"),
-                    )
-                    .maxSizePercent(0.02)
+                    ).maxSizePercent(0.02)
                     .build()
-            }
-            .components {
+            }.components {
                 add(AnimatedSkiaImageDecoder.Factory(prerenderFrames = true))
-            }
-            .logger(CoilCustomLogger())
+            }.logger(CoilCustomLogger())
             .build()
     }
 }

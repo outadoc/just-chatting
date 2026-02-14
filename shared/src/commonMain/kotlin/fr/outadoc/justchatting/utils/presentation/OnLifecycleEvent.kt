@@ -14,9 +14,10 @@ internal fun OnLifecycleEvent(onEvent: (event: Lifecycle.Event) -> Unit) {
 
     DisposableEffect(lifecycleOwner.value) {
         val lifecycle = lifecycleOwner.value.lifecycle
-        val observer = LifecycleEventObserver { _, event ->
-            eventHandler.value(event)
-        }
+        val observer =
+            LifecycleEventObserver { _, event ->
+                eventHandler.value(event)
+            }
 
         lifecycle.addObserver(observer)
 
@@ -37,12 +38,30 @@ internal fun OnLifecycleEvent(
 ) {
     OnLifecycleEvent { event ->
         when (event) {
-            Lifecycle.Event.ON_PAUSE -> onPause()
-            Lifecycle.Event.ON_CREATE -> onCreate()
-            Lifecycle.Event.ON_START -> onStart()
-            Lifecycle.Event.ON_RESUME -> onResume()
-            Lifecycle.Event.ON_STOP -> onStop()
-            Lifecycle.Event.ON_DESTROY -> onDestroy()
+            Lifecycle.Event.ON_PAUSE -> {
+                onPause()
+            }
+
+            Lifecycle.Event.ON_CREATE -> {
+                onCreate()
+            }
+
+            Lifecycle.Event.ON_START -> {
+                onStart()
+            }
+
+            Lifecycle.Event.ON_RESUME -> {
+                onResume()
+            }
+
+            Lifecycle.Event.ON_STOP -> {
+                onStop()
+            }
+
+            Lifecycle.Event.ON_DESTROY -> {
+                onDestroy()
+            }
+
             Lifecycle.Event.ON_ANY -> {}
         }
     }

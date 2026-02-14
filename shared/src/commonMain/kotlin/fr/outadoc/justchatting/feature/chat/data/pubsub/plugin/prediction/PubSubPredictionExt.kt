@@ -9,17 +9,19 @@ internal fun PubSubPredictionMessage.Outcome.map(): Prediction.Outcome {
     return Prediction.Outcome(
         id = id,
         title = title,
-        color = when (color) {
-            "PINK" -> "#e0008e"
-            "BLUE" -> "#1e69ff"
-            else -> color
-        },
+        color =
+            when (color) {
+                "PINK" -> "#e0008e"
+                "BLUE" -> "#1e69ff"
+                else -> color
+            },
         totalPoints = totalPoints,
         totalUsers = totalUsers,
-        badge = Badge(
-            id = badge.setId,
-            version = badge.version,
-        ),
+        badge =
+            Badge(
+                id = badge.setId,
+                version = badge.version,
+            ),
     )
 }
 

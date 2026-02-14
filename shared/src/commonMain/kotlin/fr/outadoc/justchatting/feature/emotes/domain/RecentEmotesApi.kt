@@ -5,5 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 internal interface RecentEmotesApi {
     fun getAll(): Flow<List<RecentEmote>>
+
     fun insertAll(emotes: Collection<RecentEmote>)
 }

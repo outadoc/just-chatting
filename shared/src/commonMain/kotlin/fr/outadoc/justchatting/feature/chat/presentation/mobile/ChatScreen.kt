@@ -31,9 +31,10 @@ internal fun ChatScreen(
         when {
             showPlaceholder -> {
                 ChatListPlaceholder(
-                    modifier = modifier
-                        .padding(insets)
-                        .fillMaxSize(),
+                    modifier =
+                        modifier
+                            .padding(insets)
+                            .fillMaxSize(),
                 )
             }
 

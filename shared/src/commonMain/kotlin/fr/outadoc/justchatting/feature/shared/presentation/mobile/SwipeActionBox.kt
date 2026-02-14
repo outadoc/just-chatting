@@ -68,9 +68,10 @@ internal fun SwipeActionBox(
                 contentAlignment = Alignment.CenterEnd,
             ) {
                 Box(
-                    modifier = Modifier
-                        .scale(scale)
-                        .alpha(scale),
+                    modifier =
+                        Modifier
+                            .scale(scale)
+                            .alpha(scale),
                 ) {
                     icon()
                 }
@@ -78,10 +79,11 @@ internal fun SwipeActionBox(
         },
         content = {
             val elevation by animateDpAsState(
-                targetValue = when (dismissState.targetValue) {
-                    direction -> 2.dp
-                    else -> 0.dp
-                },
+                targetValue =
+                    when (dismissState.targetValue) {
+                        direction -> 2.dp
+                        else -> 0.dp
+                    },
                 label = "Action content elevation",
             )
 

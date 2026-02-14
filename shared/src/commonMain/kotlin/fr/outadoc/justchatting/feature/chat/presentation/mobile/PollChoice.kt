@@ -43,21 +43,24 @@ internal fun PollChoice(
     Box(modifier = modifier.height(32.dp)) {
         LinearProgressIndicator(
             progress = { ratio },
-            modifier = Modifier
-                .fillMaxSize()
-                .clip(MaterialTheme.shapes.medium),
-            color = if (isWinner) {
-                MaterialTheme.customColors.success
-            } else {
-                MaterialTheme.colorScheme.primaryContainer
-            },
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .clip(MaterialTheme.shapes.medium),
+            color =
+                if (isWinner) {
+                    MaterialTheme.customColors.success
+                } else {
+                    MaterialTheme.colorScheme.primaryContainer
+                },
             trackColor = MaterialTheme.colorScheme.outlineVariant,
         )
 
         Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {

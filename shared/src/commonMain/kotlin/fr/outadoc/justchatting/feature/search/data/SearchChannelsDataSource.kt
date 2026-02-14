@@ -14,7 +14,6 @@ internal class SearchChannelsDataSource(
     private val query: String,
     private val twitchClient: TwitchClient,
 ) : PagingSource<Pagination, List<ChannelSearchResult>>() {
-
     override fun getRefreshKey(state: PagingState<Pagination, List<ChannelSearchResult>>): Pagination? = null
 
     override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, List<ChannelSearchResult>> {
@@ -32,8 +31,7 @@ internal class SearchChannelsDataSource(
                 query = query,
                 limit = params.loadSize,
                 after = (params.key as? Pagination.Next)?.cursor,
-            )
-            .fold(
+            ).fold(
                 onSuccess = { response ->
                     val itemsAfter: Int =
                         if (response.pagination.cursor == null) {
@@ -43,34 +41,37 @@ internal class SearchChannelsDataSource(
                         }
 
                     LoadResult.Page(
-                        data = listOf(
-                            response.data.map { search ->
-                                ChannelSearchResult(
-                                    title = search.title,
-                                    user = User(
-                                        id = search.userId,
-                                        login = search.userLogin,
-                                        displayName = search.userDisplayName,
-                                        description = "",
-                                        profileImageUrl = "",
-                                        createdAt = Instant.DISTANT_PAST,
-                                        usedAt = Instant.DISTANT_PAST,
-                                    ),
-                                    language = search.broadcasterLanguage,
-                                    gameId = search.gameId,
-                                    gameName = search.gameName,
-                                    isLive = search.isLive,
-                                    thumbnailUrl = search.thumbnailUrl,
-                                    tags = search.tags.toPersistentList(),
+                        data =
+                            listOf(
+                                response.data.map { search ->
+                                    ChannelSearchResult(
+                                        title = search.title,
+                                        user =
+                                            User(
+                                                id = search.userId,
+                                                login = search.userLogin,
+                                                displayName = search.userDisplayName,
+                                                description = "",
+                                                profileImageUrl = "",
+                                                createdAt = Instant.DISTANT_PAST,
+                                                usedAt = Instant.DISTANT_PAST,
+                                            ),
+                                        language = search.broadcasterLanguage,
+                                        gameId = search.gameId,
+                                        gameName = search.gameName,
+                                        isLive = search.isLive,
+                                        thumbnailUrl = search.thumbnailUrl,
+                                        tags = search.tags.toPersistentList(),
+                                    )
+                                },
+                            ),
+                        prevKey = null,
+                        nextKey =
+                            response.pagination.cursor?.let { cursor ->
+                                Pagination.Next(
+                                    cursor,
                                 )
                             },
-                        ),
-                        prevKey = null,
-                        nextKey = response.pagination.cursor?.let { cursor ->
-                            Pagination.Next(
-                                cursor,
-                            )
-                        },
                         itemsAfter = itemsAfter,
                     )
                 },

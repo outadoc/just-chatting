@@ -58,20 +58,22 @@ internal fun PredictionCard(
     Card(
         modifier = modifier,
         onClick = { isExpanded = !isExpanded },
-        colors = CardDefaults.cardColors(
-            containerColor = color,
-        ),
+        colors =
+            CardDefaults.cardColors(
+                containerColor = color,
+            ),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            val status = when (prediction.status) {
-                Prediction.Status.Active -> Res.string.prediction_status_progress
+            val status =
+                when (prediction.status) {
+                    Prediction.Status.Active -> Res.string.prediction_status_progress
 
-                Prediction.Status.Locked -> Res.string.prediction_status_locked
+                    Prediction.Status.Locked -> Res.string.prediction_status_locked
 
-                Prediction.Status.ResolvePending,
-                Prediction.Status.Resolved,
-                -> Res.string.prediction_status_ended
-            }
+                    Prediction.Status.ResolvePending,
+                    Prediction.Status.Resolved,
+                    -> Res.string.prediction_status_ended
+                }
 
             val totalPointsSpent: Int =
                 prediction.outcomes.sumOf { outcome -> outcome.totalPoints }
@@ -85,16 +87,17 @@ internal fun PredictionCard(
                 ) {
                     Text(
                         modifier = Modifier.padding(bottom = 4.dp),
-                        text = buildString {
-                            append(stringResource(status))
-                            append(" · ")
-                            append(
-                                stringResource(
-                                    Res.string.prediction_status_points,
-                                    totalPointsSpent.formatNumber(),
-                                ),
-                            )
-                        },
+                        text =
+                            buildString {
+                                append(stringResource(status))
+                                append(" · ")
+                                append(
+                                    stringResource(
+                                        Res.string.prediction_status_points,
+                                        totalPointsSpent.formatNumber(),
+                                    ),
+                                )
+                            },
                         style = MaterialTheme.typography.titleSmall,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -126,26 +129,28 @@ internal fun PredictionCard(
                 ) {
                     prediction.outcomes.forEach { outcome ->
                         PredictionOutcome(
-                            modifier = Modifier
-                                .padding(vertical = 8.dp)
-                                .fillMaxWidth(),
+                            modifier =
+                                Modifier
+                                    .padding(vertical = 8.dp)
+                                    .fillMaxWidth(),
                             title = outcome.title,
                             votes = outcome.totalPoints,
                             totalVotes = totalPointsSpent,
-                            color = outcome.color.parseHexColor()
-                                ?.let { color ->
-                                    ensureColorIsAccessible(
-                                        foreground = color,
-                                        background = MaterialTheme.colorScheme.surface,
-                                    )
-                                }
-                                ?: LocalContentColor.current,
+                            color =
+                                outcome.color
+                                    .parseHexColor()
+                                    ?.let { color ->
+                                        ensureColorIsAccessible(
+                                            foreground = color,
+                                            background = MaterialTheme.colorScheme.surface,
+                                        )
+                                    }
+                                    ?: LocalContentColor.current,
                             icon = {
                                 badges
                                     .firstOrNull { badge ->
                                         badge.setId == outcome.badge.id && badge.version == outcome.badge.version
-                                    }
-                                    ?.let { twitchBadge ->
+                                    }?.let { twitchBadge ->
                                         BadgeItem(
                                             modifier = Modifier.size(24.dp),
                                             badge = twitchBadge,
@@ -160,48 +165,53 @@ internal fun PredictionCard(
     }
 }
 
-private val mockPrediction = Prediction(
-    id = "1234",
-    status = Prediction.Status.Resolved,
-    title = "QUI GAGNE ?",
-    createdAt = Instant.parse("2023-02-05T18:11:52.832Z"),
-    predictionWindow = 5.minutes,
-    outcomes = listOf(
-        Prediction.Outcome(
-            id = "1",
-            title = "Étoiles",
-            totalPoints = 12345,
-            totalUsers = 1000,
-            badge = Badge(
-                id = "123",
-                version = "5",
+private val mockPrediction =
+    Prediction(
+        id = "1234",
+        status = Prediction.Status.Resolved,
+        title = "QUI GAGNE ?",
+        createdAt = Instant.parse("2023-02-05T18:11:52.832Z"),
+        predictionWindow = 5.minutes,
+        outcomes =
+            listOf(
+                Prediction.Outcome(
+                    id = "1",
+                    title = "Étoiles",
+                    totalPoints = 12345,
+                    totalUsers = 1000,
+                    badge =
+                        Badge(
+                            id = "123",
+                            version = "5",
+                        ),
+                    color = "#00FF00",
+                ),
+                Prediction.Outcome(
+                    id = "1",
+                    title = "AntoineDaniel",
+                    totalPoints = 102345,
+                    totalUsers = 1000,
+                    badge =
+                        Badge(
+                            id = "123",
+                            version = "5",
+                        ),
+                    color = "#FF0000",
+                ),
+                Prediction.Outcome(
+                    id = "1",
+                    title = "HortyUnderscore",
+                    totalPoints = 52450,
+                    totalUsers = 1000,
+                    badge =
+                        Badge(
+                            id = "123",
+                            version = "5",
+                        ),
+                    color = "#0000FF",
+                ),
             ),
-            color = "#00FF00",
-        ),
-        Prediction.Outcome(
-            id = "1",
-            title = "AntoineDaniel",
-            totalPoints = 102345,
-            totalUsers = 1000,
-            badge = Badge(
-                id = "123",
-                version = "5",
-            ),
-            color = "#FF0000",
-        ),
-        Prediction.Outcome(
-            id = "1",
-            title = "HortyUnderscore",
-            totalPoints = 52450,
-            totalUsers = 1000,
-            badge = Badge(
-                id = "123",
-                version = "5",
-            ),
-            color = "#0000FF",
-        ),
-    ),
-)
+    )
 
 @Preview
 @Composable

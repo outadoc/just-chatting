@@ -27,18 +27,24 @@ internal class MainRouterViewModel(
     private val authCallbackWebServer: AuthCallbackWebServer,
 ) : ViewModel(),
     DeeplinkReceiver {
-
     sealed class State {
         data object Loading : State()
+
         data object LoggedOut : State()
+
         data class LoggedIn(
             val appUser: AppUser.LoggedIn,
         ) : State()
     }
 
     sealed class Event {
-        data class ViewChannel(val userId: String) : Event()
-        data class ShowAuthPage(val uri: Uri) : Event()
+        data class ViewChannel(
+            val userId: String,
+        ) : Event()
+
+        data class ShowAuthPage(
+            val uri: Uri,
+        ) : Event()
     }
 
     val state: StateFlow<State> =
@@ -48,8 +54,7 @@ internal class MainRouterViewModel(
                     is AppUser.LoggedIn -> State.LoggedIn(appUser = appUser)
                     is AppUser.NotLoggedIn -> State.LoggedOut
                 }
-            }
-            .onEach { state ->
+            }.onEach { state ->
                 when (state) {
                     is State.LoggedOut -> {
                         authCallbackWebServer.start()
@@ -61,8 +66,7 @@ internal class MainRouterViewModel(
                         authCallbackWebServer.stop()
                     }
                 }
-            }
-            .stateIn(
+            }.stateIn(
                 viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = State.Loading,
@@ -79,13 +83,14 @@ internal class MainRouterViewModel(
         }
     }
 
-    fun onLoginClick() = viewModelScope.launch {
-        _events.emit(
-            Event.ShowAuthPage(
-                uri = authRepository.getExternalAuthorizeUrl(),
-            ),
-        )
-    }
+    fun onLoginClick() =
+        viewModelScope.launch {
+            _events.emit(
+                Event.ShowAuthPage(
+                    uri = authRepository.getExternalAuthorizeUrl(),
+                ),
+            )
+        }
 
     override fun onDeeplinkReceived(uriString: String) {
         onDeeplinkReceived(Uri.parse(uriString))

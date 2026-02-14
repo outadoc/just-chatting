@@ -9,7 +9,6 @@ internal class PubSubRaidPlugin(
     private val json: Json,
     private val clock: Clock,
 ) : PubSubPlugin<PubSubRaidMessage> {
-
     override fun getTopic(channelId: String): String = "raid.$channelId"
 
     override fun parseMessage(payload: String): List<ChatEvent> {

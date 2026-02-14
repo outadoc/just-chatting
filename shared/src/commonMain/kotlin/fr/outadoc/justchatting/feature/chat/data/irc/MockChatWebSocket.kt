@@ -45,15 +45,15 @@ internal class MockChatWebSocket private constructor(
     private val httpClient: HttpClient,
     private val channelLogin: String,
 ) : ChatEventHandler {
-
     companion object {
         private const val ENDPOINT = "wss://irc.fdgt.dev"
     }
 
-    private val _eventFlow = MutableSharedFlow<ChatEvent>(
-        replay = Defaults.EventBufferSize,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST,
-    )
+    private val _eventFlow =
+        MutableSharedFlow<ChatEvent>(
+            replay = Defaults.EventBufferSize,
+            onBufferOverflow = BufferOverflow.DROP_OLDEST,
+        )
     override val eventFlow: Flow<ChatEvent> = _eventFlow
 
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
@@ -78,39 +78,40 @@ internal class MockChatWebSocket private constructor(
     }
 
     override fun start() {
-        socketJob = scope.launch(DispatchersProvider.io + SupervisorJob()) {
-            logDebug<LoggedInChatWebSocket> { "Starting job" }
+        socketJob =
+            scope.launch(DispatchersProvider.io + SupervisorJob()) {
+                logDebug<LoggedInChatWebSocket> { "Starting job" }
 
-            _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
+                _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
 
-            while (isActive) {
-                if (isNetworkAvailable) {
-                    logDebug<LoggedInChatWebSocket> { "Network is available, listening" }
-                    _connectionStatus.update { status ->
-                        status.copy(
-                            isAlive = true,
-                        )
+                while (isActive) {
+                    if (isNetworkAvailable) {
+                        logDebug<LoggedInChatWebSocket> { "Network is available, listening" }
+                        _connectionStatus.update { status ->
+                            status.copy(
+                                isAlive = true,
+                            )
+                        }
+
+                        try {
+                            listen()
+                        } catch (e: Exception) {
+                            logError<LoggedInChatWebSocket>(e) { "Socket was closed" }
+                        }
+                    } else {
+                        logDebug<LoggedInChatWebSocket> { "Network is out, delay and retry" }
+                        _connectionStatus.update { status ->
+                            status.copy(
+                                isAlive = false,
+                            )
+                        }
                     }
 
-                    try {
-                        listen()
-                    } catch (e: Exception) {
-                        logError<LoggedInChatWebSocket>(e) { "Socket was closed" }
+                    if (isActive) {
+                        delayWithJitter(1.seconds, maxJitter = 3.seconds)
                     }
-                } else {
-                    logDebug<LoggedInChatWebSocket> { "Network is out, delay and retry" }
-                    _connectionStatus.update { status ->
-                        status.copy(
-                            isAlive = false,
-                        )
-                    }
-                }
-
-                if (isActive) {
-                    delayWithJitter(1.seconds, maxJitter = 3.seconds)
                 }
             }
-        }
     }
 
     private suspend fun listen() {
@@ -133,7 +134,8 @@ internal class MockChatWebSocket private constructor(
             while (isActive) {
                 when (val received = incoming.receive()) {
                     is Frame.Text -> {
-                        received.readText()
+                        received
+                            .readText()
                             .lines()
                             .filter { it.isNotBlank() }
                             .forEach { line -> handleMessage(line) }
@@ -184,18 +186,18 @@ internal class MockChatWebSocket private constructor(
         private val parser: TwitchIrcCommandParser,
         private val httpClient: HttpClient,
     ) : ChatCommandHandlerFactory {
-
         override fun create(
             scope: CoroutineScope,
             channelLogin: String,
             channelId: String,
-        ): MockChatWebSocket = MockChatWebSocket(
-            networkStateObserver = networkStateObserver,
-            scope = scope,
-            clock = clock,
-            parser = parser,
-            httpClient = httpClient,
-            channelLogin = channelLogin,
-        )
+        ): MockChatWebSocket =
+            MockChatWebSocket(
+                networkStateObserver = networkStateObserver,
+                scope = scope,
+                clock = clock,
+                parser = parser,
+                httpClient = httpClient,
+                channelLogin = channelLogin,
+            )
     }
 }

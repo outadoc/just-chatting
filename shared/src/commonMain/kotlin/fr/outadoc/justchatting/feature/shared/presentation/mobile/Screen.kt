@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.feature.shared.presentation.mobile
 import kotlinx.serialization.Serializable
 
 internal sealed interface Screen {
-
     @Serializable
     data object Followed : Screen
 

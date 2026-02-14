@@ -11,35 +11,39 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.http.path
 
-internal class StvEmotesServer(httpClient: HttpClient) : StvEmotesApi {
-
-    private val client = httpClient.config {
-        defaultRequest {
-            url(ApiEndpoints.STV_BASE)
+internal class StvEmotesServer(
+    httpClient: HttpClient,
+) : StvEmotesApi {
+    private val client =
+        httpClient.config {
+            defaultRequest {
+                url(ApiEndpoints.STV_BASE)
+            }
         }
-    }
 
-    override suspend fun getGlobalStvEmotes(): Result<List<Emote>> = runCatching {
-        client
-            .get { url { path("v3/emote-sets/global") } }
-            .body<StvEmoteResponse>()
-    }.map { response ->
-        response.emotes
-            .map { emote -> emote.map() }
-    }
-
-    override suspend fun getStvEmotes(channelId: String): Result<List<Emote>> = runCatching {
-        client
-            .get { url { path("v3/users/twitch", channelId) } }
-            .body<StvChannelResponse>()
-    }.map { response ->
-        if (response.emoteSet == null) {
-            return Result.failure(
-                NoSuchElementException("No 7tv emote set found for channel $channelId"),
-            )
-        } else {
-            response.emoteSet.emotes
+    override suspend fun getGlobalStvEmotes(): Result<List<Emote>> =
+        runCatching {
+            client
+                .get { url { path("v3/emote-sets/global") } }
+                .body<StvEmoteResponse>()
+        }.map { response ->
+            response.emotes
                 .map { emote -> emote.map() }
         }
-    }
+
+    override suspend fun getStvEmotes(channelId: String): Result<List<Emote>> =
+        runCatching {
+            client
+                .get { url { path("v3/users/twitch", channelId) } }
+                .body<StvChannelResponse>()
+        }.map { response ->
+            if (response.emoteSet == null) {
+                return Result.failure(
+                    NoSuchElementException("No 7tv emote set found for channel $channelId"),
+                )
+            } else {
+                response.emoteSet.emotes
+                    .map { emote -> emote.map() }
+            }
+        }
 }

@@ -63,7 +63,8 @@ internal fun ChatMessageBody(
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
 
     val fullInlineContent =
-        inlineContent.toPersistentHashMap()
+        inlineContent
+            .toPersistentHashMap()
             .putAll(
                 body.embeddedEmotes
                     .associate { emote ->
@@ -73,17 +74,17 @@ internal fun ChatMessageBody(
                                 emote = emote,
                             ),
                         )
-                    }
-                    .toImmutableMap(),
+                    }.toImmutableMap(),
             )
 
-    val annotatedString = body.toAnnotatedString(
-        appUser = appUser,
-        inlineContent = fullInlineContent,
-        pronouns = pronouns,
-        backgroundHint = backgroundHint,
-        onShowInfoForUserId = onShowInfoForUserId,
-    )
+    val annotatedString =
+        body.toAnnotatedString(
+            appUser = appUser,
+            inlineContent = fullInlineContent,
+            pronouns = pronouns,
+            backgroundHint = backgroundHint,
+            onShowInfoForUserId = onShowInfoForUserId,
+        )
 
     Column(modifier = modifier) {
         body.inReplyTo?.let { inReplyTo ->
@@ -102,9 +103,10 @@ internal fun ChatMessageBody(
             lineHeight = emoteSize,
             maxLines = maxLines,
             overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                hyphens = Hyphens.Auto,
-            ),
+            style =
+                MaterialTheme.typography.bodyMedium.copy(
+                    hyphens = Hyphens.Auto,
+                ),
         )
 
         AnimatedVisibility(visible = richEmbed != null) {
@@ -136,9 +138,10 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
         }
 
     val randomChatColors = MaterialTheme.customColors.fallbackChatColors
-    val fallbackColor = remember(chatter) {
-        randomChatColors.random(Random(chatter.hashCode()))
-    }
+    val fallbackColor =
+        remember(chatter) {
+            randomChatColors.random(Random(chatter.hashCode()))
+        }
 
     val pronoun: String? = pronouns[chatter]?.displayPronoun
 
@@ -164,17 +167,19 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
 
         withStyle(
             SpanStyle(
-                color = MaterialTheme.colorScheme.harmonizeWithPrimary(
-                    accessibleChatterColor ?: fallbackColor,
-                ),
+                color =
+                    MaterialTheme.colorScheme.harmonizeWithPrimary(
+                        accessibleChatterColor ?: fallbackColor,
+                    ),
             ),
         ) {
             withLink(
                 LinkAnnotation.Clickable(
                     tag = CHATTER_ID_ANNOTATION_TAG,
-                    styles = TextLinkStyles(
-                        style = SpanStyle(fontWeight = FontWeight.Bold),
-                    ),
+                    styles =
+                        TextLinkStyles(
+                            style = SpanStyle(fontWeight = FontWeight.Bold),
+                        ),
                     linkInteractionListener = {
                         onShowInfoForUserId(chatter.id)
                     },
@@ -236,16 +241,20 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
     }
 }
 
-private fun AnnotatedString.Builder.appendUrl(url: String, urlColor: Color) {
+private fun AnnotatedString.Builder.appendUrl(
+    url: String,
+    urlColor: Color,
+) {
     val validUrl: String = if (url.startsWith("http")) url else "https://$url"
     withLink(
         LinkAnnotation.Url(
             validUrl,
             TextLinkStyles(
-                style = SpanStyle(
-                    color = urlColor,
-                    textDecoration = TextDecoration.Underline,
-                ),
+                style =
+                    SpanStyle(
+                        color = urlColor,
+                        textDecoration = TextDecoration.Underline,
+                    ),
             ),
         ),
     ) {

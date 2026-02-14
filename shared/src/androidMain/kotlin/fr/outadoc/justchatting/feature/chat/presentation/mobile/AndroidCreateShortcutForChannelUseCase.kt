@@ -12,15 +12,16 @@ import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainActivity
 internal class AndroidCreateShortcutForChannelUseCase(
     private val context: Context,
 ) : CreateShortcutForChannelUseCase {
-
     override operator fun invoke(user: User) {
-        val intent = MainActivity.createIntent(
-            context = context,
-            userId = user.id,
-        )
+        val intent =
+            MainActivity.createIntent(
+                context = context,
+                userId = user.id,
+            )
 
         val person: Person =
-            Person.Builder()
+            Person
+                .Builder()
                 .setKey(user.id)
                 .setName(user.displayName)
                 .setIcon(user.getProfileImageIcon(context))
@@ -31,9 +32,10 @@ internal class AndroidCreateShortcutForChannelUseCase(
         val alreadyPublished = currentShortcuts.any { it.id == user.id }
 
         if (currentShortcuts.size >= maxShortcutCount && !alreadyPublished) {
-            val oldest = currentShortcuts
-                .filterNot { it.id == user.id }
-                .minByOrNull { shortcut -> shortcut.lastChangedTimestamp }
+            val oldest =
+                currentShortcuts
+                    .filterNot { it.id == user.id }
+                    .minByOrNull { shortcut -> shortcut.lastChangedTimestamp }
 
             oldest?.let { shortcut ->
                 ShortcutManagerCompat.removeDynamicShortcuts(context, listOf(shortcut.id))
@@ -43,7 +45,8 @@ internal class AndroidCreateShortcutForChannelUseCase(
         ShortcutManagerCompat.addDynamicShortcuts(
             context,
             listOf(
-                ShortcutInfoCompat.Builder(context, user.id)
+                ShortcutInfoCompat
+                    .Builder(context, user.id)
                     .setIntent(intent)
                     .setLongLived(true)
                     .setIcon(user.getProfileImageIcon(context))

@@ -9,25 +9,27 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 internal class FilterAutocompleteItemsUseCaseTest {
-
     private val instance = FilterAutocompleteItemsUseCase()
 
-    private val recentEmotes = listOf(
-        Emote(name = "htyLuv", urls = EmoteUrls("")),
-        Emote(name = "htyKnuk", urls = EmoteUrls("")),
-    )
+    private val recentEmotes =
+        listOf(
+            Emote(name = "htyLuv", urls = EmoteUrls("")),
+            Emote(name = "htyKnuk", urls = EmoteUrls("")),
+        )
 
-    private val mockEmotes = persistentMapOf(
-        "ḧtyLaser" to Emote(name = "htyLaser", urls = EmoteUrls("")),
-        "ponceFAB" to Emote(name = "ponceFAB", urls = EmoteUrls("")),
-        "bgrLoutre" to Emote(name = "bgrLoutre", urls = EmoteUrls("")),
-    )
+    private val mockEmotes =
+        persistentMapOf(
+            "ḧtyLaser" to Emote(name = "htyLaser", urls = EmoteUrls("")),
+            "ponceFAB" to Emote(name = "ponceFAB", urls = EmoteUrls("")),
+            "bgrLoutre" to Emote(name = "bgrLoutre", urls = EmoteUrls("")),
+        )
 
-    private val mockChatters = persistentSetOf(
-        Chatter(id = "1", login = "ultia", displayName = "Ultia"),
-        Chatter(id = "2", login = "ponce", displayName = "Ponce"),
-        Chatter(id = "3", login = "rivenzi", displayName = "Rivenzi"),
-    )
+    private val mockChatters =
+        persistentSetOf(
+            Chatter(id = "1", login = "ultia", displayName = "Ultia"),
+            Chatter(id = "2", login = "ponce", displayName = "Ponce"),
+            Chatter(id = "3", login = "rivenzi", displayName = "Rivenzi"),
+        )
 
     @Test
     fun `When parsing an empty string, recent emotes are returned`() {

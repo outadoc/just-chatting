@@ -62,16 +62,17 @@ internal fun LiveStreamCard(
     ) {
         Column {
             Card(
-                modifier = Modifier
-                    .combinedClickable(
-                        onClick = onClick,
-                        onClickLabel = stringResource(Res.string.chat_open_action),
-                        onLongClick = {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            onLongClick()
-                        },
-                        onLongClickLabel = stringResource(Res.string.all_showDetails_cd),
-                    ),
+                modifier =
+                    Modifier
+                        .combinedClickable(
+                            onClick = onClick,
+                            onClickLabel = stringResource(Res.string.chat_open_action),
+                            onLongClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                onLongClick()
+                            },
+                            onLongClickLabel = stringResource(Res.string.all_showDetails_cd),
+                        ),
             ) {
                 LiveStream(
                     modifier = Modifier.padding(8.dp),
@@ -87,12 +88,13 @@ internal fun LiveStreamCard(
 
             if (tags.isNotEmpty()) {
                 TagList(
-                    modifier = Modifier.padding(
-                        start = 8.dp,
-                        end = 8.dp,
-                        top = 4.dp,
-                        bottom = 8.dp,
-                    ),
+                    modifier =
+                        Modifier.padding(
+                            start = 8.dp,
+                            end = 8.dp,
+                            top = 4.dp,
+                            bottom = 8.dp,
+                        ),
                     tags = tags,
                 )
             }
@@ -118,12 +120,13 @@ private fun LiveStream(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .size(56.dp)
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surface)
-                    .clickable(onClick = onUserClick),
+                modifier =
+                    Modifier
+                        .padding(end = 8.dp)
+                        .size(56.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surface)
+                        .clickable(onClick = onUserClick),
                 model = remoteImageModel(profileImageUrl),
                 contentDescription = null,
             )
@@ -145,9 +148,10 @@ private fun LiveStream(
                 ) {
                     userName?.let { userName ->
                         Text(
-                            modifier = Modifier
-                                .weight(1f, fill = true)
-                                .alignByBaseline(),
+                            modifier =
+                                Modifier
+                                    .weight(1f, fill = true)
+                                    .alignByBaseline(),
                             text = userName,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
@@ -173,9 +177,10 @@ private fun LiveStream(
                 ) {
                     category?.let { category ->
                         Text(
-                            modifier = Modifier
-                                .weight(1f, fill = true)
-                                .alignByBaseline(),
+                            modifier =
+                                Modifier
+                                    .weight(1f, fill = true)
+                                    .alignByBaseline(),
                             text = category.name,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
@@ -187,9 +192,10 @@ private fun LiveStream(
                         ?.formatTimeSince(showSeconds = false)
                         ?.let { streamDuration ->
                             Icon(
-                                modifier = Modifier
-                                    .size(12.dp)
-                                    .align(Alignment.CenterVertically),
+                                modifier =
+                                    Modifier
+                                        .size(12.dp)
+                                        .align(Alignment.CenterVertically),
                                 imageVector = Icons.Default.Timelapse,
                                 contentDescription = null,
                             )
@@ -214,21 +220,23 @@ internal fun LiveStreamPreview() {
         LiveStreamCard(
             modifier = Modifier.padding(8.dp),
             userName = "Maghla",
-            category = StreamCategory(
-                id = "1",
-                name = "Powerwash Simulator",
-            ),
+            category =
+                StreamCategory(
+                    id = "1",
+                    name = "Powerwash Simulator",
+                ),
             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
             viewerCount = 5_305,
             startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
             profileImageUrl = null,
-            tags = persistentSetOf(
-                "French",
-                "Test",
-                "Sponsored",
-                "Label 1",
-                "Super long label with too much text, you can't really argue otherwise",
-            ),
+            tags =
+                persistentSetOf(
+                    "French",
+                    "Test",
+                    "Sponsored",
+                    "Label 1",
+                    "Super long label with too much text, you can't really argue otherwise",
+                ),
         )
     }
 }
@@ -238,14 +246,16 @@ internal fun LiveStreamPreview() {
 internal fun LiveStreamLongPreview() {
     AppTheme {
         LiveStreamCard(
-            modifier = Modifier
-                .width(250.dp)
-                .padding(8.dp),
+            modifier =
+                Modifier
+                    .width(250.dp)
+                    .padding(8.dp),
             userName = "Maghla",
-            category = StreamCategory(
-                id = "1",
-                name = "Powerwash Simulator",
-            ),
+            category =
+                StreamCategory(
+                    id = "1",
+                    name = "Powerwash Simulator",
+                ),
             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
             viewerCount = 5_305,
             startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),

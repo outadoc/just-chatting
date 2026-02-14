@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 internal class KtorAuthCallbackWebServer(
     private val oAuthAppCredentials: OAuthAppCredentials,
 ) : AuthCallbackWebServer {
-
     override val receivedUris = MutableSharedFlow<String>()
 
     private val server =
@@ -32,12 +31,14 @@ internal class KtorAuthCallbackWebServer(
                     call.respond(HttpStatusCode.NoContent)
 
                     val asFragmentEncoded: Uri =
-                        oAuthAppCredentials.redirectUri.toUri()
+                        oAuthAppCredentials.redirectUri
+                            .toUri()
                             .buildUpon()
                             .encodedFragment(
-                                call.request.uri.toUri().encodedQuery,
-                            )
-                            .build()
+                                call.request.uri
+                                    .toUri()
+                                    .encodedQuery,
+                            ).build()
 
                     logDebug<KtorAuthCallbackWebServer> { "received: $asFragmentEncoded" }
 

@@ -6,7 +6,6 @@ import com.lemonappdev.konsist.api.architecture.Layer
 import org.junit.jupiter.api.Test
 
 class ArchitectureTest {
-
     @Test
     fun `Check that clean architecture layers have correct dependencies`() {
         Konsist

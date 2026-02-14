@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal sealed class PubSubRaidMessage {
-
     @Serializable
     @SerialName("raid_update_v2")
     data class Update(

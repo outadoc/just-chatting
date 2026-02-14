@@ -9,7 +9,6 @@ package fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.prefix
 import fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.CharacterCodes
 
 internal object PrefixParser : IPrefixParser {
-
     override fun parse(rawPrefix: String): Prefix? {
         var raw = rawPrefix
 
@@ -26,22 +25,24 @@ internal object PrefixParser : IPrefixParser {
             raw = rawPrefix.substring(0, indexOfLastAt)
             nick = raw
 
-            host = if (rawPrefix.length > indexOfLastAt + 2) {
-                rawPrefix.substring(indexOfLastAt + 1, rawPrefix.length)
-            } else {
-                ""
-            }
+            host =
+                if (rawPrefix.length > indexOfLastAt + 2) {
+                    rawPrefix.substring(indexOfLastAt + 1, rawPrefix.length)
+                } else {
+                    ""
+                }
         }
 
         val indexOfFirstExclam = raw.indexOfFirst { character -> character == CharacterCodes.EXCLAM }
         if (indexOfFirstExclam >= 0) {
             nick = raw.substring(0, indexOfFirstExclam)
 
-            user = if (raw.length > indexOfFirstExclam + 2) {
-                raw.substring(indexOfFirstExclam + 1, raw.length)
-            } else {
-                ""
-            }
+            user =
+                if (raw.length > indexOfFirstExclam + 2) {
+                    raw.substring(indexOfFirstExclam + 1, raw.length)
+                } else {
+                    ""
+                }
         }
 
         if (nick.isEmpty()) {

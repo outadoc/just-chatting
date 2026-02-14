@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal sealed class PubSubPollMessage {
-
     abstract val data: Data
 
     @Serializable
@@ -74,7 +73,6 @@ internal sealed class PubSubPollMessage {
         ) {
             @Serializable
             enum class Status {
-
                 @SerialName("ACTIVE")
                 Active,
 

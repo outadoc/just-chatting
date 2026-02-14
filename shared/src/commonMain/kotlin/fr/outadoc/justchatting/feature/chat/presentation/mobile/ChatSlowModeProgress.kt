@@ -32,24 +32,27 @@ internal fun ChatSlowModeProgress(
             val remainingSlowModeDuration = slowModeDuration - durationSinceLastMessage
 
             progress.snapTo(
-                targetValue = remainingSlowModeDuration.inWholeMilliseconds.toFloat() /
-                    slowModeDuration.inWholeMilliseconds.toFloat(),
+                targetValue =
+                    remainingSlowModeDuration.inWholeMilliseconds.toFloat() /
+                        slowModeDuration.inWholeMilliseconds.toFloat(),
             )
 
             progress.animateTo(
                 targetValue = 0f,
-                animationSpec = tween(
-                    durationMillis = remainingSlowModeDuration.inWholeMilliseconds.toInt(),
-                    easing = LinearEasing,
-                ),
+                animationSpec =
+                    tween(
+                        durationMillis = remainingSlowModeDuration.inWholeMilliseconds.toInt(),
+                        easing = LinearEasing,
+                    ),
             )
         }
     }
 
-    val progressVisibility = animateFloatAsState(
-        targetValue = if (progress.isRunning) 1f else 0f,
-        label = "Slow mode progress countdown",
-    )
+    val progressVisibility =
+        animateFloatAsState(
+            targetValue = if (progress.isRunning) 1f else 0f,
+            label = "Slow mode progress countdown",
+        )
 
     LinearProgressIndicator(
         modifier = modifier.alpha(progressVisibility.value),

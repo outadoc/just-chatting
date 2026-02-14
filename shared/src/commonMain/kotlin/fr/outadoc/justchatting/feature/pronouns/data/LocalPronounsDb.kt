@@ -24,9 +24,9 @@ internal class LocalPronounsDb(
     private val db: PronounQueries,
     private val clock: Clock,
 ) : LocalPronounsApi {
-
     private val pronouns: Flow<PersistentMap<String, Pronoun>> =
-        db.getPronouns()
+        db
+            .getPronouns()
             .asFlow()
             .mapToList(DispatchersProvider.io)
             .map { result ->
@@ -39,8 +39,7 @@ internal class LocalPronounsDb(
                             objective = result.objective,
                             isSingular = result.singular > 0,
                         )
-                    }
-                    .toPersistentMap()
+                    }.toPersistentMap()
             }
 
     override suspend fun arePronounsSynced(): Boolean {
@@ -76,7 +75,8 @@ internal class LocalPronounsDb(
 
     override suspend fun getPronounsForUser(userId: String): Flow<UserPronouns?> {
         return withContext(DispatchersProvider.io) {
-            db.getUserPronoun(userId)
+            db
+                .getUserPronoun(userId)
                 .asFlow()
                 .mapToOneOrNull(DispatchersProvider.io)
                 .combine(pronouns) { result, pronouns ->

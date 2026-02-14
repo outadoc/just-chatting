@@ -14,11 +14,16 @@ import kotlinx.coroutines.launch
 internal class UserInfoViewModel(
     private val twitchRepository: TwitchRepository,
 ) : ViewModel() {
-
     sealed class State {
         data object Loading : State()
-        data class Error(val throwable: Throwable) : State()
-        data class Loaded(val user: User) : State()
+
+        data class Error(
+            val throwable: Throwable,
+        ) : State()
+
+        data class Loaded(
+            val user: User,
+        ) : State()
     }
 
     private val _state = MutableStateFlow<State>(State.Loading)
@@ -40,8 +45,7 @@ internal class UserInfoViewModel(
                             State.Error(exception)
                         },
                     )
-                }
-                .onStart { emit(State.Loading) }
+                }.onStart { emit(State.Loading) }
                 .collect(_state)
         }
     }

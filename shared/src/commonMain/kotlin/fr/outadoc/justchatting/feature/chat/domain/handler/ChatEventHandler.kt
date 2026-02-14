@@ -6,10 +6,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 internal interface ChatEventHandler {
-
     val eventFlow: Flow<ChatEvent>
     val connectionStatus: StateFlow<ConnectionStatus>
 
     fun start()
+
     fun disconnect()
 }

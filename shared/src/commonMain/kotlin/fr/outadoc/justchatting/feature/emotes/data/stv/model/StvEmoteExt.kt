@@ -11,25 +11,31 @@ internal fun StvEmote.map(): Emote {
         name = name,
         ownerId = null,
         isZeroWidth = flags.hasFlag(FLAG_IS_ZERO_WIDTH),
-        ratio = supportedFiles.first().let { file ->
-            file.width.toFloat() / file.height.toFloat()
-        },
-        urls = EmoteUrls(
-            anyTheme = mapOf(
-                0f to Uri.parse("https:${data.host.baseUrl}")
-                    .buildUpon()
-                    .appendPath(supportedFiles.first().name)
-                    .build()
-                    .toString(),
+        ratio =
+            supportedFiles.first().let { file ->
+                file.width.toFloat() / file.height.toFloat()
+            },
+        urls =
+            EmoteUrls(
+                anyTheme =
+                    mapOf(
+                        0f to
+                            Uri
+                                .parse("https:${data.host.baseUrl}")
+                                .buildUpon()
+                                .appendPath(supportedFiles.first().name)
+                                .build()
+                                .toString(),
+                    ),
             ),
-        ),
     )
 }
 
 private val StvEmote.supportedFiles: List<StvEmoteFiles>
-    get() = data.host.files
-        .filter { file -> file.format == "WEBP" }
-        .sortedByDescending { file -> file.width }
+    get() =
+        data.host.files
+            .filter { file -> file.format == "WEBP" }
+            .sortedByDescending { file -> file.width }
 
 /**
  * Checks if the given bit position is set on the bitfield.

@@ -1,7 +1,6 @@
 package fr.outadoc.justchatting.feature.emotes.domain
 
 internal abstract class CachedEmoteListSource<T> : EmoteListSource<T> {
-
     data class Params(
         val channelId: String,
         val channelName: String,
@@ -15,11 +14,12 @@ internal abstract class CachedEmoteListSource<T> : EmoteListSource<T> {
         channelName: String,
         emoteSets: List<String>,
     ): Result<T> {
-        val params = Params(
-            channelId = channelId,
-            channelName = channelName,
-            emoteSets = emoteSets,
-        )
+        val params =
+            Params(
+                channelId = channelId,
+                channelName = channelName,
+                emoteSets = emoteSets,
+            )
 
         val cachedResult = this.cachedResult
         return if (cachedResult != null && shouldUseCache(cachedResult.first, params)) {
@@ -33,5 +33,9 @@ internal abstract class CachedEmoteListSource<T> : EmoteListSource<T> {
     }
 
     abstract suspend fun getEmotes(params: Params): Result<T>
-    abstract fun shouldUseCache(previous: Params, next: Params): Boolean
+
+    abstract fun shouldUseCache(
+        previous: Params,
+        next: Params,
+    ): Boolean
 }

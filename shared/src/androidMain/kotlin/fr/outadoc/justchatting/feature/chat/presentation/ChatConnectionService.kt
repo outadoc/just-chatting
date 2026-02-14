@@ -12,19 +12,25 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 internal class ChatConnectionService : LifecycleService() {
-
     companion object {
         private const val ACTION_REPLY = "reply"
         private const val KEY_QUICK_REPLY_TEXT = "quick_reply"
 
-        fun createReplyIntent(context: Context, channelId: String): Intent {
+        fun createReplyIntent(
+            context: Context,
+            channelId: String,
+        ): Intent {
             return Intent(context, ChatConnectionService::class.java).apply {
                 data = "ccs://reply/?userId=$channelId".toUri()
             }
         }
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int,
+    ): Int {
         logInfo<ChatConnectionService> { "Received intent $intent with data=${intent?.data}" }
 
         val repository by inject<TwitchRepository>()
@@ -38,7 +44,8 @@ internal class ChatConnectionService : LifecycleService() {
             ACTION_REPLY -> {
                 lifecycleScope.launch {
                     val quickReplyResult: String? =
-                        RemoteInput.getResultsFromIntent(intent)
+                        RemoteInput
+                            .getResultsFromIntent(intent)
                             ?.getCharSequence(KEY_QUICK_REPLY_TEXT)
                             ?.toString()
 

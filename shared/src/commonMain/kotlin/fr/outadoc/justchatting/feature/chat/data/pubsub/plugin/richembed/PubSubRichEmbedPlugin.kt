@@ -9,7 +9,6 @@ internal class PubSubRichEmbedPlugin(
     private val json: Json,
     private val clock: Clock,
 ) : PubSubPlugin<PubSubRichEmbedMessage> {
-
     override fun getTopic(channelId: String): String = "stream-chat-room-v1.$channelId"
 
     override fun parseMessage(payload: String): List<ChatEvent> {
@@ -24,7 +23,9 @@ internal class PubSubRichEmbedPlugin(
                         requestUrl = message.data.requestUrl,
                         thumbnailUrl = message.data.thumbnailUrl,
                         authorName = message.data.authorName,
-                        channelName = message.data.metadata.clipMetadata?.channelDisplayName,
+                        channelName =
+                            message.data.metadata.clipMetadata
+                                ?.channelDisplayName,
                     )
                 }
             },

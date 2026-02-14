@@ -34,22 +34,25 @@ import fr.outadoc.justchatting.shared.R
 import org.koin.compose.koinInject
 
 internal class RecentChannelsWidget : GlanceAppWidget() {
-
     companion object {
         private val SMALL_SQUARE = DpSize(100.dp, 100.dp)
         private val HORIZONTAL_RECTANGLE = DpSize(250.dp, 100.dp)
         private val BIG_SQUARE = DpSize(250.dp, 250.dp)
     }
 
-    override val sizeMode = SizeMode.Responsive(
-        setOf(
-            SMALL_SQUARE,
-            HORIZONTAL_RECTANGLE,
-            BIG_SQUARE,
-        ),
-    )
+    override val sizeMode =
+        SizeMode.Responsive(
+            setOf(
+                SMALL_SQUARE,
+                HORIZONTAL_RECTANGLE,
+                BIG_SQUARE,
+            ),
+        )
 
-    override suspend fun provideGlance(context: Context, id: GlanceId) {
+    override suspend fun provideGlance(
+        context: Context,
+        id: GlanceId,
+    ) {
         provideContent {
             val viewModel: RecentChannelsViewModel = koinInject()
 
@@ -85,17 +88,19 @@ internal class RecentChannelsWidget : GlanceAppWidget() {
                                 items(currentState.data) { user ->
                                     Column {
                                         Box(
-                                            modifier = GlanceModifier
-                                                .clickable(
-                                                    MainActivity.createGlanceAction(
-                                                        userId = user.id,
+                                            modifier =
+                                                GlanceModifier
+                                                    .clickable(
+                                                        MainActivity.createGlanceAction(
+                                                            userId = user.id,
+                                                        ),
                                                     ),
-                                                ),
                                         ) {
                                             GlanceUserItem(
-                                                modifier = GlanceModifier
-                                                    .fillMaxWidth()
-                                                    .padding(8.dp),
+                                                modifier =
+                                                    GlanceModifier
+                                                        .fillMaxWidth()
+                                                        .padding(8.dp),
                                                 user = user,
                                             )
                                         }

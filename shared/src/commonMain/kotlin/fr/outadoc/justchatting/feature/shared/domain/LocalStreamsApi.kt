@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
 
 internal interface LocalStreamsApi {
-
     fun getPastStreams(
         notBefore: Instant,
         notAfter: Instant,
@@ -28,7 +27,10 @@ internal interface LocalStreamsApi {
         notAfter: Instant,
     )
 
-    suspend fun savePastStreams(user: User, videos: List<Video>)
+    suspend fun savePastStreams(
+        user: User,
+        videos: List<Video>,
+    )
 
     suspend fun saveAndReplaceLiveStreams(streams: List<Stream>)
 

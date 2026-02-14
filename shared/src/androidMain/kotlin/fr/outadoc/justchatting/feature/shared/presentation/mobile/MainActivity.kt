@@ -24,11 +24,13 @@ import fr.outadoc.justchatting.feature.shared.presentation.DeeplinkReceiver
 import org.koin.android.ext.android.inject
 
 internal class MainActivity : AppCompatActivity() {
-
     companion object {
         private const val CHANNEL_USER_ID = "channel_user_id"
 
-        fun createIntent(context: Context, userId: String): Intent {
+        fun createIntent(
+            context: Context,
+            userId: String,
+        ): Intent {
             return Intent(context, MainActivity::class.java).apply {
                 data = createChannelDeeplink(userId).toAndroidUri()
                 action = Intent.ACTION_VIEW
@@ -40,9 +42,10 @@ internal class MainActivity : AppCompatActivity() {
 
         fun createGlanceAction(userId: String): Action {
             return actionStartActivity<MainActivity>(
-                parameters = actionParametersOf(
-                    ActionParameters.Key<String>(CHANNEL_USER_ID) to userId,
-                ),
+                parameters =
+                    actionParametersOf(
+                        ActionParameters.Key<String>(CHANNEL_USER_ID) to userId,
+                    ),
             )
         }
     }
@@ -55,7 +58,8 @@ internal class MainActivity : AppCompatActivity() {
         installSplashScreen()
         enableEdgeToEdge()
 
-        DefaultEmojiCompatConfig.create(this)
+        DefaultEmojiCompatConfig
+            .create(this)
             ?.setReplaceAll(true)
             ?.let { emojiConfig ->
                 EmojiCompat.init(emojiConfig)
@@ -122,17 +126,18 @@ internal class MainActivity : AppCompatActivity() {
     }
 
     private fun openSettingsIntent(action: String) {
-        val intent = Intent().apply {
-            this.action = action
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val intent =
+            Intent().apply {
+                this.action = action
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-            // for Android 5-7
-            putExtra("app_package", packageName)
-            putExtra("app_uid", applicationInfo.uid)
+                // for Android 5-7
+                putExtra("app_package", packageName)
+                putExtra("app_uid", applicationInfo.uid)
 
-            // for Android 8 and above
-            putExtra("android.provider.extra.APP_PACKAGE", packageName)
-        }
+                // for Android 8 and above
+                putExtra("android.provider.extra.APP_PACKAGE", packageName)
+            }
 
         startActivity(intent)
     }

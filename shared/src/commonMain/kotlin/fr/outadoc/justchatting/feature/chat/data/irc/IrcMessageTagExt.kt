@@ -34,17 +34,17 @@ internal fun Map<String, String?>.parseEmotes(message: String): List<Emote>? {
                         id = emote.key,
                         name = message.slice(realBegin..realEnd),
                     ).map()
-                }
-                .orEmpty()
+                }.orEmpty()
         }
 }
 
-internal fun Map<String, String?>.parseBadges(): List<Badge>? = this["badges"]
-    ?.splitAndMakeMap(",", "/")
-    ?.entries
-    ?.mapNotNull { (key, value) ->
-        value?.let { Badge(key, value) }
-    }
+internal fun Map<String, String?>.parseBadges(): List<Badge>? =
+    this["badges"]
+        ?.splitAndMakeMap(",", "/")
+        ?.entries
+        ?.mapNotNull { (key, value) ->
+            value?.let { Badge(key, value) }
+        }
 
 internal fun Map<String, String?>.parseTimestamp(): Instant? {
     val prop = this["tmi-sent-ts"] ?: this["rm-received-ts"]
@@ -119,11 +119,12 @@ internal val Map<String, String?>.id: String?
     get() = this["id"]?.takeUnless { it.isEmpty() }
 
 internal val Map<String, String?>.isEmoteOnly: Boolean?
-    get() = when (this["emote-only"]) {
-        "1" -> true
-        "0" -> false
-        else -> null
-    }
+    get() =
+        when (this["emote-only"]) {
+            "1" -> true
+            "0" -> false
+            else -> null
+        }
 
 internal val Map<String, String?>.minFollowDuration: Duration?
     get() = this["followers-only"]?.toIntOrNull()?.minutes
@@ -132,18 +133,20 @@ internal val Map<String, String?>.slowModeDuration: Duration?
     get() = this["slow"]?.toIntOrNull()?.seconds
 
 internal val Map<String, String?>.uniqueMessagesOnly: Boolean?
-    get() = when (this["r9k"]) {
-        "1" -> true
-        "0" -> false
-        else -> null
-    }
+    get() =
+        when (this["r9k"]) {
+            "1" -> true
+            "0" -> false
+            else -> null
+        }
 
 internal val Map<String, String?>.isSubOnly: Boolean?
-    get() = when (this["subs-only"]) {
-        "1" -> true
-        "0" -> false
-        else -> null
-    }
+    get() =
+        when (this["subs-only"]) {
+            "1" -> true
+            "0" -> false
+            else -> null
+        }
 
 internal val Map<String, String?>.login: String?
     get() = this["login"]?.takeUnless { it.isEmpty() }
@@ -166,10 +169,12 @@ internal val Map<String, String?>.userId: String
 private fun String.splitAndMakeMap(
     split: String,
     map: String,
-): Map<String, String?> = buildMap {
-    this@splitAndMakeMap.split(split)
-        .dropLastWhile { it.isEmpty() }
-        .asSequence()
-        .map { pair -> pair.split(map).dropLastWhile { it.isEmpty() } }
-        .forEach { this[it[0]] = if (it.size == 2) it[1] else null }
-}
+): Map<String, String?> =
+    buildMap {
+        this@splitAndMakeMap
+            .split(split)
+            .dropLastWhile { it.isEmpty() }
+            .asSequence()
+            .map { pair -> pair.split(map).dropLastWhile { it.isEmpty() } }
+            .forEach { this[it[0]] = if (it.size == 2) it[1] else null }
+    }

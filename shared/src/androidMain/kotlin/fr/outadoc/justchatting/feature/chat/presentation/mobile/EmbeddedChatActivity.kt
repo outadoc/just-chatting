@@ -13,11 +13,13 @@ import com.eygraber.uri.toAndroidUri
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 
 public class EmbeddedChatActivity : AppCompatActivity() {
-
     internal companion object {
         private const val CHANNEL_USER_ID = "channel_user_id"
 
-        fun createIntent(context: Context, userId: String): Intent {
+        fun createIntent(
+            context: Context,
+            userId: String,
+        ): Intent {
             return Intent(context, EmbeddedChatActivity::class.java).apply {
                 data = createChannelDeeplink(userId).toAndroidUri()
                 action = Intent.ACTION_VIEW
@@ -35,7 +37,8 @@ public class EmbeddedChatActivity : AppCompatActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        DefaultEmojiCompatConfig.create(this)
+        DefaultEmojiCompatConfig
+            .create(this)
             ?.setReplaceAll(true)
             ?.let { emojiConfig ->
                 EmojiCompat.init(emojiConfig)

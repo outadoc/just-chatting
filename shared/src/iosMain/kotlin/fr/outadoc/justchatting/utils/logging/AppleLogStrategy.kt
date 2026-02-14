@@ -13,9 +13,12 @@ import platform.darwin.os_log_create
 import platform.darwin.os_log_t
 
 public object AppleLogStrategy : LogStrategy {
-
     @OptIn(ExperimentalForeignApi::class)
-    override fun println(level: Logger.Level, tag: String?, content: String) {
+    override fun println(
+        level: Logger.Level,
+        tag: String?,
+        content: String,
+    ) {
         val logger: os_log_t =
             os_log_create(
                 subsystem = "fr.outadoc.justchatting",
@@ -25,13 +28,14 @@ public object AppleLogStrategy : LogStrategy {
         _os_log_internal(
             dso = __dso_handle.ptr,
             log = logger,
-            type = when (level) {
-                Logger.Level.Verbose -> OS_LOG_TYPE_DEBUG
-                Logger.Level.Debug -> OS_LOG_TYPE_INFO
-                Logger.Level.Info -> OS_LOG_TYPE_DEFAULT
-                Logger.Level.Warning -> OS_LOG_TYPE_ERROR
-                Logger.Level.Error -> OS_LOG_TYPE_FAULT
-            },
+            type =
+                when (level) {
+                    Logger.Level.Verbose -> OS_LOG_TYPE_DEBUG
+                    Logger.Level.Debug -> OS_LOG_TYPE_INFO
+                    Logger.Level.Info -> OS_LOG_TYPE_DEFAULT
+                    Logger.Level.Warning -> OS_LOG_TYPE_ERROR
+                    Logger.Level.Error -> OS_LOG_TYPE_FAULT
+                },
             message = content.replace("%", "%%"),
         )
     }

@@ -63,14 +63,15 @@ internal fun FutureTimelineSegment(
         ) {
             Column {
                 Card(
-                    modifier = Modifier
-                        .combinedClickable(
-                            onClick = { showDetailsDialog = true },
-                            onLongClick = {
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                showDetailsDialog = true
-                            },
-                        ),
+                    modifier =
+                        Modifier
+                            .combinedClickable(
+                                onClick = { showDetailsDialog = true },
+                                onLongClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    showDetailsDialog = true
+                                },
+                            ),
                 ) {
                     TimelineSegmentContent(
                         modifier = Modifier.padding(8.dp),
@@ -83,9 +84,10 @@ internal fun FutureTimelineSegment(
                 }
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
@@ -97,14 +99,15 @@ internal fun FutureTimelineSegment(
 
                     Text(
                         modifier = Modifier.alignByBaseline(),
-                        text = buildAnnotatedString {
-                            append(segment.startTime.formatHourMinute())
+                        text =
+                            buildAnnotatedString {
+                                append(segment.startTime.formatHourMinute())
 
-                            if (segment.endTime != null) {
-                                append(" - ")
-                                append(segment.endTime.formatHourMinute())
-                            }
-                        },
+                                if (segment.endTime != null) {
+                                    append(" - ")
+                                    append(segment.endTime.formatHourMinute())
+                                }
+                            },
                         style = MaterialTheme.typography.bodyMedium,
                     )
 

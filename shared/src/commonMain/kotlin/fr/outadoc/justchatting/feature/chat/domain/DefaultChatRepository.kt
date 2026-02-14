@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.getAndUpdate
 internal class DefaultChatRepository(
     private val factory: AggregateChatEventHandler.Factory,
 ) : ChatRepository {
-
     private val coroutineScope: CoroutineScope = CoroutineScope(Job())
 
     private val handlerFlow: MutableStateFlow<ChatEventHandler?> = MutableStateFlow(null)
@@ -31,13 +30,14 @@ internal class DefaultChatRepository(
     private fun getOrCreateEventHandler(user: User): ChatEventHandler {
         val handler: ChatEventHandler =
             handlerFlow.value
-                ?: factory.create(
-                    channelId = user.id,
-                    channelLogin = user.login,
-                    coroutineScope = coroutineScope,
-                ).also { thread ->
-                    thread.start()
-                }
+                ?: factory
+                    .create(
+                        channelId = user.id,
+                        channelLogin = user.login,
+                        coroutineScope = coroutineScope,
+                    ).also { thread ->
+                        thread.start()
+                    }
 
         return handler.also {
             handlerFlow.value = it

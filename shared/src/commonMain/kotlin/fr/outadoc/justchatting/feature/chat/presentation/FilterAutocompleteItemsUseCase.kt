@@ -12,20 +12,21 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
 internal class FilterAutocompleteItemsUseCase {
-
     operator fun invoke(
         filter: CharSequence,
         recentEmotes: List<Emote>,
         allEmotesMap: ImmutableMap<String, Emote>,
         chatters: PersistentSet<Chatter>,
     ): ImmutableList<AutoCompleteItem> {
-        val cleanFilter: CharSequence = filter
-            .removePrefix(ChatPrefixConstants.ChatterPrefix.toString())
-            .removePrefix(ChatPrefixConstants.EmotePrefix.toString())
+        val cleanFilter: CharSequence =
+            filter
+                .removePrefix(ChatPrefixConstants.ChatterPrefix.toString())
+                .removePrefix(ChatPrefixConstants.EmotePrefix.toString())
 
-        val prefix: Char? = filter
-            .firstOrNull()
-            ?.takeIf { filter != cleanFilter }
+        val prefix: Char? =
+            filter
+                .firstOrNull()
+                ?.takeIf { filter != cleanFilter }
 
         if (cleanFilter.isBlank()) {
             return when (prefix) {
@@ -58,8 +59,7 @@ internal class FilterAutocompleteItemsUseCase {
                         } else {
                             null
                         }
-                    }
-                    .toPersistentList()
+                    }.toPersistentList()
             } else {
                 persistentListOf()
             }
@@ -73,8 +73,7 @@ internal class FilterAutocompleteItemsUseCase {
                         } else {
                             null
                         }
-                    }
-                    .toPersistentList()
+                    }.toPersistentList()
             } else {
                 persistentListOf()
             }

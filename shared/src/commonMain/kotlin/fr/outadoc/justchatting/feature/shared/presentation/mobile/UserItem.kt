@@ -68,11 +68,12 @@ internal fun UserItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         AsyncImage(
-            modifier = Modifier
-                .padding(end = 8.dp)
-                .size(56.dp)
-                .clip(MaterialTheme.shapes.medium)
-                .background(MaterialTheme.colorScheme.surface),
+            modifier =
+                Modifier
+                    .padding(end = 8.dp)
+                    .size(56.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surface),
             model = remoteImageModel(profileImageUrl),
             contentDescription = null,
         )
@@ -120,9 +121,10 @@ internal fun UserItem(
 internal fun UserItemPreview() {
     AppTheme {
         UserItemCard(
-            modifier = Modifier
-                .padding(8.dp)
-                .width(300.dp),
+            modifier =
+                Modifier
+                    .padding(8.dp)
+                    .width(300.dp),
             displayName = "Maghla",
             followedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
             profileImageUrl = null,

@@ -30,43 +30,44 @@ import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 
 internal actual val platformModule: Module
-    get() = module {
-        single {
-            OAuthAppCredentials(
-                clientId = "rzpd86ie5dz4hghlvcgtfgwmvyzfz2",
-                redirectUri = "https://just-chatting.app/auth/callback.html",
-            )
-        }
+    get() =
+        module {
+            single {
+                OAuthAppCredentials(
+                    clientId = "rzpd86ie5dz4hghlvcgtfgwmvyzfz2",
+                    redirectUri = "https://just-chatting.app/auth/callback.html",
+                )
+            }
 
-        single<ChatNotifier> { NoopChatNotifier() }
-        single<CreateShortcutForChannelUseCase> { NoopCreateShortcutForChannelUseCase() }
+            single<ChatNotifier> { NoopChatNotifier() }
+            single<CreateShortcutForChannelUseCase> { NoopCreateShortcutForChannelUseCase() }
 
-        single<SqlDriver> {
-            NativeSqliteDriver(
-                schema = AppDatabase.Schema,
-                name = "database",
-            )
-        }
+            single<SqlDriver> {
+                NativeSqliteDriver(
+                    schema = AppDatabase.Schema,
+                    name = "database",
+                )
+            }
 
-        single<DataStore<Preferences>> {
-            PreferenceDataStoreFactory.createWithPath(
-                produceFile = {
-                    getDocumentsDirectory().resolve("fr.outadoc.justchatting.preferences_pb")
-                },
-            )
-        }
+            single<DataStore<Preferences>> {
+                PreferenceDataStoreFactory.createWithPath(
+                    produceFile = {
+                        getDocumentsDirectory().resolve("fr.outadoc.justchatting.preferences_pb")
+                    },
+                )
+            }
 
-        single<BaseHttpClientProvider> { AppleHttpClientProvider(get(), get()) }
+            single<BaseHttpClientProvider> { AppleHttpClientProvider(get(), get()) }
 
-        single<LogRepository> { NoopLogRepository() }
-        single<AppVersionNameProvider> { AppleAppVersionNameProvider() }
-        single<AuthCallbackWebServer> { NoopAuthCallbackWebServer() }
-        single<Connectivity> {
-            Connectivity {
-                autoStart = true
+            single<LogRepository> { NoopLogRepository() }
+            single<AppVersionNameProvider> { AppleAppVersionNameProvider() }
+            single<AuthCallbackWebServer> { NoopAuthCallbackWebServer() }
+            single<Connectivity> {
+                Connectivity {
+                    autoStart = true
+                }
             }
         }
-    }
 
 @OptIn(ExperimentalForeignApi::class)
 private fun getDocumentsDirectory(): Path {
@@ -77,8 +78,7 @@ private fun getDocumentsDirectory(): Path {
             appropriateForURL = null,
             create = false,
             error = null,
-        )
-        ?.path
+        )?.path
         ?.toPath()
         ?: error("Could not get document directory")
 }

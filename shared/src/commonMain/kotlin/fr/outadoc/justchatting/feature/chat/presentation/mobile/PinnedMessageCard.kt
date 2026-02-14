@@ -54,19 +54,22 @@ internal fun PinnedMessageCard(
     Card(
         modifier = modifier,
         onClick = { isExpanded = !isExpanded },
-        colors = CardDefaults.cardColors(
-            containerColor = color,
-        ),
+        colors =
+            CardDefaults.cardColors(
+                containerColor = color,
+            ),
     ) {
         Row(
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             ChatMessage(
-                modifier = Modifier
-                    .weight(1f, fill = true),
+                modifier =
+                    Modifier
+                        .weight(1f, fill = true),
                 message = message,
                 inlineContent = inlineContent,
                 removedContent = removedContent,
@@ -99,11 +102,12 @@ internal fun PinnedMessageCardPreview(
     AppTheme {
         PinnedMessageCard(
             message = message,
-            appUser = AppUser.LoggedIn(
-                userId = "",
-                userLogin = "",
-                token = "",
-            ),
+            appUser =
+                AppUser.LoggedIn(
+                    userId = "",
+                    userLogin = "",
+                    token = "",
+                ),
         )
     }
 }

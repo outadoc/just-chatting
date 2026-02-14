@@ -58,11 +58,12 @@ internal fun SearchScreen(
         topBar = {
             Surface {
                 SearchBar(
-                    modifier = Modifier
-                        .hazeEffect(
-                            state = hazeState,
-                            style = HazeMaterials.regular(),
-                        ),
+                    modifier =
+                        Modifier
+                            .hazeEffect(
+                                state = hazeState,
+                                style = HazeMaterials.regular(),
+                            ),
                     searchResults = searchResults,
                     query = state.query,
                     isSearchExpanded = state.isSearchExpanded,
@@ -99,17 +100,20 @@ private fun RecentUsersList(
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = insets + PaddingValues(
-            start = 16.dp,
-            end = 16.dp,
-            bottom = 16.dp,
-        ),
+        contentPadding =
+            insets +
+                PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp,
+                ),
     ) {
         items(users) { user ->
             UserItemCard(
-                modifier = Modifier
-                    .animateItem()
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .animateItem()
+                        .fillMaxWidth(),
                 onClick = { onChannelClick(user) },
                 displayName = user.displayName,
                 profileImageUrl = user.profileImageUrl,

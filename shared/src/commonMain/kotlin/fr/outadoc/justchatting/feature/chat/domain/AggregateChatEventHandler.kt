@@ -19,7 +19,6 @@ internal class AggregateChatEventHandler(
     coroutineScope: CoroutineScope,
     chatCommandHandlerFactoriesProvider: ChatCommandHandlerFactoriesProvider,
 ) : ChatEventHandler {
-
     class Factory(
         private val chatCommandHandlerFactoriesProvider: ChatCommandHandlerFactoriesProvider,
     ) {
@@ -57,8 +56,7 @@ internal class AggregateChatEventHandler(
                     registeredListeners = acc.registeredListeners + status.registeredListeners,
                 )
             }
-        }
-            .distinctUntilChanged()
+        }.distinctUntilChanged()
             .stateIn(
                 coroutineScope,
                 started = SharingStarted.WhileSubscribed(),

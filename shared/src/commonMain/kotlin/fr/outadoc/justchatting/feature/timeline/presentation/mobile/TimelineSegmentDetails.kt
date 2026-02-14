@@ -48,9 +48,10 @@ internal fun TimelineSegmentDetails(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                modifier = Modifier
-                    .size(24.dp)
-                    .padding(end = 8.dp),
+                modifier =
+                    Modifier
+                        .size(24.dp)
+                        .padding(end = 8.dp),
                 imageVector = Icons.Default.CalendarToday,
                 contentDescription = null,
             )
@@ -60,9 +61,10 @@ internal fun TimelineSegmentDetails(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                modifier = Modifier
-                    .size(24.dp)
-                    .padding(end = 8.dp),
+                modifier =
+                    Modifier
+                        .size(24.dp)
+                        .padding(end = 8.dp),
                 imageVector = Icons.Default.AccessTime,
                 contentDescription = null,
             )
@@ -82,9 +84,10 @@ internal fun TimelineSegmentDetails(
         segment.category?.let { category ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp),
+                    modifier =
+                        Modifier
+                            .size(24.dp)
+                            .padding(end = 8.dp),
                     imageVector = Icons.Default.Gamepad,
                     contentDescription = null,
                 )
@@ -104,25 +107,28 @@ private fun TimelineSegmentDetailsPreview() {
     val lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     AppTheme {
         TimelineSegmentDetails(
-            segment = ChannelScheduleSegment(
-                id = "1",
-                user = User(
+            segment =
+                ChannelScheduleSegment(
                     id = "1",
-                    login = "user",
-                    displayName = lorem,
-                    description = "",
-                    profileImageUrl = "",
-                    createdAt = Instant.DISTANT_PAST,
-                    usedAt = Instant.DISTANT_PAST,
+                    user =
+                        User(
+                            id = "1",
+                            login = "user",
+                            displayName = lorem,
+                            description = "",
+                            profileImageUrl = "",
+                            createdAt = Instant.DISTANT_PAST,
+                            usedAt = Instant.DISTANT_PAST,
+                        ),
+                    title = lorem,
+                    startTime = Instant.parse("2022-01-01T12:00:00Z"),
+                    endTime = Instant.parse("2022-01-01T13:00:00Z"),
+                    category =
+                        StreamCategory(
+                            id = "1",
+                            name = lorem,
+                        ),
                 ),
-                title = lorem,
-                startTime = Instant.parse("2022-01-01T12:00:00Z"),
-                endTime = Instant.parse("2022-01-01T13:00:00Z"),
-                category = StreamCategory(
-                    id = "1",
-                    name = lorem,
-                ),
-            ),
         )
     }
 }

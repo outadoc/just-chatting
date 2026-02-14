@@ -7,7 +7,8 @@ import coil3.request.ImageRequest
 @Composable
 internal actual fun remoteImageModel(url: String?): ImageRequest {
     val context = LocalPlatformContext.current
-    return ImageRequest.Builder(context)
+    return ImageRequest
+        .Builder(context)
         .data(url)
         .build()
 }

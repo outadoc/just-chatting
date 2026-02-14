@@ -5,14 +5,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal sealed class PubSubRichEmbedMessage {
-
     @Serializable
     @SerialName("chat_rich_embed")
     data class RichEmbed(
         @SerialName("data")
         val data: Data,
     ) : PubSubRichEmbedMessage() {
-
         @Serializable
         data class Data(
             @SerialName("message_id")

@@ -10,13 +10,15 @@ internal fun FfzEmote.map(): Emote {
         name = code,
         ownerId = null,
         isZeroWidth = false,
-        urls = EmoteUrls(
-            images.mapKeys { (key, _) ->
-                key.removeSuffix("x")
-                    .toFloatOrNull()
-            }
-                .filterKeysNotNull()
-                .filterValuesNotNull(),
-        ),
+        urls =
+            EmoteUrls(
+                images
+                    .mapKeys { (key, _) ->
+                        key
+                            .removeSuffix("x")
+                            .toFloatOrNull()
+                    }.filterKeysNotNull()
+                    .filterValuesNotNull(),
+            ),
     )
 }

@@ -17,9 +17,10 @@ internal fun adaptiveGridCellsCompat(
         val widgetWidth = LocalSize.current.width
         val supportedRange = 1..5
         GridCells.Fixed(
-            count = floor(widgetWidth / minSize)
-                .toInt()
-                .coerceIn(supportedRange),
+            count =
+                floor(widgetWidth / minSize)
+                    .toInt()
+                    .coerceIn(supportedRange),
         )
     }
 }

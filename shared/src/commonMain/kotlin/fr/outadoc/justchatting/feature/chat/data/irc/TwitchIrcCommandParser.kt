@@ -8,21 +8,23 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.utils.logging.logWarning
 import kotlin.time.Clock
 
-internal class TwitchIrcCommandParser(private val clock: Clock) {
-
+internal class TwitchIrcCommandParser(
+    private val clock: Clock,
+) {
     fun parse(message: String): ChatEvent? {
         val ircMessage = IrcMessageParser.parse(message)
-        val parsedMessage = when (ircMessage?.command) {
-            "PING" -> ChatEvent.Command.Ping
-            "PRIVMSG" -> parsePrivateMsg(ircMessage)
-            "NOTICE" -> parseNotice(ircMessage)
-            "USERNOTICE" -> parseUserNotice(ircMessage)
-            "USERSTATE" -> parseUserState(ircMessage)
-            "CLEARMSG" -> parseClearMessage(ircMessage)
-            "CLEARCHAT" -> parseClearChat(ircMessage)
-            "ROOMSTATE" -> parseRoomState(ircMessage)
-            else -> null
-        }
+        val parsedMessage =
+            when (ircMessage?.command) {
+                "PING" -> ChatEvent.Command.Ping
+                "PRIVMSG" -> parsePrivateMsg(ircMessage)
+                "NOTICE" -> parseNotice(ircMessage)
+                "USERNOTICE" -> parseUserNotice(ircMessage)
+                "USERSTATE" -> parseUserState(ircMessage)
+                "CLEARMSG" -> parseClearMessage(ircMessage)
+                "CLEARCHAT" -> parseClearChat(ircMessage)
+                "ROOMSTATE" -> parseRoomState(ircMessage)
+                else -> null
+            }
 
         if (parsedMessage == null) {
             logWarning<TwitchIrcCommandParser> { "Unknown command: $message" }
@@ -118,8 +120,9 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
                 ChatEvent.Message.GiftPayForward(
                     timestamp = timestamp,
                     userDisplayName = ircMessage.tags.displayName ?: return null,
-                    priorGifterDisplayName = ircMessage.tags.priorGifterDisplayName
-                        ?.takeUnless { ircMessage.tags.priorGifterAnonymous },
+                    priorGifterDisplayName =
+                        ircMessage.tags.priorGifterDisplayName
+                            ?.takeUnless { ircMessage.tags.priorGifterAnonymous },
                 )
             }
 
@@ -135,8 +138,9 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
     }
 
     private fun parseMessage(ircMessage: IrcMessage): ChatEvent.Message.ChatMessage? {
-        val privateMessage = PrivMsgMessage.Message.Parser.parse(ircMessage)
-            ?: return null
+        val privateMessage =
+            PrivMsgMessage.Message.Parser.parse(ircMessage)
+                ?: return null
 
         // If the message is an action, it matches this regex, and we need
         // to extract the actual message contained inside
@@ -180,8 +184,9 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
     }
 
     private fun parseNotice(ircMessage: IrcMessage): ChatEvent.Message.Notice? {
-        val notice = NoticeMessage.Command.Parser.parse(ircMessage)
-            ?: return null
+        val notice =
+            NoticeMessage.Command.Parser.parse(ircMessage)
+                ?: return null
 
         return ChatEvent.Message.Notice(
             message = notice.message,

@@ -6,9 +6,10 @@ import kotlinx.serialization.Serializable
 
 @Parcelize
 internal sealed interface DetailScreen : Parcelable {
-
     @Serializable
-    data class Chat(val id: String) : DetailScreen
+    data class Chat(
+        val id: String,
+    ) : DetailScreen
 
     @Serializable
     data object About : DetailScreen

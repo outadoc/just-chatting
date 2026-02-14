@@ -22,7 +22,6 @@ internal data class PubSubPredictionMessage(
     @Serializable
     @JsonClassDiscriminator("status")
     sealed class Event {
-
         @Serializable
         @SerialName("ACTIVE")
         data class Active(

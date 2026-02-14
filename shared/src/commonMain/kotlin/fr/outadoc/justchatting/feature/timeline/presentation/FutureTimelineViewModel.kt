@@ -21,7 +21,6 @@ internal class FutureTimelineViewModel(
     private val twitchRepository: TwitchRepository,
     private val clock: Clock,
 ) : ViewModel() {
-
     data class State(
         val isLoading: Boolean = false,
         val future: ImmutableMap<LocalDate, List<ChannelScheduleSegment>> = persistentMapOf(),
@@ -42,8 +41,7 @@ internal class FutureTimelineViewModel(
                 .getFollowedChannelsSchedule(
                     today = today,
                     timeZone = tz,
-                )
-                .collect { schedule ->
+                ).collect { schedule ->
                     _state.update { state ->
                         state.copy(future = schedule.future)
                     }
@@ -59,22 +57,23 @@ internal class FutureTimelineViewModel(
 
     fun syncEverythingNow() {
         syncJob?.cancel()
-        syncJob = viewModelScope.launch(DispatchersProvider.io) {
-            _state.update { state ->
-                state.copy(isLoading = true)
+        syncJob =
+            viewModelScope.launch(DispatchersProvider.io) {
+                _state.update { state ->
+                    state.copy(isLoading = true)
+                }
+
+                val tz = _state.value.timeZone
+                val today = clock.now().toLocalDateTime(tz).date
+
+                twitchRepository.syncFollowedChannelsSchedule(
+                    today = today,
+                    timeZone = tz,
+                )
+
+                _state.update { state ->
+                    state.copy(isLoading = false)
+                }
             }
-
-            val tz = _state.value.timeZone
-            val today = clock.now().toLocalDateTime(tz).date
-
-            twitchRepository.syncFollowedChannelsSchedule(
-                today = today,
-                timeZone = tz,
-            )
-
-            _state.update { state ->
-                state.copy(isLoading = false)
-            }
-        }
     }
 }

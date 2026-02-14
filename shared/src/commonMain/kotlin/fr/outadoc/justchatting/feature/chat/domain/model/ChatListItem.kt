@@ -11,10 +11,8 @@ import kotlin.time.Instant
 
 @Immutable
 internal sealed interface ChatListItem {
-
     @Immutable
     sealed class Message : ChatListItem {
-
         abstract val body: Body?
         abstract val timestamp: Instant
 
@@ -30,7 +28,6 @@ internal sealed interface ChatListItem {
             override val body: Body?,
             val metadata: Metadata,
         ) : Message() {
-
             data class Metadata(
                 val title: StringDesc,
                 val titleIcon: Icon? = null,

@@ -13,7 +13,6 @@ internal sealed class PubSubRewardMessage {
         @SerialName("data")
         val data: Data,
     ) : PubSubRewardMessage() {
-
         @Serializable
         data class Data(
             @SerialName("timestamp")

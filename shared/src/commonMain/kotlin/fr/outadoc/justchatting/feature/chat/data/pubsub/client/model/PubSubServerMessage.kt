@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal sealed class PubSubServerMessage {
-
     @Serializable
     @SerialName("RESPONSE")
     data class Response(
@@ -23,7 +22,6 @@ internal sealed class PubSubServerMessage {
         @SerialName("data")
         val data: Data,
     ) : PubSubServerMessage() {
-
         @Serializable
         data class Data(
             @SerialName("topic")

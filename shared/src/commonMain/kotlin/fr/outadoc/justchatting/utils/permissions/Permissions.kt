@@ -6,12 +6,14 @@ import androidx.compose.runtime.Stable
 internal interface PermissionState {
     val permission: String
     val status: PermissionStatus
+
     fun launchPermissionRequest()
 }
 
 @Stable
 internal sealed interface PermissionStatus {
     data object Granted : PermissionStatus
+
     data class Denied(
         val shouldShowRationale: Boolean,
     ) : PermissionStatus
@@ -27,7 +29,8 @@ internal val PermissionStatus.isGranted: Boolean
     get() = this == PermissionStatus.Granted
 
 internal val PermissionStatus.shouldShowRationale: Boolean
-    get() = when (this) {
-        PermissionStatus.Granted -> false
-        is PermissionStatus.Denied -> shouldShowRationale
-    }
+    get() =
+        when (this) {
+            PermissionStatus.Granted -> false
+            is PermissionStatus.Denied -> shouldShowRationale
+        }

@@ -21,9 +21,10 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 internal fun ActionBottomSheet(
     modifier: Modifier = Modifier,
-    sheetState: SheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-    ),
+    sheetState: SheetState =
+        rememberModalBottomSheetState(
+            skipPartiallyExpanded = true,
+        ),
     onDismissRequest: () -> Unit = {},
     header: @Composable () -> Unit = {},
     content: (@Composable () -> Unit)? = null,

@@ -38,9 +38,10 @@ internal fun SettingsSwitch(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(
-                modifier = Modifier
-                    .padding(vertical = 8.dp)
-                    .weight(1f, fill = true),
+                modifier =
+                    Modifier
+                        .padding(vertical = 8.dp)
+                        .weight(1f, fill = true),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 CompositionLocalProvider(

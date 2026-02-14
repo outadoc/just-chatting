@@ -93,149 +93,150 @@ import org.koin.dsl.module
 import kotlin.time.Clock
 
 public val sharedModule: Module
-    get() = module {
-        single<Clock> { Clock.System }
-        single<AuthRepository> { AuthRepository(get(), get(), get()) }
-        single { DeeplinkParser(get()) }
+    get() =
+        module {
+            single<Clock> { Clock.System }
+            single<AuthRepository> { AuthRepository(get(), get(), get()) }
+            single { DeeplinkParser(get()) }
 
-        single<PreferenceRepository> { DataStorePreferenceRepository(get()) }
+            single<PreferenceRepository> { DataStorePreferenceRepository(get()) }
 
-        single<TwitchHttpClientProvider> { TwitchHttpClientProvider(get(), get(), get()) }
-        single { get<BaseHttpClientProvider>().get() }
-        single(named("twitch")) { get<TwitchHttpClientProvider>().get() }
+            single<TwitchHttpClientProvider> { TwitchHttpClientProvider(get(), get(), get()) }
+            single { get<BaseHttpClientProvider>().get() }
+            single(named("twitch")) { get<TwitchHttpClientProvider>().get() }
 
-        factory<DeeplinkReceiver> { get<MainRouterViewModel>() }
+            factory<DeeplinkReceiver> { get<MainRouterViewModel>() }
 
-        single { MainRouterViewModel(get(), get(), get()) }
-        viewModel { SettingsViewModel(get(), get(), get(), get(), get()) }
-        viewModel { ChannelSearchViewModel(get()) }
-        viewModel { FollowedChannelsViewModel(get()) }
-        viewModel { RecentChannelsViewModel(get()) }
-        viewModel { LiveTimelineViewModel(get(), get()) }
-        viewModel { FutureTimelineViewModel(get(), get()) }
-        viewModel { UserInfoViewModel(get()) }
-        viewModel {
-            ChatViewModel(
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-            )
-        }
-
-        single { FilterAutocompleteItemsUseCase() }
-
-        single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get()) }
-        single { LoggedInChatWebSocket.Factory(get(), get(), get(), get()) }
-        single { MockChatWebSocket.Factory(get(), get(), get(), get()) }
-        single { PubSubWebSocket.Factory(get(), get(), get(), get()) }
-
-        single {
-            ChatCommandHandlerFactoriesProvider {
-                listOf(
-                    get<LiveChatWebSocket.Factory>(),
-                    get<LoggedInChatWebSocket.Factory>(),
-                    get<PubSubWebSocket.Factory>(),
+            single { MainRouterViewModel(get(), get(), get()) }
+            viewModel { SettingsViewModel(get(), get(), get(), get(), get()) }
+            viewModel { ChannelSearchViewModel(get()) }
+            viewModel { FollowedChannelsViewModel(get()) }
+            viewModel { RecentChannelsViewModel(get()) }
+            viewModel { LiveTimelineViewModel(get(), get()) }
+            viewModel { FutureTimelineViewModel(get(), get()) }
+            viewModel { UserInfoViewModel(get()) }
+            viewModel {
+                ChatViewModel(
+                    get(),
+                    get(),
+                    get(),
+                    get(),
+                    get(),
+                    get(),
+                    get(),
+                    get(),
+                    get(),
+                    get(),
+                    get(),
                 )
             }
-        }
 
-        single { PubSubBroadcastSettingsPlugin(get(), get()) }
-        single { PubSubChannelPointsPlugin(get(), get()) }
-        single { PubSubPinnedMessagePlugin(get(), get()) }
-        single { PubSubPollPlugin(get(), get()) }
-        single { PubSubPredictionPlugin(get()) }
-        single { PubSubRaidPlugin(get(), get()) }
-        single { PubSubRichEmbedPlugin(get(), get()) }
-        single { PubSubViewerCountPlugin(get(), get()) }
+            single { FilterAutocompleteItemsUseCase() }
 
-        single {
-            PubSubPluginsProvider {
-                listOf(
-                    get<PubSubChannelPointsPlugin>(),
-                    get<PubSubPollPlugin>(),
-                    get<PubSubPredictionPlugin>(),
-                    get<PubSubBroadcastSettingsPlugin>(),
-                    get<PubSubViewerCountPlugin>(),
-                    get<PubSubRichEmbedPlugin>(),
-                    get<PubSubPinnedMessagePlugin>(),
-                    get<PubSubRaidPlugin>(),
-                )
+            single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get()) }
+            single { LoggedInChatWebSocket.Factory(get(), get(), get(), get()) }
+            single { MockChatWebSocket.Factory(get(), get(), get(), get()) }
+            single { PubSubWebSocket.Factory(get(), get(), get(), get()) }
+
+            single {
+                ChatCommandHandlerFactoriesProvider {
+                    listOf(
+                        get<LiveChatWebSocket.Factory>(),
+                        get<LoggedInChatWebSocket.Factory>(),
+                        get<PubSubWebSocket.Factory>(),
+                    )
+                }
             }
-        }
 
-        single { AggregateChatEventHandler.Factory(get()) }
-        factory<ChatRepository> { DefaultChatRepository(get()) }
+            single { PubSubBroadcastSettingsPlugin(get(), get()) }
+            single { PubSubChannelPointsPlugin(get(), get()) }
+            single { PubSubPinnedMessagePlugin(get(), get()) }
+            single { PubSubPollPlugin(get(), get()) }
+            single { PubSubPredictionPlugin(get()) }
+            single { PubSubRaidPlugin(get(), get()) }
+            single { PubSubRichEmbedPlugin(get(), get()) }
+            single { PubSubViewerCountPlugin(get(), get()) }
 
-        single { TwitchIrcCommandParser(get()) }
-        single { ChatEventViewMapper() }
-
-        single { RecentMessagesRepository(get(), get()) }
-
-        single<PronounsApi> { AlejoPronounsApi(get()) }
-        single { AlejoPronounsClient(get()) }
-        single { PronounsRepository(get(), get(), get()) }
-
-        factory { GetRecentEmotesUseCase(get()) }
-        factory { InsertRecentEmotesUseCase(get()) }
-
-        single { ChannelBttvEmotesSource(get(), get()) }
-        single { ChannelFfzEmotesSource(get(), get()) }
-        single { ChannelStvEmotesSource(get(), get()) }
-        single { ChannelTwitchEmotesSource(get()) }
-        single { GlobalBttvEmotesSource(get(), get()) }
-        single { GlobalFfzEmotesSource(get(), get()) }
-        single { GlobalStvEmotesSource(get(), get()) }
-        single { GlobalTwitchEmotesSource(get()) }
-        single { DelegateTwitchEmotesSource(get()) }
-
-        single {
-            EmoteListSourcesProvider {
-                listOf(
-                    get<ChannelTwitchEmotesSource>(),
-                    get<ChannelBttvEmotesSource>(),
-                    get<ChannelFfzEmotesSource>(),
-                    get<ChannelStvEmotesSource>(),
-                    get<GlobalTwitchEmotesSource>(),
-                    get<GlobalBttvEmotesSource>(),
-                    get<GlobalFfzEmotesSource>(),
-                    get<GlobalStvEmotesSource>(),
-                )
+            single {
+                PubSubPluginsProvider {
+                    listOf(
+                        get<PubSubChannelPointsPlugin>(),
+                        get<PubSubPollPlugin>(),
+                        get<PubSubPredictionPlugin>(),
+                        get<PubSubBroadcastSettingsPlugin>(),
+                        get<PubSubViewerCountPlugin>(),
+                        get<PubSubRichEmbedPlugin>(),
+                        get<PubSubPinnedMessagePlugin>(),
+                        get<PubSubRaidPlugin>(),
+                    )
+                }
             }
+
+            single { AggregateChatEventHandler.Factory(get()) }
+            factory<ChatRepository> { DefaultChatRepository(get()) }
+
+            single { TwitchIrcCommandParser(get()) }
+            single { ChatEventViewMapper() }
+
+            single { RecentMessagesRepository(get(), get()) }
+
+            single<PronounsApi> { AlejoPronounsApi(get()) }
+            single { AlejoPronounsClient(get()) }
+            single { PronounsRepository(get(), get(), get()) }
+
+            factory { GetRecentEmotesUseCase(get()) }
+            factory { InsertRecentEmotesUseCase(get()) }
+
+            single { ChannelBttvEmotesSource(get(), get()) }
+            single { ChannelFfzEmotesSource(get(), get()) }
+            single { ChannelStvEmotesSource(get(), get()) }
+            single { ChannelTwitchEmotesSource(get()) }
+            single { GlobalBttvEmotesSource(get(), get()) }
+            single { GlobalFfzEmotesSource(get(), get()) }
+            single { GlobalStvEmotesSource(get(), get()) }
+            single { GlobalTwitchEmotesSource(get()) }
+            single { DelegateTwitchEmotesSource(get()) }
+
+            single {
+                EmoteListSourcesProvider {
+                    listOf(
+                        get<ChannelTwitchEmotesSource>(),
+                        get<ChannelBttvEmotesSource>(),
+                        get<ChannelFfzEmotesSource>(),
+                        get<ChannelStvEmotesSource>(),
+                        get<GlobalTwitchEmotesSource>(),
+                        get<GlobalBttvEmotesSource>(),
+                        get<GlobalFfzEmotesSource>(),
+                        get<GlobalStvEmotesSource>(),
+                    )
+                }
+            }
+
+            single { AppDatabase(get<SqlDriver>()) }
+
+            single<RecentEmoteQueries> { get<AppDatabase>().recentEmoteQueries }
+            single<RecentEmotesApi> { RecentEmotesDb(get()) }
+
+            single<UserQueries> { get<AppDatabase>().userQueries }
+            single<LocalUsersApi> { LocalUsersDb(get(), get()) }
+
+            single<StreamQueries> { get<AppDatabase>().streamQueries }
+            single<LocalStreamsApi> { LocalStreamsDb(get(), get()) }
+
+            single<PronounQueries> { get<AppDatabase>().pronounQueries }
+            single<LocalPronounsApi> { LocalPronounsDb(get(), get()) }
+
+            single<Json> { DefaultJson }
+
+            single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get(), get()) }
+            single<TwitchApi> { TwitchApiImpl(get()) }
+            single { TwitchClient(get(named("twitch"))) }
+
+            single<AuthApi> { TwitchAuthApi(get()) }
+            single<BttvEmotesApi> { BttvEmotesServer(get()) }
+            single<StvEmotesApi> { StvEmotesServer(get()) }
+            single<RecentMessagesApi> { RecentMessagesServer(get()) }
+
+            single<ReadExternalDependenciesList> { DefaultReadExternalDependenciesList() }
+            single<NetworkStateObserver> { ConnectivityNetworkStateObserver(get()) }
         }
-
-        single { AppDatabase(get<SqlDriver>()) }
-
-        single<RecentEmoteQueries> { get<AppDatabase>().recentEmoteQueries }
-        single<RecentEmotesApi> { RecentEmotesDb(get()) }
-
-        single<UserQueries> { get<AppDatabase>().userQueries }
-        single<LocalUsersApi> { LocalUsersDb(get(), get()) }
-
-        single<StreamQueries> { get<AppDatabase>().streamQueries }
-        single<LocalStreamsApi> { LocalStreamsDb(get(), get()) }
-
-        single<PronounQueries> { get<AppDatabase>().pronounQueries }
-        single<LocalPronounsApi> { LocalPronounsDb(get(), get()) }
-
-        single<Json> { DefaultJson }
-
-        single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get(), get()) }
-        single<TwitchApi> { TwitchApiImpl(get()) }
-        single { TwitchClient(get(named("twitch"))) }
-
-        single<AuthApi> { TwitchAuthApi(get()) }
-        single<BttvEmotesApi> { BttvEmotesServer(get()) }
-        single<StvEmotesApi> { StvEmotesServer(get()) }
-        single<RecentMessagesApi> { RecentMessagesServer(get()) }
-
-        single<ReadExternalDependenciesList> { DefaultReadExternalDependenciesList() }
-        single<NetworkStateObserver> { ConnectivityNetworkStateObserver(get()) }
-    }

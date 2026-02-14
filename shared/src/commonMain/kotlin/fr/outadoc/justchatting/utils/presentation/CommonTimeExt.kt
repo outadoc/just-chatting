@@ -67,7 +67,8 @@ internal fun Instant.formatDate(
         }
     }
 
-    return toLocalDateTime(tz).date
+    return toLocalDateTime(tz)
+        .date
         .formatDate(
             today = today,
             isFuture = this > now,
@@ -95,8 +96,7 @@ internal fun Duration.format(
                 .takeIf { showSeconds }
                 ?.let { Res.string.duration_seconds.desc(it) },
         )
-    }
-        .map { desc -> desc.localized() }
+    }.map { desc -> desc.localized() }
         .joinToString(" ")
 }
 

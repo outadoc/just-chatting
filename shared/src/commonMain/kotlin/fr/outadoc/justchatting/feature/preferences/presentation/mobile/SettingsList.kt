@@ -75,27 +75,29 @@ internal fun SettingsList(
             Card(
                 modifier = Modifier.padding(itemInsets),
             ) {
-                val placeholderUser = remember {
-                    User(
-                        id = "",
-                        login = "",
-                        displayName = "",
-                        description = "",
-                        profileImageUrl = "",
-                        createdAt = Instant.fromEpochMilliseconds(0),
-                        usedAt = Instant.fromEpochMilliseconds(0),
-                    )
-                }
+                val placeholderUser =
+                    remember {
+                        User(
+                            id = "",
+                            login = "",
+                            displayName = "",
+                            description = "",
+                            profileImageUrl = "",
+                            createdAt = Instant.fromEpochMilliseconds(0),
+                            usedAt = Instant.fromEpochMilliseconds(0),
+                        )
+                    }
 
                 Column(
-                    modifier = Modifier
-                        .padding(itemInsets)
-                        .padding(top = 16.dp)
-                        .placeholder(
-                            visible = loggedInUser == null,
-                            color = MaterialTheme.colorScheme.surfaceVariant,
-                            highlight = PlaceholderHighlight.shimmer(),
-                        ),
+                    modifier =
+                        Modifier
+                            .padding(itemInsets)
+                            .padding(top = 16.dp)
+                            .placeholder(
+                                visible = loggedInUser == null,
+                                color = MaterialTheme.colorScheme.surfaceVariant,
+                                highlight = PlaceholderHighlight.shimmer(),
+                            ),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     BasicUserInfo(
@@ -127,10 +129,11 @@ internal fun SettingsList(
                     title = { Text(text = stringResource(Res.string.logout_title)) },
                     text = {
                         Text(
-                            text = stringResource(
-                                Res.string.logout_msg,
-                                loggedInUser?.displayName ?: "",
-                            ),
+                            text =
+                                stringResource(
+                                    Res.string.logout_msg,
+                                    loggedInUser?.displayName ?: "",
+                                ),
                         )
                     },
                     dismissButton = {
@@ -257,15 +260,16 @@ internal fun SettingsList(
 internal fun SettingsListPreview() {
     AppTheme {
         SettingsList(
-            loggedInUser = User(
-                id = "123",
-                login = "maghla",
-                displayName = "Maghla",
-                description = "",
-                profileImageUrl = "",
-                createdAt = Instant.DISTANT_PAST,
-                usedAt = Instant.DISTANT_PAST,
-            ),
+            loggedInUser =
+                User(
+                    id = "123",
+                    login = "maghla",
+                    displayName = "Maghla",
+                    description = "",
+                    profileImageUrl = "",
+                    createdAt = Instant.DISTANT_PAST,
+                    usedAt = Instant.DISTANT_PAST,
+                ),
             onLogoutClick = {},
             onOpenDependencyCredits = {},
             onOpenThirdPartiesSection = {},

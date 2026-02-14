@@ -36,12 +36,13 @@ internal fun TimelineSegmentContent(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .size(56.dp)
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surface)
-                    .clickable(onClick = onUserClick),
+                modifier =
+                    Modifier
+                        .padding(end = 8.dp)
+                        .size(56.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surface)
+                        .clickable(onClick = onUserClick),
                 model = remoteImageModel(profileImageUrl),
                 contentDescription = null,
             )
@@ -62,9 +63,10 @@ internal fun TimelineSegmentContent(
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
-                            modifier = Modifier
-                                .weight(1f, fill = true)
-                                .alignByBaseline(),
+                            modifier =
+                                Modifier
+                                    .weight(1f, fill = true)
+                                    .alignByBaseline(),
                             text = userName,
                             maxLines = 1,
                             style = MaterialTheme.typography.bodyMedium,
@@ -78,9 +80,10 @@ internal fun TimelineSegmentContent(
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
-                            modifier = Modifier
-                                .weight(1f, fill = true)
-                                .alignByBaseline(),
+                            modifier =
+                                Modifier
+                                    .weight(1f, fill = true)
+                                    .alignByBaseline(),
                             text = category.name,
                             maxLines = 1,
                             style = MaterialTheme.typography.bodyMedium,

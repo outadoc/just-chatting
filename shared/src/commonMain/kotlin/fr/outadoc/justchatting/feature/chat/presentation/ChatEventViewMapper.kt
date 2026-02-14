@@ -198,7 +198,6 @@ import fr.outadoc.justchatting.utils.resources.desc
 import kotlinx.collections.immutable.toImmutableList
 
 internal class ChatEventViewMapper {
-
     fun map(command: ChatEvent): List<ChatListItem> {
         return when (command) {
             is ChatEvent.Message -> {
@@ -235,21 +234,23 @@ internal class ChatEventViewMapper {
                         if (command.duration == null) {
                             ChatListItem.Message.Highlighted(
                                 timestamp = command.timestamp,
-                                metadata = ChatListItem.Message.Highlighted.Metadata(
-                                    title = command.targetUserLogin.desc(),
-                                    titleIcon = Icon.Gavel,
-                                    subtitle = Res.string.chat_ban.desc(),
-                                ),
+                                metadata =
+                                    ChatListItem.Message.Highlighted.Metadata(
+                                        title = command.targetUserLogin.desc(),
+                                        titleIcon = Icon.Gavel,
+                                        subtitle = Res.string.chat_ban.desc(),
+                                    ),
                                 body = null,
                             )
                         } else {
                             ChatListItem.Message.Highlighted(
                                 timestamp = command.timestamp,
-                                metadata = ChatListItem.Message.Highlighted.Metadata(
-                                    title = command.targetUserLogin.desc(),
-                                    titleIcon = Icon.Gavel,
-                                    subtitle = Res.string.chat_timeout.desc(command.duration),
-                                ),
+                                metadata =
+                                    ChatListItem.Message.Highlighted.Metadata(
+                                        title = command.targetUserLogin.desc(),
+                                        titleIcon = Icon.Gavel,
+                                        subtitle = Res.string.chat_timeout.desc(command.duration),
+                                    ),
                                 body = null,
                             )
                         }
@@ -277,321 +278,346 @@ internal class ChatEventViewMapper {
         }
     }
 
-    private fun mapMessage(chatEvent: ChatEvent.Message): ChatListItem = with(chatEvent) {
-        when (this) {
-            is ChatEvent.Message.Notice -> {
-                ChatListItem.Message.Notice(
-                    timestamp = timestamp,
-                    text = getLabelForNotice(messageId = messageId, message = message)
-                        ?: message.desc(),
-                )
-            }
-
-            is ChatEvent.Message.IncomingRaid -> {
-                ChatListItem.Message.Highlighted(
-                    timestamp = timestamp,
-                    metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = userDisplayName.desc(),
-                        titleIcon = Icon.CallReceived,
-                        subtitle = Res.string.chat_raid_header
-                            .desc(
-                                Res.plurals.viewers.desc(
-                                    number = raidersCount,
-                                    raidersCount,
-                                ),
-                            ),
-                    ),
-                    body = null,
-                )
-            }
-
-            is ChatEvent.Message.CancelledRaid -> {
-                ChatListItem.Message.Highlighted(
-                    timestamp = timestamp,
-                    metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = userDisplayName.desc(),
-                        titleIcon = Icon.Cancel,
-                        subtitle = Res.string.chat_unraid_subtitle.desc(),
-                    ),
-                    body = null,
-                )
-            }
-
-            is ChatEvent.Message.HighlightedMessage -> {
-                ChatListItem.Message.Highlighted(
-                    timestamp = timestamp,
-                    metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = Res.string.irc_msgid_highlighted_message.desc(),
-                        titleIcon = Icon.Highlight,
-                        subtitle = null,
-                    ),
-                    body = userMessage.map(),
-                )
-            }
-
-            is ChatEvent.Message.Announcement -> {
-                ChatListItem.Message.Highlighted(
-                    timestamp = timestamp,
-                    metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = Res.string.irc_msgid_announcement.desc(),
-                        titleIcon = Icon.Campaign,
-                        subtitle = null,
-                    ),
-                    body = userMessage.map(),
-                )
-            }
-
-            is ChatEvent.Message.Subscription -> {
-                ChatListItem.Message.Highlighted(
-                    timestamp = timestamp,
-                    metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = userDisplayName.desc(),
-                        titleIcon = when (subscriptionPlan) {
-                            SUB_PRIME -> Icon.Star
-                            else -> Icon.Star
-                        },
-                        subtitle = when (streakMonths) {
-                            0 -> {
-                                Res.string.chat_sub_header_withDuration
-                                    .desc(
-                                        parseSubscriptionTier(subscriptionPlan),
-                                        Res.plurals.months.desc(
-                                            number = cumulativeMonths,
-                                            cumulativeMonths.formatNumber(),
-                                        ),
-                                    )
-                            }
-
-                            else -> {
-                                Res.string.chat_sub_header_withDurationAndStreak.desc(
-                                    parseSubscriptionTier(subscriptionPlan),
-                                    Res.plurals.months.desc(
-                                        number = cumulativeMonths,
-                                        cumulativeMonths.formatNumber(),
-                                    ),
-                                    Res.plurals.months.desc(
-                                        number = streakMonths,
-                                        streakMonths.formatNumber(),
-                                    ),
-                                )
-                            }
-                        },
-                    ),
-                    body = userMessage?.map(),
-                )
-            }
-
-            is ChatEvent.Message.SubscriptionConversion -> {
-                ChatListItem.Message.Highlighted(
-                    timestamp = timestamp,
-                    metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = userDisplayName.desc(),
-                        titleIcon = Icon.Star,
-                        subtitle = Res.string.chat_subConversion_header
-                            .desc(parseSubscriptionTierWithArticle(subscriptionPlan)),
-                    ),
-                    body = userMessage?.map(),
-                )
-            }
-
-            is ChatEvent.Message.MassSubscriptionGift -> {
-                ChatListItem.Message.Highlighted(
-                    timestamp = timestamp,
-                    metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = userDisplayName.desc(),
-                        titleIcon = Icon.VolunteerActivism,
-                        subtitle = Res.string.chat_massSubGift_header
-                            .desc(
-                                giftCount.formatNumber(),
-                                parseSubscriptionTierWithArticle(subscriptionPlan),
-                                totalChannelGiftCount.formatNumber(),
-                            ),
-                    ),
-                    body = null,
-                )
-            }
-
-            is ChatEvent.Message.SubscriptionGift -> {
-                ChatListItem.Message.Highlighted(
-                    timestamp = timestamp,
-                    body = null,
-                    metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = userDisplayName.desc(),
-                        titleIcon = Icon.Redeem,
-                        subtitle = Res.string.chat_subGift_header
-                            .desc(
-                                parseSubscriptionTier(subscriptionPlan),
-                                recipientDisplayName,
-                                Res.plurals.months.desc(
-                                    number = cumulativeMonths,
-                                    cumulativeMonths.formatNumber(),
-                                ),
-                            ),
-                    ),
-                )
-            }
-
-            is ChatEvent.Message.GiftPayForward -> {
-                ChatListItem.Message.Highlighted(
-                    timestamp = timestamp,
-                    metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = userDisplayName.desc(),
-                        titleIcon = Icon.FastForward,
-                        subtitle = when (priorGifterDisplayName) {
-                            null -> {
-                                Res.string.chat_subGift_payForwardAnonymous.desc()
-                            }
-
-                            else -> {
-                                Res.string.chat_subGift_payForward.desc(priorGifterDisplayName)
-                            }
-                        },
-                    ),
-                    body = null,
-                )
-            }
-
-            is ChatEvent.Message.UserNotice -> {
-                ChatListItem.Message.Highlighted(
-                    timestamp = timestamp,
-                    body = userMessage?.map(),
-                    metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = systemMsg.desc(),
-                        titleIcon = null,
-                        subtitle = null,
-                    ),
-                )
-            }
-
-            is ChatEvent.Message.Join -> {
-                ChatListItem.Message.Highlighted(
-                    timestamp = timestamp,
-                    metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = Res.string.chat_join.desc(channelLogin),
-                        subtitle = null,
-                    ),
-                    body = null,
-                )
-            }
-
-            is ChatEvent.Message.SendError -> {
-                ChatListItem.Message.Highlighted(
-                    timestamp = timestamp,
-                    metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = Res.string.chat_send_msg_error.desc(),
-                        subtitle = null,
-                    ),
-                    body = null,
-                )
-            }
-
-            is ChatEvent.Message.ChatMessage -> {
-                val metadata = when {
-                    isFirstMessageByUser -> {
-                        ChatListItem.Message.Highlighted.Metadata(
-                            title = Res.string.chat_first.desc(),
-                            titleIcon = Icon.WavingHand,
-                            subtitle = null,
-                        )
-                    }
-
-                    rewardId != null -> {
-                        ChatListItem.Message.Highlighted.Metadata(
-                            title = Res.string.chat_reward.desc(),
-                            titleIcon = Icon.Toll,
-                            subtitle = null,
-                        )
-                    }
-
-                    else -> {
-                        null
-                    }
+    private fun mapMessage(chatEvent: ChatEvent.Message): ChatListItem =
+        with(chatEvent) {
+            when (this) {
+                is ChatEvent.Message.Notice -> {
+                    ChatListItem.Message.Notice(
+                        timestamp = timestamp,
+                        text =
+                            getLabelForNotice(messageId = messageId, message = message)
+                                ?: message.desc(),
+                    )
                 }
 
-                if (metadata != null) {
+                is ChatEvent.Message.IncomingRaid -> {
                     ChatListItem.Message.Highlighted(
                         timestamp = timestamp,
-                        body = map(),
-                        metadata = metadata,
+                        metadata =
+                            ChatListItem.Message.Highlighted.Metadata(
+                                title = userDisplayName.desc(),
+                                titleIcon = Icon.CallReceived,
+                                subtitle =
+                                    Res.string.chat_raid_header
+                                        .desc(
+                                            Res.plurals.viewers.desc(
+                                                number = raidersCount,
+                                                raidersCount,
+                                            ),
+                                        ),
+                            ),
+                        body = null,
                     )
-                } else {
-                    ChatListItem.Message.Simple(
-                        body = map(),
+                }
+
+                is ChatEvent.Message.CancelledRaid -> {
+                    ChatListItem.Message.Highlighted(
                         timestamp = timestamp,
+                        metadata =
+                            ChatListItem.Message.Highlighted.Metadata(
+                                title = userDisplayName.desc(),
+                                titleIcon = Icon.Cancel,
+                                subtitle = Res.string.chat_unraid_subtitle.desc(),
+                            ),
+                        body = null,
+                    )
+                }
+
+                is ChatEvent.Message.HighlightedMessage -> {
+                    ChatListItem.Message.Highlighted(
+                        timestamp = timestamp,
+                        metadata =
+                            ChatListItem.Message.Highlighted.Metadata(
+                                title = Res.string.irc_msgid_highlighted_message.desc(),
+                                titleIcon = Icon.Highlight,
+                                subtitle = null,
+                            ),
+                        body = userMessage.map(),
+                    )
+                }
+
+                is ChatEvent.Message.Announcement -> {
+                    ChatListItem.Message.Highlighted(
+                        timestamp = timestamp,
+                        metadata =
+                            ChatListItem.Message.Highlighted.Metadata(
+                                title = Res.string.irc_msgid_announcement.desc(),
+                                titleIcon = Icon.Campaign,
+                                subtitle = null,
+                            ),
+                        body = userMessage.map(),
+                    )
+                }
+
+                is ChatEvent.Message.Subscription -> {
+                    ChatListItem.Message.Highlighted(
+                        timestamp = timestamp,
+                        metadata =
+                            ChatListItem.Message.Highlighted.Metadata(
+                                title = userDisplayName.desc(),
+                                titleIcon =
+                                    when (subscriptionPlan) {
+                                        SUB_PRIME -> Icon.Star
+                                        else -> Icon.Star
+                                    },
+                                subtitle =
+                                    when (streakMonths) {
+                                        0 -> {
+                                            Res.string.chat_sub_header_withDuration
+                                                .desc(
+                                                    parseSubscriptionTier(subscriptionPlan),
+                                                    Res.plurals.months.desc(
+                                                        number = cumulativeMonths,
+                                                        cumulativeMonths.formatNumber(),
+                                                    ),
+                                                )
+                                        }
+
+                                        else -> {
+                                            Res.string.chat_sub_header_withDurationAndStreak.desc(
+                                                parseSubscriptionTier(subscriptionPlan),
+                                                Res.plurals.months.desc(
+                                                    number = cumulativeMonths,
+                                                    cumulativeMonths.formatNumber(),
+                                                ),
+                                                Res.plurals.months.desc(
+                                                    number = streakMonths,
+                                                    streakMonths.formatNumber(),
+                                                ),
+                                            )
+                                        }
+                                    },
+                            ),
+                        body = userMessage?.map(),
+                    )
+                }
+
+                is ChatEvent.Message.SubscriptionConversion -> {
+                    ChatListItem.Message.Highlighted(
+                        timestamp = timestamp,
+                        metadata =
+                            ChatListItem.Message.Highlighted.Metadata(
+                                title = userDisplayName.desc(),
+                                titleIcon = Icon.Star,
+                                subtitle =
+                                    Res.string.chat_subConversion_header
+                                        .desc(parseSubscriptionTierWithArticle(subscriptionPlan)),
+                            ),
+                        body = userMessage?.map(),
+                    )
+                }
+
+                is ChatEvent.Message.MassSubscriptionGift -> {
+                    ChatListItem.Message.Highlighted(
+                        timestamp = timestamp,
+                        metadata =
+                            ChatListItem.Message.Highlighted.Metadata(
+                                title = userDisplayName.desc(),
+                                titleIcon = Icon.VolunteerActivism,
+                                subtitle =
+                                    Res.string.chat_massSubGift_header
+                                        .desc(
+                                            giftCount.formatNumber(),
+                                            parseSubscriptionTierWithArticle(subscriptionPlan),
+                                            totalChannelGiftCount.formatNumber(),
+                                        ),
+                            ),
+                        body = null,
+                    )
+                }
+
+                is ChatEvent.Message.SubscriptionGift -> {
+                    ChatListItem.Message.Highlighted(
+                        timestamp = timestamp,
+                        body = null,
+                        metadata =
+                            ChatListItem.Message.Highlighted.Metadata(
+                                title = userDisplayName.desc(),
+                                titleIcon = Icon.Redeem,
+                                subtitle =
+                                    Res.string.chat_subGift_header
+                                        .desc(
+                                            parseSubscriptionTier(subscriptionPlan),
+                                            recipientDisplayName,
+                                            Res.plurals.months.desc(
+                                                number = cumulativeMonths,
+                                                cumulativeMonths.formatNumber(),
+                                            ),
+                                        ),
+                            ),
+                    )
+                }
+
+                is ChatEvent.Message.GiftPayForward -> {
+                    ChatListItem.Message.Highlighted(
+                        timestamp = timestamp,
+                        metadata =
+                            ChatListItem.Message.Highlighted.Metadata(
+                                title = userDisplayName.desc(),
+                                titleIcon = Icon.FastForward,
+                                subtitle =
+                                    when (priorGifterDisplayName) {
+                                        null -> {
+                                            Res.string.chat_subGift_payForwardAnonymous.desc()
+                                        }
+
+                                        else -> {
+                                            Res.string.chat_subGift_payForward.desc(priorGifterDisplayName)
+                                        }
+                                    },
+                            ),
+                        body = null,
+                    )
+                }
+
+                is ChatEvent.Message.UserNotice -> {
+                    ChatListItem.Message.Highlighted(
+                        timestamp = timestamp,
+                        body = userMessage?.map(),
+                        metadata =
+                            ChatListItem.Message.Highlighted.Metadata(
+                                title = systemMsg.desc(),
+                                titleIcon = null,
+                                subtitle = null,
+                            ),
+                    )
+                }
+
+                is ChatEvent.Message.Join -> {
+                    ChatListItem.Message.Highlighted(
+                        timestamp = timestamp,
+                        metadata =
+                            ChatListItem.Message.Highlighted.Metadata(
+                                title = Res.string.chat_join.desc(channelLogin),
+                                subtitle = null,
+                            ),
+                        body = null,
+                    )
+                }
+
+                is ChatEvent.Message.SendError -> {
+                    ChatListItem.Message.Highlighted(
+                        timestamp = timestamp,
+                        metadata =
+                            ChatListItem.Message.Highlighted.Metadata(
+                                title = Res.string.chat_send_msg_error.desc(),
+                                subtitle = null,
+                            ),
+                        body = null,
+                    )
+                }
+
+                is ChatEvent.Message.ChatMessage -> {
+                    val metadata =
+                        when {
+                            isFirstMessageByUser -> {
+                                ChatListItem.Message.Highlighted.Metadata(
+                                    title = Res.string.chat_first.desc(),
+                                    titleIcon = Icon.WavingHand,
+                                    subtitle = null,
+                                )
+                            }
+
+                            rewardId != null -> {
+                                ChatListItem.Message.Highlighted.Metadata(
+                                    title = Res.string.chat_reward.desc(),
+                                    titleIcon = Icon.Toll,
+                                    subtitle = null,
+                                )
+                            }
+
+                            else -> {
+                                null
+                            }
+                        }
+
+                    if (metadata != null) {
+                        ChatListItem.Message.Highlighted(
+                            timestamp = timestamp,
+                            body = map(),
+                            metadata = metadata,
+                        )
+                    } else {
+                        ChatListItem.Message.Simple(
+                            body = map(),
+                            timestamp = timestamp,
+                        )
+                    }
+                }
+
+                is ChatEvent.Message.BroadcastSettingsUpdate -> {
+                    ChatListItem.BroadcastSettingsUpdate(
+                        streamTitle = streamTitle,
+                        streamCategory =
+                            StreamCategory(
+                                id = categoryId,
+                                name = categoryName,
+                            ),
+                    )
+                }
+
+                is ChatEvent.Message.PinnedMessageUpdate -> {
+                    ChatListItem.PinnedMessageUpdate(
+                        pinnedMessage = pinnedMessage,
+                    )
+                }
+
+                is ChatEvent.Message.PollUpdate -> {
+                    ChatListItem.PollUpdate(
+                        poll = poll,
+                    )
+                }
+
+                is ChatEvent.Message.PredictionUpdate -> {
+                    ChatListItem.PredictionUpdate(
+                        prediction = prediction,
+                    )
+                }
+
+                is ChatEvent.Message.RaidUpdate -> {
+                    ChatListItem.RaidUpdate(
+                        raid = raid,
+                    )
+                }
+
+                is ChatEvent.Message.RedemptionUpdate -> {
+                    ChatListItem.Message.Highlighted(
+                        timestamp = timestamp,
+                        metadata =
+                            ChatListItem.Message.Highlighted.Metadata(
+                                title =
+                                    Res.plurals.user_redeemed
+                                        .desc(
+                                            number = redemption.reward.cost,
+                                            redemption.userDisplayName,
+                                            redemption.reward.title,
+                                            redemption.reward.cost,
+                                        ),
+                                titleIcon = Icon.Toll,
+                                subtitle = null,
+                            ),
+                        body = null,
+                    )
+                }
+
+                is ChatEvent.Message.RichEmbed -> {
+                    ChatListItem.RichEmbed(
+                        messageId = messageId,
+                        title = title,
+                        requestUrl = requestUrl,
+                        thumbnailUrl = thumbnailUrl,
+                        authorName = authorName,
+                        channelName = channelName,
+                    )
+                }
+
+                is ChatEvent.Message.ViewerCountUpdate -> {
+                    ChatListItem.ViewerCountUpdate(
+                        viewerCount = viewerCount,
                     )
                 }
             }
-
-            is ChatEvent.Message.BroadcastSettingsUpdate -> {
-                ChatListItem.BroadcastSettingsUpdate(
-                    streamTitle = streamTitle,
-                    streamCategory = StreamCategory(
-                        id = categoryId,
-                        name = categoryName,
-                    ),
-                )
-            }
-
-            is ChatEvent.Message.PinnedMessageUpdate -> {
-                ChatListItem.PinnedMessageUpdate(
-                    pinnedMessage = pinnedMessage,
-                )
-            }
-
-            is ChatEvent.Message.PollUpdate -> {
-                ChatListItem.PollUpdate(
-                    poll = poll,
-                )
-            }
-
-            is ChatEvent.Message.PredictionUpdate -> {
-                ChatListItem.PredictionUpdate(
-                    prediction = prediction,
-                )
-            }
-
-            is ChatEvent.Message.RaidUpdate -> {
-                ChatListItem.RaidUpdate(
-                    raid = raid,
-                )
-            }
-
-            is ChatEvent.Message.RedemptionUpdate -> {
-                ChatListItem.Message.Highlighted(
-                    timestamp = timestamp,
-                    metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = Res.plurals.user_redeemed
-                            .desc(
-                                number = redemption.reward.cost,
-                                redemption.userDisplayName,
-                                redemption.reward.title,
-                                redemption.reward.cost,
-                            ),
-                        titleIcon = Icon.Toll,
-                        subtitle = null,
-                    ),
-                    body = null,
-                )
-            }
-
-            is ChatEvent.Message.RichEmbed -> {
-                ChatListItem.RichEmbed(
-                    messageId = messageId,
-                    title = title,
-                    requestUrl = requestUrl,
-                    thumbnailUrl = thumbnailUrl,
-                    authorName = authorName,
-                    channelName = channelName,
-                )
-            }
-
-            is ChatEvent.Message.ViewerCountUpdate -> {
-                ChatListItem.ViewerCountUpdate(
-                    viewerCount = viewerCount,
-                )
-            }
         }
-    }
 
     private fun parseSubscriptionTier(planId: String): StringDesc {
         return when (planId) {
@@ -617,35 +643,42 @@ internal class ChatEventViewMapper {
         val mentionsLength = mentions.sumOf { mention -> mention.length + 1 }
 
         return ChatListItem.Message.Body(
-            message = message.orEmpty()
-                .drop(mentionsLength)
-                .removePrefix(" "),
+            message =
+                message
+                    .orEmpty()
+                    .drop(mentionsLength)
+                    .removePrefix(" "),
             messageId = id,
-            chatter = Chatter(
-                id = userId,
-                displayName = userName,
-                login = userLogin,
-            ),
+            chatter =
+                Chatter(
+                    id = userId,
+                    displayName = userName,
+                    login = userLogin,
+                ),
             isAction = isAction,
             color = color,
             embeddedEmotes = embeddedEmotes.toImmutableList(),
             badges = badges.orEmpty().toImmutableList(),
-            inReplyTo = if (mentions.isNotEmpty()) {
-                ChatListItem.Message.Body.InReplyTo(
-                    message = inReplyTo?.message,
-                    mentions = mentions
-                        .map { mention ->
-                            mention.drop(1)
-                        }
-                        .toImmutableList(),
-                )
-            } else {
-                null
-            },
+            inReplyTo =
+                if (mentions.isNotEmpty()) {
+                    ChatListItem.Message.Body.InReplyTo(
+                        message = inReplyTo?.message,
+                        mentions =
+                            mentions
+                                .map { mention ->
+                                    mention.drop(1)
+                                }.toImmutableList(),
+                    )
+                } else {
+                    null
+                },
         )
     }
 
-    private fun getLabelForNotice(messageId: String?, message: String?): StringDesc? {
+    private fun getLabelForNotice(
+        messageId: String?,
+        message: String?,
+    ): StringDesc? {
         return when (messageId) {
             "already_banned" -> {
                 Res.string.irc_notice_already_banned
@@ -668,7 +701,8 @@ internal class ChatEventViewMapper {
 
             "already_followers_on" -> {
                 Res.string.irc_notice_already_followers_on.desc(
-                    message?.substringAfter("is already in ", "")
+                    message
+                        ?.substringAfter("is already in ", "")
                         ?.substringBefore(" followers-only mode", "") ?: "",
                 )
             }
@@ -687,7 +721,8 @@ internal class ChatEventViewMapper {
 
             "already_slow_on" -> {
                 Res.string.irc_notice_already_slow_on.desc(
-                    message?.substringAfter("is already in ", "")
+                    message
+                        ?.substringAfter("is already in ", "")
                         ?.substringBefore("-second slow", "")
                         ?: "",
                 )
@@ -711,7 +746,8 @@ internal class ChatEventViewMapper {
 
             "bad_ban_admin" -> {
                 Res.string.irc_notice_bad_ban_admin.desc(
-                    message?.substringAfter("cannot ban admin", "")
+                    message
+                        ?.substringAfter("cannot ban admin", "")
                         ?.substringBefore(". Please email", "") ?: "",
                 )
             }
@@ -726,7 +762,8 @@ internal class ChatEventViewMapper {
 
             "bad_ban_mod" -> {
                 Res.string.irc_notice_bad_ban_mod.desc(
-                    message?.substringAfter("cannot ban moderator", "")
+                    message
+                        ?.substringAfter("cannot ban moderator", "")
                         ?.substringBefore(" unless you are", "") ?: "",
                 )
             }
@@ -737,7 +774,8 @@ internal class ChatEventViewMapper {
 
             "bad_ban_staff" -> {
                 Res.string.irc_notice_bad_ban_staff.desc(
-                    message?.substringAfter("cannot ban staff", "")
+                    message
+                        ?.substringAfter("cannot ban staff", "")
                         ?.substringBefore(". Please email", "") ?: "",
                 )
             }
@@ -752,7 +790,8 @@ internal class ChatEventViewMapper {
 
             "bad_delete_message_mod" -> {
                 Res.string.irc_notice_bad_delete_message_mod.desc(
-                    message?.substringAfter("from another moderator ", "")
+                    message
+                        ?.substringAfter("from another moderator ", "")
                         ?.substringBeforeLast(".", "")
                         ?: "",
                 )
@@ -760,7 +799,8 @@ internal class ChatEventViewMapper {
 
             "bad_host_error" -> {
                 Res.string.irc_notice_bad_host_error.desc(
-                    message?.substringAfter("a problem hosting ", "")
+                    message
+                        ?.substringAfter("a problem hosting ", "")
                         ?.substringBefore(". Please try", "") ?: "",
                 )
             }
@@ -774,7 +814,8 @@ internal class ChatEventViewMapper {
 
             "bad_host_rate_exceeded" -> {
                 Res.string.irc_notice_bad_host_rate_exceeded.desc(
-                    message?.substringAfter("changed more than ", "")
+                    message
+                        ?.substringAfter("changed more than ", "")
                         ?.substringBefore(" times every half", "") ?: "",
                 )
             }
@@ -808,7 +849,8 @@ internal class ChatEventViewMapper {
 
             "bad_timeout_admin" -> {
                 Res.string.irc_notice_bad_timeout_admin.desc(
-                    message?.substringAfter("cannot timeout admin ", "")
+                    message
+                        ?.substringAfter("cannot timeout admin ", "")
                         ?.substringBefore(". Please email", "") ?: "",
                 )
             }
@@ -830,7 +872,8 @@ internal class ChatEventViewMapper {
 
             "bad_timeout_mod" -> {
                 Res.string.irc_notice_bad_timeout_mod.desc(
-                    message?.substringAfter("cannot timeout moderator ", "")
+                    message
+                        ?.substringAfter("cannot timeout moderator ", "")
                         ?.substringBefore(" unless you are", "") ?: "",
                 )
             }
@@ -841,7 +884,8 @@ internal class ChatEventViewMapper {
 
             "bad_timeout_staff" -> {
                 Res.string.irc_notice_bad_timeout_staff.desc(
-                    message?.substringAfter("cannot timeout staff ", "")
+                    message
+                        ?.substringAfter("cannot timeout staff ", "")
                         ?.substringBefore(". Please email", "") ?: "",
                 )
             }
@@ -907,21 +951,24 @@ internal class ChatEventViewMapper {
 
             "commercial_success" -> {
                 Res.string.irc_notice_commercial_success.desc(
-                    message?.substringAfter("Initiating ", "")
+                    message
+                        ?.substringAfter("Initiating ", "")
                         ?.substringBefore(" second commercial break.", "") ?: "",
                 )
             }
 
             "delete_message_success" -> {
                 Res.string.irc_notice_delete_message_success.desc(
-                    message?.substringAfter("The message from ", "")
+                    message
+                        ?.substringAfter("The message from ", "")
                         ?.substringBefore(" is now deleted.", "") ?: "",
                 )
             }
 
             "delete_staff_message_success" -> {
                 Res.string.irc_notice_delete_staff_message_success.desc(
-                    message?.substringAfter("message from staff ", "")
+                    message
+                        ?.substringAfter("message from staff ", "")
                         ?.substringBefore(". Please email", "") ?: "",
                 )
             }
@@ -940,7 +987,8 @@ internal class ChatEventViewMapper {
 
             "followers_on" -> {
                 Res.string.irc_notice_followers_on.desc(
-                    message?.substringAfter("is now in ", "")
+                    message
+                        ?.substringAfter("is now in ", "")
                         ?.substringBefore(" followers-only mode", "") ?: "",
                 )
             }
@@ -993,7 +1041,8 @@ internal class ChatEventViewMapper {
 
             "mod_success" -> {
                 Res.string.irc_notice_mod_success.desc(
-                    message?.substringAfter("You have added ", "")
+                    message
+                        ?.substringAfter("You have added ", "")
                         ?.substringBefore(" as a moderator", "") ?: "",
                 )
             }
@@ -1027,7 +1076,8 @@ internal class ChatEventViewMapper {
 
             "msg_followersonly" -> {
                 Res.string.irc_notice_msg_followersonly.desc(
-                    message?.substringAfter("This room is in ", "")
+                    message
+                        ?.substringAfter("This room is in ", "")
                         ?.substringBefore(" followers-only mode", "") ?: "",
                     message?.substringAfter("Follow ", "")?.substringBefore(" to join", "") ?: "",
                 )
@@ -1035,7 +1085,8 @@ internal class ChatEventViewMapper {
 
             "msg_followersonly_followed" -> {
                 Res.string.irc_notice_msg_followersonly_followed.desc(
-                    message?.substringAfter("This room is in ", "")
+                    message
+                        ?.substringAfter("This room is in ", "")
                         ?.substringBefore(" followers-only mode", "") ?: "",
                     message?.substringAfter("following for ", "")?.substringBefore(". Continue", "")
                         ?: "",
@@ -1085,7 +1136,8 @@ internal class ChatEventViewMapper {
 
             "msg_timedout" -> {
                 Res.string.irc_notice_msg_timedout.desc(
-                    message?.substringAfter("timed out for ", "")
+                    message
+                        ?.substringAfter("timed out for ", "")
                         ?.substringBefore(" more seconds.", "")
                         ?: "",
                 )
@@ -1141,7 +1193,8 @@ internal class ChatEventViewMapper {
 
             "raid_error_unexpected" -> {
                 Res.string.irc_notice_raid_error_unexpected.desc(
-                    message?.substringAfter("a problem raiding ", "")
+                    message
+                        ?.substringAfter("a problem raiding ", "")
                         ?.substringBefore(". Please try", "") ?: "",
                 )
             }
@@ -1166,7 +1219,8 @@ internal class ChatEventViewMapper {
 
             "slow_on" -> {
                 Res.string.irc_notice_slow_on.desc(
-                    message?.substringAfter("send messages every ", "")
+                    message
+                        ?.substringAfter("send messages every ", "")
                         ?.substringBefore(" seconds.", "") ?: "",
                 )
             }
@@ -1195,7 +1249,8 @@ internal class ChatEventViewMapper {
 
             "tos_ban" -> {
                 Res.string.irc_notice_tos_ban.desc(
-                    message?.substringAfter("has closed channel ", "")
+                    message
+                        ?.substringAfter("has closed channel ", "")
                         ?.substringBefore(" due to Terms", "") ?: "",
                 )
             }
@@ -1208,7 +1263,8 @@ internal class ChatEventViewMapper {
 
             "unavailable_command" -> {
                 Res.string.irc_notice_unavailable_command.desc(
-                    message?.substringAfter("Sorry, “", "")
+                    message
+                        ?.substringAfter("Sorry, “", "")
                         ?.substringBefore("” is not available", "")
                         ?: "",
                 )
@@ -1222,7 +1278,8 @@ internal class ChatEventViewMapper {
 
             "unmod_success" -> {
                 Res.string.irc_notice_unmod_success.desc(
-                    message?.substringAfter("You have removed ", "")
+                    message
+                        ?.substringAfter("You have removed ", "")
                         ?.substringBefore(" as a moderator", "") ?: "",
                 )
             }
@@ -1259,7 +1316,8 @@ internal class ChatEventViewMapper {
 
             "unvip_success" -> {
                 Res.string.irc_notice_unvip_success.desc(
-                    message?.substringAfter("You have removed ", "")
+                    message
+                        ?.substringAfter("You have removed ", "")
                         ?.substringBefore(" as a VIP", "")
                         ?: "",
                 )
@@ -1407,7 +1465,8 @@ internal class ChatEventViewMapper {
 
             "vip_success" -> {
                 Res.string.irc_notice_vip_success.desc(
-                    message?.substringAfter("You have added ", "")
+                    message
+                        ?.substringAfter("You have added ", "")
                         ?.substringBeforeLast(" as a vip", "")
                         ?: "",
                 )

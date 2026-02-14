@@ -33,9 +33,10 @@ internal fun SearchBar(
             .fillMaxWidth(),
     ) {
         SearchScreenBar(
-            modifier = modifier
-                .statusBarsPadding()
-                .fillMaxWidth(),
+            modifier =
+                modifier
+                    .statusBarsPadding()
+                    .fillMaxWidth(),
             searchResults = searchResults,
             query = query,
             isSearchExpanded = isSearchExpanded,

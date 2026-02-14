@@ -28,44 +28,47 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 internal actual val platformModule: Module
-    get() = module {
-        single {
-            OAuthAppCredentials(
-                clientId = "l9klwmh97qgn0s0me276ezsft5szp2",
-                redirectUri = "https://just-chatting.app/auth/callback.html",
-            )
-        }
+    get() =
+        module {
+            single {
+                OAuthAppCredentials(
+                    clientId = "l9klwmh97qgn0s0me276ezsft5szp2",
+                    redirectUri = "https://just-chatting.app/auth/callback.html",
+                )
+            }
 
-        single<ChatNotifier> { AndroidChatNotifier(get(), get()) }
-        single<CreateShortcutForChannelUseCase> { AndroidCreateShortcutForChannelUseCase(get()) }
+            single<ChatNotifier> { AndroidChatNotifier(get(), get()) }
+            single<CreateShortcutForChannelUseCase> { AndroidCreateShortcutForChannelUseCase(get()) }
 
-        single<SqlDriver> {
-            AndroidSqliteDriver(
-                schema = AppDatabase.Schema,
-                context = get(),
-                name = "database",
-            )
-        }
+            single<SqlDriver> {
+                AndroidSqliteDriver(
+                    schema = AppDatabase.Schema,
+                    context = get(),
+                    name = "database",
+                )
+            }
 
-        single<DataStore<Preferences>> {
-            PreferenceDataStoreFactory.createWithPath(
-                produceFile = {
-                    get<Context>().filesDir.absolutePath.toPath()
-                        .resolve("datastore")
-                        .resolve("fr.outadoc.justchatting.preferences_pb")
-                },
-            )
-        }
+            single<DataStore<Preferences>> {
+                PreferenceDataStoreFactory.createWithPath(
+                    produceFile = {
+                        get<Context>()
+                            .filesDir.absolutePath
+                            .toPath()
+                            .resolve("datastore")
+                            .resolve("fr.outadoc.justchatting.preferences_pb")
+                    },
+                )
+            }
 
-        single<ConnectivityManager> { get<Context>().getSystemService()!! }
-        single<BaseHttpClientProvider> { AndroidHttpClientProvider(get(), get()) }
+            single<ConnectivityManager> { get<Context>().getSystemService()!! }
+            single<BaseHttpClientProvider> { AndroidHttpClientProvider(get(), get()) }
 
-        single<LogRepository> { AndroidLogRepository(get()) }
-        single<AppVersionNameProvider> { AndroidAppVersionNameProvider(get()) }
-        single<AuthCallbackWebServer> { NoopAuthCallbackWebServer() }
-        single<Connectivity> {
-            Connectivity {
-                autoStart = true
+            single<LogRepository> { AndroidLogRepository(get()) }
+            single<AppVersionNameProvider> { AndroidAppVersionNameProvider(get()) }
+            single<AuthCallbackWebServer> { NoopAuthCallbackWebServer() }
+            single<Connectivity> {
+                Connectivity {
+                    autoStart = true
+                }
             }
         }
-    }

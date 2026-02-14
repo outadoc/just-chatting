@@ -11,5 +11,7 @@ internal sealed class EmoteSetItem {
         val iconUrl: String? = null,
     ) : EmoteSetItem()
 
-    data class Emote(val emote: fr.outadoc.justchatting.feature.emotes.domain.model.Emote) : EmoteSetItem()
+    data class Emote(
+        val emote: fr.outadoc.justchatting.feature.emotes.domain.model.Emote,
+    ) : EmoteSetItem()
 }

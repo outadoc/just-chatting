@@ -15,12 +15,13 @@ import kotlin.time.Instant
 @Stable
 @Composable
 internal actual fun Instant.formatHourMinute(): String? {
-    val formatter = remember {
-        NSDateFormatter().apply {
-            dateFormat = "HH:mm"
-            locale = NSLocale.currentLocale
+    val formatter =
+        remember {
+            NSDateFormatter().apply {
+                dateFormat = "HH:mm"
+                locale = NSLocale.currentLocale
+            }
         }
-    }
 
     return remember(this) {
         formatter.stringFromDate(this.toNSDate())
@@ -29,10 +30,11 @@ internal actual fun Instant.formatHourMinute(): String? {
 
 @Stable
 internal actual fun LocalDate.formatWithoutYear(): String {
-    val formatter = NSDateFormatter().apply {
-        dateFormat = "eeee d MMM"
-        locale = NSLocale.currentLocale
-    }
+    val formatter =
+        NSDateFormatter().apply {
+            dateFormat = "eeee d MMM"
+            locale = NSLocale.currentLocale
+        }
 
     val instant: Instant = this.atStartOfDayIn(TimeZone.currentSystemDefault())
     val date = instant.toNSDate()
@@ -42,10 +44,11 @@ internal actual fun LocalDate.formatWithoutYear(): String {
 
 @Stable
 internal actual fun LocalDate.formatWithYear(): String {
-    val formatter = NSDateFormatter().apply {
-        dateFormat = "d MMM uuuu"
-        locale = NSLocale.currentLocale
-    }
+    val formatter =
+        NSDateFormatter().apply {
+            dateFormat = "d MMM uuuu"
+            locale = NSLocale.currentLocale
+        }
 
     val instant: Instant = this.atStartOfDayIn(TimeZone.currentSystemDefault())
     val date = instant.toNSDate()

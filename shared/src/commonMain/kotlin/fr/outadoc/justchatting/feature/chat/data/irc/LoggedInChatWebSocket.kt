@@ -50,15 +50,15 @@ internal class LoggedInChatWebSocket(
     private val authRepository: AuthRepository,
     private val channelLogin: String,
 ) : ChatEventHandler {
-
     companion object {
         private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
     }
 
-    private val _eventFlow = MutableSharedFlow<ChatEvent>(
-        replay = Defaults.EventBufferSize,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST,
-    )
+    private val _eventFlow =
+        MutableSharedFlow<ChatEvent>(
+            replay = Defaults.EventBufferSize,
+            onBufferOverflow = BufferOverflow.DROP_OLDEST,
+        )
     override val eventFlow: Flow<ChatEvent> = _eventFlow
 
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
@@ -86,11 +86,12 @@ internal class LoggedInChatWebSocket(
             return
         }
 
-        networkStateJob = scope.launch {
-            networkStateObserver.state.collectLatest { state ->
-                isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
+        networkStateJob =
+            scope.launch {
+                networkStateObserver.state.collectLatest { state ->
+                    isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
+                }
             }
-        }
     }
 
     private fun observeSocket() {
@@ -98,39 +99,40 @@ internal class LoggedInChatWebSocket(
             return
         }
 
-        socketJob = scope.launch(DispatchersProvider.io + SupervisorJob()) {
-            logDebug<LoggedInChatWebSocket> { "Starting job" }
+        socketJob =
+            scope.launch(DispatchersProvider.io + SupervisorJob()) {
+                logDebug<LoggedInChatWebSocket> { "Starting job" }
 
-            _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
+                _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
 
-            while (isActive) {
-                if (isNetworkAvailable) {
-                    logDebug<LoggedInChatWebSocket> { "Network is available, listening" }
-                    _connectionStatus.update { status ->
-                        status.copy(
-                            isAlive = true,
-                        )
+                while (isActive) {
+                    if (isNetworkAvailable) {
+                        logDebug<LoggedInChatWebSocket> { "Network is available, listening" }
+                        _connectionStatus.update { status ->
+                            status.copy(
+                                isAlive = true,
+                            )
+                        }
+
+                        try {
+                            listen()
+                        } catch (e: Exception) {
+                            logError<LoggedInChatWebSocket>(e) { "Socket was closed" }
+                        }
+                    } else {
+                        logDebug<LoggedInChatWebSocket> { "Network is out, delay and retry" }
+                        _connectionStatus.update { status ->
+                            status.copy(
+                                isAlive = false,
+                            )
+                        }
                     }
 
-                    try {
-                        listen()
-                    } catch (e: Exception) {
-                        logError<LoggedInChatWebSocket>(e) { "Socket was closed" }
+                    if (isActive) {
+                        delayWithJitter(1.seconds, maxJitter = 3.seconds)
                     }
-                } else {
-                    logDebug<LoggedInChatWebSocket> { "Network is out, delay and retry" }
-                    _connectionStatus.update { status ->
-                        status.copy(
-                            isAlive = false,
-                        )
-                    }
-                }
-
-                if (isActive) {
-                    delayWithJitter(1.seconds, maxJitter = 3.seconds)
                 }
             }
-        }
     }
 
     private suspend fun listen() {
@@ -150,7 +152,8 @@ internal class LoggedInChatWebSocket(
             while (isActive) {
                 when (val received = incoming.receive()) {
                     is Frame.Text -> {
-                        received.readText()
+                        received
+                            .readText()
                             .lines()
                             .filter { it.isNotBlank() }
                             .forEach { line -> handleMessage(line) }
@@ -200,18 +203,18 @@ internal class LoggedInChatWebSocket(
         private val authRepository: AuthRepository,
         private val httpClient: HttpClient,
     ) : ChatCommandHandlerFactory {
-
         override fun create(
             scope: CoroutineScope,
             channelLogin: String,
             channelId: String,
-        ): LoggedInChatWebSocket = LoggedInChatWebSocket(
-            networkStateObserver = networkStateObserver,
-            scope = scope,
-            parser = parser,
-            httpClient = httpClient,
-            authRepository = authRepository,
-            channelLogin = channelLogin,
-        )
+        ): LoggedInChatWebSocket =
+            LoggedInChatWebSocket(
+                networkStateObserver = networkStateObserver,
+                scope = scope,
+                parser = parser,
+                httpClient = httpClient,
+                authRepository = authRepository,
+                channelLogin = channelLogin,
+            )
     }
 }

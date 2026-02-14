@@ -20,58 +20,58 @@ internal class PronounsRepository(
 ) {
     private val cacheMutex = Mutex()
 
-    suspend fun fillPronounsFor(chatters: Set<Chatter>): Map<Chatter, Pronoun?> = withContext(DispatchersProvider.io) {
-        if (!preferenceRepository.currentPreferences.first().enablePronouns) {
-            return@withContext emptyMap()
-        }
-
-        cacheMutex.withLock {
-            if (!localPronounsApi.arePronounsSynced()) {
-                pronounsApi
-                    .getPronouns()
-                    .fold(
-                        onSuccess = { pronouns ->
-                            localPronounsApi.saveAndReplacePronouns(pronouns)
-                        },
-                        onFailure = { e ->
-                            logError<PronounsRepository>(e) { "Error while fetching pronouns from Alejo API" }
-                        },
-                    )
+    suspend fun fillPronounsFor(chatters: Set<Chatter>): Map<Chatter, Pronoun?> =
+        withContext(DispatchersProvider.io) {
+            if (!preferenceRepository.currentPreferences.first().enablePronouns) {
+                return@withContext emptyMap()
             }
-        }
 
-        chatters
-            .map { chatter ->
-                chatter to localPronounsApi.getPronounsForUser(chatter.id).firstOrNull()
-            }
-            .map { (chatter, userPronoun) ->
-                async {
-                    if (userPronoun != null) {
-                        chatter to userPronoun
-                    } else {
-                        chatter to pronounsApi
-                            .getUserPronouns(chatter)
-                            .fold(
-                                onSuccess = { userPronoun ->
-                                    localPronounsApi
-                                        .saveUserPronouns(userPronoun)
-
-                                    localPronounsApi
-                                        .getPronounsForUser(chatter.id)
-                                        .firstOrNull()
-                                },
-                                onFailure = { e ->
-                                    logError<PronounsRepository>(e) { "Error while fetching pronouns for user ${chatter.id}" }
-                                    null
-                                },
-                            )
-                    }
+            cacheMutex.withLock {
+                if (!localPronounsApi.arePronounsSynced()) {
+                    pronounsApi
+                        .getPronouns()
+                        .fold(
+                            onSuccess = { pronouns ->
+                                localPronounsApi.saveAndReplacePronouns(pronouns)
+                            },
+                            onFailure = { e ->
+                                logError<PronounsRepository>(e) { "Error while fetching pronouns from Alejo API" }
+                            },
+                        )
                 }
             }
-            .awaitAll()
-            .toMap()
-            .mapValues { (_, userPronoun) ->
-                userPronoun?.mainPronoun
-            }
-    }
+
+            chatters
+                .map { chatter ->
+                    chatter to localPronounsApi.getPronounsForUser(chatter.id).firstOrNull()
+                }.map { (chatter, userPronoun) ->
+                    async {
+                        if (userPronoun != null) {
+                            chatter to userPronoun
+                        } else {
+                            chatter to
+                                pronounsApi
+                                    .getUserPronouns(chatter)
+                                    .fold(
+                                        onSuccess = { userPronoun ->
+                                            localPronounsApi
+                                                .saveUserPronouns(userPronoun)
+
+                                            localPronounsApi
+                                                .getPronounsForUser(chatter.id)
+                                                .firstOrNull()
+                                        },
+                                        onFailure = { e ->
+                                            logError<PronounsRepository>(e) { "Error while fetching pronouns for user ${chatter.id}" }
+                                            null
+                                        },
+                                    )
+                        }
+                    }
+                }.awaitAll()
+                .toMap()
+                .mapValues { (_, userPronoun) ->
+                    userPronoun?.mainPronoun
+                }
+        }
 }

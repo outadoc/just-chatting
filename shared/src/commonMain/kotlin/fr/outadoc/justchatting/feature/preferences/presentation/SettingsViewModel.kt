@@ -33,9 +33,10 @@ internal class SettingsViewModel(
     private val authRepository: AuthRepository,
     private val appVersionNameProvider: AppVersionNameProvider,
 ) : ViewModel() {
-
     sealed class Event {
-        data class ShareLogs(val uri: Uri) : Event()
+        data class ShareLogs(
+            val uri: Uri,
+        ) : Event()
     }
 
     data class State(
@@ -79,12 +80,11 @@ internal class SettingsViewModel(
                 user = user,
                 appVersionName = appVersionNameProvider.appVersionName,
             )
-        }
-            .stateIn(
-                viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                initialValue = State(),
-            )
+        }.stateIn(
+            viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = State(),
+        )
 
     fun updatePreferences(appPreferences: AppPreferences) {
         viewModelScope.launch(DispatchersProvider.io) {

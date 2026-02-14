@@ -14,27 +14,31 @@ import fr.outadoc.justchatting.utils.presentation.formatNumber
 private const val emoteSizeFloat = 1.8
 internal val emoteSize = emoteSizeFloat.em
 
-private fun getEmotePlaceholder(ratio: Float = 1f) = Placeholder(
-    width = emoteSize * ratio,
-    height = emoteSize,
-    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
-)
-
-private val badgePlaceholder = Placeholder(
-    width = 1.4.em,
-    height = 1.4.em,
-    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
-)
-
-internal fun emoteTextContent(emote: Emote): InlineTextContent = InlineTextContent(getEmotePlaceholder(ratio = emote.ratio)) {
-    EmoteItem(
-        emote = emote,
+private fun getEmotePlaceholder(ratio: Float = 1f) =
+    Placeholder(
+        width = emoteSize * ratio,
+        height = emoteSize,
+        placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
     )
-}
 
-internal fun badgeTextContent(badge: TwitchBadge): InlineTextContent = InlineTextContent(badgePlaceholder) {
-    BadgeItem(badge = badge)
-}
+private val badgePlaceholder =
+    Placeholder(
+        width = 1.4.em,
+        height = 1.4.em,
+        placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
+    )
+
+internal fun emoteTextContent(emote: Emote): InlineTextContent =
+    InlineTextContent(getEmotePlaceholder(ratio = emote.ratio)) {
+        EmoteItem(
+            emote = emote,
+        )
+    }
+
+internal fun badgeTextContent(badge: TwitchBadge): InlineTextContent =
+    InlineTextContent(badgePlaceholder) {
+        BadgeItem(badge = badge)
+    }
 
 internal fun cheerEmoteTextContent(cheer: Emote): InlineTextContent {
     val textWidthEm: Float = cheer.bitsValue?.let { it.formatNumber().length / 1.8f } ?: 0f
@@ -51,6 +55,7 @@ internal fun cheerEmoteTextContent(cheer: Emote): InlineTextContent {
     }
 }
 
-internal fun previewTextContent(): InlineTextContent = InlineTextContent(badgePlaceholder) {
-    Icon(Icons.Default.Token, contentDescription = null)
-}
+internal fun previewTextContent(): InlineTextContent =
+    InlineTextContent(badgePlaceholder) {
+        Icon(Icons.Default.Token, contentDescription = null)
+    }

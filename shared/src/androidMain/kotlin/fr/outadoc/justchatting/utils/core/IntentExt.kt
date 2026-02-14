@@ -46,40 +46,43 @@ private fun Intent.toPendingIntent(
     val flags = PendingIntent.FLAG_UPDATE_CURRENT or mutableFlag or immutableFlag
 
     return when (intentComponent) {
-        IntentComponent.Activity -> PendingIntent.getActivity(
-            /* context = */
-            context,
-            /* requestCode = */
-            0,
-            /* intent = */
-            this,
-            /* flags = */
-            flags,
-        )
+        IntentComponent.Activity -> {
+            PendingIntent.getActivity(
+                // context =
+                context,
+                // requestCode =
+                0,
+                // intent =
+                this,
+                // flags =
+                flags,
+            )
+        }
 
-        IntentComponent.ForegroundService ->
+        IntentComponent.ForegroundService -> {
             if (Build.VERSION.SDK_INT >= 26) {
                 PendingIntent.getForegroundService(
-                    /* context = */
+                    // context =
                     context,
-                    /* requestCode = */
+                    // requestCode =
                     0,
-                    /* intent = */
+                    // intent =
                     this,
-                    /* flags = */
+                    // flags =
                     flags,
                 )
             } else {
                 PendingIntent.getService(
-                    /* context = */
+                    // context =
                     context,
-                    /* requestCode = */
+                    // requestCode =
                     0,
-                    /* intent = */
+                    // intent =
                     this,
-                    /* flags = */
+                    // flags =
                     flags,
                 )
             }
+        }
     }
 }

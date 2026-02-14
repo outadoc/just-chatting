@@ -30,24 +30,27 @@ internal fun TwitchEmote.map(templateUrl: String): Emote {
         name = name,
         ownerId = ownerId,
         isZeroWidth = false,
-        urls = EmoteUrls(
-            light = scales.associateWith { scale ->
-                createUrlForEmote(
-                    templateUrl = templateUrl,
-                    id = id,
-                    theme = "light",
-                    scale = scale.toString(),
-                )
-            },
-            dark = scales.associateWith { scale ->
-                createUrlForEmote(
-                    templateUrl = templateUrl,
-                    id = id,
-                    theme = "dark",
-                    scale = scale.toString(),
-                )
-            },
-        ),
+        urls =
+            EmoteUrls(
+                light =
+                    scales.associateWith { scale ->
+                        createUrlForEmote(
+                            templateUrl = templateUrl,
+                            id = id,
+                            theme = "light",
+                            scale = scale.toString(),
+                        )
+                    },
+                dark =
+                    scales.associateWith { scale ->
+                        createUrlForEmote(
+                            templateUrl = templateUrl,
+                            id = id,
+                            theme = "dark",
+                            scale = scale.toString(),
+                        )
+                    },
+            ),
     )
 }
 
@@ -56,21 +59,24 @@ internal fun ChatEmote.map(): Emote {
         name = name,
         ownerId = null,
         isZeroWidth = false,
-        urls = EmoteUrls(
-            light = scales.associateWith { scale ->
-                createUrlForEmote(
-                    id = id,
-                    theme = "light",
-                    scale = scale.toString(),
-                )
-            },
-            dark = scales.associateWith { scale ->
-                createUrlForEmote(
-                    id = id,
-                    theme = "dark",
-                    scale = scale.toString(),
-                )
-            },
-        ),
+        urls =
+            EmoteUrls(
+                light =
+                    scales.associateWith { scale ->
+                        createUrlForEmote(
+                            id = id,
+                            theme = "light",
+                            scale = scale.toString(),
+                        )
+                    },
+                dark =
+                    scales.associateWith { scale ->
+                        createUrlForEmote(
+                            id = id,
+                            theme = "dark",
+                            scale = scale.toString(),
+                        )
+                    },
+            ),
     )
 }

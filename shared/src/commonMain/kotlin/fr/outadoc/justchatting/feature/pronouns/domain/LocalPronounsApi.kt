@@ -7,7 +7,10 @@ import kotlinx.coroutines.flow.Flow
 
 internal interface LocalPronounsApi {
     suspend fun arePronounsSynced(): Boolean
+
     suspend fun saveAndReplacePronouns(pronouns: List<Pronoun>)
+
     suspend fun getPronounsForUser(userId: String): Flow<UserPronouns?>
+
     suspend fun saveUserPronouns(userPronoun: UserPronounIds)
 }

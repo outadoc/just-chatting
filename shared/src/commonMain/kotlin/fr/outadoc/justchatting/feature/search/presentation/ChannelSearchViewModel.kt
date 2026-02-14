@@ -29,7 +29,6 @@ import kotlin.time.Duration.Companion.seconds
 internal class ChannelSearchViewModel(
     private val twitchRepository: TwitchRepository,
 ) : ViewModel() {
-
     data class State(
         val query: String = "",
         val isSearchExpanded: Boolean = false,
@@ -41,7 +40,8 @@ internal class ChannelSearchViewModel(
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     val pagingData: Flow<PagingData<ChannelSearchResult>> =
-        state.mapNotNull { state -> state.query }
+        state
+            .mapNotNull { state -> state.query }
             .distinctUntilChanged()
             .debounce(0.3.seconds)
             .flatMapLatest { query ->
@@ -50,16 +50,16 @@ internal class ChannelSearchViewModel(
                 } else {
                     flowOf(
                         PagingData.empty(
-                            sourceLoadStates = LoadStates(
-                                prepend = LoadState.NotLoading(endOfPaginationReached = true),
-                                append = LoadState.NotLoading(endOfPaginationReached = true),
-                                refresh = LoadState.NotLoading(endOfPaginationReached = true),
-                            ),
+                            sourceLoadStates =
+                                LoadStates(
+                                    prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                                    append = LoadState.NotLoading(endOfPaginationReached = true),
+                                    refresh = LoadState.NotLoading(endOfPaginationReached = true),
+                                ),
                         ),
                     )
                 }
-            }
-            .cachedIn(viewModelScope)
+            }.cachedIn(viewModelScope)
 
     fun onStart() {
         viewModelScope.launch {

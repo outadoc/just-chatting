@@ -11,13 +11,13 @@ import fr.outadoc.justchatting.feature.chat.data.irc.parser.core.message.IrcMess
 import fr.outadoc.justchatting.feature.chat.data.irc.parser.core.message.MessageParser
 
 internal object NoticeMessage : ICommand {
-
     override val command = "NOTICE"
 
-    data class Command(val target: String, val message: String) {
-
+    data class Command(
+        val target: String,
+        val message: String,
+    ) {
         object Parser : MessageParser<Command>() {
-
             override fun parseFromComponents(components: IrcMessageComponents): Command? {
                 if (components.parameters.size < 2) {
                     return null

@@ -5,7 +5,10 @@ import kotlin.random.Random
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
-internal suspend fun delayWithJitter(delay: Duration, maxJitter: Duration) {
+internal suspend fun delayWithJitter(
+    delay: Duration,
+    maxJitter: Duration,
+) {
     val jitter = Random.nextLong(maxJitter.inWholeMilliseconds).milliseconds
     delay(delay + jitter)
 }

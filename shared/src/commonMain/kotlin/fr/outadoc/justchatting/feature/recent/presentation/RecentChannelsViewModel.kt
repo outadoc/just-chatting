@@ -16,9 +16,9 @@ import kotlinx.coroutines.launch
 internal class RecentChannelsViewModel(
     private val repository: TwitchRepository,
 ) : ViewModel() {
-
     sealed class State {
         data object Loading : State()
+
         data class Content(
             val data: ImmutableList<User>,
         ) : State()
@@ -31,14 +31,15 @@ internal class RecentChannelsViewModel(
 
     fun refresh() {
         job?.cancel()
-        job = viewModelScope.launch {
-            _state.emitAll(
-                repository
-                    .getRecentChannels()
-                    .map { channels ->
-                        State.Content(channels.toPersistentList())
-                    },
-            )
-        }
+        job =
+            viewModelScope.launch {
+                _state.emitAll(
+                    repository
+                        .getRecentChannels()
+                        .map { channels ->
+                            State.Content(channels.toPersistentList())
+                        },
+                )
+            }
     }
 }

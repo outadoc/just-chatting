@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 internal class FollowedChannelsViewModel(
     private val repository: TwitchRepository,
 ) : ViewModel() {
-
     @Immutable
     data class State(
         val data: ImmutableList<ChannelFollow> = persistentListOf(),
@@ -46,16 +45,17 @@ internal class FollowedChannelsViewModel(
 
     fun synchronize() {
         syncJob?.cancel()
-        syncJob = viewModelScope.launch(DispatchersProvider.io) {
-            _state.update { state ->
-                state.copy(isLoading = true)
-            }
+        syncJob =
+            viewModelScope.launch(DispatchersProvider.io) {
+                _state.update { state ->
+                    state.copy(isLoading = true)
+                }
 
-            repository.syncFollowedChannels()
+                repository.syncFollowedChannels()
 
-            _state.update { state ->
-                state.copy(isLoading = false)
+                _state.update { state ->
+                    state.copy(isLoading = false)
+                }
             }
-        }
     }
 }

@@ -58,15 +58,15 @@ internal class LiveChatWebSocket private constructor(
     private val preferencesRepository: PreferenceRepository,
     private val channelLogin: String,
 ) : ChatEventHandler {
-
     companion object {
         private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
     }
 
-    private val _eventFlow = MutableSharedFlow<ChatEvent>(
-        replay = Defaults.EventBufferSize,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST,
-    )
+    private val _eventFlow =
+        MutableSharedFlow<ChatEvent>(
+            replay = Defaults.EventBufferSize,
+            onBufferOverflow = BufferOverflow.DROP_OLDEST,
+        )
 
     override val eventFlow: Flow<ChatEvent> = _eventFlow
 
@@ -96,11 +96,12 @@ internal class LiveChatWebSocket private constructor(
             return
         }
 
-        networkStateJob = scope.launch {
-            networkStateObserver.state.collectLatest { state ->
-                isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
+        networkStateJob =
+            scope.launch {
+                networkStateObserver.state.collectLatest { state ->
+                    isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
+                }
             }
-        }
     }
 
     private fun observeSocket() {
@@ -108,33 +109,34 @@ internal class LiveChatWebSocket private constructor(
             return
         }
 
-        socketJob = scope.launch(DispatchersProvider.io + SupervisorJob()) {
-            logDebug<LiveChatWebSocket> { "Starting job" }
+        socketJob =
+            scope.launch(DispatchersProvider.io + SupervisorJob()) {
+                logDebug<LiveChatWebSocket> { "Starting job" }
 
-            _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
+                _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
 
-            while (isActive) {
-                if (isNetworkAvailable) {
-                    logDebug<LiveChatWebSocket> { "Network is available, listening" }
-                    _connectionStatus.update { status -> status.copy(isAlive = true) }
+                while (isActive) {
+                    if (isNetworkAvailable) {
+                        logDebug<LiveChatWebSocket> { "Network is available, listening" }
+                        _connectionStatus.update { status -> status.copy(isAlive = true) }
 
-                    loadRecentMessages()
+                        loadRecentMessages()
 
-                    try {
-                        listen()
-                    } catch (e: Exception) {
-                        logError<LiveChatWebSocket>(e) { "Socket was closed" }
+                        try {
+                            listen()
+                        } catch (e: Exception) {
+                            logError<LiveChatWebSocket>(e) { "Socket was closed" }
+                        }
+                    } else {
+                        logDebug<LiveChatWebSocket> { "Network is out, delay and retry" }
+                        _connectionStatus.update { status -> status.copy(isAlive = false) }
                     }
-                } else {
-                    logDebug<LiveChatWebSocket> { "Network is out, delay and retry" }
-                    _connectionStatus.update { status -> status.copy(isAlive = false) }
-                }
 
-                if (isActive) {
-                    delayWithJitter(1.seconds, maxJitter = 3.seconds)
+                    if (isActive) {
+                        delayWithJitter(1.seconds, maxJitter = 3.seconds)
+                    }
                 }
             }
-        }
     }
 
     private suspend fun listen() {
@@ -157,7 +159,8 @@ internal class LiveChatWebSocket private constructor(
             while (isActive) {
                 when (val received = incoming.receive()) {
                     is Frame.Text -> {
-                        received.readText()
+                        received
+                            .readText()
                             .lines()
                             .filter { it.isNotBlank() }
                             .forEach { line -> handleMessage(line) }
@@ -221,8 +224,7 @@ internal class LiveChatWebSocket private constructor(
             .loadRecentMessages(
                 channelLogin = channelLogin,
                 limit = AppPreferences.Defaults.RecentChatLimit,
-            )
-            .map { messages ->
+            ).map { messages ->
                 messages
                     .asFlow()
                     .filterIsInstance<ChatEvent.Message>()
@@ -230,8 +232,7 @@ internal class LiveChatWebSocket private constructor(
                         // Drop messages that were received before the last message we received
                         event.timestamp < (lastMessageReceivedAt ?: Instant.DISTANT_PAST)
                     }
-            }
-            .fold(
+            }.fold(
                 onSuccess = { events ->
                     _eventFlow.emitAll(events)
                 },
@@ -249,20 +250,20 @@ internal class LiveChatWebSocket private constructor(
         private val preferencesRepository: PreferenceRepository,
         private val httpClient: HttpClient,
     ) : ChatCommandHandlerFactory {
-
         override fun create(
             scope: CoroutineScope,
             channelLogin: String,
             channelId: String,
-        ): LiveChatWebSocket = LiveChatWebSocket(
-            networkStateObserver = networkStateObserver,
-            scope = scope,
-            clock = clock,
-            parser = parser,
-            httpClient = httpClient,
-            recentMessagesRepository = recentMessagesRepository,
-            preferencesRepository = preferencesRepository,
-            channelLogin = channelLogin,
-        )
+        ): LiveChatWebSocket =
+            LiveChatWebSocket(
+                networkStateObserver = networkStateObserver,
+                scope = scope,
+                clock = clock,
+                parser = parser,
+                httpClient = httpClient,
+                recentMessagesRepository = recentMessagesRepository,
+                preferencesRepository = preferencesRepository,
+                channelLogin = channelLogin,
+            )
     }
 }

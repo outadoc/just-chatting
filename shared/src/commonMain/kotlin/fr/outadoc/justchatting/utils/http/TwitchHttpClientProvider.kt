@@ -26,11 +26,12 @@ internal class TwitchHttpClientProvider(
                 bearer {
                     loadTokens {
                         logInfo<TwitchHttpClientProvider> { "Loading bearer token" }
-                        preferenceRepository.currentPreferences.first().apiToken
+                        preferenceRepository.currentPreferences
+                            .first()
+                            .apiToken
                             .also { token ->
                                 logInfo<TwitchHttpClientProvider> { "Most fresh token is $token" }
-                            }
-                            ?.let { token ->
+                            }?.let { token ->
                                 BearerTokens(
                                     accessToken = token,
                                     refreshToken = "",
@@ -40,11 +41,12 @@ internal class TwitchHttpClientProvider(
 
                     refreshTokens {
                         logInfo<TwitchHttpClientProvider> { "Refreshing bearer token" }
-                        preferenceRepository.currentPreferences.first().apiToken
+                        preferenceRepository.currentPreferences
+                            .first()
+                            .apiToken
                             .also { token ->
                                 logInfo<TwitchHttpClientProvider> { "Most fresh token is $token" }
-                            }
-                            ?.let { token ->
+                            }?.let { token ->
                                 BearerTokens(
                                     accessToken = token,
                                     refreshToken = "",

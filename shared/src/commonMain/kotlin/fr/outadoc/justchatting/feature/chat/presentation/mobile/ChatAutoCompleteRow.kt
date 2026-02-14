@@ -22,22 +22,23 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 internal fun ChatAutoCompleteRowPreview() {
     AppTheme {
-        val items = listOf(
-            AutoCompleteItem.User(
-                Chatter(
-                    id = "1",
-                    displayName = "BagheraJones",
-                    login = "bagherajones",
+        val items =
+            listOf(
+                AutoCompleteItem.User(
+                    Chatter(
+                        id = "1",
+                        displayName = "BagheraJones",
+                        login = "bagherajones",
+                    ),
                 ),
-            ),
-            AutoCompleteItem.User(
-                Chatter(
-                    id = "2",
-                    displayName = "HortyUnderscore",
-                    login = "hortyunderscore",
+                AutoCompleteItem.User(
+                    Chatter(
+                        id = "2",
+                        displayName = "HortyUnderscore",
+                        login = "hortyunderscore",
+                    ),
                 ),
-            ),
-        )
+            )
 
         ChatAutoCompleteRow(
             onChatterClick = {},
@@ -65,10 +66,11 @@ internal fun ChatAutoCompleteRow(
     LazyRow(
         modifier = modifier.fillMaxWidth(),
         state = listState,
-        horizontalArrangement = Arrangement.spacedBy(
-            space = 8.dp,
-            alignment = Alignment.Start,
-        ),
+        horizontalArrangement =
+            Arrangement.spacedBy(
+                space = 8.dp,
+                alignment = Alignment.Start,
+            ),
         contentPadding = contentPadding,
     ) {
         items(

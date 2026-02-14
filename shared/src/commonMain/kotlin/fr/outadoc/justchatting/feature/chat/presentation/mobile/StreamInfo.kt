@@ -35,14 +35,16 @@ internal fun StreamInfo(
     ) {
         Text(text = stream.title)
 
-        stream.category?.name
+        stream.category
+            ?.name
             .takeUnless { it.isNullOrEmpty() }
             ?.let { gameName ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .padding(end = 8.dp),
+                        modifier =
+                            Modifier
+                                .size(24.dp)
+                                .padding(end = 8.dp),
                         imageVector = Icons.Default.Gamepad,
                         contentDescription = null,
                     )
@@ -53,19 +55,21 @@ internal fun StreamInfo(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                modifier = Modifier
-                    .size(24.dp)
-                    .padding(end = 8.dp),
+                modifier =
+                    Modifier
+                        .size(24.dp)
+                        .padding(end = 8.dp),
                 imageVector = Icons.Default.Visibility,
                 contentDescription = null,
             )
 
             Text(
-                text = pluralStringResource(
-                    Res.plurals.viewers,
-                    stream.viewerCount.toInt(),
-                    stream.viewerCount.toInt().formatNumber(),
-                ),
+                text =
+                    pluralStringResource(
+                        Res.plurals.viewers,
+                        stream.viewerCount.toInt(),
+                        stream.viewerCount.toInt().formatNumber(),
+                    ),
             )
         }
 
@@ -73,9 +77,10 @@ internal fun StreamInfo(
         if (startedAt != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp),
+                    modifier =
+                        Modifier
+                            .size(24.dp)
+                            .padding(end = 8.dp),
                     imageVector = Icons.Default.Start,
                     contentDescription = null,
                 )

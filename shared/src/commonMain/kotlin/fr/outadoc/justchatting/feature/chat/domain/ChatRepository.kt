@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.Flow
 
 internal interface ChatRepository : AutoCloseable {
     fun getChatEventFlow(user: User): Flow<ChatEvent>
+
     fun getConnectionStatusFlow(user: User): Flow<ConnectionStatus>
+
     fun start(user: User)
 }

@@ -7,12 +7,12 @@ import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 internal sealed interface StringDesc {
-
     @Composable
     fun localized(): String
 
-    class Raw(val value: String) : StringDesc {
-
+    class Raw(
+        val value: String,
+    ) : StringDesc {
         @Composable
         override fun localized(): String {
             return value
@@ -22,7 +22,6 @@ internal sealed interface StringDesc {
     class Resource(
         private val resource: StringResource,
     ) : StringDesc {
-
         @Composable
         override fun localized(): String {
             return stringResource(resource)
@@ -33,16 +32,16 @@ internal sealed interface StringDesc {
         private val resource: StringResource,
         private val args: Array<out Any>,
     ) : StringDesc {
-
         @Composable
         override fun localized(): String {
             val formattedArgs: Array<Any> =
-                args.map { desc ->
-                    when (desc) {
-                        is StringDesc -> desc.localized()
-                        else -> desc
-                    }
-                }.toTypedArray()
+                args
+                    .map { desc ->
+                        when (desc) {
+                            is StringDesc -> desc.localized()
+                            else -> desc
+                        }
+                    }.toTypedArray()
 
             return stringResource(
                 resource = resource,
@@ -55,7 +54,6 @@ internal sealed interface StringDesc {
         private val resource: PluralStringResource,
         private val number: Int,
     ) : StringDesc {
-
         @Composable
         override fun localized(): String {
             return pluralStringResource(
@@ -70,16 +68,16 @@ internal sealed interface StringDesc {
         private val number: Int,
         private val args: Array<out Any>,
     ) : StringDesc {
-
         @Composable
         override fun localized(): String {
             val formattedArgs: Array<Any> =
-                args.map { desc ->
-                    when (desc) {
-                        is StringDesc -> desc.localized()
-                        else -> desc
-                    }
-                }.toTypedArray()
+                args
+                    .map { desc ->
+                        when (desc) {
+                            is StringDesc -> desc.localized()
+                            else -> desc
+                        }
+                    }.toTypedArray()
 
             return pluralStringResource(
                 resource = resource,
@@ -106,6 +104,9 @@ internal fun PluralStringResource.desc(number: Int): StringDesc {
     return StringDesc.Plural(this, number)
 }
 
-internal fun PluralStringResource.desc(number: Int, vararg args: Any): StringDesc {
+internal fun PluralStringResource.desc(
+    number: Int,
+    vararg args: Any,
+): StringDesc {
     return StringDesc.PluralFormatted(this, number, args)
 }

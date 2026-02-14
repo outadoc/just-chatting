@@ -9,7 +9,6 @@ import io.ktor.websocket.WebSocketExtensionHeader
 import io.ktor.websocket.readText
 
 internal class FrameLogger : WebSocketExtension<FrameLogger.Config> {
-
     class Config
 
     override val factory: WebSocketExtensionFactory<Config, out WebSocketExtension<Config>>
@@ -58,7 +57,6 @@ internal class FrameLogger : WebSocketExtension<FrameLogger.Config> {
     }
 
     companion object : WebSocketExtensionFactory<Config, FrameLogger> {
-
         override val key: AttributeKey<FrameLogger> = AttributeKey("frame-logger")
 
         override val rsv1: Boolean = false

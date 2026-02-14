@@ -7,6 +7,5 @@
 package fr.outadoc.justchatting.feature.chat.data.irc.parser.core
 
 internal interface ICommand {
-
     val command: String
 }

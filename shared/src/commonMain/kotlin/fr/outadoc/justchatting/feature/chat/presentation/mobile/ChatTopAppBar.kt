@@ -98,16 +98,18 @@ internal fun ChatTopAppBar(
                 ) {
                     user?.profileImageUrl?.let { imageUrl ->
                         Row(
-                            modifier = Modifier
-                                .size(56.dp)
-                                .padding(horizontal = 8.dp),
+                            modifier =
+                                Modifier
+                                    .size(56.dp)
+                                    .padding(horizontal = 8.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             AsyncImage(
-                                modifier = Modifier
-                                    .clip(MaterialTheme.shapes.medium)
-                                    .clickable(onClick = onUserClicked)
-                                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                                modifier =
+                                    Modifier
+                                        .clip(MaterialTheme.shapes.medium)
+                                        .clickable(onClick = onUserClicked)
+                                        .background(MaterialTheme.colorScheme.surfaceVariant),
                                 model = imageUrl,
                                 contentDescription = null,
                             )

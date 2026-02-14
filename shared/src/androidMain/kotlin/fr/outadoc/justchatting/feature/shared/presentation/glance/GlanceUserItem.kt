@@ -29,9 +29,10 @@ internal fun GlanceUserItem(
     ) {
         Image(
             modifier = GlanceModifier.size(48.dp),
-            provider = ImageProvider(
-                user.getProfileImageUri(LocalContext.current),
-            ),
+            provider =
+                ImageProvider(
+                    user.getProfileImageUri(LocalContext.current),
+                ),
             contentDescription = null,
         )
 
@@ -41,9 +42,10 @@ internal fun GlanceUserItem(
 
         Text(
             text = user.displayName,
-            style = TextDefaults.defaultTextStyle.copy(
-                color = GlanceTheme.colors.onSurfaceVariant,
-            ),
+            style =
+                TextDefaults.defaultTextStyle.copy(
+                    color = GlanceTheme.colors.onSurfaceVariant,
+                ),
             maxLines = 1,
         )
     }

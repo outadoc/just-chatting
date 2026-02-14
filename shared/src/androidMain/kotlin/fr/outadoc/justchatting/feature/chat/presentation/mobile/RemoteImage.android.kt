@@ -18,12 +18,12 @@ internal actual fun remoteImageModel(url: String?): ImageRequest {
             1.0f,
         )
 
-    return ImageRequest.Builder(context)
+    return ImageRequest
+        .Builder(context)
         .apply {
             if (systemAnimationScale == 0f) {
                 transformations(CoilReducedAnimationTransformation())
             }
-        }
-        .data(url)
+        }.data(url)
         .build()
 }

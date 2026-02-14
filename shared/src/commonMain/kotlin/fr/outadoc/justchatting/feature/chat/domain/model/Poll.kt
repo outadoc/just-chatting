@@ -20,7 +20,6 @@ internal data class Poll(
     val totalVoters: Int,
     val votes: Votes,
 ) {
-
     @Immutable
     enum class Status {
         Active,

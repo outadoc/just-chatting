@@ -32,7 +32,9 @@ internal class AuthRepository(
             .distinctUntilChanged()
             .map { token ->
                 when (token) {
-                    null -> AppUser.NotLoggedIn
+                    null -> {
+                        AppUser.NotLoggedIn
+                    }
 
                     else -> {
                         authApi
@@ -47,8 +49,7 @@ internal class AuthRepository(
                                 }
 
                                 response
-                            }
-                            .fold(
+                            }.fold(
                                 onSuccess = { response ->
                                     AppUser.LoggedIn(
                                         userId = response.userId,
@@ -63,12 +64,10 @@ internal class AuthRepository(
                             )
                     }
                 }
-            }
-            .distinctUntilChanged()
+            }.distinctUntilChanged()
             .onEach { user ->
                 logInfo<AuthRepository> { "User is now $user" }
-            }
-            .shareIn(
+            }.shareIn(
                 scope = scope,
                 started = SharingStarted.Lazily,
                 replay = 1,
@@ -93,8 +92,7 @@ internal class AuthRepository(
                 .revokeToken(
                     clientId = oAuthAppCredentials.clientId,
                     token = token,
-                )
-                .onFailure { exception ->
+                ).onFailure { exception ->
                     logError<AuthRepository>(exception) { "Failed to revoke token" }
                 }
 
@@ -113,15 +111,21 @@ internal class AuthRepository(
         )
     }
 
-    private class InvalidClientIdException(message: String) : Exception(message)
-    private class MissingScopesException(message: String) : Exception(message)
+    private class InvalidClientIdException(
+        message: String,
+    ) : Exception(message)
+
+    private class MissingScopesException(
+        message: String,
+    ) : Exception(message)
 
     private companion object {
-        val REQUIRED_SCOPES = setOf(
-            "chat:read",
-            "chat:edit",
-            "user:read:follows",
-            "user:write:chat",
-        )
+        val REQUIRED_SCOPES =
+            setOf(
+                "chat:read",
+                "chat:edit",
+                "user:read:follows",
+                "user:write:chat",
+            )
     }
 }

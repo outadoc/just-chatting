@@ -31,19 +31,20 @@ internal fun HighlightedMessageCard(
     level: Level = Level.Base,
     content: @Composable () -> Unit,
 ) {
-    val color = when (level) {
-        Level.Base -> MaterialTheme.colorScheme.primary
-        Level.One -> Color(0xff6b816e)
-        Level.Two -> Color(0xff32843b)
-        Level.Three -> Color(0xff007a6c)
-        Level.Four -> Color(0xff0080a9)
-        Level.Five -> Color(0xff0070db)
-        Level.Six -> Color(0xff016cd9)
-        Level.Seven -> Color(0xff731acb)
-        Level.Eight -> Color(0xffbe0bb7)
-        Level.Nine -> Color(0xffab2078)
-        Level.Ten -> Color(0xffc90216)
-    }
+    val color =
+        when (level) {
+            Level.Base -> MaterialTheme.colorScheme.primary
+            Level.One -> Color(0xff6b816e)
+            Level.Two -> Color(0xff32843b)
+            Level.Three -> Color(0xff007a6c)
+            Level.Four -> Color(0xff0080a9)
+            Level.Five -> Color(0xff0070db)
+            Level.Six -> Color(0xff016cd9)
+            Level.Seven -> Color(0xff731acb)
+            Level.Eight -> Color(0xffbe0bb7)
+            Level.Nine -> Color(0xffab2078)
+            Level.Ten -> Color(0xffc90216)
+        }
 
     DynamicMaterialTheme(
         seedColor = color,
@@ -51,11 +52,12 @@ internal fun HighlightedMessageCard(
     ) {
         Row(modifier = Modifier.height(IntrinsicSize.Min)) {
             Box(
-                modifier = Modifier
-                    .padding(vertical = 4.dp)
-                    .background(color)
-                    .width(4.dp)
-                    .fillMaxHeight(),
+                modifier =
+                    Modifier
+                        .padding(vertical = 4.dp)
+                        .background(color)
+                        .width(4.dp)
+                        .fillMaxHeight(),
             )
 
             Card(

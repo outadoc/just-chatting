@@ -6,5 +6,6 @@ import fr.outadoc.justchatting.feature.pronouns.domain.model.UserPronounIds
 
 internal interface PronounsApi {
     suspend fun getPronouns(): Result<List<Pronoun>>
+
     suspend fun getUserPronouns(chatter: Chatter): Result<UserPronounIds>
 }

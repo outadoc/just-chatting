@@ -10,14 +10,14 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 internal val AppIcon: ImageVector by lazy {
-    ImageVector.Builder(
-        name = "AppIcon",
-        defaultWidth = 64.dp,
-        defaultHeight = 64.dp,
-        viewportWidth = 14.63f,
-        viewportHeight = 14.63f,
-    )
-        .apply {
+    ImageVector
+        .Builder(
+            name = "AppIcon",
+            defaultWidth = 64.dp,
+            defaultHeight = 64.dp,
+            viewportWidth = 14.63f,
+            viewportHeight = 14.63f,
+        ).apply {
             path(
                 fill = SolidColor(Color(0xFFFFFFFF)),
                 fillAlpha = 1.0f,
@@ -61,6 +61,5 @@ internal val AppIcon: ImageVector by lazy {
                 lineToRelative(2.3f, -0.2f)
                 close()
             }
-        }
-        .build()
+        }.build()
 }

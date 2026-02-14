@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal sealed class PubSubViewerCountMessage {
-
     @Serializable
     @SerialName("viewcount")
     data class ViewCount(

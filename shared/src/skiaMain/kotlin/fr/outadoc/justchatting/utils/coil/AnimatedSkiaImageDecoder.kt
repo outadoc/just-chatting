@@ -31,7 +31,6 @@ internal class AnimatedSkiaImageDecoder(
     private val source: ImageSource,
     private val prerenderFrames: Boolean = true,
 ) : Decoder {
-
     override suspend fun decode(): DecodeResult {
         val bytes = source.source().use { it.readByteArray() }
         val codec = Codec.makeFromData(Data.makeFromBytes(bytes))
@@ -44,7 +43,6 @@ internal class AnimatedSkiaImageDecoder(
     class Factory(
         private val prerenderFrames: Boolean = false,
     ) : Decoder.Factory {
-
         override fun create(
             result: SourceFetchResult,
             options: Options,
@@ -66,20 +64,23 @@ private class AnimatedSkiaImage(
     private val codec: Codec,
     prerenderFrames: Boolean,
 ) : Image {
-    private val imageInfo = ImageInfo(
-        colorInfo = ColorInfo(
-            colorType = ColorType.BGRA_8888,
-            alphaType = ColorAlphaType.UNPREMUL,
-            colorSpace = ColorSpace.sRGB,
-        ),
-        width = codec.width,
-        height = codec.height,
-    )
+    private val imageInfo =
+        ImageInfo(
+            colorInfo =
+                ColorInfo(
+                    colorType = ColorType.BGRA_8888,
+                    alphaType = ColorAlphaType.UNPREMUL,
+                    colorSpace = ColorSpace.sRGB,
+                ),
+            width = codec.width,
+            height = codec.height,
+        )
 
     private val bitmap = Bitmap().apply { allocPixels(codec.imageInfo) }
-    private val frames = Array(codec.frameCount) { index ->
-        if (prerenderFrames) decodeFrame(index) else null
-    }
+    private val frames =
+        Array(codec.frameCount) { index ->
+            if (prerenderFrames) decodeFrame(index) else null
+        }
 
     private var invalidateTick by mutableIntStateOf(0)
 
@@ -125,8 +126,9 @@ private class AnimatedSkiaImage(
             return
         }
 
-        val startTime = currentRepetitionStartTime
-            ?: TimeSource.Monotonic.markNow().also { currentRepetitionStartTime = it }
+        val startTime =
+            currentRepetitionStartTime
+                ?: TimeSource.Monotonic.markNow().also { currentRepetitionStartTime = it }
         val elapsedTime = startTime.elapsedNow().inWholeMilliseconds
 
         var accumulatedDuration = 0
@@ -178,11 +180,12 @@ private class AnimatedSkiaImage(
     private fun Canvas.drawFrame(frameIndex: Int) {
         val frame = frames[frameIndex] ?: decodeFrame(frameIndex).also { frames[frameIndex] = it }
         drawImage(
-            image = SkiaImage.makeRaster(
-                imageInfo = imageInfo,
-                bytes = frame,
-                rowBytes = imageInfo.minRowBytes,
-            ),
+            image =
+                SkiaImage.makeRaster(
+                    imageInfo = imageInfo,
+                    bytes = frame,
+                    rowBytes = imageInfo.minRowBytes,
+                ),
             left = 0f,
             top = 0f,
         )

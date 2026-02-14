@@ -8,10 +8,11 @@ internal fun CheerEmoteTier.map(prefix: String): Emote {
         name = "${prefix}$id",
         bitsValue = minBits,
         colorHex = color,
-        urls = EmoteUrls(
-            dark = images["dark"].map(),
-            light = images["light"].map(),
-        ),
+        urls =
+            EmoteUrls(
+                dark = images["dark"].map(),
+                light = images["light"].map(),
+            ),
     )
 }
 

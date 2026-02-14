@@ -45,21 +45,24 @@ internal fun FutureTimelineContent(
 
     if (future.isEmpty()) {
         NoContent(
-            modifier = modifier
-                .padding(insets)
-                .fillMaxSize(),
+            modifier =
+                modifier
+                    .padding(insets)
+                    .fillMaxSize(),
         )
     } else {
         LazyColumn(
-            modifier = Modifier
-                .padding(insets)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(insets)
+                    .fillMaxWidth(),
             state = listState,
-            contentPadding = PaddingValues(
-                start = 16.dp,
-                end = 16.dp,
-                bottom = 16.dp,
-            ),
+            contentPadding =
+                PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp,
+                ),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             future.keys.forEach { date ->
@@ -78,9 +81,10 @@ internal fun FutureTimelineContent(
                     contentType = { "segment" },
                 ) { segment ->
                     FutureTimelineSegment(
-                        modifier = Modifier
-                            .animateItem()
-                            .fillMaxWidth(),
+                        modifier =
+                            Modifier
+                                .animateItem()
+                                .fillMaxWidth(),
                         segment = segment,
                         onUserClick = {
                             showUserDetails = segment.user
@@ -110,15 +114,15 @@ private fun SectionHeader(
     title: @Composable () -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .background(
-                Brush.verticalGradient(
-                    0f to MaterialTheme.colorScheme.surface,
-                    1f to MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
-                ),
-            )
-            .padding(vertical = 8.dp)
-            .fillMaxWidth(),
+        modifier =
+            modifier
+                .background(
+                    Brush.verticalGradient(
+                        0f to MaterialTheme.colorScheme.surface,
+                        1f to MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+                    ),
+                ).padding(vertical = 8.dp)
+                .fillMaxWidth(),
     ) {
         CompositionLocalProvider(
             LocalTextStyle provides MaterialTheme.typography.titleMedium,

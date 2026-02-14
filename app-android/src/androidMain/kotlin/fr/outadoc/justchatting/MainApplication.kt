@@ -6,7 +6,6 @@ import fr.outadoc.justchatting.utils.logging.AndroidLogStrategy
 import fr.outadoc.justchatting.utils.logging.Logger
 
 class MainApplication : Application() {
-
     override fun onCreate() {
         super.onCreate()
 

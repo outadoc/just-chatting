@@ -50,17 +50,17 @@ internal class PubSubWebSocket(
     private val pubSubPluginsProvider: PubSubPluginsProvider,
     private val channelId: String,
 ) : ChatEventHandler {
-
     companion object {
         private const val ENDPOINT = "wss://pubsub-edge.twitch.tv"
     }
 
     private val plugins = pubSubPluginsProvider.get()
 
-    private val _eventFlow = MutableSharedFlow<ChatEvent>(
-        replay = Defaults.EventBufferSize,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST,
-    )
+    private val _eventFlow =
+        MutableSharedFlow<ChatEvent>(
+            replay = Defaults.EventBufferSize,
+            onBufferOverflow = BufferOverflow.DROP_OLDEST,
+        )
     override val eventFlow: Flow<ChatEvent> = _eventFlow
 
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
@@ -88,11 +88,12 @@ internal class PubSubWebSocket(
             return
         }
 
-        networkStateJob = scope.launch {
-            networkStateObserver.state.collectLatest { state ->
-                isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
+        networkStateJob =
+            scope.launch {
+                networkStateObserver.state.collectLatest { state ->
+                    isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
+                }
             }
-        }
     }
 
     private fun observeSocket() {
@@ -100,31 +101,32 @@ internal class PubSubWebSocket(
             return
         }
 
-        socketJob = scope.launch(DispatchersProvider.io + SupervisorJob()) {
-            logDebug<PubSubWebSocket> { "Starting job" }
+        socketJob =
+            scope.launch(DispatchersProvider.io + SupervisorJob()) {
+                logDebug<PubSubWebSocket> { "Starting job" }
 
-            _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
+                _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
 
-            while (isActive) {
-                if (isNetworkAvailable) {
-                    logDebug<PubSubWebSocket> { "Network is available, listening" }
-                    _connectionStatus.update { status -> status.copy(isAlive = true) }
+                while (isActive) {
+                    if (isNetworkAvailable) {
+                        logDebug<PubSubWebSocket> { "Network is available, listening" }
+                        _connectionStatus.update { status -> status.copy(isAlive = true) }
 
-                    try {
-                        listen()
-                    } catch (e: Exception) {
-                        logError<PubSubWebSocket>(e) { "Socket was closed" }
+                        try {
+                            listen()
+                        } catch (e: Exception) {
+                            logError<PubSubWebSocket>(e) { "Socket was closed" }
+                        }
+                    } else {
+                        logDebug<PubSubWebSocket> { "Network is out, delay and retry" }
+                        _connectionStatus.update { status -> status.copy(isAlive = false) }
                     }
-                } else {
-                    logDebug<PubSubWebSocket> { "Network is out, delay and retry" }
-                    _connectionStatus.update { status -> status.copy(isAlive = false) }
-                }
 
-                if (isActive) {
-                    delayWithJitter(1.seconds, maxJitter = 3.seconds)
+                    if (isActive) {
+                        delayWithJitter(1.seconds, maxJitter = 3.seconds)
+                    }
                 }
             }
-        }
     }
 
     private suspend fun listen() {
@@ -138,11 +140,14 @@ internal class PubSubWebSocket(
             // Tell the server what we want to receive
             sendSerialized<PubSubClientMessage>(
                 PubSubClientMessage.Listen(
-                    data = PubSubClientMessage.Listen.Data(
-                        topics = pubSubPluginsProvider.get()
-                            .map { plugin -> plugin.getTopic(channelId) },
-                        authToken = appUser.token,
-                    ),
+                    data =
+                        PubSubClientMessage.Listen.Data(
+                            topics =
+                                pubSubPluginsProvider
+                                    .get()
+                                    .map { plugin -> plugin.getTopic(channelId) },
+                            authToken = appUser.token,
+                        ),
                 ),
             )
 
@@ -214,18 +219,18 @@ internal class PubSubWebSocket(
         private val authRepository: AuthRepository,
         private val pubSubPluginsProvider: PubSubPluginsProvider,
     ) : ChatCommandHandlerFactory {
-
         override fun create(
             scope: CoroutineScope,
             channelLogin: String,
             channelId: String,
-        ): PubSubWebSocket = PubSubWebSocket(
-            networkStateObserver = networkStateObserver,
-            scope = scope,
-            httpClient = httpClient,
-            authRepository = authRepository,
-            pubSubPluginsProvider = pubSubPluginsProvider,
-            channelId = channelId,
-        )
+        ): PubSubWebSocket =
+            PubSubWebSocket(
+                networkStateObserver = networkStateObserver,
+                scope = scope,
+                httpClient = httpClient,
+                authRepository = authRepository,
+                pubSubPluginsProvider = pubSubPluginsProvider,
+                channelId = channelId,
+            )
     }
 }

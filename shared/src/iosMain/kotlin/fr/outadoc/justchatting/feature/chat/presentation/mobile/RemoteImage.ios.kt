@@ -11,12 +11,12 @@ import platform.UIKit.UIAccessibilityIsReduceMotionEnabled
 internal actual fun remoteImageModel(url: String?): ImageRequest {
     val context = LocalPlatformContext.current
 
-    return ImageRequest.Builder(context)
+    return ImageRequest
+        .Builder(context)
         .apply {
             if (UIAccessibilityIsReduceMotionEnabled()) {
                 transformations(CoilReducedAnimationTransformation())
             }
-        }
-        .data(url)
+        }.data(url)
         .build()
 }

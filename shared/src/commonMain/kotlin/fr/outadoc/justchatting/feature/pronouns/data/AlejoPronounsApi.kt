@@ -10,7 +10,6 @@ import io.ktor.client.plugins.ClientRequestException
 internal class AlejoPronounsApi(
     private val alejoPronounsClient: AlejoPronounsClient,
 ) : PronounsApi {
-
     override suspend fun getPronouns(): Result<List<Pronoun>> {
         return alejoPronounsClient
             .getPronouns()
@@ -36,8 +35,7 @@ internal class AlejoPronounsApi(
                     mainPronounId = data?.pronounId,
                     altPronounId = null,
                 )
-            }
-            .recoverCatching { exception ->
+            }.recoverCatching { exception ->
                 if (exception is ClientRequestException && exception.response.status.value == 404) {
                     UserPronounIds(
                         userId = chatter.id,

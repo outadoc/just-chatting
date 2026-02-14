@@ -102,20 +102,22 @@ internal fun ChannelChatScreenContent(
     }
 
     Scaffold(
-        modifier = modifier.then(
-            if (!isEmotePickerOpen) {
-                Modifier.imePadding()
-            } else {
-                Modifier
-            },
-        ),
+        modifier =
+            modifier.then(
+                if (!isEmotePickerOpen) {
+                    Modifier.imePadding()
+                } else {
+                    Modifier
+                },
+            ),
         topBar = {
             ChatTopAppBar(
-                modifier = Modifier
-                    .hazeEffect(
-                        state = hazeState,
-                        style = HazeMaterials.regular(),
-                    ),
+                modifier =
+                    Modifier
+                        .hazeEffect(
+                            state = hazeState,
+                            style = HazeMaterials.regular(),
+                        ),
                 user = user,
                 stream = stream,
                 colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
@@ -133,9 +135,10 @@ internal fun ChannelChatScreenContent(
             val snackbarCopiedMessage = stringResource(Res.string.chat_copiedToClipboard)
 
             ChatScreen(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .haze(hazeState),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .haze(hazeState),
                 state = state,
                 showTimestamps = showTimestamps,
                 onMessageLongClick = { item ->
@@ -167,39 +170,44 @@ internal fun ChannelChatScreenContent(
                 if (state is ChatViewModel.State.Chatting) {
                     ChatSlowModeProgress(
                         modifier = Modifier.fillMaxWidth(),
-                        constraint = state.messagePostConstraint
-                            ?: MessagePostConstraint(),
+                        constraint =
+                            state.messagePostConstraint
+                                ?: MessagePostConstraint(),
                     )
                 }
 
                 Surface(
-                    modifier = Modifier
-                        .hazeEffect(
-                            state = hazeState,
-                            style = HazeMaterials.regular(
-                                MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
+                    modifier =
+                        Modifier
+                            .hazeEffect(
+                                state = hazeState,
+                                style =
+                                    HazeMaterials.regular(
+                                        MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
+                                    ),
                             ),
-                        ),
                     color = Color.Transparent,
                 ) {
                     ChatInput(
-                        modifier = Modifier
-                            .focusRequester(inputFocusRequester)
-                            .then(
-                                if (!isEmotePickerOpen) {
-                                    Modifier.navigationBarsPadding()
-                                } else {
-                                    Modifier
-                                },
-                            )
-                            .fillMaxWidth(),
-                        message = TextFieldValue(
-                            text = inputState.message,
-                            selection = TextRange(
-                                start = inputState.selectionRange.first,
-                                end = inputState.selectionRange.last,
+                        modifier =
+                            Modifier
+                                .focusRequester(inputFocusRequester)
+                                .then(
+                                    if (!isEmotePickerOpen) {
+                                        Modifier.navigationBarsPadding()
+                                    } else {
+                                        Modifier
+                                    },
+                                ).fillMaxWidth(),
+                        message =
+                            TextFieldValue(
+                                text = inputState.message,
+                                selection =
+                                    TextRange(
+                                        start = inputState.selectionRange.first,
+                                        end = inputState.selectionRange.last,
+                                    ),
                             ),
-                        ),
                         autoCompleteItems = inputState.autoCompleteItems,
                         replyingTo = inputState.replyingTo,
                         onEmoteClick = onEmoteClick,
@@ -224,9 +232,10 @@ internal fun ChannelChatScreenContent(
 
                 var imeHeight by remember { mutableStateOf(350.dp) }
 
-                val currentImeHeight = WindowInsets.ime
-                    .asPaddingValues()
-                    .calculateBottomPadding()
+                val currentImeHeight =
+                    WindowInsets.ime
+                        .asPaddingValues()
+                        .calculateBottomPadding()
 
                 LaunchedEffect(currentImeHeight) {
                     if (currentImeHeight > imeHeight) {
@@ -240,9 +249,10 @@ internal fun ChannelChatScreenContent(
                     exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
                 ) {
                     Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(imeHeight),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(imeHeight),
                     ) {
                         EmotePicker(
                             state = state,
@@ -258,13 +268,14 @@ internal fun ChannelChatScreenContent(
         is ChatViewModel.State.Chatting -> {
             if (state.showInfoForUserId != null) {
                 UserInfoDialog(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = 24.dp,
-                            end = 24.dp,
-                            bottom = 24.dp,
-                        ),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = 24.dp,
+                                end = 24.dp,
+                                bottom = 24.dp,
+                            ),
                     userId = state.showInfoForUserId,
                     onDismissRequest = onDismissUserInfo,
                 )

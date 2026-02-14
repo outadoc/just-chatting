@@ -16,7 +16,8 @@ import kotlin.time.toJavaInstant
 @Stable
 internal actual fun Instant.formatHourMinute(): String? {
     val formatter =
-        DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
+        DateTimeFormatter
+            .ofLocalizedTime(FormatStyle.SHORT)
             .withZone(ZoneId.systemDefault())
 
     return remember(this) {

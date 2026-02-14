@@ -164,7 +164,7 @@ internal fun ChatList(
                 // We want the colors to keep consistent for every message, so we alternate the
                 // logic every time we add a new message to the list.
                 val background: Color =
-                    if (entries.size.isOdd && index.isOdd || entries.size.isEven && index.isEven) {
+                    if ((entries.size.isOdd && index.isOdd) || (entries.size.isEven && index.isEven)) {
                         MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
                     } else {
                         MaterialTheme.colorScheme.surface

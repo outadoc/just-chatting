@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.chat.data.irc
 
-import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
@@ -35,12 +34,11 @@ import kotlin.time.Duration.Companion.seconds
  * Mock chat web socket. Connects to a mock server to be able to simulate chat events.
  * See https://fdgt.dev
  */
-internal class MockChatWebSocket private constructor(
+internal class MockChatWebSocket(
     private val networkStateObserver: NetworkStateObserver,
     private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
     private val httpClient: HttpClient,
-    private val channelLogin: String,
 ) : ChatEventHandler {
     companion object {
         private const val ENDPOINT = "wss://irc.fdgt.dev"
@@ -56,7 +54,11 @@ internal class MockChatWebSocket private constructor(
 
     override val connectionStatus = _connectionStatus.asStateFlow()
 
-    override val eventFlow: Flow<ChatEvent> = channelFlow {
+    override fun getEventFlow(
+        channelId: String,
+        channelLogin: String,
+        appUser: AppUser.LoggedIn,
+    ): Flow<ChatEvent> = channelFlow {
         _connectionStatus.update { it.copy(registeredListeners = 1) }
         try {
             networkStateObserver.state.collectLatest { netState ->
@@ -65,7 +67,7 @@ internal class MockChatWebSocket private constructor(
                     while (currentCoroutineContext().isActive) {
                         _connectionStatus.update { it.copy(isAlive = true) }
                         try {
-                            listen()
+                            listen(channelLogin)
                         } catch (e: Exception) {
                             logError<MockChatWebSocket>(e) { "Socket was closed" }
                         }
@@ -82,7 +84,7 @@ internal class MockChatWebSocket private constructor(
         }
     }.flowOn(DispatchersProvider.io)
 
-    private suspend fun ProducerScope<ChatEvent>.listen() {
+    private suspend fun ProducerScope<ChatEvent>.listen(channelLogin: String) {
         httpClient.webSocket(ENDPOINT) {
             logDebug<MockChatWebSocket> { "Socket open, saying hello" }
 
@@ -141,24 +143,5 @@ internal class MockChatWebSocket private constructor(
 
             null -> {}
         }
-    }
-
-    class Factory(
-        private val clock: Clock,
-        private val networkStateObserver: NetworkStateObserver,
-        private val parser: TwitchIrcCommandParser,
-        private val httpClient: HttpClient,
-    ) : ChatCommandHandlerFactory {
-        override fun create(
-            channelLogin: String,
-            channelId: String,
-            appUser: AppUser.LoggedIn,
-        ): MockChatWebSocket = MockChatWebSocket(
-            networkStateObserver = networkStateObserver,
-            clock = clock,
-            parser = parser,
-            httpClient = httpClient,
-            channelLogin = channelLogin,
-        )
     }
 }

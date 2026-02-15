@@ -27,7 +27,7 @@ import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.viewercount.PubSu
 import fr.outadoc.justchatting.feature.chat.domain.AggregateChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.feature.chat.domain.DefaultChatRepository
-import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactoriesProvider
+import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandlersProvider
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPluginsProvider
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEventViewMapper
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
@@ -133,16 +133,16 @@ public val sharedModule: Module
 
             single { FilterAutocompleteItemsUseCase() }
 
-            single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get()) }
-            single { LoggedInChatWebSocket.Factory(get(), get(), get()) }
-            single { MockChatWebSocket.Factory(get(), get(), get(), get()) }
-            single { PubSubWebSocket.Factory(get(), get(), get()) }
+            single { LiveChatWebSocket(get(), get(), get(), get(), get(), get()) }
+            single { LoggedInChatWebSocket(get(), get(), get()) }
+            single { MockChatWebSocket(get(), get(), get(), get()) }
+            single { PubSubWebSocket(get(), get(), get()) }
 
             single {
-                ChatCommandHandlerFactoriesProvider {
+                ChatEventHandlersProvider {
                     listOf(
-                        get<LiveChatWebSocket.Factory>(),
-                        get<LoggedInChatWebSocket.Factory>(),
+                        get<LiveChatWebSocket>(),
+                        get<LoggedInChatWebSocket>(),
                     )
                 }
             }
@@ -171,8 +171,8 @@ public val sharedModule: Module
                 }
             }
 
-            single { AggregateChatEventHandler.Factory(get()) }
-            factory<ChatRepository> { DefaultChatRepository(get()) }
+            single { AggregateChatEventHandler(get()) }
+            single<ChatRepository> { DefaultChatRepository(get()) }
 
             single { TwitchIrcCommandParser(get()) }
             single { ChatEventViewMapper() }

@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.feature.chat.data.pubsub.client
 
 import fr.outadoc.justchatting.feature.chat.data.pubsub.client.model.PubSubClientMessage
 import fr.outadoc.justchatting.feature.chat.data.pubsub.client.model.PubSubServerMessage
-import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
@@ -39,9 +38,7 @@ import kotlin.time.Duration.Companion.seconds
 internal class PubSubWebSocket(
     private val networkStateObserver: NetworkStateObserver,
     private val httpClient: HttpClient,
-    private val appUser: AppUser.LoggedIn,
     private val pubSubPluginsProvider: PubSubPluginsProvider,
-    private val channelId: String,
 ) : ChatEventHandler {
     companion object {
         private const val ENDPOINT = "wss://pubsub-edge.twitch.tv"
@@ -59,7 +56,11 @@ internal class PubSubWebSocket(
 
     override val connectionStatus = _connectionStatus.asStateFlow()
 
-    override val eventFlow: Flow<ChatEvent> = channelFlow {
+    override fun getEventFlow(
+        channelId: String,
+        channelLogin: String,
+        appUser: AppUser.LoggedIn,
+    ): Flow<ChatEvent> = channelFlow {
         _connectionStatus.update { it.copy(registeredListeners = 1) }
         try {
             networkStateObserver.state.collectLatest { netState ->
@@ -68,7 +69,7 @@ internal class PubSubWebSocket(
                     while (currentCoroutineContext().isActive) {
                         _connectionStatus.update { it.copy(isAlive = true) }
                         try {
-                            listen()
+                            listen(channelId, appUser)
                         } catch (e: Exception) {
                             logError<PubSubWebSocket>(e) { "Socket was closed" }
                         }
@@ -85,7 +86,10 @@ internal class PubSubWebSocket(
         }
     }.flowOn(DispatchersProvider.io)
 
-    private suspend fun ProducerScope<ChatEvent>.listen() {
+    private suspend fun ProducerScope<ChatEvent>.listen(
+        channelId: String,
+        appUser: AppUser.LoggedIn,
+    ) {
         httpClient.webSocket(ENDPOINT) {
             logDebug<PubSubWebSocket> { "Socket open, sending the LISTEN message" }
 
@@ -116,7 +120,7 @@ internal class PubSubWebSocket(
 
             // Receive messages
             while (isActive) {
-                handleMessage(receiveDeserialized()) { event ->
+                handleMessage(channelId, receiveDeserialized()) { event ->
                     this@listen.send(event)
                 }
             }
@@ -124,6 +128,7 @@ internal class PubSubWebSocket(
     }
 
     private suspend fun DefaultWebSocketSession.handleMessage(
+        channelId: String,
         received: PubSubServerMessage,
         emit: suspend (ChatEvent) -> Unit,
     ) {
@@ -156,23 +161,5 @@ internal class PubSubWebSocket(
                 close(CloseReason(CloseReason.Codes.SERVICE_RESTART, message = ""))
             }
         }
-    }
-
-    class Factory(
-        private val networkStateObserver: NetworkStateObserver,
-        private val httpClient: HttpClient,
-        private val pubSubPluginsProvider: PubSubPluginsProvider,
-    ) : ChatCommandHandlerFactory {
-        override fun create(
-            channelLogin: String,
-            channelId: String,
-            appUser: AppUser.LoggedIn,
-        ): PubSubWebSocket = PubSubWebSocket(
-            networkStateObserver = networkStateObserver,
-            httpClient = httpClient,
-            appUser = appUser,
-            pubSubPluginsProvider = pubSubPluginsProvider,
-            channelId = channelId,
-        )
     }
 }

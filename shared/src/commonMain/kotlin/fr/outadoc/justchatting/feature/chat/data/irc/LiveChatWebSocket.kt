@@ -1,7 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.irc
 
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesRepository
-import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
@@ -43,14 +42,13 @@ import kotlin.time.Instant
  * Maintains a websocket connection to the IRC Twitch chat and notifies of all messages
  * and commands, except NOTICE and USERSTATE which are handled by [LoggedInChatWebSocket].
  */
-internal class LiveChatWebSocket private constructor(
+internal class LiveChatWebSocket(
     private val networkStateObserver: NetworkStateObserver,
     private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
     private val httpClient: HttpClient,
     private val recentMessagesRepository: RecentMessagesRepository,
     private val preferencesRepository: PreferenceRepository,
-    private val channelLogin: String,
 ) : ChatEventHandler {
     companion object {
         private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
@@ -68,17 +66,21 @@ internal class LiveChatWebSocket private constructor(
 
     private var lastMessageReceivedAt: Instant? = null
 
-    override val eventFlow: Flow<ChatEvent> = channelFlow {
+    override fun getEventFlow(
+        channelId: String,
+        channelLogin: String,
+        appUser: AppUser.LoggedIn,
+    ): Flow<ChatEvent> = channelFlow {
         _connectionStatus.update { it.copy(registeredListeners = 1) }
         try {
             networkStateObserver.state.collectLatest { netState ->
                 if (netState is NetworkStateObserver.NetworkState.Available) {
                     logDebug<LiveChatWebSocket> { "Network is available, listening" }
-                    loadRecentMessages()
+                    loadRecentMessages(channelLogin)
                     while (currentCoroutineContext().isActive) {
                         _connectionStatus.update { it.copy(isAlive = true) }
                         try {
-                            listen()
+                            listen(channelLogin)
                         } catch (e: Exception) {
                             logError<LiveChatWebSocket>(e) { "Socket was closed" }
                         }
@@ -95,7 +97,7 @@ internal class LiveChatWebSocket private constructor(
         }
     }.flowOn(DispatchersProvider.io)
 
-    private suspend fun ProducerScope<ChatEvent>.listen() {
+    private suspend fun ProducerScope<ChatEvent>.listen(channelLogin: String) {
         httpClient.webSocket(ENDPOINT) {
             logDebug<LiveChatWebSocket> { "Socket open, saying hello" }
 
@@ -165,7 +167,7 @@ internal class LiveChatWebSocket private constructor(
         }
     }
 
-    private suspend fun ProducerScope<ChatEvent>.loadRecentMessages() {
+    private suspend fun ProducerScope<ChatEvent>.loadRecentMessages(channelLogin: String) {
         val prefs = preferencesRepository.currentPreferences.first()
         if (!prefs.enableRecentMessages) return
 
@@ -187,28 +189,5 @@ internal class LiveChatWebSocket private constructor(
                     logError<LiveChatWebSocket>(e) { "Failed to load recent messages for channel $channelLogin" }
                 },
             )
-    }
-
-    class Factory(
-        private val clock: Clock,
-        private val networkStateObserver: NetworkStateObserver,
-        private val parser: TwitchIrcCommandParser,
-        private val recentMessagesRepository: RecentMessagesRepository,
-        private val preferencesRepository: PreferenceRepository,
-        private val httpClient: HttpClient,
-    ) : ChatCommandHandlerFactory {
-        override fun create(
-            channelLogin: String,
-            channelId: String,
-            appUser: AppUser.LoggedIn,
-        ): LiveChatWebSocket = LiveChatWebSocket(
-            networkStateObserver = networkStateObserver,
-            clock = clock,
-            parser = parser,
-            httpClient = httpClient,
-            recentMessagesRepository = recentMessagesRepository,
-            preferencesRepository = preferencesRepository,
-            channelLogin = channelLogin,
-        )
     }
 }

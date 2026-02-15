@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.chat.data.irc
 
-import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
@@ -41,8 +40,6 @@ internal class LoggedInChatWebSocket(
     private val networkStateObserver: NetworkStateObserver,
     private val parser: TwitchIrcCommandParser,
     private val httpClient: HttpClient,
-    private val appUser: AppUser.LoggedIn,
-    private val channelLogin: String,
 ) : ChatEventHandler {
     companion object {
         private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
@@ -58,7 +55,11 @@ internal class LoggedInChatWebSocket(
 
     override val connectionStatus = _connectionStatus.asStateFlow()
 
-    override val eventFlow: Flow<ChatEvent> = channelFlow {
+    override fun getEventFlow(
+        channelId: String,
+        channelLogin: String,
+        appUser: AppUser.LoggedIn,
+    ): Flow<ChatEvent> = channelFlow {
         _connectionStatus.update { it.copy(registeredListeners = 1) }
         try {
             networkStateObserver.state.collectLatest { netState ->
@@ -67,7 +68,7 @@ internal class LoggedInChatWebSocket(
                     while (currentCoroutineContext().isActive) {
                         _connectionStatus.update { it.copy(isAlive = true) }
                         try {
-                            listen()
+                            listen(channelLogin, appUser)
                         } catch (e: Exception) {
                             logError<LoggedInChatWebSocket>(e) { "Socket was closed" }
                         }
@@ -84,7 +85,10 @@ internal class LoggedInChatWebSocket(
         }
     }.flowOn(DispatchersProvider.io)
 
-    private suspend fun ProducerScope<ChatEvent>.listen() {
+    private suspend fun ProducerScope<ChatEvent>.listen(
+        channelLogin: String,
+        appUser: AppUser.LoggedIn,
+    ) {
         httpClient.webSocket(ENDPOINT) {
             logDebug<LoggedInChatWebSocket> { "Socket open, logging in" }
 
@@ -135,23 +139,5 @@ internal class LoggedInChatWebSocket(
 
             else -> {}
         }
-    }
-
-    class Factory(
-        private val networkStateObserver: NetworkStateObserver,
-        private val parser: TwitchIrcCommandParser,
-        private val httpClient: HttpClient,
-    ) : ChatCommandHandlerFactory {
-        override fun create(
-            channelLogin: String,
-            channelId: String,
-            appUser: AppUser.LoggedIn,
-        ): LoggedInChatWebSocket = LoggedInChatWebSocket(
-            networkStateObserver = networkStateObserver,
-            parser = parser,
-            httpClient = httpClient,
-            appUser = appUser,
-            channelLogin = channelLogin,
-        )
     }
 }

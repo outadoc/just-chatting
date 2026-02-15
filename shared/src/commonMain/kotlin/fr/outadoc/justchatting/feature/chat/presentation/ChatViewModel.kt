@@ -156,12 +156,17 @@ internal class ChatViewModel(
             val streamCategory: StreamCategory? = null,
         ) : Action()
 
-        data class LoadEmotes(
-            val channelId: String,
+        data class UpdateEmotes(
+            val pickableEmotes: PersistentList<EmoteSetItem>,
+            val globalBadges: PersistentList<TwitchBadge>?,
+            val channelBadges: PersistentList<TwitchBadge>?,
+            val cheerEmotes: PersistentMap<String, Emote>?,
         ) : Action()
 
         data class LoadChat(
             val userId: String,
+            val appUser: AppUser.LoggedIn,
+            val maxAdapterCount: Int,
         ) : Action()
 
         data class UpdateChatterPronouns(
@@ -286,9 +291,8 @@ internal class ChatViewModel(
             val items: ImmutableList<AutoCompleteItem>,
         ) : InputAction()
 
-        data class Submit(
-            val screenDensity: Float,
-            val isDarkTheme: Boolean,
+        data class ClearAfterSubmit(
+            val sentMessage: String,
         ) : InputAction()
     }
 
@@ -334,10 +338,10 @@ internal class ChatViewModel(
     init {
         state
             .filterIsInstance<State.Chatting>()
-            .mapNotNull { state -> state.user }
+            .map { state -> Triple(state.user.id, state.user.displayName, state.userState.emoteSets) }
             .distinctUntilChanged()
-            .onEach { user ->
-                actions.emit(Action.LoadEmotes(user.id))
+            .onEach { (channelId, channelName, emoteSets) ->
+                handleLoadEmotes(channelId, channelName, emoteSets)
             }.launchIn(defaultScope)
 
         state
@@ -528,7 +532,14 @@ internal class ChatViewModel(
 
     fun loadChat(userId: String) {
         defaultScope.launch {
-            actions.emit(Action.LoadChat(userId))
+            val appUser = authRepository.currentUser.first() as AppUser.LoggedIn
+            actions.emit(
+                Action.LoadChat(
+                    userId = userId,
+                    appUser = appUser,
+                    maxAdapterCount = AppPreferences.Defaults.ChatBufferLimit,
+                ),
+            )
         }
     }
 
@@ -624,12 +635,67 @@ internal class ChatViewModel(
         screenDensity: Float,
         isDarkTheme: Boolean,
     ) {
+        val currentInputState = inputState.value
+        if (currentInputState.message.isEmpty()) return
+
+        val chatState = state.value as? State.Chatting ?: return
+
         inputScope.launch {
-            inputActions.emit(InputAction.Submit(screenDensity, isDarkTheme))
+            inputActions.emit(InputAction.ClearAfterSubmit(sentMessage = currentInputState.message))
+        }
+
+        defaultScope.launch {
+            val currentTime = clock.now()
+
+            twitchRepository
+                .sendChatMessage(
+                    channelUserId = chatState.user.id,
+                    message = currentInputState.message,
+                    inReplyToMessageId = currentInputState.replyingTo?.body?.messageId,
+                    appUser = chatState.appUser,
+                ).onFailure { exception ->
+                    actions.emit(
+                        Action.AddMessages(
+                            listOf(
+                                ChatListItem.Message.Highlighted(
+                                    timestamp = clock.now(),
+                                    metadata =
+                                        ChatListItem.Message.Highlighted.Metadata(
+                                            title = Res.string.chat_send_msg_error.desc(),
+                                            subtitle =
+                                                (exception as? MessageNotSentException)
+                                                    ?.dropReasonMessage
+                                                    ?.desc(),
+                                        ),
+                                    body = null,
+                                ),
+                            ),
+                        ),
+                    )
+                }
+
+            val usedEmotes: List<RecentEmote> =
+                currentInputState.message
+                    .split(' ')
+                    .mapNotNull { word ->
+                        chatState.allEmotesMap[word]?.let { emote ->
+                            RecentEmote(
+                                name = word,
+                                url =
+                                    emote.urls.getBestUrl(
+                                        screenDensity = screenDensity,
+                                        isDarkTheme = isDarkTheme,
+                                    ),
+                                usedAt = currentTime,
+                            )
+                        }
+                    }
+
+            insertRecentEmotes(usedEmotes)
         }
     }
 
-    private suspend fun Action.reduce(state: State): State {
+    private fun Action.reduce(state: State): State {
         logDebug<ChatViewModel> { "reduce: $this" }
         return when (this) {
             is Action.AddMessages -> reduce(state)
@@ -644,7 +710,7 @@ internal class ChatViewModel(
             is Action.UpdateChatterPronouns -> reduce(state)
             is Action.AddRichEmbed -> reduce(state)
             is Action.LoadChat -> reduce(state)
-            is Action.LoadEmotes -> reduce(state)
+            is Action.UpdateEmotes -> reduce(state)
             is Action.UpdateStreamDetails -> reduce(state)
             is Action.UpdateRaidAnnouncement -> reduce(state)
             is Action.UpdatePinnedMessage -> reduce(state)
@@ -654,15 +720,12 @@ internal class ChatViewModel(
         }
     }
 
-    private suspend fun Action.LoadChat.reduce(state: State): State {
+    private fun Action.LoadChat.reduce(state: State): State {
         if (state is State.Chatting && state.user.id == userId) return state
-
-        val appUser = authRepository.currentUser.first()
-
         return State.Loading(
             userId = userId,
-            appUser = appUser as AppUser.LoggedIn,
-            maxAdapterCount = AppPreferences.Defaults.ChatBufferLimit,
+            appUser = appUser,
+            maxAdapterCount = maxAdapterCount,
         )
     }
 
@@ -671,64 +734,80 @@ internal class ChatViewModel(
         return state.copy(stream = stream)
     }
 
-    private suspend fun Action.LoadEmotes.reduce(state: State): State {
+    private fun Action.UpdateEmotes.reduce(state: State): State {
         if (state !is State.Chatting) return state
+        return state.copy(
+            cheerEmotes = cheerEmotes ?: state.cheerEmotes,
+            pickableEmotes = pickableEmotes,
+            channelBadges = channelBadges ?: state.channelBadges,
+            globalBadges = globalBadges ?: state.globalBadges,
+        )
+    }
 
-        return withContext(DispatchersProvider.io) {
-            val globalBadges: Deferred<PersistentList<TwitchBadge>?> =
-                async {
+    private fun handleLoadEmotes(
+        channelId: String,
+        channelName: String,
+        emoteSets: List<String>,
+    ) {
+        defaultScope.launch {
+            withContext(DispatchersProvider.io) {
+                val globalBadges: Deferred<PersistentList<TwitchBadge>?> =
+                    async {
+                        twitchRepository
+                            .getGlobalBadges()
+                            .fold(
+                                onSuccess = { badges -> badges.toPersistentList() },
+                                onFailure = { exception ->
+                                    logError<ChatViewModel>(exception) { "Failed to load global badges" }
+                                    null
+                                },
+                            )
+                    }
+
+                val channelBadges: Deferred<PersistentList<TwitchBadge>?> =
+                    async {
+                        twitchRepository
+                            .getChannelBadges(channelId)
+                            .fold(
+                                onSuccess = { badges -> badges.toPersistentList() },
+                                onFailure = { exception ->
+                                    logError<ChatViewModel>(exception) { "Failed to load badges for channel $channelId" }
+                                    null
+                                },
+                            )
+                    }
+
+                val cheerEmotes: PersistentMap<String, Emote>? =
                     twitchRepository
-                        .getGlobalBadges()
+                        .getCheerEmotes(userId = channelId)
                         .fold(
-                            onSuccess = { badges -> badges.toPersistentList() },
+                            onSuccess = { emotes ->
+                                emotes
+                                    .associateBy { emote -> emote.name }
+                                    .toPersistentHashMap()
+                            },
                             onFailure = { exception ->
-                                logError<ChatViewModel>(exception) { "Failed to load global badges" }
+                                logError<ChatViewModel>(exception) { "Failed to load cheer emotes for channel $channelId" }
                                 null
                             },
                         )
-                }
 
-            val channelBadges: Deferred<PersistentList<TwitchBadge>?> =
-                async {
-                    twitchRepository
-                        .getChannelBadges(channelId)
-                        .fold(
-                            onSuccess = { badges -> badges.toPersistentList() },
-                            onFailure = { exception ->
-                                logError<ChatViewModel>(exception) { "Failed to load badges for channel $channelId" }
-                                null
-                            },
-                        )
-                }
-
-            val cheerEmotes: PersistentMap<String, Emote>? =
-                twitchRepository
-                    .getCheerEmotes(userId = channelId)
-                    .fold(
-                        onSuccess = { emotes ->
-                            emotes
-                                .associateBy { emote -> emote.name }
-                                .toPersistentHashMap()
-                        },
-                        onFailure = { exception ->
-                            logError<ChatViewModel>(exception) { "Failed to load cheer emotes for channel $channelId" }
-                            null
-                        },
+                val pickableEmotes: PersistentList<EmoteSetItem> =
+                    loadPickableEmotes(
+                        channelId = channelId,
+                        channelName = channelName,
+                        emoteSets = emoteSets,
                     )
 
-            val pickableEmotes: PersistentList<EmoteSetItem> =
-                loadPickableEmotes(
-                    channelId = channelId,
-                    channelName = state.user.displayName,
-                    emoteSets = state.userState.emoteSets,
+                actions.emit(
+                    Action.UpdateEmotes(
+                        pickableEmotes = pickableEmotes,
+                        globalBadges = globalBadges.await(),
+                        channelBadges = channelBadges.await(),
+                        cheerEmotes = cheerEmotes,
+                    ),
                 )
-
-            state.copy(
-                cheerEmotes = cheerEmotes ?: state.cheerEmotes,
-                pickableEmotes = pickableEmotes,
-                channelBadges = channelBadges.await() ?: state.channelBadges,
-                globalBadges = globalBadges.await() ?: state.globalBadges,
-            )
+            }
         }
     }
 
@@ -809,20 +888,9 @@ internal class ChatViewModel(
         return state.copy(connectionStatus = connectionStatus)
     }
 
-    private suspend fun Action.ChangeUserState.reduce(state: State): State {
+    private fun Action.ChangeUserState.reduce(state: State): State {
         if (state !is State.Chatting) return state
-
-        val pickableEmotes: PersistentList<EmoteSetItem> =
-            loadPickableEmotes(
-                channelId = state.user.id,
-                channelName = state.user.displayName,
-                emoteSets = userState.emoteSets,
-            )
-
-        return state.copy(
-            userState = userState,
-            pickableEmotes = pickableEmotes,
-        )
+        return state.copy(userState = userState)
     }
 
     private fun Action.ChangeRoomState.reduce(state: State): State {
@@ -1004,72 +1072,18 @@ internal class ChatViewModel(
         is InputAction.AppendEmote -> reduce(state)
         is InputAction.ChangeMessageInput -> reduce(state)
         is InputAction.ReplyToMessage -> reduce(state)
-        is InputAction.Submit -> reduce(state)
+        is InputAction.ClearAfterSubmit -> reduce(state)
         is InputAction.UpdateAutoCompleteItems -> reduce(state)
         is InputAction.ReplaceInputWithLastSentMessage -> reduce(state)
     }
 
-    private fun InputAction.Submit.reduce(inputState: InputState): InputState {
-        if (inputState.message.isEmpty()) return inputState
-        val state = state.value as? State.Chatting ?: return inputState
-
-        defaultScope.launch {
-            val currentTime = clock.now()
-
-            twitchRepository
-                .sendChatMessage(
-                    channelUserId = state.user.id,
-                    message = inputState.message,
-                    inReplyToMessageId = inputState.replyingTo?.body?.messageId,
-                    appUser = state.appUser,
-                ).onFailure { exception ->
-                    actions.emit(
-                        Action.AddMessages(
-                            listOf(
-                                ChatListItem.Message.Highlighted(
-                                    timestamp = clock.now(),
-                                    metadata =
-                                        ChatListItem.Message.Highlighted.Metadata(
-                                            title = Res.string.chat_send_msg_error.desc(),
-                                            subtitle =
-                                                (exception as? MessageNotSentException)
-                                                    ?.dropReasonMessage
-                                                    ?.desc(),
-                                        ),
-                                    body = null,
-                                ),
-                            ),
-                        ),
-                    )
-                }
-
-            val usedEmotes: List<RecentEmote> =
-                inputState.message
-                    .split(' ')
-                    .mapNotNull { word ->
-                        state.allEmotesMap[word]?.let { emote ->
-                            RecentEmote(
-                                name = word,
-                                url =
-                                    emote.urls.getBestUrl(
-                                        screenDensity = screenDensity,
-                                        isDarkTheme = isDarkTheme,
-                                    ),
-                                usedAt = currentTime,
-                            )
-                        }
-                    }
-
-            insertRecentEmotes(usedEmotes)
-        }
-
-        return inputState.copy(
+    private fun InputAction.ClearAfterSubmit.reduce(inputState: InputState): InputState =
+        inputState.copy(
             message = "",
-            lastSentMessage = inputState.message,
+            lastSentMessage = sentMessage,
             selectionRange = 0..0,
             replyingTo = null,
         )
-    }
 
     private fun InputAction.ChangeMessageInput.reduce(inputState: InputState): InputState =
         inputState.copy(

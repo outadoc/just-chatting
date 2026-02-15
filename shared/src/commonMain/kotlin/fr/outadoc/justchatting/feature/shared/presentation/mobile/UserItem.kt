@@ -69,11 +69,11 @@ internal fun UserItem(
     ) {
         AsyncImage(
             modifier =
-                Modifier
-                    .padding(end = 8.dp)
-                    .size(56.dp)
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surface),
+            Modifier
+                .padding(end = 8.dp)
+                .size(56.dp)
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colorScheme.surface),
             model = remoteImageModel(profileImageUrl),
             contentDescription = null,
         )
@@ -122,9 +122,9 @@ internal fun UserItemPreview() {
     AppTheme {
         UserItemCard(
             modifier =
-                Modifier
-                    .padding(8.dp)
-                    .width(300.dp),
+            Modifier
+                .padding(8.dp)
+                .width(300.dp),
             displayName = "Maghla",
             followedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
             profileImageUrl = null,

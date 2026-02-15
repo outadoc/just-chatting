@@ -26,33 +26,30 @@ internal class TwitchAuthApi(
             }
         }
 
-    override suspend fun validateToken(token: String): Result<AuthValidationResponse> =
-        runCatching {
-            client
-                .get {
-                    url { path("validate") }
-                    headers { append("Authorization", "Bearer $token") }
-                }.body<TwitchAuthValidationResponse>()
-        }.map { response ->
-            AuthValidationResponse(
-                clientId = response.clientId,
-                login = response.login,
-                userId = response.userId,
-                scopes = response.scopes.toImmutableSet(),
-            )
-        }
+    override suspend fun validateToken(token: String): Result<AuthValidationResponse> = runCatching {
+        client
+            .get {
+                url { path("validate") }
+                headers { append("Authorization", "Bearer $token") }
+            }.body<TwitchAuthValidationResponse>()
+    }.map { response ->
+        AuthValidationResponse(
+            clientId = response.clientId,
+            login = response.login,
+            userId = response.userId,
+            scopes = response.scopes.toImmutableSet(),
+        )
+    }
 
     override suspend fun revokeToken(
         clientId: String,
         token: String,
-    ): Result<Unit> {
-        return runCatching {
-            client.post {
-                url {
-                    path("revoke")
-                    parameter("client_id", clientId)
-                    parameter("token", token)
-                }
+    ): Result<Unit> = runCatching {
+        client.post {
+            url {
+                path("revoke")
+                parameter("client_id", clientId)
+                parameter("token", token)
             }
         }
     }
@@ -60,15 +57,13 @@ internal class TwitchAuthApi(
     override fun getExternalAuthorizeUrl(
         oAuthAppCredentials: OAuthAppCredentials,
         scopes: Set<String>,
-    ): Uri {
-        return Uri
-            .parse(ApiEndpoints.TWITCH_AUTH_AUTHORIZE)
-            .buildUpon()
-            .appendQueryParameter("response_type", "token")
-            .appendQueryParameter("client_id", oAuthAppCredentials.clientId)
-            .appendQueryParameter("redirect_uri", oAuthAppCredentials.redirectUri)
-            .appendQueryParameter("force_verify", "true")
-            .appendQueryParameter("scope", scopes.joinToString(" "))
-            .build()
-    }
+    ): Uri = Uri
+        .parse(ApiEndpoints.TWITCH_AUTH_AUTHORIZE)
+        .buildUpon()
+        .appendQueryParameter("response_type", "token")
+        .appendQueryParameter("client_id", oAuthAppCredentials.clientId)
+        .appendQueryParameter("redirect_uri", oAuthAppCredentials.redirectUri)
+        .appendQueryParameter("force_verify", "true")
+        .appendQueryParameter("scope", scopes.joinToString(" "))
+        .build()
 }

@@ -29,13 +29,13 @@ public object AppleLogStrategy : LogStrategy {
             dso = __dso_handle.ptr,
             log = logger,
             type =
-                when (level) {
-                    Logger.Level.Verbose -> OS_LOG_TYPE_DEBUG
-                    Logger.Level.Debug -> OS_LOG_TYPE_INFO
-                    Logger.Level.Info -> OS_LOG_TYPE_DEFAULT
-                    Logger.Level.Warning -> OS_LOG_TYPE_ERROR
-                    Logger.Level.Error -> OS_LOG_TYPE_FAULT
-                },
+            when (level) {
+                Logger.Level.Verbose -> OS_LOG_TYPE_DEBUG
+                Logger.Level.Debug -> OS_LOG_TYPE_INFO
+                Logger.Level.Info -> OS_LOG_TYPE_DEFAULT
+                Logger.Level.Warning -> OS_LOG_TYPE_ERROR
+                Logger.Level.Error -> OS_LOG_TYPE_FAULT
+            },
             message = content.replace("%", "%%"),
         )
     }

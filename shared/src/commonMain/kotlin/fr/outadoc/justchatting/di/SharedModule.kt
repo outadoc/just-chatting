@@ -10,12 +10,10 @@ import fr.outadoc.justchatting.feature.auth.data.TwitchAuthApi
 import fr.outadoc.justchatting.feature.auth.domain.AuthApi
 import fr.outadoc.justchatting.feature.chat.data.irc.LiveChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.irc.LoggedInChatWebSocket
-import fr.outadoc.justchatting.feature.chat.data.irc.MockChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.irc.TwitchIrcCommandParser
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesApi
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesRepository
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesServer
-import fr.outadoc.justchatting.feature.chat.data.pubsub.client.PubSubWebSocket
 import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.broadcastsettingsupdate.PubSubBroadcastSettingsPlugin
 import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.channelpoints.PubSubChannelPointsPlugin
 import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.pinnedmessage.PubSubPinnedMessagePlugin
@@ -27,7 +25,7 @@ import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.viewercount.PubSu
 import fr.outadoc.justchatting.feature.chat.domain.AggregateChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.feature.chat.domain.DefaultChatRepository
-import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactoriesProvider
+import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandlersProvider
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPluginsProvider
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEventViewMapper
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
@@ -110,10 +108,10 @@ public val sharedModule: Module
             single { MainRouterViewModel(get(), get(), get()) }
             viewModel { SettingsViewModel(get(), get(), get(), get(), get()) }
             viewModel { ChannelSearchViewModel(get()) }
-            viewModel { FollowedChannelsViewModel(get()) }
+            viewModel { FollowedChannelsViewModel(get(), get()) }
             viewModel { RecentChannelsViewModel(get()) }
-            viewModel { LiveTimelineViewModel(get(), get()) }
-            viewModel { FutureTimelineViewModel(get(), get()) }
+            viewModel { LiveTimelineViewModel(get(), get(), get()) }
+            viewModel { FutureTimelineViewModel(get(), get(), get()) }
             viewModel { UserInfoViewModel(get()) }
             viewModel {
                 ChatViewModel(
@@ -133,17 +131,14 @@ public val sharedModule: Module
 
             single { FilterAutocompleteItemsUseCase() }
 
-            single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get()) }
-            single { LoggedInChatWebSocket.Factory(get(), get(), get(), get()) }
-            single { MockChatWebSocket.Factory(get(), get(), get(), get()) }
-            single { PubSubWebSocket.Factory(get(), get(), get(), get()) }
+            single { LiveChatWebSocket(get(), get(), get(), get(), get(), get()) }
+            single { LoggedInChatWebSocket(get(), get(), get()) }
 
             single {
-                ChatCommandHandlerFactoriesProvider {
+                ChatEventHandlersProvider {
                     listOf(
-                        get<LiveChatWebSocket.Factory>(),
-                        get<LoggedInChatWebSocket.Factory>(),
-                        get<PubSubWebSocket.Factory>(),
+                        get<LiveChatWebSocket>(),
+                        get<LoggedInChatWebSocket>(),
                     )
                 }
             }
@@ -172,8 +167,8 @@ public val sharedModule: Module
                 }
             }
 
-            single { AggregateChatEventHandler.Factory(get()) }
-            factory<ChatRepository> { DefaultChatRepository(get()) }
+            single { AggregateChatEventHandler(get()) }
+            single<ChatRepository> { DefaultChatRepository(get()) }
 
             single { TwitchIrcCommandParser(get()) }
             single { ChatEventViewMapper() }
@@ -228,7 +223,7 @@ public val sharedModule: Module
 
             single<Json> { DefaultJson }
 
-            single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get(), get()) }
+            single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get()) }
             single<TwitchApi> { TwitchApiImpl(get()) }
             single { TwitchClient(get(named("twitch"))) }
 

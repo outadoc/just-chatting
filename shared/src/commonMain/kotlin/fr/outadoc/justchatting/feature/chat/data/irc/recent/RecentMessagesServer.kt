@@ -21,15 +21,13 @@ internal class RecentMessagesServer(
     override suspend fun getRecentMessages(
         channelLogin: String,
         limit: Int,
-    ): Result<RecentMessagesResponse> {
-        return runCatching {
-            client
-                .get {
-                    url {
-                        path("v2/recent-messages", channelLogin)
-                        parameter("limit", limit)
-                    }
-                }.body()
-        }
+    ): Result<RecentMessagesResponse> = runCatching {
+        client
+            .get {
+                url {
+                    path("v2/recent-messages", channelLogin)
+                    parameter("limit", limit)
+                }
+            }.body()
     }
 }

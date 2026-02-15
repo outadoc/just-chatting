@@ -28,10 +28,10 @@ internal fun SignInWithTwitchButton(
         modifier = modifier,
         onClick = onClick,
         colors =
-            ButtonDefaults.buttonColors(
-                containerColor = TwitchBrandColor,
-                contentColor = Color.White,
-            ),
+        ButtonDefaults.buttonColors(
+            containerColor = TwitchBrandColor,
+            contentColor = Color.White,
+        ),
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(ButtonDefaults.IconSpacing),

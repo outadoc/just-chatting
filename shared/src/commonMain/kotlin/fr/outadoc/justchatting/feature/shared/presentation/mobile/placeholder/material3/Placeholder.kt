@@ -58,9 +58,7 @@ internal fun PlaceholderDefaults.fadeHighlightColor(
 internal fun PlaceholderDefaults.shimmerHighlightColor(
     backgroundColor: Color = MaterialTheme.colorScheme.inverseSurface,
     alpha: Float = 0.75f,
-): Color {
-    return backgroundColor.copy(alpha = alpha)
-}
+): Color = backgroundColor.copy(alpha = alpha)
 
 /**
  * Draws some skeleton UI which is typically used whilst content is 'loading'.
@@ -99,14 +97,13 @@ internal fun Modifier.placeholder(
     highlight: PlaceholderHighlight? = null,
     placeholderFadeTransitionSpec: @Composable Transition.Segment<Boolean>.() -> FiniteAnimationSpec<Float> = { spring() },
     contentFadeTransitionSpec: @Composable Transition.Segment<Boolean>.() -> FiniteAnimationSpec<Float> = { spring() },
-): Modifier =
-    composed {
-        Modifier.placeholder(
-            visible = visible,
-            color = if (color.isSpecified) color else PlaceholderDefaults.color(),
-            shape = shape ?: MaterialTheme.shapes.small,
-            highlight = highlight,
-            placeholderFadeTransitionSpec = placeholderFadeTransitionSpec,
-            contentFadeTransitionSpec = contentFadeTransitionSpec,
-        )
-    }
+): Modifier = composed {
+    Modifier.placeholder(
+        visible = visible,
+        color = if (color.isSpecified) color else PlaceholderDefaults.color(),
+        shape = shape ?: MaterialTheme.shapes.small,
+        highlight = highlight,
+        placeholderFadeTransitionSpec = placeholderFadeTransitionSpec,
+        contentFadeTransitionSpec = contentFadeTransitionSpec,
+    )
+}

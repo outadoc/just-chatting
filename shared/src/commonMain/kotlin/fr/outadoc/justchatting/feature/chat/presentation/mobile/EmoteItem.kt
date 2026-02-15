@@ -22,11 +22,11 @@ internal fun EmoteItem(
         contentScale = ContentScale.Fit,
         contentDescription = emote.name,
         model =
-            remoteImageModel(
-                emote.urls.getBestUrl(
-                    screenDensity = density,
-                    isDarkTheme = MaterialTheme.colorScheme.isDark,
-                ),
+        remoteImageModel(
+            emote.urls.getBestUrl(
+                screenDensity = density,
+                isDarkTheme = MaterialTheme.colorScheme.isDark,
             ),
+        ),
     )
 }

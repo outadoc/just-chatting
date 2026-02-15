@@ -91,9 +91,9 @@ internal fun ChatListContainer(
         ) {
             FloatingActionButton(
                 modifier =
-                    Modifier
-                        .padding(16.dp)
-                        .padding(insets),
+                Modifier
+                    .padding(16.dp)
+                    .padding(insets),
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     scope.launch {

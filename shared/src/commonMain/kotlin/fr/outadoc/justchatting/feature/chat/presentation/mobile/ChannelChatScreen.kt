@@ -61,7 +61,6 @@ internal fun ChannelChatScreen(
         !isStandalone && areBubblesSupported() && prefs.enableNotifications && notifier.areNotificationsEnabled
 
     OnLifecycleEvent(
-        onResume = viewModel::onResume,
         onPause = {
             if (user != null && canOpenInBubble) {
                 notifier.notify(
@@ -87,10 +86,10 @@ internal fun ChannelChatScreen(
                 viewModel.onMessageInputChanged(
                     message = textFieldValue.text,
                     selectionRange =
-                        IntRange(
-                            start = textFieldValue.selection.start,
-                            endInclusive = textFieldValue.selection.end,
-                        ),
+                    IntRange(
+                        start = textFieldValue.selection.start,
+                        endInclusive = textFieldValue.selection.end,
+                    ),
                 )
             },
             onToggleEmotePicker = {

@@ -24,9 +24,9 @@ internal fun ContextualButton(
     ) {
         Row(
             modifier =
-                Modifier
-                    .padding(contentPadding)
-                    .padding(vertical = 12.dp),
+            Modifier
+                .padding(contentPadding)
+                .padding(vertical = 12.dp),
         ) {
             icon()
 
@@ -35,9 +35,9 @@ internal fun ContextualButton(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier =
-                    Modifier
-                        .padding(start = 16.dp)
-                        .weight(1f),
+                Modifier
+                    .padding(start = 16.dp)
+                    .weight(1f),
             )
         }
     }

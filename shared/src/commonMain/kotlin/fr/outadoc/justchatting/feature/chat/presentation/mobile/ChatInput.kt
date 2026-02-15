@@ -87,9 +87,9 @@ internal fun ChatInput(
 
     Column(
         modifier =
-            modifier.padding(
-                bottom = contentPadding,
-            ),
+        modifier.padding(
+            bottom = contentPadding,
+        ),
     ) {
         val replyingToMessage = replyingTo?.body
         AnimatedVisibility(visible = replyingToMessage != null) {
@@ -99,11 +99,11 @@ internal fun ChatInput(
                 ) {
                     Row(
                         modifier =
-                            Modifier
-                                .padding(
-                                    start = contentPadding,
-                                    end = contentPadding,
-                                ),
+                        Modifier
+                            .padding(
+                                start = contentPadding,
+                                end = contentPadding,
+                            ),
                         horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
@@ -132,26 +132,26 @@ internal fun ChatInput(
             AnimatedVisibility(visible = autoCompleteItems.isNotEmpty()) {
                 ChatAutoCompleteRow(
                     modifier =
-                        Modifier.padding(
-                            top = 8.dp,
-                        ),
+                    Modifier.padding(
+                        top = 8.dp,
+                    ),
                     onChatterClick = onChatterClick,
                     onEmoteClick = onEmoteClick,
                     items = autoCompleteItems,
                     contentPadding =
-                        PaddingValues(
-                            horizontal = contentPadding,
-                        ),
+                    PaddingValues(
+                        horizontal = contentPadding,
+                    ),
                 )
             }
 
             Row(
                 modifier =
-                    Modifier.padding(
-                        top = 8.dp,
-                        start = contentPadding,
-                        end = contentPadding,
-                    ),
+                Modifier.padding(
+                    top = 8.dp,
+                    start = contentPadding,
+                    end = contentPadding,
+                ),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -206,50 +206,50 @@ internal fun ChatTextField(
 
     TextField(
         modifier =
-            modifier
-                .onPreviewKeyEvent { event ->
-                    if (event.type == KeyEventType.KeyDown) {
-                        when (event.key) {
-                            Key.Tab -> {
-                                onTriggerAutoComplete()
-                                true
-                            }
-
-                            Key.Enter -> {
-                                onSubmit()
-                                true
-                            }
-
-                            else -> {
-                                false
-                            }
+        modifier
+            .onPreviewKeyEvent { event ->
+                if (event.type == KeyEventType.KeyDown) {
+                    when (event.key) {
+                        Key.Tab -> {
+                            onTriggerAutoComplete()
+                            true
                         }
-                    } else {
-                        false
+
+                        Key.Enter -> {
+                            onSubmit()
+                            true
+                        }
+
+                        else -> {
+                            false
+                        }
                     }
-                },
+                } else {
+                    false
+                }
+            },
         value = message,
         singleLine = false,
         onValueChange = onMessageChange,
         shape = FloatingActionButtonDefaults.shape,
         textStyle = MaterialTheme.typography.bodyMedium,
         keyboardOptions =
-            KeyboardOptions(
-                imeAction = ImeAction.Send,
-                capitalization = KeyboardCapitalization.Sentences,
-            ),
+        KeyboardOptions(
+            imeAction = ImeAction.Send,
+            capitalization = KeyboardCapitalization.Sentences,
+        ),
         keyboardActions =
-            KeyboardActions(
-                onSend = { onSubmit() },
-            ),
+        KeyboardActions(
+            onSend = { onSubmit() },
+        ),
         placeholder = {
             Text(text = stringResource(Res.string.chat_input_hint))
         },
         colors =
-            TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-            ),
+        TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+        ),
         leadingIcon = {
             AccessibleIconButton(
                 onClick = {
@@ -316,9 +316,9 @@ internal fun ChatInputPreviewLongMessage() {
     AppTheme {
         ChatInput(
             message =
-                TextFieldValue(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
-                ),
+            TextFieldValue(
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
+            ),
         )
     }
 }
@@ -337,20 +337,20 @@ internal fun ChatInputPreviewReplying() {
     AppTheme {
         ChatInput(
             replyingTo =
-                ChatListItem.Message.Simple(
-                    body =
-                        ChatListItem.Message.Body(
-                            message = "Lorem ipsum dolor sit amet?",
-                            messageId = "",
-                            chatter =
-                                Chatter(
-                                    id = "",
-                                    displayName = "AntoineDaniel",
-                                    login = "",
-                                ),
-                        ),
-                    timestamp = Instant.parse("2022-01-01T00:00:00.00Z"),
+            ChatListItem.Message.Simple(
+                body =
+                ChatListItem.Message.Body(
+                    message = "Lorem ipsum dolor sit amet?",
+                    messageId = "",
+                    chatter =
+                    Chatter(
+                        id = "",
+                        displayName = "AntoineDaniel",
+                        login = "",
+                    ),
                 ),
+                timestamp = Instant.parse("2022-01-01T00:00:00.00Z"),
+            ),
         )
     }
 }

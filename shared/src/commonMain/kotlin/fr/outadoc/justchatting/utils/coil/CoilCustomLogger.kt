@@ -13,13 +13,13 @@ internal class CoilCustomLogger(
     ) {
         Logger.println(
             level =
-                when (level) {
-                    coil3.util.Logger.Level.Error -> Logger.Level.Error
-                    coil3.util.Logger.Level.Warn -> Logger.Level.Warning
-                    coil3.util.Logger.Level.Info -> Logger.Level.Info
-                    coil3.util.Logger.Level.Debug -> Logger.Level.Debug
-                    coil3.util.Logger.Level.Verbose -> Logger.Level.Verbose
-                },
+            when (level) {
+                coil3.util.Logger.Level.Error -> Logger.Level.Error
+                coil3.util.Logger.Level.Warn -> Logger.Level.Warning
+                coil3.util.Logger.Level.Info -> Logger.Level.Info
+                coil3.util.Logger.Level.Debug -> Logger.Level.Debug
+                coil3.util.Logger.Level.Verbose -> Logger.Level.Verbose
+            },
             tag = tag,
             content = {
                 buildString {

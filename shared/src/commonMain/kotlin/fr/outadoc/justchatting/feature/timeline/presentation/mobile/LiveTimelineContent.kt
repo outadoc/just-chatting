@@ -39,23 +39,23 @@ internal fun LiveTimelineContent(
     if (live.isEmpty()) {
         NoContent(
             modifier =
-                modifier
-                    .padding(insets)
-                    .fillMaxSize(),
+            modifier
+                .padding(insets)
+                .fillMaxSize(),
         )
     } else {
         LazyColumn(
             modifier =
-                modifier
-                    .padding(insets)
-                    .fillMaxWidth(),
+            modifier
+                .padding(insets)
+                .fillMaxWidth(),
             state = listState,
             contentPadding =
-                PaddingValues(
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 16.dp,
-                ),
+            PaddingValues(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 16.dp,
+            ),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(
@@ -65,9 +65,9 @@ internal fun LiveTimelineContent(
             ) { userStream ->
                 LiveTimelineSegment(
                     modifier =
-                        Modifier
-                            .animateItem()
-                            .fillMaxWidth(),
+                    Modifier
+                        .animateItem()
+                        .fillMaxWidth(),
                     userStream = userStream,
                     onOpenChat = {
                         onChannelClick(userStream.user)

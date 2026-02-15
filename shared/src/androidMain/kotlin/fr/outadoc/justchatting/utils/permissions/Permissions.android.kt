@@ -8,14 +8,12 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 internal actual fun rememberPermissionState(
     permission: String,
     onPermissionResult: (Boolean) -> Unit,
-): PermissionState {
-    return PermissionStateWrapper(
-        com.google.accompanist.permissions.rememberPermissionState(
-            permission = permission,
-            onPermissionResult = onPermissionResult,
-        ),
-    )
-}
+): PermissionState = PermissionStateWrapper(
+    com.google.accompanist.permissions.rememberPermissionState(
+        permission = permission,
+        onPermissionResult = onPermissionResult,
+    ),
+)
 
 @OptIn(ExperimentalPermissionsApi::class)
 internal class PermissionStateWrapper(

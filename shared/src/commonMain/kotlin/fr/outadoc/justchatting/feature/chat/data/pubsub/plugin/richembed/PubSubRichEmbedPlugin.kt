@@ -24,8 +24,8 @@ internal class PubSubRichEmbedPlugin(
                         thumbnailUrl = message.data.thumbnailUrl,
                         authorName = message.data.authorName,
                         channelName =
-                            message.data.metadata.clipMetadata
-                                ?.channelDisplayName,
+                        message.data.metadata.clipMetadata
+                            ?.channelDisplayName,
                     )
                 }
             },

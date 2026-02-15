@@ -29,16 +29,16 @@ internal inline fun logError(
         level = Logger.Level.Error,
         tag = tag,
         content =
-            if (throwable != null) {
-                {
-                    buildString {
-                        appendLine(content())
-                        appendLine(throwable.stackTraceToString())
-                    }
+        if (throwable != null) {
+            {
+                buildString {
+                    appendLine(content())
+                    appendLine(throwable.stackTraceToString())
                 }
-            } else {
-                content
-            },
+            }
+        } else {
+            content
+        },
     )
 }
 
@@ -53,6 +53,4 @@ internal inline fun <reified T : Any> logWarning(noinline content: () -> String)
 internal inline fun <reified T : Any> logError(
     throwable: Throwable? = null,
     noinline content: () -> String,
-) {
-    return logError(T::class.simpleName!!, throwable, content)
-}
+) = logError(T::class.simpleName!!, throwable, content)

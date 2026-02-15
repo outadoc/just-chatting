@@ -32,22 +32,18 @@ public class UserProfileImageContentProvider : ContentProvider() {
         fun createForUser(
             context: Context,
             userId: String,
-        ): Uri {
-            return Uri
-                .Builder()
-                .scheme(ContentResolver.SCHEME_CONTENT)
-                .authority("${context.applicationContext.packageName}.user-image-provider")
-                .appendPath(PATH_ID)
-                .appendPath(userId)
-                .build()
-        }
+        ): Uri = Uri
+            .Builder()
+            .scheme(ContentResolver.SCHEME_CONTENT)
+            .authority("${context.applicationContext.packageName}.user-image-provider")
+            .appendPath(PATH_ID)
+            .appendPath(userId)
+            .build()
     }
 
     private val apiRepository by inject<TwitchRepository>()
 
-    override fun onCreate(): Boolean {
-        return true
-    }
+    override fun onCreate(): Boolean = true
 
     override fun openFile(
         uri: Uri,
@@ -103,41 +99,39 @@ public class UserProfileImageContentProvider : ContentProvider() {
     private suspend fun downloadImage(
         context: Context,
         userId: String,
-    ) {
-        return withContext(DispatchersProvider.io) {
-            val profileImageUrl: String =
-                apiRepository
-                    .getUserById(userId)
-                    .firstOrNull()
-                    ?.getOrNull()
-                    ?.profileImageUrl
-                    ?: throw FileNotFoundException("User not found: $userId")
+    ) = withContext(DispatchersProvider.io) {
+        val profileImageUrl: String =
+            apiRepository
+                .getUserById(userId)
+                .firstOrNull()
+                ?.getOrNull()
+                ?.profileImageUrl
+                ?: throw FileNotFoundException("User not found: $userId")
 
-            val response: ImageResult =
-                context.imageLoader.execute(
-                    ImageRequest
-                        .Builder(context)
-                        .data(profileImageUrl)
-                        .size(128)
-                        .transformations(CircleCropTransformation())
-                        .build(),
-                )
+        val response: ImageResult =
+            context.imageLoader.execute(
+                ImageRequest
+                    .Builder(context)
+                    .data(profileImageUrl)
+                    .size(128)
+                    .transformations(CircleCropTransformation())
+                    .build(),
+            )
 
-            val bitmap: Bitmap =
-                (response.image as? BitmapImage)?.bitmap
-                    ?: error("Empty bitmap received from Coil")
+        val bitmap: Bitmap =
+            (response.image as? BitmapImage)?.bitmap
+                ?: error("Empty bitmap received from Coil")
 
-            val format =
-                if (Build.VERSION.SDK_INT >= 30) {
-                    Bitmap.CompressFormat.WEBP_LOSSLESS
-                } else {
-                    @Suppress("DEPRECATION")
-                    Bitmap.CompressFormat.WEBP
-                }
-
-            getFile(context, userId).outputStream().use { os ->
-                bitmap.compress(format, 70, os)
+        val format =
+            if (Build.VERSION.SDK_INT >= 30) {
+                Bitmap.CompressFormat.WEBP_LOSSLESS
+            } else {
+                @Suppress("DEPRECATION")
+                Bitmap.CompressFormat.WEBP
             }
+
+        getFile(context, userId).outputStream().use { os ->
+            bitmap.compress(format, 70, os)
         }
     }
 

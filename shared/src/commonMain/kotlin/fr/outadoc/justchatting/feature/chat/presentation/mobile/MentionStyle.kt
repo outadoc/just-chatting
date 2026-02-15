@@ -8,10 +8,8 @@ internal fun getMentionStyle(
     mentioned: Boolean,
     mentionBackground: Color,
     mentionColor: Color,
-): SpanStyle {
-    return SpanStyle(
-        fontWeight = FontWeight.Bold,
-        background = if (mentioned) mentionBackground else Color.Unspecified,
-        color = if (mentioned) mentionColor else Color.Unspecified,
-    )
-}
+): SpanStyle = SpanStyle(
+    fontWeight = FontWeight.Bold,
+    background = if (mentioned) mentionBackground else Color.Unspecified,
+    color = if (mentioned) mentionColor else Color.Unspecified,
+)

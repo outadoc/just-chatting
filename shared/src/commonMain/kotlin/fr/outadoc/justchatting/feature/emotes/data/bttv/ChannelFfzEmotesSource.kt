@@ -20,23 +20,22 @@ internal class ChannelFfzEmotesSource(
         next: Params,
     ): Boolean = previous.channelId == next.channelId && previous.channelName == next.channelName
 
-    override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> =
-        withContext(DispatchersProvider.io) {
-            val prefs = preferencesRepository.currentPreferences.first()
-            if (!prefs.enableFfzEmotes) {
-                return@withContext Result.success(emptyList())
-            }
-
-            bttvEmotesApi
-                .getBttvFfzEmotes(params.channelId)
-                .map { emotes ->
-                    flatListOf(
-                        EmoteSetItem.Header(
-                            title = params.channelName.desc(),
-                            source = Res.string.chat_source_ffz.desc(),
-                        ),
-                        emotes.map { emote -> EmoteSetItem.Emote(emote) },
-                    )
-                }
+    override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> = withContext(DispatchersProvider.io) {
+        val prefs = preferencesRepository.currentPreferences.first()
+        if (!prefs.enableFfzEmotes) {
+            return@withContext Result.success(emptyList())
         }
+
+        bttvEmotesApi
+            .getBttvFfzEmotes(params.channelId)
+            .map { emotes ->
+                flatListOf(
+                    EmoteSetItem.Header(
+                        title = params.channelName.desc(),
+                        source = Res.string.chat_source_ffz.desc(),
+                    ),
+                    emotes.map { emote -> EmoteSetItem.Emote(emote) },
+                )
+            }
+    }
 }

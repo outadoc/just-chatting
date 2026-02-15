@@ -7,15 +7,11 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logInfo
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.withContext
 
 internal class AuthRepository(
@@ -23,8 +19,6 @@ internal class AuthRepository(
     private val authApi: AuthApi,
     private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
-    private val scope = CoroutineScope(SupervisorJob())
-
     val currentUser: Flow<AppUser> =
         preferenceRepository
             .currentPreferences
@@ -67,11 +61,7 @@ internal class AuthRepository(
             }.distinctUntilChanged()
             .onEach { user ->
                 logInfo<AuthRepository> { "User is now $user" }
-            }.shareIn(
-                scope = scope,
-                started = SharingStarted.Lazily,
-                replay = 1,
-            )
+            }
 
     suspend fun saveToken(token: String) {
         preferenceRepository.updatePreferences { prefs ->
@@ -104,12 +94,10 @@ internal class AuthRepository(
         }
     }
 
-    fun getExternalAuthorizeUrl(): Uri {
-        return authApi.getExternalAuthorizeUrl(
-            oAuthAppCredentials = oAuthAppCredentials,
-            scopes = REQUIRED_SCOPES,
-        )
-    }
+    fun getExternalAuthorizeUrl(): Uri = authApi.getExternalAuthorizeUrl(
+        oAuthAppCredentials = oAuthAppCredentials,
+        scopes = REQUIRED_SCOPES,
+    )
 
     private class InvalidClientIdException(
         message: String,

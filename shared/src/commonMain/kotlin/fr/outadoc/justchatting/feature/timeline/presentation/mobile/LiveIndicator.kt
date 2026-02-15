@@ -18,10 +18,10 @@ internal fun LiveIndicator(
 ) {
     Box(
         modifier =
-            Modifier
-                .padding(end = 4.dp)
-                .size(6.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.customColors.live),
+        Modifier
+            .padding(end = 4.dp)
+            .size(6.dp)
+            .clip(CircleShape)
+            .background(MaterialTheme.customColors.live),
     ) {}
 }

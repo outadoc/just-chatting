@@ -104,9 +104,9 @@ internal fun ChatMessageBody(
             maxLines = maxLines,
             overflow = TextOverflow.Ellipsis,
             style =
-                MaterialTheme.typography.bodyMedium.copy(
-                    hyphens = Hyphens.Auto,
-                ),
+            MaterialTheme.typography.bodyMedium.copy(
+                hyphens = Hyphens.Auto,
+            ),
         )
 
         AnimatedVisibility(visible = richEmbed != null) {
@@ -168,18 +168,18 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
         withStyle(
             SpanStyle(
                 color =
-                    MaterialTheme.colorScheme.harmonizeWithPrimary(
-                        accessibleChatterColor ?: fallbackColor,
-                    ),
+                MaterialTheme.colorScheme.harmonizeWithPrimary(
+                    accessibleChatterColor ?: fallbackColor,
+                ),
             ),
         ) {
             withLink(
                 LinkAnnotation.Clickable(
                     tag = CHATTER_ID_ANNOTATION_TAG,
                     styles =
-                        TextLinkStyles(
-                            style = SpanStyle(fontWeight = FontWeight.Bold),
-                        ),
+                    TextLinkStyles(
+                        style = SpanStyle(fontWeight = FontWeight.Bold),
+                    ),
                     linkInteractionListener = {
                         onShowInfoForUserId(chatter.id)
                     },
@@ -251,10 +251,10 @@ private fun AnnotatedString.Builder.appendUrl(
             validUrl,
             TextLinkStyles(
                 style =
-                    SpanStyle(
-                        color = urlColor,
-                        textDecoration = TextDecoration.Underline,
-                    ),
+                SpanStyle(
+                    color = urlColor,
+                    textDecoration = TextDecoration.Underline,
+                ),
             ),
         ),
     ) {

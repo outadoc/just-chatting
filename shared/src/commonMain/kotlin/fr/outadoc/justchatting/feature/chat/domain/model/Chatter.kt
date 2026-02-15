@@ -5,13 +5,11 @@ internal data class Chatter(
     val login: String,
     val displayName: String,
 ) {
-    fun contains(word: CharSequence): Boolean =
-        displayName.contains(word, ignoreCase = true) ||
-            login.contains(word, ignoreCase = true)
+    fun contains(word: CharSequence): Boolean = displayName.contains(word, ignoreCase = true) ||
+        login.contains(word, ignoreCase = true)
 
-    fun matches(word: CharSequence): Boolean =
-        displayName.contentEquals(word, ignoreCase = true) ||
-            login.contentEquals(word, ignoreCase = true)
+    fun matches(word: CharSequence): Boolean = displayName.contentEquals(word, ignoreCase = true) ||
+        login.contentEquals(word, ignoreCase = true)
 
     /**
      * Checks whether the chatter's display name is just their login but with
@@ -31,7 +29,5 @@ internal data class Chatter(
         return id == other.id
     }
 
-    override fun hashCode(): Int {
-        return id.hashCode()
-    }
+    override fun hashCode(): Int = id.hashCode()
 }

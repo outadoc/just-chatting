@@ -23,22 +23,20 @@ private val availableDensities =
         3.0f to "3x",
     )
 
-internal fun BttvEmote.map(): Emote {
-    return Emote(
-        name = code,
-        ownerId = null,
-        isZeroWidth = code in zeroWidthEmotes,
-        ratio =
-            if (height != null && width != null) {
-                width.toFloat() / height.toFloat()
-            } else {
-                1f
-            },
-        urls =
-            EmoteUrls(
-                availableDensities.mapValues { (_, densityStr) ->
-                    "${ApiEndpoints.BTTV_EMOTE_CDN}/$id/$densityStr"
-                },
-            ),
-    )
-}
+internal fun BttvEmote.map(): Emote = Emote(
+    name = code,
+    ownerId = null,
+    isZeroWidth = code in zeroWidthEmotes,
+    ratio =
+    if (height != null && width != null) {
+        width.toFloat() / height.toFloat()
+    } else {
+        1f
+    },
+    urls =
+    EmoteUrls(
+        availableDensities.mapValues { (_, densityStr) ->
+            "${ApiEndpoints.BTTV_EMOTE_CDN}/$id/$densityStr"
+        },
+    ),
+)

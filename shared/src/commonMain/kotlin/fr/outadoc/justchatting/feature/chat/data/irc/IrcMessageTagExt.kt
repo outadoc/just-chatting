@@ -15,36 +15,33 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
-internal fun Map<String, String?>.parseEmotes(message: String): List<Emote>? {
-    return this["emotes"]
-        ?.splitAndMakeMap(split = "/", map = ":")
-        ?.entries
-        ?.flatMap { emote ->
-            emote.value
-                ?.split(",")
-                ?.map { indexes ->
-                    val index = indexes.split("-")
-                    val begin = index[0].toInt()
-                    val end = index[1].toInt()
+internal fun Map<String, String?>.parseEmotes(message: String): List<Emote>? = this["emotes"]
+    ?.splitAndMakeMap(split = "/", map = ":")
+    ?.entries
+    ?.flatMap { emote ->
+        emote.value
+            ?.split(",")
+            ?.map { indexes ->
+                val index = indexes.split("-")
+                val begin = index[0].toInt()
+                val end = index[1].toInt()
 
-                    val realBegin = message.offsetByCodePoints(0, begin)
-                    val realEnd = if (begin == realBegin) end else end + realBegin - begin
+                val realBegin = message.offsetByCodePoints(0, begin)
+                val realEnd = if (begin == realBegin) end else end + realBegin - begin
 
-                    ChatEmote(
-                        id = emote.key,
-                        name = message.slice(realBegin..realEnd),
-                    ).map()
-                }.orEmpty()
-        }
-}
+                ChatEmote(
+                    id = emote.key,
+                    name = message.slice(realBegin..realEnd),
+                ).map()
+            }.orEmpty()
+    }
 
-internal fun Map<String, String?>.parseBadges(): List<Badge>? =
-    this["badges"]
-        ?.splitAndMakeMap(",", "/")
-        ?.entries
-        ?.mapNotNull { (key, value) ->
-            value?.let { Badge(key, value) }
-        }
+internal fun Map<String, String?>.parseBadges(): List<Badge>? = this["badges"]
+    ?.splitAndMakeMap(",", "/")
+    ?.entries
+    ?.mapNotNull { (key, value) ->
+        value?.let { Badge(key, value) }
+    }
 
 internal fun Map<String, String?>.parseTimestamp(): Instant? {
     val prop = this["tmi-sent-ts"] ?: this["rm-received-ts"]
@@ -169,12 +166,11 @@ internal val Map<String, String?>.userId: String
 private fun String.splitAndMakeMap(
     split: String,
     map: String,
-): Map<String, String?> =
-    buildMap {
-        this@splitAndMakeMap
-            .split(split)
-            .dropLastWhile { it.isEmpty() }
-            .asSequence()
-            .map { pair -> pair.split(map).dropLastWhile { it.isEmpty() } }
-            .forEach { this[it[0]] = if (it.size == 2) it[1] else null }
-    }
+): Map<String, String?> = buildMap {
+    this@splitAndMakeMap
+        .split(split)
+        .dropLastWhile { it.isEmpty() }
+        .asSequence()
+        .map { pair -> pair.split(map).dropLastWhile { it.isEmpty() } }
+        .forEach { this[it[0]] = if (it.size == 2) it[1] else null }
+}

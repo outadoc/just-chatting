@@ -42,9 +42,7 @@ internal class LocalPronounsDb(
                     }.toPersistentMap()
             }
 
-    override suspend fun arePronounsSynced(): Boolean {
-        return !pronouns.firstOrNull().isNullOrEmpty()
-    }
+    override suspend fun arePronounsSynced(): Boolean = !pronouns.firstOrNull().isNullOrEmpty()
 
     override suspend fun saveAndReplacePronouns(pronouns: List<Pronoun>) {
         withContext(DispatchersProvider.io) {
@@ -73,32 +71,30 @@ internal class LocalPronounsDb(
         }
     }
 
-    override suspend fun getPronounsForUser(userId: String): Flow<UserPronouns?> {
-        return withContext(DispatchersProvider.io) {
-            db
-                .getUserPronoun(userId)
-                .asFlow()
-                .mapToOneOrNull(DispatchersProvider.io)
-                .combine(pronouns) { result, pronouns ->
-                    when {
-                        result == null -> {
-                            null
-                        }
+    override suspend fun getPronounsForUser(userId: String): Flow<UserPronouns?> = withContext(DispatchersProvider.io) {
+        db
+            .getUserPronoun(userId)
+            .asFlow()
+            .mapToOneOrNull(DispatchersProvider.io)
+            .combine(pronouns) { result, pronouns ->
+                when {
+                    result == null -> {
+                        null
+                    }
 
-                        Instant.fromEpochMilliseconds(result.updated_at) < clock.now() - MaxPronounCacheLife -> {
-                            null
-                        }
+                    Instant.fromEpochMilliseconds(result.updated_at) < clock.now() - MaxPronounCacheLife -> {
+                        null
+                    }
 
-                        else -> {
-                            UserPronouns(
-                                userId = result.user_id,
-                                mainPronoun = pronouns[result.pronoun_id],
-                                altPronoun = pronouns[result.alt_pronoun_id],
-                            )
-                        }
+                    else -> {
+                        UserPronouns(
+                            userId = result.user_id,
+                            mainPronoun = pronouns[result.pronoun_id],
+                            altPronoun = pronouns[result.alt_pronoun_id],
+                        )
                     }
                 }
-        }
+            }
     }
 
     private companion object {

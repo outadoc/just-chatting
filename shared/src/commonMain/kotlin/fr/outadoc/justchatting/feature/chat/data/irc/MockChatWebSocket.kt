@@ -1,10 +1,9 @@
 package fr.outadoc.justchatting.feature.chat.data.irc
 
-import fr.outadoc.justchatting.feature.chat.data.Defaults
-import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
@@ -17,18 +16,16 @@ import io.ktor.websocket.DefaultWebSocketSession
 import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.channels.ProducerScope
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
@@ -37,24 +34,15 @@ import kotlin.time.Duration.Companion.seconds
  * Mock chat web socket. Connects to a mock server to be able to simulate chat events.
  * See https://fdgt.dev
  */
-internal class MockChatWebSocket private constructor(
-    networkStateObserver: NetworkStateObserver,
-    private val scope: CoroutineScope,
+internal class MockChatWebSocket(
+    private val networkStateObserver: NetworkStateObserver,
     private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
     private val httpClient: HttpClient,
-    private val channelLogin: String,
 ) : ChatEventHandler {
     companion object {
         private const val ENDPOINT = "wss://irc.fdgt.dev"
     }
-
-    private val _eventFlow =
-        MutableSharedFlow<ChatEvent>(
-            replay = Defaults.EventBufferSize,
-            onBufferOverflow = BufferOverflow.DROP_OLDEST,
-        )
-    override val eventFlow: Flow<ChatEvent> = _eventFlow
 
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
         MutableStateFlow(
@@ -66,55 +54,37 @@ internal class MockChatWebSocket private constructor(
 
     override val connectionStatus = _connectionStatus.asStateFlow()
 
-    private var isNetworkAvailable: Boolean = false
-    private var socketJob: Job? = null
-
-    init {
-        scope.launch {
-            networkStateObserver.state.collectLatest { state ->
-                isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
-            }
-        }
-    }
-
-    override fun start() {
-        socketJob =
-            scope.launch(DispatchersProvider.io + SupervisorJob()) {
-                logDebug<LoggedInChatWebSocket> { "Starting job" }
-
-                _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
-
-                while (isActive) {
-                    if (isNetworkAvailable) {
-                        logDebug<LoggedInChatWebSocket> { "Network is available, listening" }
-                        _connectionStatus.update { status ->
-                            status.copy(
-                                isAlive = true,
-                            )
-                        }
-
+    override fun getEventFlow(
+        channelId: String,
+        channelLogin: String,
+        appUser: AppUser.LoggedIn,
+    ): Flow<ChatEvent> = channelFlow {
+        _connectionStatus.update { it.copy(registeredListeners = 1) }
+        try {
+            networkStateObserver.state.collectLatest { netState ->
+                if (netState is NetworkStateObserver.NetworkState.Available) {
+                    logDebug<MockChatWebSocket> { "Network is available, listening" }
+                    while (currentCoroutineContext().isActive) {
+                        _connectionStatus.update { it.copy(isAlive = true) }
                         try {
-                            listen()
+                            listen(channelLogin)
                         } catch (e: Exception) {
-                            logError<LoggedInChatWebSocket>(e) { "Socket was closed" }
+                            logError<MockChatWebSocket>(e) { "Socket was closed" }
                         }
-                    } else {
-                        logDebug<LoggedInChatWebSocket> { "Network is out, delay and retry" }
-                        _connectionStatus.update { status ->
-                            status.copy(
-                                isAlive = false,
-                            )
-                        }
-                    }
-
-                    if (isActive) {
+                        _connectionStatus.update { it.copy(isAlive = false) }
                         delayWithJitter(1.seconds, maxJitter = 3.seconds)
                     }
+                } else {
+                    logDebug<MockChatWebSocket> { "Network is out, waiting" }
+                    _connectionStatus.update { it.copy(isAlive = false) }
                 }
             }
-    }
+        } finally {
+            _connectionStatus.update { it.copy(registeredListeners = 0) }
+        }
+    }.flowOn(DispatchersProvider.io)
 
-    private suspend fun listen() {
+    private suspend fun ProducerScope<ChatEvent>.listen(channelLogin: String) {
         httpClient.webSocket(ENDPOINT) {
             logDebug<MockChatWebSocket> { "Socket open, saying hello" }
 
@@ -123,7 +93,7 @@ internal class MockChatWebSocket private constructor(
             send("CAP REQ :twitch.tv/tags twitch.tv/commands")
             send("JOIN #$channelLogin")
 
-            _eventFlow.emit(
+            this@listen.send(
                 ChatEvent.Message.Join(
                     timestamp = clock.now(),
                     channelLogin = channelLogin,
@@ -138,7 +108,11 @@ internal class MockChatWebSocket private constructor(
                             .readText()
                             .lines()
                             .filter { it.isNotBlank() }
-                            .forEach { line -> handleMessage(line) }
+                            .forEach { line ->
+                                handleMessage(line) { event ->
+                                    this@listen.send(event)
+                                }
+                            }
                     }
 
                     else -> {}
@@ -147,7 +121,10 @@ internal class MockChatWebSocket private constructor(
         }
     }
 
-    private suspend fun DefaultWebSocketSession.handleMessage(received: String) {
+    private suspend fun DefaultWebSocketSession.handleMessage(
+        received: String,
+        emit: suspend (ChatEvent) -> Unit,
+    ) {
         logInfo<MockChatWebSocket> { "received: $received" }
 
         when (val command: ChatEvent? = parser.parse(received)) {
@@ -157,7 +134,7 @@ internal class MockChatWebSocket private constructor(
             is ChatEvent.Command.ClearChat,
             is ChatEvent.Command.ClearMessage,
             -> {
-                _eventFlow.emit(command)
+                emit(command)
             }
 
             is ChatEvent.Command.Ping -> {
@@ -166,38 +143,5 @@ internal class MockChatWebSocket private constructor(
 
             null -> {}
         }
-    }
-
-    override fun disconnect() {
-        scope.launch {
-            _connectionStatus.update { status -> status.copy(registeredListeners = 0) }
-            doDisconnect()
-        }
-    }
-
-    private fun doDisconnect() {
-        logDebug<MockChatWebSocket> { "Disconnecting live chat socket" }
-        socketJob?.cancel()
-    }
-
-    class Factory(
-        private val clock: Clock,
-        private val networkStateObserver: NetworkStateObserver,
-        private val parser: TwitchIrcCommandParser,
-        private val httpClient: HttpClient,
-    ) : ChatCommandHandlerFactory {
-        override fun create(
-            scope: CoroutineScope,
-            channelLogin: String,
-            channelId: String,
-        ): MockChatWebSocket =
-            MockChatWebSocket(
-                networkStateObserver = networkStateObserver,
-                scope = scope,
-                clock = clock,
-                parser = parser,
-                httpClient = httpClient,
-                channelLogin = channelLogin,
-            )
     }
 }

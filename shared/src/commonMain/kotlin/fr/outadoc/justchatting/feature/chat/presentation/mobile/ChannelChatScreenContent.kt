@@ -103,21 +103,21 @@ internal fun ChannelChatScreenContent(
 
     Scaffold(
         modifier =
-            modifier.then(
-                if (!isEmotePickerOpen) {
-                    Modifier.imePadding()
-                } else {
-                    Modifier
-                },
-            ),
+        modifier.then(
+            if (!isEmotePickerOpen) {
+                Modifier.imePadding()
+            } else {
+                Modifier
+            },
+        ),
         topBar = {
             ChatTopAppBar(
                 modifier =
-                    Modifier
-                        .hazeEffect(
-                            state = hazeState,
-                            style = HazeMaterials.regular(),
-                        ),
+                Modifier
+                    .hazeEffect(
+                        state = hazeState,
+                        style = HazeMaterials.regular(),
+                    ),
                 user = user,
                 stream = stream,
                 colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
@@ -136,9 +136,9 @@ internal fun ChannelChatScreenContent(
 
             ChatScreen(
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .haze(hazeState),
+                Modifier
+                    .fillMaxSize()
+                    .haze(hazeState),
                 state = state,
                 showTimestamps = showTimestamps,
                 onMessageLongClick = { item ->
@@ -171,43 +171,43 @@ internal fun ChannelChatScreenContent(
                     ChatSlowModeProgress(
                         modifier = Modifier.fillMaxWidth(),
                         constraint =
-                            state.messagePostConstraint
-                                ?: MessagePostConstraint(),
+                        state.messagePostConstraint
+                            ?: MessagePostConstraint(),
                     )
                 }
 
                 Surface(
                     modifier =
-                        Modifier
-                            .hazeEffect(
-                                state = hazeState,
-                                style =
-                                    HazeMaterials.regular(
-                                        MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
-                                    ),
+                    Modifier
+                        .hazeEffect(
+                            state = hazeState,
+                            style =
+                            HazeMaterials.regular(
+                                MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
                             ),
+                        ),
                     color = Color.Transparent,
                 ) {
                     ChatInput(
                         modifier =
-                            Modifier
-                                .focusRequester(inputFocusRequester)
-                                .then(
-                                    if (!isEmotePickerOpen) {
-                                        Modifier.navigationBarsPadding()
-                                    } else {
-                                        Modifier
-                                    },
-                                ).fillMaxWidth(),
+                        Modifier
+                            .focusRequester(inputFocusRequester)
+                            .then(
+                                if (!isEmotePickerOpen) {
+                                    Modifier.navigationBarsPadding()
+                                } else {
+                                    Modifier
+                                },
+                            ).fillMaxWidth(),
                         message =
-                            TextFieldValue(
-                                text = inputState.message,
-                                selection =
-                                    TextRange(
-                                        start = inputState.selectionRange.first,
-                                        end = inputState.selectionRange.last,
-                                    ),
+                        TextFieldValue(
+                            text = inputState.message,
+                            selection =
+                            TextRange(
+                                start = inputState.selectionRange.first,
+                                end = inputState.selectionRange.last,
                             ),
+                        ),
                         autoCompleteItems = inputState.autoCompleteItems,
                         replyingTo = inputState.replyingTo,
                         onEmoteClick = onEmoteClick,
@@ -250,9 +250,9 @@ internal fun ChannelChatScreenContent(
                 ) {
                     Surface(
                         modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .height(imeHeight),
+                        Modifier
+                            .fillMaxWidth()
+                            .height(imeHeight),
                     ) {
                         EmotePicker(
                             state = state,
@@ -269,13 +269,13 @@ internal fun ChannelChatScreenContent(
             if (state.showInfoForUserId != null) {
                 UserInfoDialog(
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                start = 24.dp,
-                                end = 24.dp,
-                                bottom = 24.dp,
-                            ),
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = 24.dp,
+                            end = 24.dp,
+                            bottom = 24.dp,
+                        ),
                     userId = state.showInfoForUserId,
                     onDismissRequest = onDismissUserInfo,
                 )

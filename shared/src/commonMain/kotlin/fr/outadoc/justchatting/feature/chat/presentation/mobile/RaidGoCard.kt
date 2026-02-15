@@ -47,24 +47,24 @@ internal fun RaidGoCard(
             )
         },
         colors =
-            CardDefaults.cardColors(
-                containerColor = color,
-            ),
+        CardDefaults.cardColors(
+            containerColor = color,
+        ),
     ) {
         Row(
             modifier =
-                Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AsyncImage(
                 modifier =
-                    Modifier
-                        .size(56.dp)
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(MaterialTheme.colorScheme.surface),
+                Modifier
+                    .size(56.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surface),
                 model = remoteImageModel(raid.targetProfileImageUrl),
                 contentDescription = null,
             )
@@ -79,10 +79,10 @@ internal fun RaidGoCard(
 
                 Text(
                     text =
-                        stringResource(
-                            Res.string.raid_go_message,
-                            "${ChatPrefixConstants.ChatterPrefix}${raid.targetDisplayName}",
-                        ),
+                    stringResource(
+                        Res.string.raid_go_message,
+                        "${ChatPrefixConstants.ChatterPrefix}${raid.targetDisplayName}",
+                    ),
                     style = MaterialTheme.typography.titleLarge,
                 )
             }
@@ -101,13 +101,13 @@ private fun RaidGoCardPreview() {
     AppTheme {
         RaidGoCard(
             raid =
-                Raid.Go(
-                    targetId = "",
-                    targetLogin = "",
-                    targetDisplayName = "HortyUnderscore",
-                    targetProfileImageUrl = null,
-                    viewerCount = 12_000,
-                ),
+            Raid.Go(
+                targetId = "",
+                targetLogin = "",
+                targetDisplayName = "HortyUnderscore",
+                targetProfileImageUrl = null,
+                viewerCount = 12_000,
+            ),
         )
     }
 }

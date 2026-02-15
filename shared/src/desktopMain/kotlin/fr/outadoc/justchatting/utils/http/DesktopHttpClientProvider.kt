@@ -22,43 +22,41 @@ internal class DesktopHttpClientProvider(
     private val json: Json,
     private val appVersionNameProvider: AppVersionNameProvider,
 ) : BaseHttpClientProvider {
-    override fun get(block: HttpClientConfig<*>.() -> Unit): HttpClient {
-        return HttpClient(Java) {
-            install(HttpCache)
+    override fun get(block: HttpClientConfig<*>.() -> Unit): HttpClient = HttpClient(Java) {
+        install(HttpCache)
 
-            install(HttpTimeout) {
-                requestTimeoutMillis = 30.seconds.inWholeMilliseconds
-                connectTimeoutMillis = 10.seconds.inWholeMilliseconds
-            }
-
-            install(ContentNegotiation) {
-                json(json)
-            }
-
-            install(UserAgent) {
-                val appVersion = appVersionNameProvider.appVersionName.orEmpty()
-                agent = "JustChatting-fr.outadoc.justchatting/$appVersion (JVM)"
-            }
-
-            install(Logging) {
-                level = LogLevel.ALL
-                logger =
-                    object : Logger {
-                        override fun log(message: String) = logDebug<HttpClient> { message }
-                    }
-            }
-
-            install(WebSockets) {
-                extensions {
-                    install(FrameLogger)
-                }
-
-                contentConverter = KotlinxWebsocketSerializationConverter(json)
-            }
-
-            expectSuccess = true
-
-            block()
+        install(HttpTimeout) {
+            requestTimeoutMillis = 30.seconds.inWholeMilliseconds
+            connectTimeoutMillis = 10.seconds.inWholeMilliseconds
         }
+
+        install(ContentNegotiation) {
+            json(json)
+        }
+
+        install(UserAgent) {
+            val appVersion = appVersionNameProvider.appVersionName.orEmpty()
+            agent = "JustChatting-fr.outadoc.justchatting/$appVersion (JVM)"
+        }
+
+        install(Logging) {
+            level = LogLevel.ALL
+            logger =
+                object : Logger {
+                    override fun log(message: String) = logDebug<HttpClient> { message }
+                }
+        }
+
+        install(WebSockets) {
+            extensions {
+                install(FrameLogger)
+            }
+
+            contentConverter = KotlinxWebsocketSerializationConverter(json)
+        }
+
+        expectSuccess = true
+
+        block()
     }
 }

@@ -2,14 +2,15 @@ package fr.outadoc.justchatting.feature.chat.domain.handler
 
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 internal interface ChatEventHandler {
-    val eventFlow: Flow<ChatEvent>
-    val connectionStatus: StateFlow<ConnectionStatus>
+    fun getEventFlow(
+        channelId: String,
+        channelLogin: String,
+        appUser: AppUser.LoggedIn,
+    ): Flow<ChatEvent>
 
-    fun start()
-
-    fun disconnect()
+    val connectionStatus: Flow<ConnectionStatus>
 }

@@ -44,23 +44,23 @@ internal fun PollChoice(
         LinearProgressIndicator(
             progress = { ratio },
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .clip(MaterialTheme.shapes.medium),
+            Modifier
+                .fillMaxSize()
+                .clip(MaterialTheme.shapes.medium),
             color =
-                if (isWinner) {
-                    MaterialTheme.customColors.success
-                } else {
-                    MaterialTheme.colorScheme.primaryContainer
-                },
+            if (isWinner) {
+                MaterialTheme.customColors.success
+            } else {
+                MaterialTheme.colorScheme.primaryContainer
+            },
             trackColor = MaterialTheme.colorScheme.outlineVariant,
         )
 
         Row(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 8.dp),
+            Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {

@@ -67,11 +67,11 @@ private class AnimatedSkiaImage(
     private val imageInfo =
         ImageInfo(
             colorInfo =
-                ColorInfo(
-                    colorType = ColorType.BGRA_8888,
-                    alphaType = ColorAlphaType.UNPREMUL,
-                    colorSpace = ColorSpace.sRGB,
-                ),
+            ColorInfo(
+                colorType = ColorType.BGRA_8888,
+                alphaType = ColorAlphaType.UNPREMUL,
+                colorSpace = ColorSpace.sRGB,
+            ),
             width = codec.width,
             height = codec.height,
         )
@@ -181,11 +181,11 @@ private class AnimatedSkiaImage(
         val frame = frames[frameIndex] ?: decodeFrame(frameIndex).also { frames[frameIndex] = it }
         drawImage(
             image =
-                SkiaImage.makeRaster(
-                    imageInfo = imageInfo,
-                    bytes = frame,
-                    rowBytes = imageInfo.minRowBytes,
-                ),
+            SkiaImage.makeRaster(
+                imageInfo = imageInfo,
+                bytes = frame,
+                rowBytes = imageInfo.minRowBytes,
+            ),
             left = 0f,
             top = 0f,
         )
@@ -211,15 +211,11 @@ private val WEBP_HEADER_VPX8 = "VP8X".encodeUtf8()
 /**
  * Return 'true' if the [source] contains a GIF image. The [source] is not consumed.
  */
-private fun isGif(source: BufferedSource): Boolean {
-    return source.rangeEquals(0, GIF_HEADER_89A) ||
-        source.rangeEquals(0, GIF_HEADER_87A)
-}
+private fun isGif(source: BufferedSource): Boolean = source.rangeEquals(0, GIF_HEADER_89A) ||
+    source.rangeEquals(0, GIF_HEADER_87A)
 
 /**
  * Return 'true' if the [source] contains a WebP image. The [source] is not consumed.
  */
-private fun isWebP(source: BufferedSource): Boolean {
-    return source.rangeEquals(0, WEBP_HEADER_RIFF) &&
-        source.rangeEquals(8, WEBP_HEADER_WEBP)
-}
+private fun isWebP(source: BufferedSource): Boolean = source.rangeEquals(0, WEBP_HEADER_RIFF) &&
+    source.rangeEquals(8, WEBP_HEADER_WEBP)

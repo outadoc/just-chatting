@@ -29,18 +29,18 @@ internal fun RoomStateBanner(
             if (!minFollowDuration.isNegative()) {
                 Text(
                     text =
-                        when (minFollowDuration) {
-                            Duration.ZERO -> {
-                                stringResource(Res.string.room_followers)
-                            }
+                    when (minFollowDuration) {
+                        Duration.ZERO -> {
+                            stringResource(Res.string.room_followers)
+                        }
 
-                            else -> {
-                                stringResource(
-                                    Res.string.room_followers_min,
-                                    minFollowDuration.format(),
-                                )
-                            }
-                        },
+                        else -> {
+                            stringResource(
+                                Res.string.room_followers_min,
+                                minFollowDuration.format(),
+                            )
+                        }
+                    },
                 )
             }
 
@@ -51,10 +51,10 @@ internal fun RoomStateBanner(
             if (slowModeDuration.isPositive()) {
                 Text(
                     text =
-                        stringResource(
-                            Res.string.room_slow,
-                            slowModeDuration.format(),
-                        ),
+                    stringResource(
+                        Res.string.room_slow,
+                        slowModeDuration.format(),
+                    ),
                 )
             }
 

@@ -44,42 +44,42 @@ internal fun InReplyToMessage(
         ) {
             Icon(
                 modifier =
-                    Modifier
-                        .size(16.dp)
-                        .alignByBaseline()
-                        .padding(end = 4.dp, top = 1.dp),
+                Modifier
+                    .size(16.dp)
+                    .alignByBaseline()
+                    .padding(end = 4.dp, top = 1.dp),
                 imageVector = Icons.AutoMirrored.Filled.Reply,
                 contentDescription = stringResource(Res.string.chat_replyingTo),
             )
 
             Text(
                 text =
-                    buildAnnotatedString {
-                        withStyle(
-                            getMentionStyle(
-                                mentioned =
-                                    mentions.any { mention ->
-                                        mention.equals(appUser?.userLogin, ignoreCase = true)
-                                    },
-                                mentionBackground = mentionBackground,
-                                mentionColor = mentionColor,
+                buildAnnotatedString {
+                    withStyle(
+                        getMentionStyle(
+                            mentioned =
+                            mentions.any { mention ->
+                                mention.equals(appUser?.userLogin, ignoreCase = true)
+                            },
+                            mentionBackground = mentionBackground,
+                            mentionColor = mentionColor,
+                        ),
+                    ) {
+                        append(
+                            mentions.joinToString(
+                                separator = " ",
+                                transform = { mention ->
+                                    "${ChatPrefixConstants.ChatterPrefix}$mention"
+                                },
                             ),
-                        ) {
-                            append(
-                                mentions.joinToString(
-                                    separator = " ",
-                                    transform = { mention ->
-                                        "${ChatPrefixConstants.ChatterPrefix}$mention"
-                                    },
-                                ),
-                            )
-                        }
+                        )
+                    }
 
-                        if (message != null) {
-                            append(stringResource(Res.string.chat_message_standardSeparator))
-                            append(message)
-                        }
-                    },
+                    if (message != null) {
+                        append(stringResource(Res.string.chat_message_standardSeparator))
+                        append(message)
+                    }
+                },
                 style = MaterialTheme.typography.bodySmall,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,

@@ -36,10 +36,10 @@ internal fun SettingsText(
 ) {
     Box(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable(onClickLabel = onClickLabel) { onClick() }
-                .padding(vertical = 16.dp),
+        Modifier
+            .fillMaxWidth()
+            .clickable(onClickLabel = onClickLabel) { onClick() }
+            .padding(vertical = 16.dp),
         contentAlignment = Alignment.CenterStart,
     ) {
         Row(

@@ -9,8 +9,7 @@ import org.koin.core.KoinApplication
 public class KoinInitializer : Initializer<KoinApplication> {
     override fun dependencies(): List<Class<out Initializer<*>>> = emptyList()
 
-    override fun create(context: Context): KoinApplication =
-        startSharedKoin {
-            androidContext(context)
-        }
+    override fun create(context: Context): KoinApplication = startSharedKoin {
+        androidContext(context)
+    }
 }

@@ -6,12 +6,10 @@ import fr.outadoc.justchatting.utils.logging.logError
 
 @OptIn(ExperimentalStdlibApi::class)
 @Stable
-internal fun String.parseHexColor(): Color? {
-    return try {
-        val color: Long = removePrefix("#").lowercase().hexToLong()
-        Color(color).copy(alpha = 1f)
-    } catch (e: Exception) {
-        logError("ColorExt", e) { "Failed to parse color from string: $this" }
-        null
-    }
+internal fun String.parseHexColor(): Color? = try {
+    val color: Long = removePrefix("#").lowercase().hexToLong()
+    Color(color).copy(alpha = 1f)
+} catch (e: Exception) {
+    logError("ColorExt", e) { "Failed to parse color from string: $this" }
+    null
 }

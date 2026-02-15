@@ -606,7 +606,7 @@ internal class ChatViewModel(
         emote: Emote,
         autocomplete: Boolean,
     ) {
-        defaultScope.launch {
+        inputScope.launch {
             inputActions.emit(InputAction.AppendEmote(emote, autocomplete))
         }
     }

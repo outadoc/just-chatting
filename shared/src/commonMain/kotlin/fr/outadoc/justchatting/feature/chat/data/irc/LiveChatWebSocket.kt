@@ -64,23 +64,22 @@ internal class LiveChatWebSocket(
 
     override val connectionStatus = _connectionStatus.asStateFlow()
 
-    private var lastMessageReceivedAt: Instant? = null
-
     override fun getEventFlow(
         channelId: String,
         channelLogin: String,
         appUser: AppUser.LoggedIn,
     ): Flow<ChatEvent> = channelFlow {
+        var lastMessageReceivedAt: Instant? = null
         _connectionStatus.update { it.copy(registeredListeners = 1) }
         try {
             networkStateObserver.state.collectLatest { netState ->
                 if (netState is NetworkStateObserver.NetworkState.Available) {
                     logDebug<LiveChatWebSocket> { "Network is available, listening" }
-                    loadRecentMessages(channelLogin)
+                    loadRecentMessages(channelLogin, lastMessageReceivedAt)
                     while (currentCoroutineContext().isActive) {
                         _connectionStatus.update { it.copy(isAlive = true) }
                         try {
-                            listen(channelLogin)
+                            lastMessageReceivedAt = listen(channelLogin, lastMessageReceivedAt)
                         } catch (e: Exception) {
                             logError<LiveChatWebSocket>(e) { "Socket was closed" }
                         }
@@ -97,7 +96,11 @@ internal class LiveChatWebSocket(
         }
     }.flowOn(DispatchersProvider.io)
 
-    private suspend fun ProducerScope<ChatEvent>.listen(channelLogin: String) {
+    private suspend fun ProducerScope<ChatEvent>.listen(
+        channelLogin: String,
+        lastMessageReceivedAt: Instant?,
+    ): Instant? {
+        var currentLastMessageReceivedAt = lastMessageReceivedAt
         httpClient.webSocket(ENDPOINT) {
             logDebug<LiveChatWebSocket> { "Socket open, saying hello" }
 
@@ -122,7 +125,10 @@ internal class LiveChatWebSocket(
                             .lines()
                             .filter { it.isNotBlank() }
                             .forEach { line ->
-                                handleMessage(line) { event ->
+                                currentLastMessageReceivedAt = handleMessage(
+                                    received = line,
+                                    lastMessageReceivedAt = currentLastMessageReceivedAt,
+                                ) { event ->
                                     this@listen.send(event)
                                 }
                             }
@@ -132,12 +138,14 @@ internal class LiveChatWebSocket(
                 }
             }
         }
+        return currentLastMessageReceivedAt
     }
 
     private suspend fun DefaultWebSocketSession.handleMessage(
         received: String,
+        lastMessageReceivedAt: Instant?,
         emit: suspend (ChatEvent) -> Unit,
-    ) {
+    ): Instant? {
         logInfo<LiveChatWebSocket> { "received: $received" }
 
         when (val command: ChatEvent? = parser.parse(received)) {
@@ -148,8 +156,8 @@ internal class LiveChatWebSocket(
             }
 
             is ChatEvent.Message -> {
-                lastMessageReceivedAt = command.timestamp
                 emit(command)
+                return command.timestamp
             }
 
             is ChatEvent.Command.RoomStateDelta,
@@ -165,9 +173,14 @@ internal class LiveChatWebSocket(
 
             null -> {}
         }
+
+        return lastMessageReceivedAt
     }
 
-    private suspend fun ProducerScope<ChatEvent>.loadRecentMessages(channelLogin: String) {
+    private suspend fun ProducerScope<ChatEvent>.loadRecentMessages(
+        channelLogin: String,
+        lastMessageReceivedAt: Instant?,
+    ) {
         val prefs = preferencesRepository.currentPreferences.first()
         if (!prefs.enableRecentMessages) return
 

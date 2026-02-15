@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.chat.data.irc
 
-import fr.outadoc.justchatting.feature.chat.data.Defaults
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesRepository
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
@@ -21,23 +20,18 @@ import io.ktor.websocket.DefaultWebSocketSession
 import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.channels.ProducerScope
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.dropWhile
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
@@ -58,19 +52,9 @@ internal class LiveChatWebSocket private constructor(
     private val preferencesRepository: PreferenceRepository,
     private val channelLogin: String,
 ) : ChatEventHandler {
-    private val scope = CoroutineScope(SupervisorJob())
-
     companion object {
         private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
     }
-
-    private val _eventFlow =
-        MutableSharedFlow<ChatEvent>(
-            replay = Defaults.EventBufferSize,
-            onBufferOverflow = BufferOverflow.DROP_OLDEST,
-        )
-
-    override val eventFlow: Flow<ChatEvent> = _eventFlow
 
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
         MutableStateFlow(
@@ -83,52 +67,35 @@ internal class LiveChatWebSocket private constructor(
     override val connectionStatus = _connectionStatus.asStateFlow()
 
     private var lastMessageReceivedAt: Instant? = null
-    private var isNetworkAvailable: Boolean = false
 
-    override fun start() {
-        observeNetworkState()
-        observeSocket()
-    }
-
-    private fun observeNetworkState() {
-        scope.launch {
-            networkStateObserver.state.collectLatest { state ->
-                isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
-            }
-        }
-    }
-
-    private fun observeSocket() {
-        scope.launch(DispatchersProvider.io) {
-            logDebug<LiveChatWebSocket> { "Starting job" }
-
-            _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
-
-            while (isActive) {
-                if (isNetworkAvailable) {
+    override val eventFlow: Flow<ChatEvent> = channelFlow {
+        _connectionStatus.update { it.copy(registeredListeners = 1) }
+        try {
+            networkStateObserver.state.collectLatest { netState ->
+                if (netState is NetworkStateObserver.NetworkState.Available) {
                     logDebug<LiveChatWebSocket> { "Network is available, listening" }
-                    _connectionStatus.update { status -> status.copy(isAlive = true) }
-
                     loadRecentMessages()
-
-                    try {
-                        listen()
-                    } catch (e: Exception) {
-                        logError<LiveChatWebSocket>(e) { "Socket was closed" }
+                    while (currentCoroutineContext().isActive) {
+                        _connectionStatus.update { it.copy(isAlive = true) }
+                        try {
+                            listen()
+                        } catch (e: Exception) {
+                            logError<LiveChatWebSocket>(e) { "Socket was closed" }
+                        }
+                        _connectionStatus.update { it.copy(isAlive = false) }
+                        delayWithJitter(1.seconds, maxJitter = 3.seconds)
                     }
                 } else {
-                    logDebug<LiveChatWebSocket> { "Network is out, delay and retry" }
-                    _connectionStatus.update { status -> status.copy(isAlive = false) }
-                }
-
-                if (isActive) {
-                    delayWithJitter(1.seconds, maxJitter = 3.seconds)
+                    logDebug<LiveChatWebSocket> { "Network is out, waiting" }
+                    _connectionStatus.update { it.copy(isAlive = false) }
                 }
             }
+        } finally {
+            _connectionStatus.update { it.copy(registeredListeners = 0) }
         }
-    }
+    }.flowOn(DispatchersProvider.io)
 
-    private suspend fun listen() {
+    private suspend fun ProducerScope<ChatEvent>.listen() {
         httpClient.webSocket(ENDPOINT) {
             logDebug<LiveChatWebSocket> { "Socket open, saying hello" }
 
@@ -137,7 +104,7 @@ internal class LiveChatWebSocket private constructor(
             send("CAP REQ :twitch.tv/tags twitch.tv/commands")
             send("JOIN #$channelLogin")
 
-            _eventFlow.emit(
+            this@listen.send(
                 ChatEvent.Message.Join(
                     timestamp = clock.now(),
                     channelLogin = channelLogin,
@@ -152,7 +119,11 @@ internal class LiveChatWebSocket private constructor(
                             .readText()
                             .lines()
                             .filter { it.isNotBlank() }
-                            .forEach { line -> handleMessage(line) }
+                            .forEach { line ->
+                                handleMessage(line) { event ->
+                                    this@listen.send(event)
+                                }
+                            }
                     }
 
                     else -> {}
@@ -161,7 +132,10 @@ internal class LiveChatWebSocket private constructor(
         }
     }
 
-    private suspend fun DefaultWebSocketSession.handleMessage(received: String) {
+    private suspend fun DefaultWebSocketSession.handleMessage(
+        received: String,
+        emit: suspend (ChatEvent) -> Unit,
+    ) {
         logInfo<LiveChatWebSocket> { "received: $received" }
 
         when (val command: ChatEvent? = parser.parse(received)) {
@@ -172,17 +146,15 @@ internal class LiveChatWebSocket private constructor(
             }
 
             is ChatEvent.Message -> {
-                // Remember time of last message so that we can restore lost messages after a connection loss
                 lastMessageReceivedAt = command.timestamp
-
-                _eventFlow.emit(command)
+                emit(command)
             }
 
             is ChatEvent.Command.RoomStateDelta,
             is ChatEvent.Command.ClearChat,
             is ChatEvent.Command.ClearMessage,
             -> {
-                _eventFlow.emit(command)
+                emit(command)
             }
 
             is ChatEvent.Command.Ping -> {
@@ -193,13 +165,7 @@ internal class LiveChatWebSocket private constructor(
         }
     }
 
-    override fun disconnect() {
-        logDebug<LiveChatWebSocket> { "Disconnecting live chat socket" }
-        _connectionStatus.update { status -> status.copy(registeredListeners = 0) }
-        scope.cancel()
-    }
-
-    private suspend fun loadRecentMessages() {
+    private suspend fun ProducerScope<ChatEvent>.loadRecentMessages() {
         val prefs = preferencesRepository.currentPreferences.first()
         if (!prefs.enableRecentMessages) return
 
@@ -209,15 +175,13 @@ internal class LiveChatWebSocket private constructor(
                 limit = AppPreferences.Defaults.RecentChatLimit,
             ).map { messages ->
                 messages
-                    .asFlow()
                     .filterIsInstance<ChatEvent.Message>()
-                    .dropWhile { event ->
-                        // Drop messages that were received before the last message we received
-                        event.timestamp < (lastMessageReceivedAt ?: Instant.DISTANT_PAST)
+                    .filter { event ->
+                        event.timestamp >= (lastMessageReceivedAt ?: Instant.DISTANT_PAST)
                     }
             }.fold(
                 onSuccess = { events ->
-                    _eventFlow.emitAll(events)
+                    events.forEach { event -> send(event) }
                 },
                 onFailure = { e ->
                     logError<LiveChatWebSocket>(e) { "Failed to load recent messages for channel $channelLogin" }

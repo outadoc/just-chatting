@@ -7,7 +7,6 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.getAndUpdate
 
 internal class DefaultChatRepository(
     private val factory: AggregateChatEventHandler.Factory,
@@ -30,28 +29,14 @@ internal class DefaultChatRepository(
     ): ChatEventHandler {
         val handler: ChatEventHandler =
             handlerFlow.value
-                ?: factory
-                    .create(
-                        channelId = user.id,
-                        channelLogin = user.login,
-                        appUser = appUser,
-                    ).also { thread ->
-                        thread.start()
-                    }
+                ?: factory.create(
+                    channelId = user.id,
+                    channelLogin = user.login,
+                    appUser = appUser,
+                )
 
         return handler.also {
             handlerFlow.value = it
         }
-    }
-
-    override fun start(
-        user: User,
-        appUser: AppUser.LoggedIn,
-    ) {
-        getOrCreateEventHandler(user, appUser).start()
-    }
-
-    override fun close() {
-        handlerFlow.getAndUpdate { null }?.disconnect()
     }
 }

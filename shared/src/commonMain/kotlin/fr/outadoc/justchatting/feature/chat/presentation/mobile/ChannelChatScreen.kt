@@ -61,7 +61,6 @@ internal fun ChannelChatScreen(
         !isStandalone && areBubblesSupported() && prefs.enableNotifications && notifier.areNotificationsEnabled
 
     OnLifecycleEvent(
-        onResume = viewModel::onResume,
         onPause = {
             if (user != null && canOpenInBubble) {
                 notifier.notify(

@@ -6,7 +6,7 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
-internal interface ChatRepository : AutoCloseable {
+internal interface ChatRepository {
     fun getChatEventFlow(
         user: User,
         appUser: AppUser.LoggedIn,
@@ -16,9 +16,4 @@ internal interface ChatRepository : AutoCloseable {
         user: User,
         appUser: AppUser.LoggedIn,
     ): Flow<ConnectionStatus>
-
-    fun start(
-        user: User,
-        appUser: AppUser.LoggedIn,
-    )
 }

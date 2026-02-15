@@ -76,6 +76,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.stateIn
@@ -331,8 +332,6 @@ internal class ChatViewModel(
             )
 
     init {
-        addCloseable(chatRepository)
-
         state
             .filterIsInstance<State.Chatting>()
             .mapNotNull { state -> state.user }
@@ -385,77 +384,74 @@ internal class ChatViewModel(
             .filterIsInstance<State.Chatting>()
             .map { state -> Pair(state.user, state.appUser) }
             .distinctUntilChanged()
-            .onEach { (user, appUser) ->
-                chatRepository
-                    .getChatEventFlow(user, appUser)
-                    .flatMapConcat { event ->
-                        chatEventViewMapper.map(event).asFlow()
-                    }.mapNotNull { event ->
-                        when (event) {
-                            is ChatListItem.Message -> {
-                                Action.AddMessages(listOf(event))
+            .flatMapLatest { (user, appUser) ->
+                merge(
+                    chatRepository
+                        .getChatEventFlow(user, appUser)
+                        .flatMapConcat { event ->
+                            chatEventViewMapper.map(event).asFlow()
+                        }.mapNotNull { event ->
+                            when (event) {
+                                is ChatListItem.Message -> {
+                                    Action.AddMessages(listOf(event))
+                                }
+
+                                is ChatListItem.RoomStateDelta -> {
+                                    Action.ChangeRoomState(event)
+                                }
+
+                                is ChatListItem.UserState -> {
+                                    Action.ChangeUserState(event)
+                                }
+
+                                is ChatListItem.RemoveContent -> {
+                                    Action.RemoveContent(event)
+                                }
+
+                                is ChatListItem.PollUpdate -> {
+                                    Action.UpdatePoll(event.poll)
+                                }
+
+                                is ChatListItem.PredictionUpdate -> {
+                                    Action.UpdatePrediction(event.prediction)
+                                }
+
+                                is ChatListItem.BroadcastSettingsUpdate -> {
+                                    Action.UpdateStreamMetadata(
+                                        streamTitle = event.streamTitle,
+                                        streamCategory = event.streamCategory,
+                                    )
+                                }
+
+                                is ChatListItem.ViewerCountUpdate -> {
+                                    Action.UpdateStreamMetadata(
+                                        viewerCount = event.viewerCount,
+                                    )
+                                }
+
+                                is ChatListItem.RichEmbed -> {
+                                    Action.AddRichEmbed(event)
+                                }
+
+                                is ChatListItem.RaidUpdate -> {
+                                    Action.UpdateRaidAnnouncement(
+                                        raid = event.raid,
+                                    )
+                                }
+
+                                is ChatListItem.PinnedMessageUpdate -> {
+                                    Action.UpdatePinnedMessage(
+                                        pinnedMessage = event.pinnedMessage,
+                                    )
+                                }
                             }
-
-                            is ChatListItem.RoomStateDelta -> {
-                                Action.ChangeRoomState(event)
-                            }
-
-                            is ChatListItem.UserState -> {
-                                Action.ChangeUserState(event)
-                            }
-
-                            is ChatListItem.RemoveContent -> {
-                                Action.RemoveContent(event)
-                            }
-
-                            is ChatListItem.PollUpdate -> {
-                                Action.UpdatePoll(event.poll)
-                            }
-
-                            is ChatListItem.PredictionUpdate -> {
-                                Action.UpdatePrediction(event.prediction)
-                            }
-
-                            is ChatListItem.BroadcastSettingsUpdate -> {
-                                Action.UpdateStreamMetadata(
-                                    streamTitle = event.streamTitle,
-                                    streamCategory = event.streamCategory,
-                                )
-                            }
-
-                            is ChatListItem.ViewerCountUpdate -> {
-                                Action.UpdateStreamMetadata(
-                                    viewerCount = event.viewerCount,
-                                )
-                            }
-
-                            is ChatListItem.RichEmbed -> {
-                                Action.AddRichEmbed(event)
-                            }
-
-                            is ChatListItem.RaidUpdate -> {
-                                Action.UpdateRaidAnnouncement(
-                                    raid = event.raid,
-                                )
-                            }
-
-                            is ChatListItem.PinnedMessageUpdate -> {
-                                Action.UpdatePinnedMessage(
-                                    pinnedMessage = event.pinnedMessage,
-                                )
-                            }
-                        }
-                    }.onEach { action -> actions.emit(action) }
-                    .launchIn(defaultScope)
-
-                chatRepository
-                    .getConnectionStatusFlow(user, appUser)
-                    .map { status -> Action.ChangeConnectionStatus(status) }
-                    .onEach { action -> actions.emit(action) }
-                    .launchIn(defaultScope)
-
-                chatRepository.start(user, appUser)
-            }.launchIn(defaultScope)
+                        },
+                    chatRepository
+                        .getConnectionStatusFlow(user, appUser)
+                        .map { status -> Action.ChangeConnectionStatus(status) },
+                )
+            }.onEach { action -> actions.emit(action) }
+            .launchIn(defaultScope)
 
         state
             .filterIsInstance<State.Chatting>()
@@ -528,12 +524,6 @@ internal class ChatViewModel(
                     InputAction.UpdateAutoCompleteItems(autoCompleteItems),
                 )
             }.launchIn(viewModelScope)
-    }
-
-    fun onResume() {
-        (state.value as? State.Chatting)?.let { chattingState ->
-            chatRepository.start(chattingState.user, chattingState.appUser)
-        }
     }
 
     fun loadChat(userId: String) {
@@ -666,8 +656,6 @@ internal class ChatViewModel(
 
     private suspend fun Action.LoadChat.reduce(state: State): State {
         if (state is State.Chatting && state.user.id == userId) return state
-
-        chatRepository.close()
 
         val appUser = authRepository.currentUser.first()
 

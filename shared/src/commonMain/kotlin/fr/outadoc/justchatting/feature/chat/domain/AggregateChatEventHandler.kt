@@ -52,12 +52,4 @@ internal class AggregateChatEventHandler(
                 )
             }
         }.distinctUntilChanged()
-
-    override fun start() {
-        handlers.forEach { handler -> handler.start() }
-    }
-
-    override fun disconnect() {
-        handlers.forEach { handler -> handler.disconnect() }
-    }
 }

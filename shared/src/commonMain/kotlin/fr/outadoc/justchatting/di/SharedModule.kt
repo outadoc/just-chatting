@@ -143,7 +143,6 @@ public val sharedModule: Module
                     listOf(
                         get<LiveChatWebSocket.Factory>(),
                         get<LoggedInChatWebSocket.Factory>(),
-                        get<PubSubWebSocket.Factory>(),
                     )
                 }
             }

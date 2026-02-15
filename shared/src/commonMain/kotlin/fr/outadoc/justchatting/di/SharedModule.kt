@@ -10,12 +10,10 @@ import fr.outadoc.justchatting.feature.auth.data.TwitchAuthApi
 import fr.outadoc.justchatting.feature.auth.domain.AuthApi
 import fr.outadoc.justchatting.feature.chat.data.irc.LiveChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.irc.LoggedInChatWebSocket
-import fr.outadoc.justchatting.feature.chat.data.irc.MockChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.irc.TwitchIrcCommandParser
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesApi
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesRepository
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesServer
-import fr.outadoc.justchatting.feature.chat.data.pubsub.client.PubSubWebSocket
 import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.broadcastsettingsupdate.PubSubBroadcastSettingsPlugin
 import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.channelpoints.PubSubChannelPointsPlugin
 import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.pinnedmessage.PubSubPinnedMessagePlugin
@@ -135,8 +133,6 @@ public val sharedModule: Module
 
             single { LiveChatWebSocket(get(), get(), get(), get(), get(), get()) }
             single { LoggedInChatWebSocket(get(), get(), get()) }
-            single { MockChatWebSocket(get(), get(), get(), get()) }
-            single { PubSubWebSocket(get(), get(), get()) }
 
             single {
                 ChatEventHandlersProvider {

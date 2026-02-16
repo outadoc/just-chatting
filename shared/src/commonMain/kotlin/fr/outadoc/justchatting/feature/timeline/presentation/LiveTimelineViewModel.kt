@@ -26,7 +26,7 @@ import kotlin.time.Duration.Companion.minutes
 internal class LiveTimelineViewModel(
     private val twitchRepository: TwitchRepository,
     private val clock: Clock,
-    private val authRepository: AuthRepository,
+    authRepository: AuthRepository,
 ) : ViewModel() {
     data class State(
         val isLoading: Boolean = false,
@@ -36,30 +36,16 @@ internal class LiveTimelineViewModel(
 
     private val currentAppUser =
         authRepository.currentUser
-            .stateIn(viewModelScope, SharingStarted.Eagerly, AppUser.NotLoggedIn)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = AppUser.NotLoggedIn,
+            )
 
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
 
     private var periodicSyncJob: Job? = null
-    private var syncJob: Job? = null
-
-    init {
-        viewModelScope.launch {
-            val tz = _state.value.timeZone
-            val today = clock.now().toLocalDateTime(tz).date
-
-            twitchRepository
-                .getFollowedChannelsSchedule(
-                    today = today,
-                    timeZone = tz,
-                ).collect { schedule ->
-                    _state.update { state ->
-                        state.copy(live = schedule.live)
-                    }
-                }
-        }
-    }
 
     fun syncLiveStreamsPeriodically() {
         if (periodicSyncJob?.isActive == true) {
@@ -68,42 +54,43 @@ internal class LiveTimelineViewModel(
 
         periodicSyncJob =
             viewModelScope.launch(DispatchersProvider.default) {
-                while (isActive) {
-                    delay(1.minutes)
+                launch {
+                    val tz = _state.value.timeZone
+                    val today = clock.now().toLocalDateTime(tz).date
 
-                    if (syncJob?.isActive != true) {
-                        syncLiveStreamsNow()
-                    }
+                    twitchRepository
+                        .getFollowedChannelsSchedule(
+                            today = today,
+                            timeZone = tz,
+                        ).collect { schedule ->
+                            _state.update { state ->
+                                state.copy(live = schedule.live)
+                            }
+                        }
+                }
+
+                while (isActive) {
+                    doSync()
+                    delay(1.minutes)
                 }
             }
     }
 
     fun syncLiveStreamsNow() {
-        viewModelScope.launch(DispatchersProvider.io) {
-            twitchRepository.syncFollowedStreams(appUser = currentAppUser.value)
+        viewModelScope.launch {
+            doSync()
         }
     }
 
-    fun syncEverythingNow() {
-        syncJob?.cancel()
-        syncJob =
-            viewModelScope.launch(DispatchersProvider.io) {
-                _state.update { state ->
-                    state.copy(isLoading = true)
-                }
+    private suspend fun doSync() {
+        _state.update { state ->
+            state.copy(isLoading = true)
+        }
 
-                val tz = _state.value.timeZone
-                val today = clock.now().toLocalDateTime(tz).date
+        twitchRepository.syncFollowedStreams(appUser = currentAppUser.value)
 
-                twitchRepository.syncFollowedChannelsSchedule(
-                    today = today,
-                    timeZone = tz,
-                    appUser = currentAppUser.value,
-                )
-
-                _state.update { state ->
-                    state.copy(isLoading = false)
-                }
-            }
+        _state.update { state ->
+            state.copy(isLoading = false)
+        }
     }
 }

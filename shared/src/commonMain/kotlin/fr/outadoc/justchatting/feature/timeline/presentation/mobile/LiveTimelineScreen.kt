@@ -51,7 +51,6 @@ internal fun LiveTimelineScreen(
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        viewModel.syncEverythingNow()
         viewModel.syncLiveStreamsPeriodically()
     }
 
@@ -83,7 +82,7 @@ internal fun LiveTimelineScreen(
 
                         AccessibleIconButton(
                             onClickLabel = stringResource(Res.string.timeline_refresh_action_cd),
-                            onClick = { viewModel.syncEverythingNow() },
+                            onClick = { viewModel.syncLiveStreamsNow() },
                         ) {
                             if (state.isLoading) {
                                 CircularProgressIndicator(

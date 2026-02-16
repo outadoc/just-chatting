@@ -42,6 +42,6 @@ jobs:
           "-PexternalVersionName=pr-${{ steps.date.outputs.date }}-${{ github.event.pull_request.number }}-${{ github.sha }}"
 
       - name: Upload packages to GitHub
-        uses: actions/upload-artifact@v5.0.0
+        uses: actions/upload-artifact@v6.0.0
         with:
           path: app-desktop/build/compose/binaries/main

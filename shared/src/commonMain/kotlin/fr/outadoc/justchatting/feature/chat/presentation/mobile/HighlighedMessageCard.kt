@@ -16,14 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.materialkolor.DynamicMaterialTheme
 import com.materialkolor.PaletteStyle
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem.Message.Highlighted.Level
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.HighlightLevelPreviewProvider
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
 @Composable
 internal fun HighlightedMessageCard(

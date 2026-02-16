@@ -67,8 +67,10 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.ui)
                 implementation(compose.components.uiToolingPreview)
+                implementation(compose.preview)
                 implementation(compose.material3AdaptiveNavigationSuite)
 
+                implementation(libs.androidx.compose.ui.tooling)
                 implementation(libs.androidx.datastore.preferences)
                 implementation(libs.androidx.lifecycle.viewmodel)
                 implementation(libs.androidx.paging.common)

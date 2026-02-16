@@ -3,9 +3,9 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun AutoCompleteUserItem(

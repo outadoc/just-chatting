@@ -6,13 +6,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.LocalContentColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
@@ -42,7 +43,6 @@ import fr.outadoc.justchatting.utils.presentation.parseHexColor
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 
@@ -59,9 +59,9 @@ internal fun PredictionCard(
         modifier = modifier,
         onClick = { isExpanded = !isExpanded },
         colors =
-        CardDefaults.cardColors(
-            containerColor = color,
-        ),
+            CardDefaults.cardColors(
+                containerColor = color,
+            ),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             val status =
@@ -88,16 +88,16 @@ internal fun PredictionCard(
                     Text(
                         modifier = Modifier.padding(bottom = 4.dp),
                         text =
-                        buildString {
-                            append(stringResource(status))
-                            append(" · ")
-                            append(
-                                stringResource(
-                                    Res.string.prediction_status_points,
-                                    totalPointsSpent.formatNumber(),
-                                ),
-                            )
-                        },
+                            buildString {
+                                append(stringResource(status))
+                                append(" · ")
+                                append(
+                                    stringResource(
+                                        Res.string.prediction_status_points,
+                                        totalPointsSpent.formatNumber(),
+                                    ),
+                                )
+                            },
                         style = MaterialTheme.typography.titleSmall,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -130,22 +130,22 @@ internal fun PredictionCard(
                     prediction.outcomes.forEach { outcome ->
                         PredictionOutcome(
                             modifier =
-                            Modifier
-                                .padding(vertical = 8.dp)
-                                .fillMaxWidth(),
+                                Modifier
+                                    .padding(vertical = 8.dp)
+                                    .fillMaxWidth(),
                             title = outcome.title,
                             votes = outcome.totalPoints,
                             totalVotes = totalPointsSpent,
                             color =
-                            outcome.color
-                                .parseHexColor()
-                                ?.let { color ->
-                                    ensureColorIsAccessible(
-                                        foreground = color,
-                                        background = MaterialTheme.colorScheme.surface,
-                                    )
-                                }
-                                ?: LocalContentColor.current,
+                                outcome.color
+                                    .parseHexColor()
+                                    ?.let { color ->
+                                        ensureColorIsAccessible(
+                                            foreground = color,
+                                            background = MaterialTheme.colorScheme.surface,
+                                        )
+                                    }
+                                    ?: LocalContentColor.current,
                             icon = {
                                 badges
                                     .firstOrNull { badge ->
@@ -173,44 +173,44 @@ private val mockPrediction =
         createdAt = Instant.parse("2023-02-05T18:11:52.832Z"),
         predictionWindow = 5.minutes,
         outcomes =
-        listOf(
-            Prediction.Outcome(
-                id = "1",
-                title = "Étoiles",
-                totalPoints = 12345,
-                totalUsers = 1000,
-                badge =
-                Badge(
-                    id = "123",
-                    version = "5",
+            listOf(
+                Prediction.Outcome(
+                    id = "1",
+                    title = "Étoiles",
+                    totalPoints = 12345,
+                    totalUsers = 1000,
+                    badge =
+                        Badge(
+                            id = "123",
+                            version = "5",
+                        ),
+                    color = "#00FF00",
                 ),
-                color = "#00FF00",
-            ),
-            Prediction.Outcome(
-                id = "1",
-                title = "AntoineDaniel",
-                totalPoints = 102345,
-                totalUsers = 1000,
-                badge =
-                Badge(
-                    id = "123",
-                    version = "5",
+                Prediction.Outcome(
+                    id = "1",
+                    title = "AntoineDaniel",
+                    totalPoints = 102345,
+                    totalUsers = 1000,
+                    badge =
+                        Badge(
+                            id = "123",
+                            version = "5",
+                        ),
+                    color = "#FF0000",
                 ),
-                color = "#FF0000",
-            ),
-            Prediction.Outcome(
-                id = "1",
-                title = "HortyUnderscore",
-                totalPoints = 52450,
-                totalUsers = 1000,
-                badge =
-                Badge(
-                    id = "123",
-                    version = "5",
+                Prediction.Outcome(
+                    id = "1",
+                    title = "HortyUnderscore",
+                    totalPoints = 52450,
+                    totalUsers = 1000,
+                    badge =
+                        Badge(
+                            id = "123",
+                            version = "5",
+                        ),
+                    color = "#0000FF",
                 ),
-                color = "#0000FF",
             ),
-        ),
     )
 
 @Preview

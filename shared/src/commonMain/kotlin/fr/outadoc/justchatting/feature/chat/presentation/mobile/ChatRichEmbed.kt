@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
@@ -25,7 +26,6 @@ import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.richEmbed_author_title
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun ChatRichEmbed(

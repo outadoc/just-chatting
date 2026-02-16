@@ -12,13 +12,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.core.PlaceholderHighlight
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.material3.placeholder
 import fr.outadoc.justchatting.feature.shared.presentation.mobile.placeholder.material3.shimmer
 import fr.outadoc.justchatting.utils.core.isOdd
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.random.Random
 
 @Composable

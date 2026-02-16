@@ -20,6 +20,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.app_name
@@ -28,7 +29,6 @@ import fr.outadoc.justchatting.shared.onboarding_title
 import fr.outadoc.justchatting.shared.presentation.icons.AppIcon
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun OnboardingScreen(

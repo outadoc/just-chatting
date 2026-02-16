@@ -1,12 +1,12 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile.preview
 
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Icon
 import fr.outadoc.justchatting.utils.resources.desc
 import kotlinx.collections.immutable.persistentListOf
-import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import kotlin.time.Instant
 
 internal val previewBadges =

@@ -70,7 +70,6 @@ kotlin {
                 implementation(compose.preview)
                 implementation(compose.material3AdaptiveNavigationSuite)
 
-                implementation(libs.androidx.compose.ui.tooling)
                 implementation(libs.androidx.datastore.preferences)
                 implementation(libs.androidx.lifecycle.viewmodel)
                 implementation(libs.androidx.paging.common)
@@ -177,6 +176,10 @@ kotlin {
             }
         }
     }
+}
+
+dependencies {
+    debugImplementation(libs.androidx.compose.ui.tooling)
 }
 
 compose.resources {

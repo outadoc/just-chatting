@@ -10,4 +10,5 @@ tasks.withType<Test> {
 dependencies {
     testImplementation(libs.konsist)
     testImplementation(libs.junit.jupiter.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }

@@ -179,7 +179,7 @@ kotlin {
 }
 
 dependencies {
-    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.jetbrains.compose.ui.tooling)
 }
 
 compose.resources {

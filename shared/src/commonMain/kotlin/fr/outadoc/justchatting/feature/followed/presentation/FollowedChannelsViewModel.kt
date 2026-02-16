@@ -15,6 +15,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,10 +29,6 @@ internal class FollowedChannelsViewModel(
         val data: ImmutableList<ChannelFollow> = persistentListOf(),
         val isLoading: Boolean = true,
     )
-
-    private val currentAppUser =
-        authRepository.currentUser
-            .stateIn(viewModelScope, SharingStarted.Eagerly, AppUser.NotLoggedIn)
 
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
@@ -60,7 +57,9 @@ internal class FollowedChannelsViewModel(
                     state.copy(isLoading = true)
                 }
 
-                repository.syncFollowedChannels(appUser = currentAppUser.value)
+                repository.syncFollowedChannels(
+                    appUser = authRepository.currentUser.first(),
+                )
 
                 _state.update { state ->
                     state.copy(isLoading = false)

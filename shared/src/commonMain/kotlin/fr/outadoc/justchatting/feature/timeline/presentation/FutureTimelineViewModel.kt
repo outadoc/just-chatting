@@ -13,6 +13,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -31,10 +32,6 @@ internal class FutureTimelineViewModel(
         val future: ImmutableMap<LocalDate, List<ChannelScheduleSegment>> = persistentMapOf(),
         val timeZone: TimeZone = TimeZone.currentSystemDefault(),
     )
-
-    private val currentAppUser =
-        authRepository.currentUser
-            .stateIn(viewModelScope, SharingStarted.Eagerly, AppUser.NotLoggedIn)
 
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
@@ -60,7 +57,9 @@ internal class FutureTimelineViewModel(
 
     fun syncLiveStreamsNow() {
         viewModelScope.launch(DispatchersProvider.io) {
-            twitchRepository.syncFollowedStreams(appUser = currentAppUser.value)
+            twitchRepository.syncFollowedStreams(
+                appUser = authRepository.currentUser.first(),
+            )
         }
     }
 
@@ -78,7 +77,7 @@ internal class FutureTimelineViewModel(
                 twitchRepository.syncFollowedChannelsSchedule(
                     today = today,
                     timeZone = tz,
-                    appUser = currentAppUser.value,
+                    appUser = authRepository.currentUser.first(),
                 )
 
                 _state.update { state ->

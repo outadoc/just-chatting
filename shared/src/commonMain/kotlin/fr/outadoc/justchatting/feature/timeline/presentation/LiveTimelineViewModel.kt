@@ -14,6 +14,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
@@ -26,21 +27,13 @@ import kotlin.time.Duration.Companion.minutes
 internal class LiveTimelineViewModel(
     private val twitchRepository: TwitchRepository,
     private val clock: Clock,
-    authRepository: AuthRepository,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
     data class State(
         val isLoading: Boolean = false,
         val live: ImmutableList<UserStream> = persistentListOf(),
         val timeZone: TimeZone = TimeZone.currentSystemDefault(),
     )
-
-    private val currentAppUser =
-        authRepository.currentUser
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.Eagerly,
-                initialValue = AppUser.NotLoggedIn,
-            )
 
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
@@ -87,7 +80,11 @@ internal class LiveTimelineViewModel(
             state.copy(isLoading = true)
         }
 
-        twitchRepository.syncFollowedStreams(appUser = currentAppUser.value)
+        val appUser = authRepository.currentUser.first()
+
+        twitchRepository.syncFollowedStreams(
+            appUser = appUser,
+        )
 
         _state.update { state ->
             state.copy(isLoading = false)

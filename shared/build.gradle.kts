@@ -176,10 +176,6 @@ kotlin {
     }
 }
 
-dependencies {
-    debugImplementation(libs.jetbrains.compose.ui.tooling)
-}
-
 compose.resources {
     packageOfResClass = "fr.outadoc.justchatting.shared"
 }
@@ -221,4 +217,5 @@ sqldelight {
 
 dependencies {
     coreLibraryDesugaring(libs.desugar)
+    debugImplementation(libs.jetbrains.compose.ui.tooling)
 }

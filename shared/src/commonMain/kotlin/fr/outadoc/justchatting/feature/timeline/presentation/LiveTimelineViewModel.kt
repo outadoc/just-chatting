@@ -45,23 +45,23 @@ internal class LiveTimelineViewModel(
             return
         }
 
-        periodicSyncJob =
-            viewModelScope.launch(DispatchersProvider.default) {
-                launch {
-                    val tz = _state.value.timeZone
-                    val today = clock.now().toLocalDateTime(tz).date
+        viewModelScope.launch {
+            val tz = _state.value.timeZone
+            val today = clock.now().toLocalDateTime(tz).date
 
-                    twitchRepository
-                        .getFollowedChannelsSchedule(
-                            today = today,
-                            timeZone = tz,
-                        ).collect { schedule ->
-                            _state.update { state ->
-                                state.copy(live = schedule.live)
-                            }
-                        }
+            twitchRepository
+                .getFollowedChannelsSchedule(
+                    today = today,
+                    timeZone = tz,
+                ).collect { schedule ->
+                    _state.update { state ->
+                        state.copy(live = schedule.live)
+                    }
                 }
+        }
 
+        periodicSyncJob =
+            viewModelScope.launch {
                 while (isActive) {
                     doSync()
                     delay(1.minutes)
@@ -82,9 +82,8 @@ internal class LiveTimelineViewModel(
 
         val appUser = authRepository.currentUser.first()
 
-        twitchRepository.syncFollowedStreams(
-            appUser = appUser,
-        )
+        twitchRepository.syncFollowedChannels(appUser)
+        twitchRepository.syncFollowedStreams(appUser)
 
         _state.update { state ->
             state.copy(isLoading = false)

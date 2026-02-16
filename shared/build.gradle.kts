@@ -71,7 +71,6 @@ kotlin {
                 implementation(libs.haze.core)
                 implementation(libs.haze.materials)
                 implementation(libs.compose.components.resources)
-                implementation(libs.compose.material)
                 implementation(libs.compose.material.adaptive.core)
                 implementation(libs.compose.material.adaptive.layout)
                 implementation(libs.compose.material.adaptive.navigation)
@@ -124,7 +123,6 @@ kotlin {
                 implementation(libs.connectivity.android)
                 implementation(libs.koin.android)
                 implementation(libs.ktor.client.okhttp)
-                implementation(libs.material.core)
                 implementation(libs.okhttp)
 
                 api(libs.sqldelight.driver.android)

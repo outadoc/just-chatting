@@ -6,14 +6,14 @@
         <item name="postSplashScreenTheme">@style/Theme.App</item>
     </style>
 
-    <style name="Theme.Base.App.Light" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Theme.Base.App.Light" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
-    <style name="Theme.Base.App.Dark" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.Base.App.Dark" parent="Theme.AppCompat.NoActionBar">
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>

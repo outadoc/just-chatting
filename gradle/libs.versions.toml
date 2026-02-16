@@ -60,7 +60,6 @@ coil-core = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 coil-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coil" }
 coil-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version = "1.10.1" }
-compose-material = { module = "org.jetbrains.compose.material:material", version.ref = "jetbrains-compose" }
 compose-material-adaptive-core = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "jetbrains-navigation" }
 compose-material-adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version.ref = "jetbrains-navigation" }
 compose-material-adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "jetbrains-navigation" }
@@ -112,7 +111,6 @@ ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", versi
 ktor-server-cio = { module = "io.ktor:ktor-server-cio", version.ref = "ktor" }
 ktor-server-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor" }
 logback = "ch.qos.logback:logback-classic:1.5.32"
-material-core = "com.google.android.material:material:1.13.0"
 material-kolor = "com.materialkolor:material-kolor:4.1.1"
 okio = "com.squareup.okio:okio:3.16.4"
 okhttp = "com.squareup.okhttp3:okhttp:5.3.2"

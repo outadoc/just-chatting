@@ -22,7 +22,6 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.firebase.crashlytics)
-            implementation(libs.material.core)
         }
     }
 }

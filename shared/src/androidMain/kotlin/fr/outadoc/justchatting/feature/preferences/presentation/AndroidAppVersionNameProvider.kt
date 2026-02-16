@@ -1,8 +1,7 @@
-package fr.outadoc.justchatting.feature.preferences.presentation.ui
+package fr.outadoc.justchatting.feature.preferences.presentation
 
 import android.content.Context
 import android.content.pm.PackageManager
-import fr.outadoc.justchatting.feature.preferences.presentation.AppVersionNameProvider
 
 internal class AndroidAppVersionNameProvider(
     private val context: Context,

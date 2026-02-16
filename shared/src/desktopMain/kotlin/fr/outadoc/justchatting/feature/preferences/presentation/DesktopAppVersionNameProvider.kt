@@ -1,6 +1,4 @@
-package fr.outadoc.justchatting.feature.preferences.presentation.ui
-
-import fr.outadoc.justchatting.feature.preferences.presentation.AppVersionNameProvider
+package fr.outadoc.justchatting.feature.preferences.presentation
 
 internal class DesktopAppVersionNameProvider : AppVersionNameProvider {
     override val appVersionName: String

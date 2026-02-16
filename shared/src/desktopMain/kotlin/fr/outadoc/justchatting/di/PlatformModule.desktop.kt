@@ -16,9 +16,9 @@ import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChanne
 import fr.outadoc.justchatting.feature.chat.presentation.NoopChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.NoopCreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.preferences.presentation.AppVersionNameProvider
+import fr.outadoc.justchatting.feature.preferences.presentation.DesktopAppVersionNameProvider
 import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.NoopLogRepository
-import fr.outadoc.justchatting.feature.preferences.presentation.ui.DesktopAppVersionNameProvider
 import fr.outadoc.justchatting.utils.http.BaseHttpClientProvider
 import fr.outadoc.justchatting.utils.http.DesktopHttpClientProvider
 import net.harawata.appdirs.AppDirsFactory

@@ -17,10 +17,10 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.ui.AndroidChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ui.AndroidCreateShortcutForChannelUseCase
+import fr.outadoc.justchatting.feature.preferences.presentation.AndroidAppVersionNameProvider
 import fr.outadoc.justchatting.feature.preferences.presentation.AndroidLogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.AppVersionNameProvider
 import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
-import fr.outadoc.justchatting.feature.preferences.presentation.ui.AndroidAppVersionNameProvider
 import fr.outadoc.justchatting.utils.http.AndroidHttpClientProvider
 import fr.outadoc.justchatting.utils.http.BaseHttpClientProvider
 import okio.Path.Companion.toPath

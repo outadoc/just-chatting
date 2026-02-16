@@ -4,7 +4,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import fr.outadoc.justchatting.di.startSharedKoin
-import fr.outadoc.justchatting.feature.shared.presentation.mobile.App
+import fr.outadoc.justchatting.feature.shared.presentation.ui.App
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.app_name
 import fr.outadoc.justchatting.shared.icon_masked

@@ -1,0 +1,19 @@
+package fr.outadoc.justchatting.feature.preferences.presentation.ui
+
+import fr.outadoc.justchatting.feature.preferences.presentation.AppVersionNameProvider
+
+internal class DesktopAppVersionNameProvider : AppVersionNameProvider {
+    override val appVersionName: String
+        get() {
+            val stream =
+                javaClass.getResourceAsStream("/version.txt")
+                    ?: error("version.txt not found in resources")
+
+            return stream
+                .bufferedReader()
+                .readText()
+                .takeIf { it.isNotBlank() }
+                ?.trim()
+                ?: "SNAPSHOT"
+        }
+}

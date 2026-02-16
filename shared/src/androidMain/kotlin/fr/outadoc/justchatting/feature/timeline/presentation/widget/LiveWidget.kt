@@ -36,7 +36,7 @@ import androidx.glance.text.TextDefaults
 import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageUri
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.glance.GlanceCard
-import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainActivity
+import fr.outadoc.justchatting.feature.shared.presentation.ui.MainActivity
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.feature.timeline.presentation.LiveTimelineViewModel
 import fr.outadoc.justchatting.shared.R

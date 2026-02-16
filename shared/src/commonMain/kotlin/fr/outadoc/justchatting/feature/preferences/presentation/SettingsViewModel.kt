@@ -7,7 +7,7 @@ import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
-import fr.outadoc.justchatting.feature.preferences.presentation.mobile.AppVersionNameProvider
+import fr.outadoc.justchatting.feature.preferences.presentation.AppVersionNameProvider
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.utils.core.DispatchersProvider

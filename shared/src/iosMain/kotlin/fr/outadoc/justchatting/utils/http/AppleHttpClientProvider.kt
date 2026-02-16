@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.utils.http
 
-import fr.outadoc.justchatting.feature.preferences.presentation.mobile.AppVersionNameProvider
+import fr.outadoc.justchatting.feature.preferences.presentation.AppVersionNameProvider
 import fr.outadoc.justchatting.utils.logging.logDebug
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig

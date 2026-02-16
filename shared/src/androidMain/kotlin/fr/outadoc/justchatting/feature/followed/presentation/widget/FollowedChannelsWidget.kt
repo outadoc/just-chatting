@@ -27,7 +27,7 @@ import androidx.glance.layout.padding
 import fr.outadoc.justchatting.feature.followed.presentation.FollowedChannelsViewModel
 import fr.outadoc.justchatting.feature.shared.presentation.glance.GlanceUserItem
 import fr.outadoc.justchatting.feature.shared.presentation.glance.adaptiveGridCellsCompat
-import fr.outadoc.justchatting.feature.shared.presentation.mobile.MainActivity
+import fr.outadoc.justchatting.feature.shared.presentation.ui.MainActivity
 import fr.outadoc.justchatting.shared.R
 import org.koin.compose.koinInject
 

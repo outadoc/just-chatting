@@ -12,31 +12,23 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Poll
 import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
-import fr.outadoc.justchatting.feature.emotes.domain.EmoteListSourcesProvider
 import fr.outadoc.justchatting.feature.emotes.domain.GetRecentEmotesUseCase
-import fr.outadoc.justchatting.feature.emotes.domain.InsertRecentEmotesUseCase
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteSetItem
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
-import fr.outadoc.justchatting.feature.emotes.domain.model.RecentEmote
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
-import fr.outadoc.justchatting.feature.shared.domain.model.MessageNotSentException
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.chat_header_recent
-import fr.outadoc.justchatting.shared.chat_send_msg_error
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.flatListOf
-import fr.outadoc.justchatting.utils.core.isOdd
-import fr.outadoc.justchatting.utils.core.roundUpOddToEven
-import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.resources.desc
 import kotlinx.collections.immutable.ImmutableList
@@ -47,26 +39,17 @@ import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentHashSetOf
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
-import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
-import kotlinx.collections.immutable.toPersistentHashMap
-import kotlinx.collections.immutable.toPersistentList
-import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapConcat
@@ -93,17 +76,19 @@ internal class ChatViewModel(
     private val clock: Clock,
     private val twitchRepository: TwitchRepository,
     private val getRecentEmotes: GetRecentEmotesUseCase,
-    private val insertRecentEmotes: InsertRecentEmotesUseCase,
     private val chatRepository: ChatRepository,
     private val authRepository: AuthRepository,
-    private val emoteListSourcesProvider: EmoteListSourcesProvider,
     private val filterAutocompleteItemsUseCase: FilterAutocompleteItemsUseCase,
     private val pronounsRepository: PronounsRepository,
     private val createShortcutForChannel: CreateShortcutForChannelUseCase,
     private val chatEventViewMapper: ChatEventViewMapper,
+    private val loadEmotesAndBadges: LoadEmotesAndBadgesUseCase,
+    private val submitMessage: SubmitMessageUseCase,
 ) : ViewModel() {
     private val defaultScope = viewModelScope + CoroutineName("defaultScope")
     private val inputScope = viewModelScope + CoroutineName("inputScope")
+
+    private val reducer = ChatStateReducer()
 
     sealed class Action {
         data class AddMessages(
@@ -317,7 +302,7 @@ internal class ChatViewModel(
     @OptIn(FlowPreview::class)
     val state: StateFlow<State> =
         actions
-            .runningFold(State.Initial) { state: State, action -> action.reduce(state) }
+            .runningFold(State.Initial) { state: State, action -> reducer.reduce(action, state) }
             .debounce(100.milliseconds)
             .stateIn(
                 scope = defaultScope,
@@ -328,7 +313,7 @@ internal class ChatViewModel(
     private val inputActions = MutableSharedFlow<InputAction>()
     val inputState: StateFlow<InputState> =
         inputActions
-            .runningFold(InputState()) { state: InputState, action -> action.reduce(state) }
+            .runningFold(InputState()) { state: InputState, action -> reducer.reduce(action, state) }
             .stateIn(
                 scope = inputScope,
                 started = SharingStarted.WhileSubscribed(),
@@ -341,7 +326,16 @@ internal class ChatViewModel(
             .map { state -> Triple(state.user.id, state.user.displayName, state.userState.emoteSets) }
             .distinctUntilChanged()
             .onEach { (channelId, channelName, emoteSets) ->
-                handleLoadEmotes(channelId, channelName, emoteSets)
+                defaultScope.launch {
+                    withContext(DispatchersProvider.io) {
+                        val action = loadEmotesAndBadges(
+                            channelId = channelId,
+                            channelName = channelName,
+                            emoteSets = emoteSets,
+                        )
+                        actions.emit(action)
+                    }
+                }
             }.launchIn(defaultScope)
 
         state
@@ -474,14 +468,14 @@ internal class ChatViewModel(
                 val action =
                     Action.ChangeRecentEmotes(
                         recentEmotes =
-                            recentEmotes
-                                .filter { recentEmote -> recentEmote.name in allEmotesMap }
-                                .map { recentEmote ->
-                                    Emote(
-                                        name = recentEmote.name,
-                                        urls = EmoteUrls(recentEmote.url),
-                                    )
-                                },
+                        recentEmotes
+                            .filter { recentEmote -> recentEmote.name in allEmotesMap }
+                            .map { recentEmote ->
+                                Emote(
+                                    name = recentEmote.name,
+                                    urls = EmoteUrls(recentEmote.url),
+                                )
+                            },
                     )
 
                 actions.emit(action)
@@ -645,516 +639,19 @@ internal class ChatViewModel(
         }
 
         defaultScope.launch {
-            val currentTime = clock.now()
+            val errorAction = submitMessage(
+                channelUserId = chatState.user.id,
+                message = currentInputState.message,
+                inReplyToMessageId = currentInputState.replyingTo?.body?.messageId,
+                appUser = chatState.appUser,
+                allEmotesMap = chatState.allEmotesMap,
+                screenDensity = screenDensity,
+                isDarkTheme = isDarkTheme,
+            )
 
-            twitchRepository
-                .sendChatMessage(
-                    channelUserId = chatState.user.id,
-                    message = currentInputState.message,
-                    inReplyToMessageId = currentInputState.replyingTo?.body?.messageId,
-                    appUser = chatState.appUser,
-                ).onFailure { exception ->
-                    actions.emit(
-                        Action.AddMessages(
-                            listOf(
-                                ChatListItem.Message.Highlighted(
-                                    timestamp = clock.now(),
-                                    metadata =
-                                        ChatListItem.Message.Highlighted.Metadata(
-                                            title = Res.string.chat_send_msg_error.desc(),
-                                            subtitle =
-                                                (exception as? MessageNotSentException)
-                                                    ?.dropReasonMessage
-                                                    ?.desc(),
-                                        ),
-                                    body = null,
-                                ),
-                            ),
-                        ),
-                    )
-                }
-
-            val usedEmotes: List<RecentEmote> =
-                currentInputState.message
-                    .split(' ')
-                    .mapNotNull { word ->
-                        chatState.allEmotesMap[word]?.let { emote ->
-                            RecentEmote(
-                                name = word,
-                                url =
-                                    emote.urls.getBestUrl(
-                                        screenDensity = screenDensity,
-                                        isDarkTheme = isDarkTheme,
-                                    ),
-                                usedAt = currentTime,
-                            )
-                        }
-                    }
-
-            insertRecentEmotes(usedEmotes)
-        }
-    }
-
-    private fun Action.reduce(state: State): State {
-        logDebug<ChatViewModel> { "reduce: $this" }
-        return when (this) {
-            is Action.AddMessages -> reduce(state)
-            is Action.ChangeConnectionStatus -> reduce(state)
-            is Action.ChangeRecentEmotes -> reduce(state)
-            is Action.ChangeRoomState -> reduce(state)
-            is Action.ChangeUserState -> reduce(state)
-            is Action.RemoveContent -> reduce(state)
-            is Action.UpdatePoll -> reduce(state)
-            is Action.UpdatePrediction -> reduce(state)
-            is Action.UpdateStreamMetadata -> reduce(state)
-            is Action.UpdateChatterPronouns -> reduce(state)
-            is Action.AddRichEmbed -> reduce(state)
-            is Action.LoadChat -> reduce(state)
-            is Action.UpdateEmotes -> reduce(state)
-            is Action.UpdateStreamDetails -> reduce(state)
-            is Action.UpdateRaidAnnouncement -> reduce(state)
-            is Action.UpdatePinnedMessage -> reduce(state)
-            is Action.ShowUserInfo -> reduce(state)
-            is Action.UpdateStreamInfoVisibility -> reduce(state)
-            is Action.UpdateUser -> reduce(state)
-        }
-    }
-
-    private fun Action.LoadChat.reduce(state: State): State {
-        if (state is State.Chatting && state.user.id == userId) return state
-        return State.Loading(
-            userId = userId,
-            appUser = appUser,
-            maxAdapterCount = maxAdapterCount,
-        )
-    }
-
-    private fun Action.UpdateStreamDetails.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(stream = stream)
-    }
-
-    private fun Action.UpdateEmotes.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(
-            cheerEmotes = cheerEmotes ?: state.cheerEmotes,
-            pickableEmotes = pickableEmotes,
-            channelBadges = channelBadges ?: state.channelBadges,
-            globalBadges = globalBadges ?: state.globalBadges,
-        )
-    }
-
-    private fun handleLoadEmotes(
-        channelId: String,
-        channelName: String,
-        emoteSets: List<String>,
-    ) {
-        defaultScope.launch {
-            withContext(DispatchersProvider.io) {
-                val globalBadges: Deferred<PersistentList<TwitchBadge>?> =
-                    async {
-                        twitchRepository
-                            .getGlobalBadges()
-                            .fold(
-                                onSuccess = { badges -> badges.toPersistentList() },
-                                onFailure = { exception ->
-                                    logError<ChatViewModel>(exception) { "Failed to load global badges" }
-                                    null
-                                },
-                            )
-                    }
-
-                val channelBadges: Deferred<PersistentList<TwitchBadge>?> =
-                    async {
-                        twitchRepository
-                            .getChannelBadges(channelId)
-                            .fold(
-                                onSuccess = { badges -> badges.toPersistentList() },
-                                onFailure = { exception ->
-                                    logError<ChatViewModel>(exception) { "Failed to load badges for channel $channelId" }
-                                    null
-                                },
-                            )
-                    }
-
-                val cheerEmotes: PersistentMap<String, Emote>? =
-                    twitchRepository
-                        .getCheerEmotes(userId = channelId)
-                        .fold(
-                            onSuccess = { emotes ->
-                                emotes
-                                    .associateBy { emote -> emote.name }
-                                    .toPersistentHashMap()
-                            },
-                            onFailure = { exception ->
-                                logError<ChatViewModel>(exception) { "Failed to load cheer emotes for channel $channelId" }
-                                null
-                            },
-                        )
-
-                val pickableEmotes: PersistentList<EmoteSetItem> =
-                    loadPickableEmotes(
-                        channelId = channelId,
-                        channelName = channelName,
-                        emoteSets = emoteSets,
-                    )
-
-                actions.emit(
-                    Action.UpdateEmotes(
-                        pickableEmotes = pickableEmotes,
-                        globalBadges = globalBadges.await(),
-                        channelBadges = channelBadges.await(),
-                        cheerEmotes = cheerEmotes,
-                    ),
-                )
+            if (errorAction != null) {
+                actions.emit(errorAction)
             }
         }
-    }
-
-    private suspend fun loadPickableEmotes(
-        channelId: String,
-        channelName: String,
-        emoteSets: List<String>,
-    ): PersistentList<EmoteSetItem> = coroutineScope {
-        emoteListSourcesProvider
-            .getSources()
-            .map { source ->
-                async {
-                    source
-                        .getEmotes(
-                            channelId = channelId,
-                            channelName = channelName,
-                            emoteSets = emoteSets,
-                        ).fold(
-                            onSuccess = { emotes -> emotes },
-                            onFailure = { exception ->
-                                logError<ChatViewModel>(exception) { "Failed to load emotes from source $source" }
-                                emptyList()
-                            },
-                        )
-                }
-            }.awaitAll()
-            .flatten()
-            .toPersistentList()
-    }
-
-    private fun Action.AddMessages.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-
-        // Note that this is the last message we've sent
-        val lastSentMessageInstant: Instant? =
-            messages
-                .lastOrNull { message ->
-                    message.body != null && message.body?.chatter?.id == state.appUser.userId
-                }?.timestamp
-
-        // Remember names of chatters
-        val newChatters: PersistentSet<Chatter> =
-            messages
-                .asSequence()
-                .mapNotNull { message -> message.body?.chatter }
-                .toPersistentSet()
-
-        val newMessages: PersistentList<ChatListItem> =
-            state.chatMessages
-                .addAll(
-                    // New messages are added to the top of the list
-                    index = 0,
-                    messages.asReversed(),
-                ).distinct()
-                .toPersistentList()
-
-        // We alternate the background of each chat row.
-        // If we remove just one item, the backgrounds will shift, so we always need to remove
-        // an even number of items.
-        val maxCount =
-            state.maxAdapterCount.roundUpOddToEven() + if (newMessages.size.isOdd) 1 else 0
-
-        return state.copy(
-            chatMessages =
-                newMessages
-                    .filterIsInstance<ChatListItem.Message>()
-                    .take(maxCount)
-                    .toPersistentList(),
-            lastSentMessageInstant =
-                lastSentMessageInstant
-                    ?: state.lastSentMessageInstant,
-            chatters = state.chatters.addAll(newChatters),
-        )
-    }
-
-    private fun Action.ChangeConnectionStatus.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(connectionStatus = connectionStatus)
-    }
-
-    private fun Action.ChangeUserState.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(userState = userState)
-    }
-
-    private fun Action.ChangeRoomState.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(
-            roomState =
-                RoomState(
-                    isEmoteOnly = delta.isEmoteOnly ?: state.roomState.isEmoteOnly,
-                    isSubOnly = delta.isSubOnly ?: state.roomState.isSubOnly,
-                    minFollowDuration = delta.minFollowDuration
-                        ?: state.roomState.minFollowDuration,
-                    uniqueMessagesOnly = delta.uniqueMessagesOnly
-                        ?: state.roomState.uniqueMessagesOnly,
-                    slowModeDuration = delta.slowModeDuration ?: state.roomState.slowModeDuration,
-                ),
-        )
-    }
-
-    private fun Action.RemoveContent.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(
-            removedContent = state.removedContent.add(removedContent),
-        )
-    }
-
-    private fun Action.ChangeRecentEmotes.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(recentEmotes = recentEmotes)
-    }
-
-    private fun Action.UpdatePoll.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(
-            ongoingEvents =
-                state.ongoingEvents.copy(
-                    poll = poll,
-                ),
-        )
-    }
-
-    private fun Action.UpdatePrediction.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(
-            ongoingEvents =
-                state.ongoingEvents.copy(
-                    prediction = prediction,
-                ),
-        )
-    }
-
-    private fun Action.UpdateStreamMetadata.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(
-            stream =
-                state.stream?.copy(
-                    title = streamTitle ?: state.stream.title,
-                    category = streamCategory ?: state.stream.category,
-                    viewerCount = viewerCount ?: state.stream.viewerCount,
-                ),
-        )
-    }
-
-    private fun Action.AddRichEmbed.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(
-            richEmbeds =
-                state.richEmbeds.put(
-                    key = richEmbed.messageId,
-                    value = richEmbed,
-                ),
-        )
-    }
-
-    private fun Action.UpdateChatterPronouns.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(
-            pronouns = state.pronouns.putAll(pronouns),
-        )
-    }
-
-    private fun Action.UpdatePinnedMessage.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-
-        if (pinnedMessage == null) {
-            return state.copy(
-                ongoingEvents =
-                    state.ongoingEvents.copy(
-                        pinnedMessage = null,
-                    ),
-            )
-        }
-
-        val matchingMessage: ChatListItem.Message =
-            state.chatMessages.findLast { message ->
-                message.body?.messageId == pinnedMessage.message.messageId
-            } ?: return state.copy(
-                ongoingEvents =
-                    state.ongoingEvents.copy(
-                        pinnedMessage = null,
-                    ),
-            )
-
-        return state.copy(
-            ongoingEvents =
-                state.ongoingEvents.copy(
-                    pinnedMessage =
-                        OngoingEvents.PinnedMessage(
-                            message = matchingMessage,
-                            endsAt = pinnedMessage.message.endsAt,
-                        ),
-                ),
-        )
-    }
-
-    private fun Action.UpdateRaidAnnouncement.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(
-            ongoingEvents =
-                state.ongoingEvents.copy(
-                    outgoingRaid = raid,
-                ),
-        )
-    }
-
-    private fun Action.ShowUserInfo.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(
-            showInfoForUserId = userId,
-        )
-    }
-
-    private fun Action.UpdateStreamInfoVisibility.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(
-            isStreamInfoVisible = isVisible,
-        )
-    }
-
-    private fun Action.UpdateUser.reduce(state: State): State = when (state) {
-        is State.Initial,
-        is State.Failed,
-            -> {
-            state
-        }
-
-        is State.Loading -> {
-            State.Chatting(
-                user = user,
-                appUser = state.appUser,
-                maxAdapterCount = state.maxAdapterCount,
-                chatters =
-                    persistentSetOf(
-                        Chatter(
-                            id = user.id,
-                            login = user.login,
-                            displayName = user.displayName,
-                        ),
-                    ),
-            )
-        }
-
-        is State.Chatting -> {
-            state.copy(
-                user = user,
-                chatters =
-                    state.chatters.add(
-                        Chatter(
-                            id = user.id,
-                            login = user.login,
-                            displayName = user.displayName,
-                        ),
-                    ),
-            )
-        }
-    }
-
-    private fun InputAction.reduce(state: InputState): InputState = when (this) {
-        is InputAction.AppendChatter -> reduce(state)
-        is InputAction.AppendEmote -> reduce(state)
-        is InputAction.ChangeMessageInput -> reduce(state)
-        is InputAction.ReplyToMessage -> reduce(state)
-        is InputAction.ClearAfterSubmit -> reduce(state)
-        is InputAction.UpdateAutoCompleteItems -> reduce(state)
-        is InputAction.ReplaceInputWithLastSentMessage -> reduce(state)
-    }
-
-    private fun InputAction.ClearAfterSubmit.reduce(inputState: InputState): InputState =
-        inputState.copy(
-            message = "",
-            lastSentMessage = sentMessage,
-            selectionRange = 0..0,
-            replyingTo = null,
-        )
-
-    private fun InputAction.ChangeMessageInput.reduce(inputState: InputState): InputState =
-        inputState.copy(
-            message = message,
-            selectionRange = selectionRange,
-        )
-
-    private fun InputAction.AppendEmote.reduce(inputState: InputState): InputState =
-        appendTextToInput(
-            inputState = inputState,
-            text = emote.name,
-            replaceLastWord = autocomplete,
-        )
-
-    private fun InputAction.AppendChatter.reduce(inputState: InputState): InputState =
-        appendTextToInput(
-            inputState = inputState,
-            text = "${ChatPrefixConstants.ChatterPrefix}${chatter.displayName}",
-            replaceLastWord = autocomplete,
-        )
-
-    private fun InputAction.ReplyToMessage.reduce(inputState: InputState): InputState =
-        inputState.copy(replyingTo = chatListItem)
-
-    private fun InputAction.UpdateAutoCompleteItems.reduce(inputState: InputState): InputState =
-        inputState.copy(autoCompleteItems = items)
-
-    @Suppress("UnusedReceiverParameter")
-    private fun InputAction.ReplaceInputWithLastSentMessage.reduce(inputState: InputState): InputState {
-        if (inputState.message.isNotEmpty()) return inputState
-        val newMessage = inputState.lastSentMessage ?: return inputState
-
-        return inputState.copy(
-            message = newMessage,
-            lastSentMessage = newMessage,
-            selectionRange =
-                IntRange(
-                    start = newMessage.length,
-                    endInclusive = newMessage.length,
-                ),
-        )
-    }
-
-    private fun appendTextToInput(
-        inputState: InputState,
-        text: String,
-        replaceLastWord: Boolean,
-    ): InputState {
-        val previousWord =
-            inputState.message
-                .substring(startIndex = 0, endIndex = inputState.selectionRange.first)
-                .takeLastWhile { it != ' ' }
-
-        val textBefore =
-            inputState.message
-                .substring(startIndex = 0, endIndex = inputState.selectionRange.first)
-                .removeSuffix(
-                    if (replaceLastWord) previousWord else "",
-                )
-
-        val textAfter =
-            inputState.message
-                .substring(inputState.selectionRange.last)
-
-        return inputState.copy(
-            message = "${textBefore}$text $textAfter",
-            selectionRange =
-                IntRange(
-                    start = textBefore.length + text.length + 1,
-                    endInclusive = textBefore.length + text.length + 1,
-                ),
-        )
     }
 }

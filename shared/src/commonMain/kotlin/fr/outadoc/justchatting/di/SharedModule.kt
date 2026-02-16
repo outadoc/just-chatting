@@ -30,6 +30,8 @@ import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPluginsProvider
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEventViewMapper
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.FilterAutocompleteItemsUseCase
+import fr.outadoc.justchatting.feature.chat.presentation.LoadEmotesAndBadgesUseCase
+import fr.outadoc.justchatting.feature.chat.presentation.SubmitMessageUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.UserInfoViewModel
 import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesApi
@@ -130,6 +132,8 @@ public val sharedModule: Module
             }
 
             single { FilterAutocompleteItemsUseCase() }
+            single { LoadEmotesAndBadgesUseCase(get(), get()) }
+            factory { SubmitMessageUseCase(get(), get(), get()) }
 
             single { LiveChatWebSocket(get(), get(), get(), get(), get(), get()) }
             single { LoggedInChatWebSocket(get(), get(), get()) }

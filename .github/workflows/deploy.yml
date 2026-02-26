@@ -126,7 +126,7 @@ jobs:
           directory: "app-desktop/build/compose/binaries/main/msi"
 
       - name: Upload packages to GitHub
-        uses: actions/upload-artifact@v6.0.0
+        uses: actions/upload-artifact@v7.0.0
         with:
           path: "app-desktop/build/compose/binaries/main/msi/JustChatting-windows-amd64-${{ steps.version.outputs.version }}.zip"
           name: build-windows-amd64
@@ -185,7 +185,7 @@ jobs:
           directory: "app-desktop/build/compose/binaries/main/dmg"
 
       - name: Upload packages to GitHub
-        uses: actions/upload-artifact@v6.0.0
+        uses: actions/upload-artifact@v7.0.0
         with:
           path: "app-desktop/build/compose/binaries/main/dmg/JustChatting-macos-aarch64-${{ steps.version.outputs.version }}.zip"
           name: build-macos-aarch64
@@ -262,7 +262,7 @@ jobs:
             --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
 
       - name: Upload packages to GitHub
-        uses: actions/upload-artifact@v6.0.0
+        uses: actions/upload-artifact@v7.0.0
         with:
           path: "JustChatting-linux-${{ steps.version.outputs.version }}.flatpak"
           name: build-linux-amd64
@@ -315,7 +315,7 @@ jobs:
           "-PenableLogging=false"
 
       - name: Upload app bundle to GitHub
-        uses: actions/upload-artifact@v6.0.0
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: apk
           path: app-android/build/outputs/bundle/release/app-android-release.aab

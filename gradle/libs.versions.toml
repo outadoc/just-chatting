@@ -78,7 +78,7 @@ connectivity-apple = { module = "dev.jordond.connectivity:connectivity-apple", v
 connectivity-android = { module = "dev.jordond.connectivity:connectivity-android", version.ref = "connectivity" }
 connectivity-http = { module = "dev.jordond.connectivity:connectivity-http", version.ref = "connectivity" }
 desugar = "com.android.tools:desugar_jdk_libs:2.1.5"
-firebase-bom = "com.google.firebase:firebase-bom:34.9.0"
+firebase-bom = "com.google.firebase:firebase-bom:34.10.0"
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 haze-core = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 haze-materials = { module = "dev.chrisbanes.haze:haze-materials", version.ref = "haze" }

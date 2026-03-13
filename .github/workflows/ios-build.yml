@@ -31,7 +31,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Set up Mise
-        uses: jdx/mise-action@v3
+        uses: jdx/mise-action@v4
         with:
           install: false
 

@@ -77,7 +77,7 @@ kotlin {
                 implementation(libs.compose.material.windowSizeClass)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.materialIcons)
-                implementation(libs.compose.navigation)
+                implementation(libs.compose.navigation3.ui)
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.ui)
                 implementation(libs.compose.ui.backhandler)

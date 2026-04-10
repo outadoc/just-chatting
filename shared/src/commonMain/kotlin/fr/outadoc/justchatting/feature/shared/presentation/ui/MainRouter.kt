@@ -9,14 +9,18 @@ import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberDecoratedNavEntries
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.chat.presentation.ui.ChannelChatScreen
 import fr.outadoc.justchatting.feature.followed.presentation.ui.FollowedChannelsList
@@ -35,7 +39,7 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun MainRouter(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
+    backStack: NavBackStack<NavKey> = rememberNavBackStack(ScreenNavBackStackConfig, DefaultScreen),
     navigator: ThreePaneScaffoldNavigator<DetailScreen> = rememberListDetailPaneScaffoldNavigator<DetailScreen>(),
     onOpenNotificationPreferences: () -> Unit = {},
     onOpenBubblePreferences: () -> Unit = {},
@@ -50,6 +54,60 @@ internal fun MainRouter(
         backBehavior = BackNavigationBehavior.PopUntilScaffoldValueChange,
     )
 
+    val onNavigate: (Screen) -> Unit = { screen ->
+        backStack.clear()
+        backStack.add(screen)
+    }
+
+    val saveableDecorator = rememberSaveableStateHolderNavEntryDecorator<NavKey>()
+    val entries = rememberDecoratedNavEntries<NavKey>(
+        backStack = backStack,
+        entryDecorators = listOf(saveableDecorator),
+        entryProvider = entryProvider {
+            entry<Screen.Followed> {
+                FollowedChannelsList(
+                    onNavigate = onNavigate,
+                    onItemClick = onChannelClick,
+                )
+            }
+
+            entry<Screen.Live> {
+                LiveTimelineScreen(
+                    onNavigate = onNavigate,
+                    onChannelClick = onChannelClick,
+                )
+            }
+
+            entry<Screen.Future> {
+                FutureTimelineScreen(
+                    onNavigate = onNavigate,
+                )
+            }
+
+            entry<Screen.Search> {
+                SearchScreen(
+                    onNavigate = onNavigate,
+                    onChannelClick = onChannelClick,
+                )
+            }
+
+            entry<Screen.Settings> {
+                SettingsContent(
+                    onNavigate = onNavigate,
+                    onNavigateDetails = { screen ->
+                        scope.launch {
+                            navigator.navigateTo(
+                                pane = ListDetailPaneScaffoldRole.Detail,
+                                contentKey = screen,
+                            )
+                        }
+                    },
+                    onShareLogs = onShareLogs,
+                )
+            }
+        },
+    )
+
     ListDetailPaneScaffold(
         modifier = modifier,
         directive = navigator.scaffoldDirective,
@@ -61,52 +119,10 @@ internal fun MainRouter(
             AnimatedPane(
                 modifier = Modifier.preferredWidth(500.dp),
             ) {
-                NavHost(
-                    navController = navController,
-                    startDestination = DefaultScreen,
-                ) {
-                    composable<Screen.Followed> {
-                        FollowedChannelsList(
-                            onNavigate = { navController.navigate(it) },
-                            onItemClick = onChannelClick,
-                        )
-                    }
-
-                    composable<Screen.Live> {
-                        LiveTimelineScreen(
-                            onNavigate = { navController.navigate(it) },
-                            onChannelClick = onChannelClick,
-                        )
-                    }
-
-                    composable<Screen.Future> {
-                        FutureTimelineScreen(
-                            onNavigate = { navController.navigate(it) },
-                        )
-                    }
-
-                    composable<Screen.Search> {
-                        SearchScreen(
-                            onNavigate = { navController.navigate(it) },
-                            onChannelClick = onChannelClick,
-                        )
-                    }
-
-                    composable<Screen.Settings> {
-                        SettingsContent(
-                            onNavigate = { navController.navigate(it) },
-                            onNavigateDetails = { screen ->
-                                scope.launch {
-                                    navigator.navigateTo(
-                                        pane = ListDetailPaneScaffoldRole.Detail,
-                                        contentKey = screen,
-                                    )
-                                }
-                            },
-                            onShareLogs = onShareLogs,
-                        )
-                    }
-                }
+                NavDisplay(
+                    entries = entries,
+                    onBack = { backStack.removeLastOrNull() },
+                )
             }
         },
         detailPane = {

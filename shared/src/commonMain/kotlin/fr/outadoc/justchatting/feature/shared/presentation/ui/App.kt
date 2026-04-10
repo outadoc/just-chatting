@@ -15,7 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.rememberNavBackStack
 import coil3.SingletonImageLoader
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.onboarding.presentation.ui.OnboardingScreen
@@ -38,7 +38,7 @@ public fun App(
     val viewModel: MainRouterViewModel = koinInject()
     val state by viewModel.state.collectAsState()
 
-    val navController = rememberNavController()
+    val backStack = rememberNavBackStack(ScreenNavBackStackConfig, DefaultScreen)
     val navigator = rememberListDetailPaneScaffoldNavigator<DetailScreen>()
     val scope = rememberCoroutineScope()
 
@@ -101,7 +101,7 @@ public fun App(
 
                 is MainRouterViewModel.State.LoggedIn -> {
                     MainRouter(
-                        navController = navController,
+                        backStack = backStack,
                         navigator = navigator,
                         onOpenNotificationPreferences = onOpenNotificationPreferences,
                         onOpenBubblePreferences = onOpenBubblePreferences,

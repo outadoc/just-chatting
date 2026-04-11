@@ -50,6 +50,16 @@ https://github.com/user-attachments/assets/0f107cee-6294-4fbf-aa15-5466b57a548f
 cd app-ios && tuist generate               # Generate Xcode project, then build in Xcode
 ```
 
+## ABI
+
+Shared modules contain ABI files to precisely control what's exposed publicly to their consumers.
+They can be found in the modules' `abi/` directory.
+
+```bash
+./gradlew :shared:updateKotlinAbi        # Generate ABI files
+./gradlew :shared:checkKotlinAbi         # Check ABI compatibility
+̀```
+
 ## Testing
 
 ```bash

@@ -1,0 +1,485 @@
+public final class fr/outadoc/justchatting/di/KoinInitializer : androidx/startup/Initializer {
+	public static final field $stable I
+	public fun <init> ()V
+	public synthetic fun create (Landroid/content/Context;)Ljava/lang/Object;
+	public fun create (Landroid/content/Context;)Lorg/koin/core/KoinApplication;
+	public fun dependencies ()Ljava/util/List;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/UserProfileImageContentProvider : android/content/ContentProvider {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun delete (Landroid/net/Uri;Ljava/lang/String;[Ljava/lang/String;)I
+	public fun getType (Landroid/net/Uri;)Ljava/lang/String;
+	public fun insert (Landroid/net/Uri;Landroid/content/ContentValues;)Landroid/net/Uri;
+	public fun onCreate ()Z
+	public fun openFile (Landroid/net/Uri;Ljava/lang/String;)Landroid/os/ParcelFileDescriptor;
+	public fun query (Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;
+	public fun update (Landroid/net/Uri;Landroid/content/ContentValues;Ljava/lang/String;[Ljava/lang/String;)I
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$AutoCompleteEmoteItemKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$AutoCompleteEmoteItemKt;
+	public fun <init> ()V
+	public final fun getLambda$-651952114$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$482858894$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$AutoCompleteUserItemKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$AutoCompleteUserItemKt;
+	public fun <init> ()V
+	public final fun getLambda$-1259708016$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-440305136$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChannelChatScreenContentKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChannelChatScreenContentKt;
+	public fun <init> ()V
+	public final fun getLambda$-1589370504$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatAutoCompleteRowKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatAutoCompleteRowKt;
+	public fun <init> ()V
+	public final fun getLambda$2068491007$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatEventsKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatEventsKt;
+	public fun <init> ()V
+	public final fun getLambda$-884945735$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$649860232$shared_ui_release ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatInlineTextContentKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatInlineTextContentKt;
+	public fun <init> ()V
+	public final fun getLambda$-804647652$shared_ui_release ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatInputKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatInputKt;
+	public fun <init> ()V
+	public final fun getLambda$-1111142288$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-132894148$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-159943730$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-687957849$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-742271965$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-784029743$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-81153958$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1337536743$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1615835621$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$686500621$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatListContainerKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatListContainerKt;
+	public fun <init> ()V
+	public final fun getLambda$-2046124378$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatListKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatListKt;
+	public fun <init> ()V
+	public final fun getLambda$1634393648$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatListPlaceholderKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatListPlaceholderKt;
+	public fun <init> ()V
+	public final fun getLambda$1834047327$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1922589370$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatRichEmbedKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatRichEmbedKt;
+	public fun <init> ()V
+	public final fun getLambda$549873695$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatTopAppBarKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatTopAppBarKt;
+	public fun <init> ()V
+	public final fun getLambda$-576339745$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$64144353$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$HighlighedMessageCardKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$HighlighedMessageCardKt;
+	public fun <init> ()V
+	public final fun getLambda$-95144754$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$PollCardKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$PollCardKt;
+	public fun <init> ()V
+	public final fun getLambda$-1788137750$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$2129503585$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$PredictionCardKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$PredictionCardKt;
+	public fun <init> ()V
+	public final fun getLambda$-1649109247$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1787028842$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$PredictionOutcomeKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$PredictionOutcomeKt;
+	public fun <init> ()V
+	public final fun getLambda$-1954440993$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-410680534$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-822452526$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1285761654$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$81131465$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$RaidGoCardKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$RaidGoCardKt;
+	public fun <init> ()V
+	public final fun getLambda$1896809979$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$RaidPrepareCardKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$RaidPrepareCardKt;
+	public fun <init> ()V
+	public final fun getLambda$1195042783$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/EmbeddedChatActivity : androidx/appcompat/app/AppCompatActivity {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class fr/outadoc/justchatting/feature/details/presentation/ComposableSingletons$ActionBottomSheetKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/details/presentation/ComposableSingletons$ActionBottomSheetKt;
+	public fun <init> ()V
+	public final fun getLambda$-70620895$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-788710641$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/followed/presentation/ui/ComposableSingletons$FollowedChannelsListKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/followed/presentation/ui/ComposableSingletons$FollowedChannelsListKt;
+	public fun <init> ()V
+	public final fun getLambda$-1599195837$shared_ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1089636977$shared_ui_release ()Lkotlin/jvm/functions/Function4;
+	public final fun getLambda$1782144059$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/followed/presentation/widget/ComposableSingletons$FollowedChannelsWidgetKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/followed/presentation/widget/ComposableSingletons$FollowedChannelsWidgetKt;
+	public fun <init> ()V
+	public final fun getLambda$-1596876447$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/followed/presentation/widget/FollowedChannelsWidgetReceiver : androidx/glance/appwidget/GlanceAppWidgetReceiver {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun getGlanceAppWidget ()Landroidx/glance/appwidget/GlanceAppWidget;
+}
+
+public final class fr/outadoc/justchatting/feature/onboarding/presentation/ui/ComposableSingletons$OnboardingScreenKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/onboarding/presentation/ui/ComposableSingletons$OnboardingScreenKt;
+	public fun <init> ()V
+	public final fun getLambda$-319376050$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/onboarding/presentation/ui/ComposableSingletons$SignInWithTwitchButtonKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/onboarding/presentation/ui/ComposableSingletons$SignInWithTwitchButtonKt;
+	public fun <init> ()V
+	public final fun getLambda$-134583705$shared_ui_release ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsContentKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsContentKt;
+	public fun <init> ()V
+	public final fun getLambda$1559634820$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsHeaderKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsHeaderKt;
+	public fun <init> ()V
+	public final fun getLambda$-131063321$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1967210614$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-2095231892$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsListKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsListKt;
+	public fun <init> ()V
+	public final fun getLambda$-1050608384$shared_ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1068679673$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1363066374$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-24574119$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-465117895$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-585321478$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-589091361$shared_ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-864812009$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1032661308$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1779168900$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1872899198$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1892722375$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$2087893149$shared_ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$2091663032$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$2133916100$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$254916412$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$427937410$shared_ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$469910363$shared_ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$723894884$shared_ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$944602747$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSectionAboutKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSectionAboutKt;
+	public fun <init> ()V
+	public final fun getLambda$-1234125789$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1425467489$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1679663100$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1791441860$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1871004800$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-2125200411$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-788588478$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-841493119$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1250755122$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1416892738$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1532887874$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1862430049$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1978425185$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$525818116$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$971355427$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSectionAppearanceKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSectionAppearanceKt;
+	public fun <init> ()V
+	public final fun getLambda$-475244366$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-620573947$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1184053620$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$2013702613$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$528289389$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$799406238$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSectionDependenciesKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSectionDependenciesKt;
+	public fun <init> ()V
+	public final fun getLambda$-304729703$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1623381130$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSectionNotificationsKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSectionNotificationsKt;
+	public fun <init> ()V
+	public final fun getLambda$-2058485996$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-575732806$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-91095975$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1149284061$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1633920892$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1745084844$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$263558883$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$888434701$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSectionThirdPartiesKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSectionThirdPartiesKt;
+	public fun <init> ()V
+	public final fun getLambda$-1121632537$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1371974257$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1490579864$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1513106432$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1902973820$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-2007771456$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-2097444598$shared_ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-297431563$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-341897761$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-399908556$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-501618581$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-982106869$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1115987169$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1507461064$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1807655310$shared_ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1933661706$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$5550873$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$726119781$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$737100040$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSliderKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSliderKt;
+	public fun <init> ()V
+	public final fun getLambda$-317171865$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1046766362$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1349877499$shared_ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$43706466$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$528651715$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSwitchKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSwitchKt;
+	public fun <init> ()V
+	public final fun getLambda$-2110217325$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-788542201$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1006537225$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1031558655$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$54705386$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsTextKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsTextKt;
+	public fun <init> ()V
+	public final fun getLambda$-1189035528$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1512433623$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1630070392$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-170211343$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1747707161$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1865343930$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-629808153$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1721874565$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1894571551$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$496039048$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/recent/presentation/widget/ComposableSingletons$RecentChannelsWidgetKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/recent/presentation/widget/ComposableSingletons$RecentChannelsWidgetKt;
+	public fun <init> ()V
+	public final fun getLambda$-840779306$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$647412290$shared_ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$940055313$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/recent/presentation/widget/RecentChannelsWidgetReceiver : androidx/glance/appwidget/GlanceAppWidgetReceiver {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun getGlanceAppWidget ()Landroidx/glance/appwidget/GlanceAppWidget;
+}
+
+public final class fr/outadoc/justchatting/feature/search/presentation/ui/ComposableSingletons$SearchResultsListKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/search/presentation/ui/ComposableSingletons$SearchResultsListKt;
+	public fun <init> ()V
+	public final fun getLambda$2000053872$shared_ui_release ()Lkotlin/jvm/functions/Function4;
+	public final fun getLambda$228198960$shared_ui_release ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class fr/outadoc/justchatting/feature/search/presentation/ui/ComposableSingletons$SearchScreenBarKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/search/presentation/ui/ComposableSingletons$SearchScreenBarKt;
+	public fun <init> ()V
+	public final fun getLambda$-1229238141$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1189528161$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1301105194$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1734416822$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$411877651$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$60776376$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/search/presentation/ui/ComposableSingletons$SearchScreenKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/search/presentation/ui/ComposableSingletons$SearchScreenKt;
+	public fun <init> ()V
+	public final fun getLambda$231763194$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/shared/presentation/ComposableSingletons$LabelChipKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/shared/presentation/ComposableSingletons$LabelChipKt;
+	public fun <init> ()V
+	public final fun getLambda$1160732232$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$51219679$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$566857741$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/shared/presentation/ui/AppKt {
+	public static final fun App (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/shared/presentation/ui/ComposableSingletons$MainNavigationKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/shared/presentation/ui/ComposableSingletons$MainNavigationKt;
+	public fun <init> ()V
+	public final fun getLambda$-1180219060$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1256791600$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1496268088$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1821570711$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1864179766$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-655701933$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-812307382$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1309244941$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$309235207$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$625284235$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$993195913$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/shared/presentation/ui/ComposableSingletons$MainRouterKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/shared/presentation/ui/ComposableSingletons$MainRouterKt;
+	public fun <init> ()V
+	public final fun getLambda$-858712046$shared_ui_release ()Lkotlin/jvm/functions/Function4;
+}
+
+public final class fr/outadoc/justchatting/feature/shared/presentation/ui/ComposableSingletons$NoContentKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/shared/presentation/ui/ComposableSingletons$NoContentKt;
+	public fun <init> ()V
+	public final fun getLambda$1330790284$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/shared/presentation/ui/ComposableSingletons$UserItemKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/shared/presentation/ui/ComposableSingletons$UserItemKt;
+	public fun <init> ()V
+	public final fun getLambda$-1715509482$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$FutureTimelineContentKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$FutureTimelineContentKt;
+	public fun <init> ()V
+	public final fun getLambda$-891338823$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$FutureTimelineScreenKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$FutureTimelineScreenKt;
+	public fun <init> ()V
+	public final fun getLambda$-700247043$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$806498836$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$FutureTimelineSegmentKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$FutureTimelineSegmentKt;
+	public fun <init> ()V
+	public final fun getLambda$-379128337$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$LiveDetailsDialogKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$LiveDetailsDialogKt;
+	public fun <init> ()V
+	public final fun getLambda$-21472301$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-529701444$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1055455310$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$LiveStreamKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$LiveStreamKt;
+	public fun <init> ()V
+	public final fun getLambda$-10207010$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1683874366$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$LiveTimelineScreenKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$LiveTimelineScreenKt;
+	public fun <init> ()V
+	public final fun getLambda$-2000394489$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1251243568$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$LiveTimelineSegmentKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$LiveTimelineSegmentKt;
+	public fun <init> ()V
+	public final fun getLambda$-902654151$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$PastTimelineSegmentKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$PastTimelineSegmentKt;
+	public fun <init> ()V
+	public final fun getLambda$-1608706597$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$632062031$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/timeline/presentation/widget/LiveWidgetReceiver : androidx/glance/appwidget/GlanceAppWidgetReceiver {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun getGlanceAppWidget ()Landroidx/glance/appwidget/GlanceAppWidget;
+}
+

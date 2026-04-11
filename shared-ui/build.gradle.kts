@@ -11,6 +11,14 @@ plugins {
 kotlin {
     explicitApi()
 
+    @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
+    abiValidation {
+        enabled = true
+        klib {
+            keepUnsupportedTargets = false
+        }
+    }
+
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)

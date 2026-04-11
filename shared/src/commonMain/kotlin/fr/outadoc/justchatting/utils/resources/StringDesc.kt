@@ -6,25 +6,25 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
-internal sealed interface StringDesc {
+public sealed interface StringDesc {
     @Composable
-    fun localized(): String
+    public fun localized(): String
 
-    class Raw(
-        val value: String,
+    public class Raw(
+        public val value: String,
     ) : StringDesc {
         @Composable
         override fun localized(): String = value
     }
 
-    class Resource(
+    public class Resource(
         private val resource: StringResource,
     ) : StringDesc {
         @Composable
         override fun localized(): String = stringResource(resource)
     }
 
-    class Formatted(
+    public class Formatted(
         private val resource: StringResource,
         private val args: Array<out Any>,
     ) : StringDesc {
@@ -46,7 +46,7 @@ internal sealed interface StringDesc {
         }
     }
 
-    class Plural(
+    public class Plural(
         private val resource: PluralStringResource,
         private val number: Int,
     ) : StringDesc {
@@ -58,7 +58,7 @@ internal sealed interface StringDesc {
             )
     }
 
-    class PluralFormatted(
+    public class PluralFormatted(
         private val resource: PluralStringResource,
         private val number: Int,
         private val args: Array<out Any>,
@@ -83,15 +83,15 @@ internal sealed interface StringDesc {
     }
 }
 
-internal fun String.desc(): StringDesc = StringDesc.Raw(this)
+public fun String.desc(): StringDesc = StringDesc.Raw(this)
 
-internal fun StringResource.desc(): StringDesc = StringDesc.Resource(this)
+public fun StringResource.desc(): StringDesc = StringDesc.Resource(this)
 
-internal fun StringResource.desc(vararg args: Any): StringDesc = StringDesc.Formatted(this, args)
+public fun StringResource.desc(vararg args: Any): StringDesc = StringDesc.Formatted(this, args)
 
-internal fun PluralStringResource.desc(number: Int): StringDesc = StringDesc.Plural(this, number)
+public fun PluralStringResource.desc(number: Int): StringDesc = StringDesc.Plural(this, number)
 
-internal fun PluralStringResource.desc(
+public fun PluralStringResource.desc(
     number: Int,
     vararg args: Any,
 ): StringDesc = StringDesc.PluralFormatted(this, number, args)

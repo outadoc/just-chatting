@@ -5,11 +5,11 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import kotlin.time.Duration
 import kotlin.time.Instant
 
-internal sealed interface ChatEvent {
-    sealed interface Message : ChatEvent {
-        val timestamp: Instant
+public sealed interface ChatEvent {
+    public sealed interface Message : ChatEvent {
+        public val timestamp: Instant
 
-        data class ChatMessage(
+        public data class ChatMessage(
             override val timestamp: Instant,
             val id: String?,
             val userId: String,
@@ -25,7 +25,7 @@ internal sealed interface ChatEvent {
             val inReplyTo: InReplyTo?,
         ) : Message {
             @Immutable
-            data class InReplyTo(
+            public data class InReplyTo(
                 val id: String,
                 val message: String,
                 val userId: String,
@@ -34,30 +34,30 @@ internal sealed interface ChatEvent {
             )
         }
 
-        data class UserNotice(
+        public data class UserNotice(
             override val timestamp: Instant,
             val systemMsg: String,
             val userMessage: ChatMessage?,
             val msgId: String?,
         ) : Message
 
-        data class IncomingRaid(
+        public data class IncomingRaid(
             override val timestamp: Instant,
             val userDisplayName: String,
             val raidersCount: Int,
         ) : Message
 
-        data class CancelledRaid(
+        public data class CancelledRaid(
             override val timestamp: Instant,
             val userDisplayName: String,
         ) : Message
 
-        data class Announcement(
+        public data class Announcement(
             override val timestamp: Instant,
             val userMessage: ChatMessage,
         ) : Message
 
-        data class Subscription(
+        public data class Subscription(
             override val timestamp: Instant,
             val userDisplayName: String,
             val months: Int,
@@ -67,14 +67,14 @@ internal sealed interface ChatEvent {
             val userMessage: ChatMessage?,
         ) : Message
 
-        data class SubscriptionConversion(
+        public data class SubscriptionConversion(
             override val timestamp: Instant,
             val userDisplayName: String,
             val subscriptionPlan: String,
             val userMessage: ChatMessage?,
         ) : Message
 
-        data class SubscriptionGift(
+        public data class SubscriptionGift(
             override val timestamp: Instant,
             val userDisplayName: String,
             val recipientDisplayName: String,
@@ -83,13 +83,13 @@ internal sealed interface ChatEvent {
             val subscriptionPlan: String,
         ) : Message
 
-        data class GiftPayForward(
+        public data class GiftPayForward(
             override val timestamp: Instant,
             val userDisplayName: String,
             val priorGifterDisplayName: String?,
         ) : Message
 
-        data class MassSubscriptionGift(
+        public data class MassSubscriptionGift(
             override val timestamp: Instant,
             val userDisplayName: String,
             val giftCount: Int,
@@ -97,64 +97,64 @@ internal sealed interface ChatEvent {
             val subscriptionPlan: String,
         ) : Message
 
-        data class HighlightedMessage(
+        public data class HighlightedMessage(
             override val timestamp: Instant,
             val userMessage: ChatMessage,
         ) : Message
 
-        data class Notice(
+        public data class Notice(
             override val timestamp: Instant,
             val message: String,
             val messageId: String?,
         ) : Message
 
-        data class Join(
+        public data class Join(
             override val timestamp: Instant,
             val channelLogin: String,
         ) : Message
 
-        data class SendError(
+        public data class SendError(
             override val timestamp: Instant,
         ) : Message
 
-        data class PollUpdate(
+        public data class PollUpdate(
             override val timestamp: Instant,
             val poll: Poll,
         ) : Message
 
-        data class BroadcastSettingsUpdate(
+        public data class BroadcastSettingsUpdate(
             override val timestamp: Instant,
             val streamTitle: String,
             val categoryId: String,
             val categoryName: String,
         ) : Message
 
-        data class ViewerCountUpdate(
+        public data class ViewerCountUpdate(
             override val timestamp: Instant,
             val viewerCount: Long,
         ) : Message
 
-        data class PredictionUpdate(
+        public data class PredictionUpdate(
             override val timestamp: Instant,
             val prediction: Prediction,
         ) : Message
 
-        data class RaidUpdate(
+        public data class RaidUpdate(
             override val timestamp: Instant,
             val raid: Raid?,
         ) : Message
 
-        data class PinnedMessageUpdate(
+        public data class PinnedMessageUpdate(
             override val timestamp: Instant,
             val pinnedMessage: PinnedMessage?,
         ) : Message
 
-        data class RedemptionUpdate(
+        public data class RedemptionUpdate(
             override val timestamp: Instant,
             val redemption: Redemption,
         ) : Message
 
-        data class RichEmbed(
+        public data class RichEmbed(
             override val timestamp: Instant,
             val messageId: String,
             val title: String,
@@ -165,10 +165,10 @@ internal sealed interface ChatEvent {
         ) : Message
     }
 
-    sealed interface Command : ChatEvent {
-        data object Ping : Command
+    public sealed interface Command : ChatEvent {
+        public data object Ping : Command
 
-        data class RoomStateDelta(
+        public data class RoomStateDelta(
             val isEmoteOnly: Boolean? = null,
             val minFollowDuration: Duration? = null,
             val uniqueMessagesOnly: Boolean? = null,
@@ -176,18 +176,18 @@ internal sealed interface ChatEvent {
             val isSubOnly: Boolean? = null,
         ) : Command
 
-        data class UserState(
+        public data class UserState(
             val emoteSets: List<String> = emptyList(),
         ) : Command
 
-        data class ClearChat(
+        public data class ClearChat(
             val timestamp: Instant,
             val targetUserId: String?,
             val targetUserLogin: String?,
             val duration: Duration?,
         ) : Command
 
-        data class ClearMessage(
+        public data class ClearMessage(
             val timestamp: Instant,
             val targetMessage: String?,
             val targetMessageId: String?,

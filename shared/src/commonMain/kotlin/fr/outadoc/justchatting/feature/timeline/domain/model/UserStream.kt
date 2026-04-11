@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 
 @Immutable
-internal data class UserStream(
+public data class UserStream(
     val user: User,
     val stream: Stream,
 )

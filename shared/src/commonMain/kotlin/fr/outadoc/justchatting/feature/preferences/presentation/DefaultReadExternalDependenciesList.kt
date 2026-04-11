@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 
-internal class DefaultReadExternalDependenciesList : ReadExternalDependenciesList {
+public class DefaultReadExternalDependenciesList : ReadExternalDependenciesList {
     override suspend fun invoke(): List<Dependency> =
         withContext(DispatchersProvider.io) {
             withContext(DispatchersProvider.io) {

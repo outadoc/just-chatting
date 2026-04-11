@@ -1,9 +1,9 @@
 package fr.outadoc.justchatting
 
-internal object AppInfo {
-    const val APP_ID = "JustChatting"
-    const val APP_AUTHOR = "outadoc"
+public object AppInfo {
+    public const val APP_ID: String = "JustChatting"
+    public const val APP_AUTHOR: String = "outadoc"
 
     // TODO make dynamic
-    const val APP_VERSION = "1.0.0"
+    public const val APP_VERSION: String = "1.0.0"
 }

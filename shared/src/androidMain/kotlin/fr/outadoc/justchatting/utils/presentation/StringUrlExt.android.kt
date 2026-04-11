@@ -4,4 +4,4 @@ import android.util.Patterns
 
 private val UrlRegex = Patterns.WEB_URL.toRegex()
 
-internal actual fun String.isValidWebUrl(): Boolean = matches(UrlRegex)
+public actual fun String.isValidWebUrl(): Boolean = matches(UrlRegex)

@@ -13,12 +13,12 @@ import fr.outadoc.justchatting.utils.resources.desc
 import kotlinx.collections.immutable.ImmutableMap
 import kotlin.time.Clock
 
-internal class SubmitMessageUseCase(
+public class SubmitMessageUseCase(
     private val clock: Clock,
     private val twitchRepository: TwitchRepository,
     private val insertRecentEmotes: InsertRecentEmotesUseCase,
 ) {
-    suspend operator fun invoke(
+    public suspend operator fun invoke(
         channelUserId: String,
         message: String,
         inReplyToMessageId: String?,

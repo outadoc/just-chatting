@@ -2,10 +2,10 @@ package fr.outadoc.justchatting.feature.emotes.domain
 
 import fr.outadoc.justchatting.feature.emotes.domain.model.RecentEmote
 
-internal class InsertRecentEmotesUseCase(
+public class InsertRecentEmotesUseCase(
     private val recentEmotesApi: RecentEmotesApi,
 ) {
-    operator fun invoke(emotes: Collection<RecentEmote>) {
+    public operator fun invoke(emotes: Collection<RecentEmote>) {
         recentEmotesApi.insertAll(emotes)
     }
 }

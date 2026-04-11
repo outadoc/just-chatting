@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.feature.chat.domain.model
 
 import kotlin.time.Instant
 
-internal data class Redemption(
+public data class Redemption(
     val id: String,
     val userId: String,
     val userLogin: String,

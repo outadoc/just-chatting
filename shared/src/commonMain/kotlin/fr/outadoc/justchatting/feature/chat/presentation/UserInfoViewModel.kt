@@ -6,30 +6,31 @@ import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
-internal class UserInfoViewModel(
+public class UserInfoViewModel(
     private val twitchRepository: TwitchRepository,
 ) : ViewModel() {
-    sealed class State {
-        data object Loading : State()
+    public sealed class State {
+        public data object Loading : State()
 
-        data class Error(
+        public data class Error(
             val throwable: Throwable,
         ) : State()
 
-        data class Loaded(
+        public data class Loaded(
             val user: User,
         ) : State()
     }
 
     private val _state = MutableStateFlow<State>(State.Loading)
-    val state = _state.asStateFlow()
+    public val state: StateFlow<State> = _state.asStateFlow()
 
-    fun load(userId: String) {
+    public fun load(userId: String) {
         viewModelScope.launch {
             twitchRepository
                 .getUserById(userId)

@@ -4,7 +4,7 @@ import org.koin.core.logger.Level
 import org.koin.core.logger.Logger
 import org.koin.core.logger.MESSAGE
 
-internal object KoinCustomLogger : Logger() {
+public object KoinCustomLogger : Logger() {
     override fun display(
         level: Level,
         msg: MESSAGE,

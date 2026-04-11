@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.feature.chat.presentation
 
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 
-internal fun EmoteUrls.getBestUrl(
+public fun EmoteUrls.getBestUrl(
     screenDensity: Float,
     isDarkTheme: Boolean,
 ): String =

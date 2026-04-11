@@ -8,28 +8,29 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-internal class RecentChannelsViewModel(
+public class RecentChannelsViewModel(
     private val repository: TwitchRepository,
 ) : ViewModel() {
-    sealed class State {
-        data object Loading : State()
+    public sealed class State {
+        public data object Loading : State()
 
-        data class Content(
+        public data class Content(
             val data: ImmutableList<User>,
         ) : State()
     }
 
     private val _state = MutableStateFlow<State>(State.Loading)
-    val state = _state.asStateFlow()
+    public val state: StateFlow<State> = _state.asStateFlow()
 
     private var job: Job? = null
 
-    fun refresh() {
+    public fun refresh() {
         job?.cancel()
         job =
             viewModelScope.launch {

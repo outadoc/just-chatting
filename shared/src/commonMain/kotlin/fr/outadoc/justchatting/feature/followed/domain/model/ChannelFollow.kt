@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.feature.shared.domain.model.User
 import kotlin.time.Instant
 
 @Immutable
-internal data class ChannelFollow(
+public data class ChannelFollow(
     val user: User,
     val followedAt: Instant,
 )

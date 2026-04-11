@@ -4,7 +4,7 @@ import coil3.Bitmap
 import coil3.size.Size
 import coil3.transform.Transformation
 
-internal class CoilReducedAnimationTransformation : Transformation() {
+public class CoilReducedAnimationTransformation : Transformation() {
     override val cacheKey: String = "CoilReducedAnimationTransformation"
 
     override suspend fun transform(

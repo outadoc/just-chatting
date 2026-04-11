@@ -197,8 +197,8 @@ import fr.outadoc.justchatting.utils.resources.StringDesc
 import fr.outadoc.justchatting.utils.resources.desc
 import kotlinx.collections.immutable.toImmutableList
 
-internal class ChatEventViewMapper {
-    fun map(command: ChatEvent): List<ChatListItem> =
+public class ChatEventViewMapper {
+    public fun map(command: ChatEvent): List<ChatListItem> =
         when (command) {
             is ChatEvent.Message -> {
                 listOf(mapMessage(command))

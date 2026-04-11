@@ -13,11 +13,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
-internal class LoadEmotesAndBadgesUseCase(
+public class LoadEmotesAndBadgesUseCase(
     private val twitchRepository: TwitchRepository,
     private val emoteListSourcesProvider: EmoteListSourcesProvider,
 ) {
-    suspend operator fun invoke(
+    public suspend operator fun invoke(
         channelId: String,
         channelName: String,
         emoteSets: List<String>,

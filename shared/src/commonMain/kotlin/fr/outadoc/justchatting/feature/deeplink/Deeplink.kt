@@ -1,11 +1,11 @@
 package fr.outadoc.justchatting.feature.deeplink
 
-internal sealed class Deeplink {
-    data class ViewChannel(
+public sealed class Deeplink {
+    public data class ViewChannel(
         val userId: String,
     ) : Deeplink()
 
-    data class Authenticated(
+    public data class Authenticated(
         val token: String,
     ) : Deeplink()
 }

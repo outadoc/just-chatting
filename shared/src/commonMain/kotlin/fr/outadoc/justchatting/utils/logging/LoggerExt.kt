@@ -1,26 +1,26 @@
 package fr.outadoc.justchatting.utils.logging
 
-internal inline fun logVerbose(
+public inline fun logVerbose(
     tag: String,
     noinline content: () -> String,
-) = Logger.println(Logger.Level.Verbose, tag, content)
+): Unit = Logger.println(Logger.Level.Verbose, tag, content)
 
-internal inline fun logDebug(
+public inline fun logDebug(
     tag: String,
     noinline content: () -> String,
-) = Logger.println(Logger.Level.Debug, tag, content)
+): Unit = Logger.println(Logger.Level.Debug, tag, content)
 
-internal inline fun logInfo(
+public inline fun logInfo(
     tag: String,
     noinline content: () -> String,
-) = Logger.println(Logger.Level.Info, tag, content)
+): Unit = Logger.println(Logger.Level.Info, tag, content)
 
-internal inline fun logWarning(
+public inline fun logWarning(
     tag: String,
     noinline content: () -> String,
-) = Logger.println(Logger.Level.Warning, tag, content)
+): Unit = Logger.println(Logger.Level.Warning, tag, content)
 
-internal inline fun logError(
+public inline fun logError(
     tag: String,
     throwable: Throwable? = null,
     noinline content: () -> String,

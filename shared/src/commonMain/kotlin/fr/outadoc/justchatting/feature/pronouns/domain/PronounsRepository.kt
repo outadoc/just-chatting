@@ -13,14 +13,14 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
-internal class PronounsRepository(
+public class PronounsRepository(
     private val pronounsApi: PronounsApi,
     private val localPronounsApi: LocalPronounsApi,
     private val preferenceRepository: PreferenceRepository,
 ) {
     private val cacheMutex = Mutex()
 
-    suspend fun fillPronounsFor(chatters: Set<Chatter>): Map<Chatter, Pronoun?> =
+    public suspend fun fillPronounsFor(chatters: Set<Chatter>): Map<Chatter, Pronoun?> =
         withContext(DispatchersProvider.io) {
             if (!preferenceRepository.currentPreferences.first().enablePronouns) {
                 return@withContext emptyMap()

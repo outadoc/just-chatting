@@ -1,5 +1,5 @@
 package fr.outadoc.justchatting.utils.presentation
 
-internal expect fun Float.formatPercent(): String
+public expect fun Float.formatPercent(): String
 
-internal expect fun Int.formatNumber(): String
+public expect fun Int.formatNumber(): String

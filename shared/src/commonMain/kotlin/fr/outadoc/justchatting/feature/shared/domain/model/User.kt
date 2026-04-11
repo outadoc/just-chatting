@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import kotlin.time.Instant
 
 @Immutable
-internal data class User(
+public data class User(
     val id: String,
     val login: String,
     val displayName: String,

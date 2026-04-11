@@ -4,9 +4,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
-internal object DispatchersProvider {
-    val main: CoroutineDispatcher = Dispatchers.Main
-    val io: CoroutineDispatcher = Dispatchers.IO
-    val default: CoroutineDispatcher = Dispatchers.Default
-    val unconfined: CoroutineDispatcher = Dispatchers.Unconfined
+public object DispatchersProvider {
+    public val main: CoroutineDispatcher = Dispatchers.Main
+    public val io: CoroutineDispatcher = Dispatchers.IO
+    public val default: CoroutineDispatcher = Dispatchers.Default
+    public val unconfined: CoroutineDispatcher = Dispatchers.Unconfined
 }

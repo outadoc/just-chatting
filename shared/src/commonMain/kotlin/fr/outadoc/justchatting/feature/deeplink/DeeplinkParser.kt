@@ -3,10 +3,10 @@ package fr.outadoc.justchatting.feature.deeplink
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 
-internal data class DeeplinkParser(
+public data class DeeplinkParser(
     private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
-    fun parseDeeplink(uri: Uri): Deeplink? {
+    public fun parseDeeplink(uri: Uri): Deeplink? {
         when {
             uri.isViewChannelUrl() -> {
                 uri.pathSegments.firstOrNull()?.let { userId ->

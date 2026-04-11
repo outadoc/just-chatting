@@ -30,14 +30,7 @@ kotlin {
     listOf(
         iosArm64(),
         iosSimulatorArm64(),
-    ).forEach { iosTarget ->
-        iosTarget.binaries {
-            framework {
-                baseName = "JCShared"
-                isStatic = true
-            }
-        }
-    }
+    )
 
     jvm("desktop") {
         compilerOptions {
@@ -62,30 +55,14 @@ kotlin {
                 implementation(libs.androidx.datastore.preferences)
                 implementation(libs.androidx.lifecycle.viewmodel)
                 implementation(libs.androidx.paging.common)
-                implementation(libs.androidx.paging.compose.common)
-                implementation(libs.coil.compose)
                 implementation(libs.coil.core)
                 implementation(libs.coil.ktor)
-                implementation(libs.connectivity.core)
-                implementation(libs.haze.core)
-                implementation(libs.haze.materials)
                 implementation(libs.compose.components.resources)
-                implementation(libs.compose.material.adaptive.core)
-                implementation(libs.compose.material.adaptive.layout)
-                implementation(libs.compose.material.adaptive.navigation)
-                implementation(libs.compose.material.adaptive.navigation.suite)
-                implementation(libs.compose.material.windowSizeClass)
-                implementation(libs.compose.material3)
-                implementation(libs.compose.materialIcons)
                 implementation(libs.compose.navigation3.ui)
                 implementation(libs.compose.runtime)
-                implementation(libs.compose.ui)
-                implementation(libs.compose.ui.backhandler)
-                implementation(libs.compose.ui.tooling.preview)
-                implementation(libs.compose.ui.tooling.preview)
-                implementation(libs.koin.core)
-                implementation(libs.koin.compose)
+                implementation(libs.connectivity.core)
                 implementation(libs.koin.compose.viewmodel)
+                implementation(libs.koin.core)
                 implementation(libs.kotlinx.collections.immutable)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.json)
@@ -94,9 +71,6 @@ kotlin {
                 implementation(libs.ktor.contentNegociation)
                 implementation(libs.ktor.logging)
                 implementation(libs.ktor.serialization)
-                implementation(libs.kmpalette.core)
-                implementation(libs.kmpalette.extensions.network)
-                implementation(libs.material.kolor)
                 implementation(libs.okio)
                 implementation(libs.sqldelight.coroutines)
                 implementation(libs.stately.common)
@@ -107,18 +81,10 @@ kotlin {
 
         androidMain {
             dependencies {
-                implementation(libs.accompanist.permissions)
-                implementation(libs.androidx.activity.compose)
                 implementation(libs.androidx.appcompat)
                 implementation(libs.androidx.browser)
                 implementation(libs.androidx.emoji2.core)
-                implementation(libs.androidx.glance.appwidget)
-                implementation(libs.androidx.glance.material3)
-                implementation(libs.androidx.lifecycle.service)
-                implementation(libs.androidx.palette)
                 implementation(libs.androidx.paging.runtime.android)
-                implementation(libs.androidx.splashscreen)
-                implementation(libs.coil.gif)
                 implementation(libs.connectivity.android)
                 implementation(libs.koin.android)
                 implementation(libs.ktor.client.okhttp)
@@ -175,6 +141,7 @@ kotlin {
 
 compose.resources {
     packageOfResClass = "fr.outadoc.justchatting.shared"
+    publicResClass = true
 }
 
 android {
@@ -214,5 +181,4 @@ sqldelight {
 
 dependencies {
     coreLibraryDesugaring(libs.desugar)
-    debugImplementation(libs.compose.ui.tooling)
 }

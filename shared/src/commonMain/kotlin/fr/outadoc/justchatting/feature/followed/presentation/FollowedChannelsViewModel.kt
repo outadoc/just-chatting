@@ -14,33 +14,34 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-internal class FollowedChannelsViewModel(
+public class FollowedChannelsViewModel(
     private val repository: TwitchRepository,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
-    sealed class Event {
-        data class NavigateToChannel(
+    public sealed class Event {
+        public data class NavigateToChannel(
             val userId: String,
         ) : Event()
     }
 
     @Immutable
-    data class State(
+    public data class State(
         val data: ImmutableList<ChannelFollow> = persistentListOf(),
         val isLoading: Boolean = true,
     )
 
     private val _events = MutableSharedFlow<Event>()
-    val events: SharedFlow<Event> = _events.asSharedFlow()
+    public val events: SharedFlow<Event> = _events.asSharedFlow()
 
     private val _state = MutableStateFlow(State())
-    val state = _state.asStateFlow()
+    public val state: StateFlow<State> = _state.asStateFlow()
 
     private var syncJob: Job? = null
 
@@ -58,13 +59,13 @@ internal class FollowedChannelsViewModel(
         }
     }
 
-    fun onChannelClick(userId: String) {
+    public fun onChannelClick(userId: String) {
         viewModelScope.launch {
             _events.emit(Event.NavigateToChannel(userId))
         }
     }
 
-    fun synchronize() {
+    public fun synchronize() {
         syncJob?.cancel()
         syncJob =
             viewModelScope.launch(DispatchersProvider.io) {

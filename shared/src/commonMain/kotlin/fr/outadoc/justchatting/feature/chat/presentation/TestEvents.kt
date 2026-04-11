@@ -12,8 +12,8 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
-internal object TestEvents {
-    val events: Flow<ChatViewModel.Action> =
+public object TestEvents {
+    public val events: Flow<ChatViewModel.Action> =
         flowOf(
             ChatViewModel.Action.UpdatePrediction(
                 prediction =

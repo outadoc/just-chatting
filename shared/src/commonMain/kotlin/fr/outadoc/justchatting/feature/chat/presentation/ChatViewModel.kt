@@ -72,7 +72,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-internal class ChatViewModel(
+public class ChatViewModel(
     private val clock: Clock,
     private val twitchRepository: TwitchRepository,
     private val getRecentEmotes: GetRecentEmotesUseCase,
@@ -90,106 +90,106 @@ internal class ChatViewModel(
 
     private val reducer = ChatStateReducer()
 
-    sealed class Action {
-        data class AddMessages(
+    public sealed class Action {
+        public data class AddMessages(
             val messages: List<ChatListItem.Message>,
         ) : Action()
 
-        data class ChangeRecentEmotes(
+        public data class ChangeRecentEmotes(
             val recentEmotes: List<Emote>,
         ) : Action()
 
-        data class ChangeRoomState(
+        public data class ChangeRoomState(
             val delta: ChatListItem.RoomStateDelta,
         ) : Action()
 
-        data class ChangeConnectionStatus(
+        public data class ChangeConnectionStatus(
             val connectionStatus: ConnectionStatus,
         ) : Action()
 
-        data class ChangeUserState(
+        public data class ChangeUserState(
             val userState: ChatListItem.UserState,
         ) : Action()
 
-        data class RemoveContent(
+        public data class RemoveContent(
             val removedContent: ChatListItem.RemoveContent,
         ) : Action()
 
-        data class UpdatePoll(
+        public data class UpdatePoll(
             val poll: Poll,
         ) : Action()
 
-        data class UpdatePrediction(
+        public data class UpdatePrediction(
             val prediction: Prediction,
         ) : Action()
 
-        data class UpdateRaidAnnouncement(
+        public data class UpdateRaidAnnouncement(
             val raid: Raid?,
         ) : Action()
 
-        data class UpdatePinnedMessage(
+        public data class UpdatePinnedMessage(
             val pinnedMessage: PinnedMessage?,
         ) : Action()
 
-        data class AddRichEmbed(
+        public data class AddRichEmbed(
             val richEmbed: ChatListItem.RichEmbed,
         ) : Action()
 
-        data class UpdateStreamMetadata(
+        public data class UpdateStreamMetadata(
             val viewerCount: Long? = null,
             val streamTitle: String? = null,
             val streamCategory: StreamCategory? = null,
         ) : Action()
 
-        data class UpdateEmotes(
+        public data class UpdateEmotes(
             val pickableEmotes: PersistentList<EmoteSetItem>,
             val globalBadges: PersistentList<TwitchBadge>?,
             val channelBadges: PersistentList<TwitchBadge>?,
             val cheerEmotes: PersistentMap<String, Emote>?,
         ) : Action()
 
-        data class LoadChat(
+        public data class LoadChat(
             val userId: String,
             val appUser: AppUser.LoggedIn,
             val maxAdapterCount: Int,
         ) : Action()
 
-        data class UpdateChatterPronouns(
+        public data class UpdateChatterPronouns(
             val pronouns: Map<Chatter, Pronoun?>,
         ) : Action()
 
-        data class UpdateStreamDetails(
+        public data class UpdateStreamDetails(
             val stream: Stream,
         ) : Action()
 
-        data class ShowUserInfo(
+        public data class ShowUserInfo(
             val userId: String?,
         ) : Action()
 
-        data class UpdateStreamInfoVisibility(
+        public data class UpdateStreamInfoVisibility(
             val isVisible: Boolean,
         ) : Action()
 
-        data class UpdateUser(
+        public data class UpdateUser(
             val user: User,
         ) : Action()
     }
 
     @Immutable
-    sealed class State {
-        data object Initial : State()
+    public sealed class State {
+        public data object Initial : State()
 
-        data class Loading(
+        public data class Loading(
             val userId: String,
             val appUser: AppUser.LoggedIn,
             val maxAdapterCount: Int,
         ) : State()
 
-        data class Failed(
+        public data class Failed(
             val throwable: Throwable,
         ) : State()
 
-        data class Chatting(
+        public data class Chatting(
             val user: User,
             val appUser: AppUser.LoggedIn,
             val stream: Stream? = null,
@@ -250,39 +250,39 @@ internal class ChatViewModel(
         }
     }
 
-    sealed class InputAction {
-        data class AppendChatter(
+    public sealed class InputAction {
+        public data class AppendChatter(
             val chatter: Chatter,
             val autocomplete: Boolean,
         ) : InputAction()
 
-        data class AppendEmote(
+        public data class AppendEmote(
             val emote: Emote,
             val autocomplete: Boolean,
         ) : InputAction()
 
-        data class ChangeMessageInput(
+        public data class ChangeMessageInput(
             val message: String,
             val selectionRange: IntRange,
         ) : InputAction()
 
-        data object ReplaceInputWithLastSentMessage : InputAction()
+        public data object ReplaceInputWithLastSentMessage : InputAction()
 
-        data class ReplyToMessage(
+        public data class ReplyToMessage(
             val chatListItem: ChatListItem.Message? = null,
         ) : InputAction()
 
-        data class UpdateAutoCompleteItems(
+        public data class UpdateAutoCompleteItems(
             val items: ImmutableList<AutoCompleteItem>,
         ) : InputAction()
 
-        data class ClearAfterSubmit(
+        public data class ClearAfterSubmit(
             val sentMessage: String,
         ) : InputAction()
     }
 
     @Immutable
-    data class InputState(
+    public data class InputState(
         val message: String = "",
         val selectionRange: IntRange = 0..0,
         val replyingTo: ChatListItem.Message? = null,
@@ -300,7 +300,7 @@ internal class ChatViewModel(
         )
 
     @OptIn(FlowPreview::class)
-    val state: StateFlow<State> =
+    public val state: StateFlow<State> =
         actions
             .runningFold(State.Initial) { state: State, action -> reducer.reduce(action, state) }
             .debounce(100.milliseconds)
@@ -311,7 +311,7 @@ internal class ChatViewModel(
             )
 
     private val inputActions = MutableSharedFlow<InputAction>()
-    val inputState: StateFlow<InputState> =
+    public val inputState: StateFlow<InputState> =
         inputActions
             .runningFold(InputState()) { state: InputState, action ->
                 reducer.reduce(
@@ -534,7 +534,7 @@ internal class ChatViewModel(
             }.launchIn(viewModelScope)
     }
 
-    fun loadChat(userId: String) {
+    public fun loadChat(userId: String) {
         defaultScope.launch {
             val appUser = authRepository.currentUser.first() as AppUser.LoggedIn
             actions.emit(
@@ -547,37 +547,37 @@ internal class ChatViewModel(
         }
     }
 
-    fun onShowUserInfo(userId: String) {
+    public fun onShowUserInfo(userId: String) {
         defaultScope.launch {
             actions.emit(Action.ShowUserInfo(userId = userId))
         }
     }
 
-    fun onDismissUserInfo() {
+    public fun onDismissUserInfo() {
         defaultScope.launch {
             actions.emit(Action.ShowUserInfo(userId = null))
         }
     }
 
-    fun onShowStreamInfo() {
+    public fun onShowStreamInfo() {
         defaultScope.launch {
             actions.emit(Action.UpdateStreamInfoVisibility(isVisible = true))
         }
     }
 
-    fun onDismissStreamInfo() {
+    public fun onDismissStreamInfo() {
         defaultScope.launch {
             actions.emit(Action.UpdateStreamInfoVisibility(isVisible = false))
         }
     }
 
-    fun onReplyToMessage(entry: ChatListItem.Message?) {
+    public fun onReplyToMessage(entry: ChatListItem.Message?) {
         inputScope.launch {
             inputActions.emit(InputAction.ReplyToMessage(entry))
         }
     }
 
-    fun onMessageInputChanged(
+    public fun onMessageInputChanged(
         message: String,
         selectionRange: IntRange,
     ) {
@@ -591,13 +591,13 @@ internal class ChatViewModel(
         }
     }
 
-    fun onReuseLastMessageClicked() {
+    public fun onReuseLastMessageClicked() {
         inputScope.launch {
             inputActions.emit(InputAction.ReplaceInputWithLastSentMessage)
         }
     }
 
-    fun onTriggerAutoComplete() {
+    public fun onTriggerAutoComplete() {
         inputScope.launch {
             when (val firstItem = inputState.value.autoCompleteItems.firstOrNull()) {
                 is AutoCompleteItem.Emote -> {
@@ -617,7 +617,7 @@ internal class ChatViewModel(
         }
     }
 
-    fun appendEmote(
+    public fun appendEmote(
         emote: Emote,
         autocomplete: Boolean,
     ) {
@@ -626,7 +626,7 @@ internal class ChatViewModel(
         }
     }
 
-    fun appendChatter(
+    public fun appendChatter(
         chatter: Chatter,
         autocomplete: Boolean,
     ) {
@@ -635,7 +635,7 @@ internal class ChatViewModel(
         }
     }
 
-    fun submit(
+    public fun submit(
         screenDensity: Float,
         isDarkTheme: Boolean,
     ) {

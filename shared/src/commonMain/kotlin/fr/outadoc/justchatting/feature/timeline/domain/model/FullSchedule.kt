@@ -8,7 +8,7 @@ import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.datetime.LocalDate
 
 @Immutable
-internal data class FullSchedule(
+public data class FullSchedule(
     val past: ImmutableMap<LocalDate, List<ChannelScheduleSegment>> = persistentMapOf(),
     val live: ImmutableList<UserStream> = persistentListOf(),
     val future: ImmutableMap<LocalDate, List<ChannelScheduleSegment>> = persistentMapOf(),

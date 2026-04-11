@@ -9,7 +9,7 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.shared.domain.model.User
-import fr.outadoc.justchatting.feature.shared.presentation.ui.DetailScreen
+import fr.outadoc.justchatting.feature.shared.presentation.DetailScreen
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,33 +26,33 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class SettingsViewModel(
+public class SettingsViewModel(
     private val preferenceRepository: PreferenceRepository,
     private val logRepository: LogRepository,
     private val twitchRepository: TwitchRepository,
     private val authRepository: AuthRepository,
     private val appVersionNameProvider: AppVersionNameProvider,
 ) : ViewModel() {
-    sealed class Event {
-        data class ShareLogs(
+    public sealed class Event {
+        public data class ShareLogs(
             val uri: Uri,
         ) : Event()
 
-        data class NavigateToDetail(
+        public data class NavigateToDetail(
             val screen: DetailScreen,
         ) : Event()
     }
 
-    data class State(
+    public data class State(
         val appPreferences: AppPreferences = AppPreferences(),
         val appVersionName: String? = null,
         val user: User? = null,
     )
 
     private val _events = MutableSharedFlow<Event>()
-    val events: SharedFlow<Event> = _events.asSharedFlow()
+    public val events: SharedFlow<Event> = _events.asSharedFlow()
 
-    val state: StateFlow<State> =
+    public val state: StateFlow<State> =
         combine(
             preferenceRepository.currentPreferences,
             authRepository
@@ -90,25 +90,25 @@ internal class SettingsViewModel(
             initialValue = State(),
         )
 
-    fun onNavigateToDetail(screen: DetailScreen) {
+    public fun onNavigateToDetail(screen: DetailScreen) {
         viewModelScope.launch {
             _events.emit(Event.NavigateToDetail(screen))
         }
     }
 
-    fun updatePreferences(appPreferences: AppPreferences) {
+    public fun updatePreferences(appPreferences: AppPreferences) {
         viewModelScope.launch(DispatchersProvider.io) {
             preferenceRepository.updatePreferences { appPreferences }
         }
     }
 
-    fun logout() {
+    public fun logout() {
         viewModelScope.launch(DispatchersProvider.io) {
             authRepository.logout()
         }
     }
 
-    fun onShareLogsClick() {
+    public fun onShareLogsClick() {
         viewModelScope.launch {
             try {
                 if (logRepository.isSupported) {

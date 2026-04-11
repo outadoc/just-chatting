@@ -6,7 +6,7 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
-internal class DefaultChatRepository(
+public class DefaultChatRepository(
     private val handler: AggregateChatEventHandler,
 ) : ChatRepository {
     override fun getChatEventFlow(

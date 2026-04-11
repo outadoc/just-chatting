@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.utils.core
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 
-internal fun createChannelExternalLink(user: User): String =
+public fun createChannelExternalLink(user: User): String =
     Uri
         .parse("https://twitch.tv")
         .buildUpon()
@@ -11,7 +11,7 @@ internal fun createChannelExternalLink(user: User): String =
         .build()
         .toString()
 
-internal fun createVideoExternalLink(videoId: String): String =
+public fun createVideoExternalLink(videoId: String): String =
     Uri
         .parse("https://www.twitch.tv/videos")
         .buildUpon()

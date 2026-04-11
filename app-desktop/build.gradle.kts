@@ -71,7 +71,7 @@ compose.desktop {
 }
 
 dependencies {
-    implementation(project(":shared"))
+    implementation(project(":shared-ui"))
     implementation(platform(libs.kotlin.bom))
     implementation(compose.desktop.currentOs)
 }

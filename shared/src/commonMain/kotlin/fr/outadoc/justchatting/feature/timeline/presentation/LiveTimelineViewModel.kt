@@ -12,6 +12,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -23,38 +24,38 @@ import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
 
-internal class LiveTimelineViewModel(
+public class LiveTimelineViewModel(
     private val twitchRepository: TwitchRepository,
     private val clock: Clock,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
-    sealed class Event {
-        data class NavigateToChannel(
+    public sealed class Event {
+        public data class NavigateToChannel(
             val userId: String,
         ) : Event()
     }
 
-    data class State(
+    public data class State(
         val isLoading: Boolean = false,
         val live: ImmutableList<UserStream> = persistentListOf(),
         val timeZone: TimeZone = TimeZone.currentSystemDefault(),
     )
 
     private val _events = MutableSharedFlow<Event>()
-    val events: SharedFlow<Event> = _events.asSharedFlow()
+    public val events: SharedFlow<Event> = _events.asSharedFlow()
 
     private val _state = MutableStateFlow(State())
-    val state = _state.asStateFlow()
+    public val state: StateFlow<State> = _state.asStateFlow()
 
     private var periodicSyncJob: Job? = null
 
-    fun onChannelClick(userId: String) {
+    public fun onChannelClick(userId: String) {
         viewModelScope.launch {
             _events.emit(Event.NavigateToChannel(userId))
         }
     }
 
-    fun syncLiveStreamsPeriodically() {
+    public fun syncLiveStreamsPeriodically() {
         if (periodicSyncJob?.isActive == true) {
             return
         }
@@ -83,7 +84,7 @@ internal class LiveTimelineViewModel(
             }
     }
 
-    fun syncLiveStreamsNow() {
+    public fun syncLiveStreamsNow() {
         viewModelScope.launch {
             doSync()
         }

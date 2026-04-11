@@ -12,41 +12,41 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.Video
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
 
-internal interface TwitchApi {
-    suspend fun getStreamsByUserId(ids: List<String>): Result<List<Stream>>
+public interface TwitchApi {
+    public suspend fun getStreamsByUserId(ids: List<String>): Result<List<Stream>>
 
-    suspend fun getStreamsByUserLogin(logins: List<String>): Result<List<Stream>>
+    public suspend fun getStreamsByUserLogin(logins: List<String>): Result<List<Stream>>
 
-    suspend fun getUsersById(ids: List<String>): List<User>
+    public suspend fun getUsersById(ids: List<String>): List<User>
 
-    suspend fun getUsersByLogin(logins: List<String>): List<User>
+    public suspend fun getUsersByLogin(logins: List<String>): List<User>
 
-    suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>>
+    public suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>>
 
-    suspend fun getCheerEmotes(userId: String?): Result<List<Emote>>
+    public suspend fun getCheerEmotes(userId: String?): Result<List<Emote>>
 
-    suspend fun getGlobalBadges(): Result<List<TwitchBadge>>
+    public suspend fun getGlobalBadges(): Result<List<TwitchBadge>>
 
-    suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>>
+    public suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>>
 
-    suspend fun getChannelVideos(
+    public suspend fun getChannelVideos(
         channelId: String,
         notBefore: Instant,
     ): Result<List<Video>>
 
-    suspend fun getChannelSchedule(
+    public suspend fun getChannelSchedule(
         userId: String,
         notBefore: Instant,
         notAfter: Instant,
     ): Result<List<ChannelScheduleSegment>>
 
-    suspend fun getFollowedChannels(userId: String): Result<List<ChannelFollow>>
+    public suspend fun getFollowedChannels(userId: String): Result<List<ChannelFollow>>
 
-    suspend fun getFollowedStreams(userId: String): Result<List<Stream>>
+    public suspend fun getFollowedStreams(userId: String): Result<List<Stream>>
 
-    suspend fun searchChannels(query: String): Flow<PagingData<List<ChannelSearchResult>>>
+    public suspend fun searchChannels(query: String): Flow<PagingData<List<ChannelSearchResult>>>
 
-    suspend fun sendChatMessage(
+    public suspend fun sendChatMessage(
         channelUserId: String,
         senderUserId: String,
         message: String,

@@ -11,12 +11,12 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.header
 import kotlinx.coroutines.flow.first
 
-internal class TwitchHttpClientProvider(
+public class TwitchHttpClientProvider(
     private val baseHttpClientProvider: BaseHttpClientProvider,
     private val preferenceRepository: PreferenceRepository,
     private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
-    fun get(): HttpClient =
+    public fun get(): HttpClient =
         baseHttpClientProvider.get {
             defaultRequest {
                 header("Client-ID", oAuthAppCredentials.clientId)

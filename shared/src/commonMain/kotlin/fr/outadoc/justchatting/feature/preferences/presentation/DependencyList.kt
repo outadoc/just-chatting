@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class DependencyList(
+public data class DependencyList(
     @SerialName("dependencies")
     val dependencies: List<Dependency>,
 )

@@ -6,7 +6,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Immutable
-internal data class ChannelSearchResult(
+public data class ChannelSearchResult(
     val title: String,
     val user: User,
     val language: String? = null,

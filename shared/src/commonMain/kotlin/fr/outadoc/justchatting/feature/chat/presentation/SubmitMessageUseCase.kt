@@ -13,7 +13,7 @@ import fr.outadoc.justchatting.utils.resources.desc
 import kotlinx.collections.immutable.ImmutableMap
 import kotlin.time.Clock
 
-public class SubmitMessageUseCase(
+internal class SubmitMessageUseCase(
     private val clock: Clock,
     private val twitchRepository: TwitchRepository,
     private val insertRecentEmotes: InsertRecentEmotesUseCase,

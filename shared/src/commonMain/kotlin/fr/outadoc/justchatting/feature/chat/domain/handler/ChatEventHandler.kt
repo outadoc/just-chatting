@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import kotlinx.coroutines.flow.Flow
 
-public interface ChatEventHandler {
+internal interface ChatEventHandler {
     public fun getEventFlow(
         channelId: String,
         channelLogin: String,

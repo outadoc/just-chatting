@@ -12,7 +12,7 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.Video
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
 
-public interface TwitchApi {
+internal interface TwitchApi {
     public suspend fun getStreamsByUserId(ids: List<String>): Result<List<Stream>>
 
     public suspend fun getStreamsByUserLogin(logins: List<String>): Result<List<Stream>>

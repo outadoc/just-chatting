@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.feature.emotes.domain
 import fr.outadoc.justchatting.feature.emotes.domain.model.RecentEmote
 import kotlinx.coroutines.flow.Flow
 
-public interface RecentEmotesApi {
+internal interface RecentEmotesApi {
     public fun getAll(): Flow<List<RecentEmote>>
 
     public fun insertAll(emotes: Collection<RecentEmote>)

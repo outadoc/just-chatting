@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.merge
 
-public class AggregateChatEventHandler(
+internal class AggregateChatEventHandler(
     chatEventHandlersProvider: ChatEventHandlersProvider,
 ) : ChatEventHandler {
     private val handlers: List<ChatEventHandler> = chatEventHandlersProvider.get()

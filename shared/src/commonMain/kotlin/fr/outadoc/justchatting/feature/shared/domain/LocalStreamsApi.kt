@@ -7,7 +7,7 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.Video
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
 
-public interface LocalStreamsApi {
+internal interface LocalStreamsApi {
     public fun getPastStreams(
         notBefore: Instant,
         notAfter: Instant,

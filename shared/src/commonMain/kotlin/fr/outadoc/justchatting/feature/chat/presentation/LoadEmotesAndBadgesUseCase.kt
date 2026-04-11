@@ -13,7 +13,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
-public class LoadEmotesAndBadgesUseCase(
+internal class LoadEmotesAndBadgesUseCase(
     private val twitchRepository: TwitchRepository,
     private val emoteListSourcesProvider: EmoteListSourcesProvider,
 ) {

@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
-public class MainRouterViewModel(
+public class MainRouterViewModel internal constructor(
     private val authRepository: AuthRepository,
     private val deeplinkParser: DeeplinkParser,
     private val authCallbackWebServer: AuthCallbackWebServer,

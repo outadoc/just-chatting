@@ -72,7 +72,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-public class ChatViewModel(
+public class ChatViewModel internal constructor(
     private val clock: Clock,
     private val twitchRepository: TwitchRepository,
     private val getRecentEmotes: GetRecentEmotesUseCase,

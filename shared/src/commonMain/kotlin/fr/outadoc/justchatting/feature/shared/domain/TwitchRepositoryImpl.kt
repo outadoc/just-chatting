@@ -42,7 +42,7 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
 
-public class TwitchRepositoryImpl(
+internal class TwitchRepositoryImpl(
     private val twitchApi: TwitchApi,
     private val localUsersApi: LocalUsersApi,
     private val localStreamsApi: LocalStreamsApi,

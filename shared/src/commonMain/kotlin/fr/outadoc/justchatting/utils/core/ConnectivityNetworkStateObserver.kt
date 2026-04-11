@@ -4,7 +4,7 @@ import dev.jordond.connectivity.Connectivity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-public class ConnectivityNetworkStateObserver(
+internal class ConnectivityNetworkStateObserver(
     private val connectivity: Connectivity,
 ) : NetworkStateObserver {
     override val state: Flow<NetworkStateObserver.NetworkState>

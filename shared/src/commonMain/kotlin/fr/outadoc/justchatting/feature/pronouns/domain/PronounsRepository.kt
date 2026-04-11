@@ -13,7 +13,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
-public class PronounsRepository(
+internal class PronounsRepository(
     private val pronounsApi: PronounsApi,
     private val localPronounsApi: LocalPronounsApi,
     private val preferenceRepository: PreferenceRepository,

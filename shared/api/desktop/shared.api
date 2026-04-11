@@ -572,27 +572,6 @@ public final class fr/outadoc/justchatting/di/SharedModuleKt {
 	public static final fun getSharedModule ()Lorg/koin/core/module/Module;
 }
 
-public abstract interface class fr/outadoc/justchatting/feature/auth/data/AuthCallbackWebServer {
-	public abstract fun getReceivedUris ()Lkotlinx/coroutines/flow/SharedFlow;
-	public abstract fun start ()V
-	public abstract fun stop ()V
-}
-
-public abstract interface class fr/outadoc/justchatting/feature/auth/domain/AuthApi {
-	public abstract fun getExternalAuthorizeUrl (Lfr/outadoc/justchatting/feature/auth/domain/model/OAuthAppCredentials;Ljava/util/Set;)Lcom/eygraber/uri/Uri;
-	public abstract fun revokeToken-0E7RQCE (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun validateToken-gIAlu-s (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public final class fr/outadoc/justchatting/feature/auth/domain/model/AuthValidationResponse {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/collections/immutable/ImmutableSet;)V
-	public final fun getClientId ()Ljava/lang/String;
-	public final fun getLogin ()Ljava/lang/String;
-	public final fun getScopes ()Lkotlinx/collections/immutable/ImmutableSet;
-	public final fun getUserId ()Ljava/lang/String;
-}
-
 public final class fr/outadoc/justchatting/feature/auth/domain/model/OAuthAppCredentials {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
@@ -607,32 +586,9 @@ public final class fr/outadoc/justchatting/feature/auth/domain/model/OAuthAppCre
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class fr/outadoc/justchatting/feature/chat/domain/AggregateChatEventHandler : fr/outadoc/justchatting/feature/chat/domain/handler/ChatEventHandler {
-	public static final field $stable I
-	public fun <init> (Lfr/outadoc/justchatting/feature/chat/domain/handler/ChatEventHandlersProvider;)V
-	public fun getConnectionStatus ()Lkotlinx/coroutines/flow/Flow;
-	public fun getEventFlow (Ljava/lang/String;Ljava/lang/String;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;)Lkotlinx/coroutines/flow/Flow;
-}
-
 public abstract interface class fr/outadoc/justchatting/feature/chat/domain/ChatRepository {
 	public abstract fun getChatEventFlow (Lfr/outadoc/justchatting/feature/shared/domain/model/User;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;)Lkotlinx/coroutines/flow/Flow;
 	public abstract fun getConnectionStatusFlow (Lfr/outadoc/justchatting/feature/shared/domain/model/User;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;)Lkotlinx/coroutines/flow/Flow;
-}
-
-public final class fr/outadoc/justchatting/feature/chat/domain/DefaultChatRepository : fr/outadoc/justchatting/feature/chat/domain/ChatRepository {
-	public static final field $stable I
-	public fun <init> (Lfr/outadoc/justchatting/feature/chat/domain/AggregateChatEventHandler;)V
-	public fun getChatEventFlow (Lfr/outadoc/justchatting/feature/shared/domain/model/User;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;)Lkotlinx/coroutines/flow/Flow;
-	public fun getConnectionStatusFlow (Lfr/outadoc/justchatting/feature/shared/domain/model/User;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;)Lkotlinx/coroutines/flow/Flow;
-}
-
-public abstract interface class fr/outadoc/justchatting/feature/chat/domain/handler/ChatEventHandler {
-	public abstract fun getConnectionStatus ()Lkotlinx/coroutines/flow/Flow;
-	public abstract fun getEventFlow (Ljava/lang/String;Ljava/lang/String;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;)Lkotlinx/coroutines/flow/Flow;
-}
-
-public abstract interface class fr/outadoc/justchatting/feature/chat/domain/handler/ChatEventHandlersProvider {
-	public abstract fun get ()Ljava/util/List;
 }
 
 public final class fr/outadoc/justchatting/feature/chat/domain/model/Badge {
@@ -645,20 +601,6 @@ public final class fr/outadoc/justchatting/feature/chat/domain/model/Badge {
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getId ()Ljava/lang/String;
 	public final fun getVersion ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class fr/outadoc/justchatting/feature/chat/domain/model/ChatEmote {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lfr/outadoc/justchatting/feature/chat/domain/model/ChatEmote;
-	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/chat/domain/model/ChatEmote;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/chat/domain/model/ChatEmote;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getId ()Ljava/lang/String;
-	public final fun getName ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1798,15 +1740,6 @@ public final class fr/outadoc/justchatting/feature/chat/domain/model/TwitchBadge
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface class fr/outadoc/justchatting/feature/chat/domain/pubsub/PubSubPlugin {
-	public abstract fun getTopic (Ljava/lang/String;)Ljava/lang/String;
-	public abstract fun parseMessage (Ljava/lang/String;)Ljava/util/List;
-}
-
-public abstract interface class fr/outadoc/justchatting/feature/chat/domain/pubsub/PubSubPluginsProvider {
-	public abstract fun get ()Ljava/util/List;
-}
-
 public abstract class fr/outadoc/justchatting/feature/chat/presentation/AutoCompleteItem {
 	public static final field $stable I
 }
@@ -1835,16 +1768,6 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/AutoComplet
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class fr/outadoc/justchatting/feature/chat/presentation/ChatEventViewMapper {
-	public static final field $stable I
-	public static final field SUB_PRIME Ljava/lang/String;
-	public static final field SUB_T1 Ljava/lang/String;
-	public static final field SUB_T2 Ljava/lang/String;
-	public static final field SUB_T3 Ljava/lang/String;
-	public fun <init> ()V
-	public final fun map (Lfr/outadoc/justchatting/feature/chat/domain/model/ChatEvent;)Ljava/util/List;
-}
-
 public abstract interface class fr/outadoc/justchatting/feature/chat/presentation/ChatNotifier {
 	public abstract fun getAreNotificationsEnabled ()Z
 	public abstract fun notify (Lcoil3/PlatformContext;Lfr/outadoc/justchatting/feature/shared/domain/model/User;)V
@@ -1857,16 +1780,8 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/ChatPrefixC
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ChatPrefixConstants;
 }
 
-public final class fr/outadoc/justchatting/feature/chat/presentation/ChatStateReducer {
-	public static final field $stable I
-	public fun <init> ()V
-	public final fun reduce (Lfr/outadoc/justchatting/feature/chat/presentation/ChatViewModel$Action;Lfr/outadoc/justchatting/feature/chat/presentation/ChatViewModel$State;)Lfr/outadoc/justchatting/feature/chat/presentation/ChatViewModel$State;
-	public final fun reduce (Lfr/outadoc/justchatting/feature/chat/presentation/ChatViewModel$InputAction;Lfr/outadoc/justchatting/feature/chat/presentation/ChatViewModel$InputState;)Lfr/outadoc/justchatting/feature/chat/presentation/ChatViewModel$InputState;
-}
-
 public final class fr/outadoc/justchatting/feature/chat/presentation/ChatViewModel : androidx/lifecycle/ViewModel {
 	public static final field $stable I
-	public fun <init> (Lkotlin/time/Clock;Lfr/outadoc/justchatting/feature/shared/domain/TwitchRepository;Lfr/outadoc/justchatting/feature/emotes/domain/GetRecentEmotesUseCase;Lfr/outadoc/justchatting/feature/chat/domain/ChatRepository;Lfr/outadoc/justchatting/feature/preferences/domain/AuthRepository;Lfr/outadoc/justchatting/feature/chat/presentation/FilterAutocompleteItemsUseCase;Lfr/outadoc/justchatting/feature/pronouns/domain/PronounsRepository;Lfr/outadoc/justchatting/feature/chat/presentation/CreateShortcutForChannelUseCase;Lfr/outadoc/justchatting/feature/chat/presentation/ChatEventViewMapper;Lfr/outadoc/justchatting/feature/chat/presentation/LoadEmotesAndBadgesUseCase;Lfr/outadoc/justchatting/feature/chat/presentation/SubmitMessageUseCase;)V
 	public final fun appendChatter (Lfr/outadoc/justchatting/feature/chat/domain/model/Chatter;Z)V
 	public final fun appendEmote (Lfr/outadoc/justchatting/feature/emotes/domain/model/Emote;Z)V
 	public final fun getInputState ()Lkotlinx/coroutines/flow/StateFlow;
@@ -2357,18 +2272,6 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/EmoteUrlsEx
 	public static final fun getBestUrl (Lfr/outadoc/justchatting/feature/emotes/domain/model/EmoteUrls;FZ)Ljava/lang/String;
 }
 
-public final class fr/outadoc/justchatting/feature/chat/presentation/FilterAutocompleteItemsUseCase {
-	public static final field $stable I
-	public fun <init> ()V
-	public final fun invoke (Ljava/lang/CharSequence;Ljava/util/List;Lkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/PersistentSet;)Lkotlinx/collections/immutable/ImmutableList;
-}
-
-public final class fr/outadoc/justchatting/feature/chat/presentation/LoadEmotesAndBadgesUseCase {
-	public static final field $stable I
-	public fun <init> (Lfr/outadoc/justchatting/feature/shared/domain/TwitchRepository;Lfr/outadoc/justchatting/feature/emotes/domain/EmoteListSourcesProvider;)V
-	public final fun invoke (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
 public final class fr/outadoc/justchatting/feature/chat/presentation/MessagePostConstraint {
 	public static final field $stable I
 	public synthetic fun <init> (Lkotlin/time/Instant;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -2382,19 +2285,6 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/MessagePost
 	public final fun getSlowModeDuration-UwyO8pc ()J
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-}
-
-public final class fr/outadoc/justchatting/feature/chat/presentation/NoopChatNotifier : fr/outadoc/justchatting/feature/chat/presentation/ChatNotifier {
-	public static final field $stable I
-	public fun <init> ()V
-	public fun getAreNotificationsEnabled ()Z
-	public fun notify (Lcoil3/PlatformContext;Lfr/outadoc/justchatting/feature/shared/domain/model/User;)V
-}
-
-public final class fr/outadoc/justchatting/feature/chat/presentation/NoopCreateShortcutForChannelUseCase : fr/outadoc/justchatting/feature/chat/presentation/CreateShortcutForChannelUseCase {
-	public static final field $stable I
-	public fun <init> ()V
-	public fun invoke (Lfr/outadoc/justchatting/feature/shared/domain/model/User;)V
 }
 
 public final class fr/outadoc/justchatting/feature/chat/presentation/OngoingEvents {
@@ -2455,18 +2345,6 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/RoomState {
 
 public final class fr/outadoc/justchatting/feature/chat/presentation/RoomState$Companion {
 	public final fun getDefault ()Lfr/outadoc/justchatting/feature/chat/presentation/RoomState;
-}
-
-public final class fr/outadoc/justchatting/feature/chat/presentation/SubmitMessageUseCase {
-	public static final field $stable I
-	public fun <init> (Lkotlin/time/Clock;Lfr/outadoc/justchatting/feature/shared/domain/TwitchRepository;Lfr/outadoc/justchatting/feature/emotes/domain/InsertRecentEmotesUseCase;)V
-	public final fun invoke (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;Lkotlinx/collections/immutable/ImmutableMap;FZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public final class fr/outadoc/justchatting/feature/chat/presentation/TestEvents {
-	public static final field $stable I
-	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/TestEvents;
-	public final fun getEvents ()Lkotlinx/coroutines/flow/Flow;
 }
 
 public final class fr/outadoc/justchatting/feature/chat/presentation/UserInfoViewModel : androidx/lifecycle/ViewModel {
@@ -2547,42 +2425,6 @@ public final class fr/outadoc/justchatting/feature/deeplink/DeeplinkDefinitions 
 	public final fun getViewChannel ()Lcom/eygraber/uri/Uri;
 }
 
-public final class fr/outadoc/justchatting/feature/deeplink/DeeplinkParser {
-	public static final field $stable I
-	public fun <init> (Lfr/outadoc/justchatting/feature/auth/domain/model/OAuthAppCredentials;)V
-	public final fun copy (Lfr/outadoc/justchatting/feature/auth/domain/model/OAuthAppCredentials;)Lfr/outadoc/justchatting/feature/deeplink/DeeplinkParser;
-	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/deeplink/DeeplinkParser;Lfr/outadoc/justchatting/feature/auth/domain/model/OAuthAppCredentials;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/deeplink/DeeplinkParser;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public final fun parseDeeplink (Lcom/eygraber/uri/Uri;)Lfr/outadoc/justchatting/feature/deeplink/Deeplink;
-	public fun toString ()Ljava/lang/String;
-}
-
-public abstract interface class fr/outadoc/justchatting/feature/emotes/domain/EmoteListSource {
-	public abstract fun getEmotes-BWLJW6A (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public abstract interface class fr/outadoc/justchatting/feature/emotes/domain/EmoteListSourcesProvider {
-	public abstract fun getSources ()Ljava/util/List;
-}
-
-public final class fr/outadoc/justchatting/feature/emotes/domain/GetRecentEmotesUseCase {
-	public static final field $stable I
-	public fun <init> (Lfr/outadoc/justchatting/feature/emotes/domain/RecentEmotesApi;)V
-	public final fun invoke ()Lkotlinx/coroutines/flow/Flow;
-}
-
-public final class fr/outadoc/justchatting/feature/emotes/domain/InsertRecentEmotesUseCase {
-	public static final field $stable I
-	public fun <init> (Lfr/outadoc/justchatting/feature/emotes/domain/RecentEmotesApi;)V
-	public final fun invoke (Ljava/util/Collection;)V
-}
-
-public abstract interface class fr/outadoc/justchatting/feature/emotes/domain/RecentEmotesApi {
-	public abstract fun getAll ()Lkotlinx/coroutines/flow/Flow;
-	public abstract fun insertAll (Ljava/util/Collection;)V
-}
-
 public final class fr/outadoc/justchatting/feature/emotes/domain/model/Emote {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Lfr/outadoc/justchatting/feature/emotes/domain/model/EmoteUrls;Ljava/lang/String;ZLjava/lang/Integer;Ljava/lang/String;F)V
@@ -2657,22 +2499,6 @@ public final class fr/outadoc/justchatting/feature/emotes/domain/model/EmoteUrls
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class fr/outadoc/justchatting/feature/emotes/domain/model/RecentEmote {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlin/time/Instant;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Lkotlin/time/Instant;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lkotlin/time/Instant;)Lfr/outadoc/justchatting/feature/emotes/domain/model/RecentEmote;
-	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/emotes/domain/model/RecentEmote;Ljava/lang/String;Ljava/lang/String;Lkotlin/time/Instant;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/emotes/domain/model/RecentEmote;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getName ()Ljava/lang/String;
-	public final fun getUrl ()Ljava/lang/String;
-	public final fun getUsedAt ()Lkotlin/time/Instant;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public final class fr/outadoc/justchatting/feature/followed/domain/model/ChannelFollow {
 	public static final field $stable I
 	public fun <init> (Lfr/outadoc/justchatting/feature/shared/domain/model/User;Lkotlin/time/Instant;)V
@@ -2730,7 +2556,6 @@ public final class fr/outadoc/justchatting/feature/followed/presentation/Followe
 
 public final class fr/outadoc/justchatting/feature/preferences/domain/AuthRepository {
 	public static final field $stable I
-	public fun <init> (Lfr/outadoc/justchatting/feature/preferences/domain/PreferenceRepository;Lfr/outadoc/justchatting/feature/auth/domain/AuthApi;Lfr/outadoc/justchatting/feature/auth/domain/model/OAuthAppCredentials;)V
 	public final fun getCurrentUser ()Lkotlinx/coroutines/flow/Flow;
 	public final fun getExternalAuthorizeUrl ()Lcom/eygraber/uri/Uri;
 	public final fun logout (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -2805,10 +2630,6 @@ public final class fr/outadoc/justchatting/feature/preferences/domain/model/AppU
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface class fr/outadoc/justchatting/feature/preferences/presentation/AppVersionNameProvider {
-	public abstract fun getAppVersionName ()Ljava/lang/String;
-}
-
 public final class fr/outadoc/justchatting/feature/preferences/presentation/DefaultReadExternalDependenciesList : fr/outadoc/justchatting/feature/preferences/presentation/ReadExternalDependenciesList {
 	public static final field $stable I
 	public fun <init> ()V
@@ -2853,35 +2674,6 @@ public final class fr/outadoc/justchatting/feature/preferences/presentation/Depe
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
-public final class fr/outadoc/justchatting/feature/preferences/presentation/DependencyList {
-	public static final field $stable I
-	public static final field Companion Lfr/outadoc/justchatting/feature/preferences/presentation/DependencyList$Companion;
-	public fun <init> (Ljava/util/List;)V
-	public final fun component1 ()Ljava/util/List;
-	public final fun copy (Ljava/util/List;)Lfr/outadoc/justchatting/feature/preferences/presentation/DependencyList;
-	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/preferences/presentation/DependencyList;Ljava/util/List;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/preferences/presentation/DependencyList;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getDependencies ()Ljava/util/List;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final synthetic class fr/outadoc/justchatting/feature/preferences/presentation/DependencyList$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
-	public static final field $stable I
-	public static final field INSTANCE Lfr/outadoc/justchatting/feature/preferences/presentation/DependencyList$$serializer;
-	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lfr/outadoc/justchatting/feature/preferences/presentation/DependencyList;
-	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lfr/outadoc/justchatting/feature/preferences/presentation/DependencyList;)V
-	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
-}
-
-public final class fr/outadoc/justchatting/feature/preferences/presentation/DependencyList$Companion {
-	public final fun serializer ()Lkotlinx/serialization/KSerializer;
-}
-
 public abstract interface class fr/outadoc/justchatting/feature/preferences/presentation/LogRepository {
 	public abstract fun dumpLogs (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun isSupported ()Z
@@ -2906,7 +2698,6 @@ public abstract interface class fr/outadoc/justchatting/feature/preferences/pres
 
 public final class fr/outadoc/justchatting/feature/preferences/presentation/SettingsViewModel : androidx/lifecycle/ViewModel {
 	public static final field $stable I
-	public fun <init> (Lfr/outadoc/justchatting/feature/preferences/domain/PreferenceRepository;Lfr/outadoc/justchatting/feature/preferences/presentation/LogRepository;Lfr/outadoc/justchatting/feature/shared/domain/TwitchRepository;Lfr/outadoc/justchatting/feature/preferences/domain/AuthRepository;Lfr/outadoc/justchatting/feature/preferences/presentation/AppVersionNameProvider;)V
 	public final fun getEvents ()Lkotlinx/coroutines/flow/SharedFlow;
 	public final fun getState ()Lkotlinx/coroutines/flow/StateFlow;
 	public final fun logout ()V
@@ -2961,24 +2752,6 @@ public final class fr/outadoc/justchatting/feature/preferences/presentation/Sett
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface class fr/outadoc/justchatting/feature/pronouns/domain/LocalPronounsApi {
-	public abstract fun arePronounsSynced (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getPronounsForUser (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun saveAndReplacePronouns (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun saveUserPronouns (Lfr/outadoc/justchatting/feature/pronouns/domain/model/UserPronounIds;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public abstract interface class fr/outadoc/justchatting/feature/pronouns/domain/PronounsApi {
-	public abstract fun getPronouns-IoAF18A (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getUserPronouns-gIAlu-s (Lfr/outadoc/justchatting/feature/chat/domain/model/Chatter;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public final class fr/outadoc/justchatting/feature/pronouns/domain/PronounsRepository {
-	public static final field $stable I
-	public fun <init> (Lfr/outadoc/justchatting/feature/pronouns/domain/PronounsApi;Lfr/outadoc/justchatting/feature/pronouns/domain/LocalPronounsApi;Lfr/outadoc/justchatting/feature/preferences/domain/PreferenceRepository;)V
-	public final fun fillPronounsFor (Ljava/util/Set;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
 public final class fr/outadoc/justchatting/feature/pronouns/domain/model/Pronoun {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V
@@ -2995,38 +2768,6 @@ public final class fr/outadoc/justchatting/feature/pronouns/domain/model/Pronoun
 	public final fun getObjective ()Ljava/lang/String;
 	public fun hashCode ()I
 	public final fun isSingular ()Z
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class fr/outadoc/justchatting/feature/pronouns/domain/model/UserPronounIds {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lfr/outadoc/justchatting/feature/pronouns/domain/model/UserPronounIds;
-	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/pronouns/domain/model/UserPronounIds;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/pronouns/domain/model/UserPronounIds;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAltPronounId ()Ljava/lang/String;
-	public final fun getMainPronounId ()Ljava/lang/String;
-	public final fun getUserId ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class fr/outadoc/justchatting/feature/pronouns/domain/model/UserPronouns {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Lfr/outadoc/justchatting/feature/pronouns/domain/model/Pronoun;Lfr/outadoc/justchatting/feature/pronouns/domain/model/Pronoun;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Lfr/outadoc/justchatting/feature/pronouns/domain/model/Pronoun;
-	public final fun component3 ()Lfr/outadoc/justchatting/feature/pronouns/domain/model/Pronoun;
-	public final fun copy (Ljava/lang/String;Lfr/outadoc/justchatting/feature/pronouns/domain/model/Pronoun;Lfr/outadoc/justchatting/feature/pronouns/domain/model/Pronoun;)Lfr/outadoc/justchatting/feature/pronouns/domain/model/UserPronouns;
-	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/pronouns/domain/model/UserPronouns;Ljava/lang/String;Lfr/outadoc/justchatting/feature/pronouns/domain/model/Pronoun;Lfr/outadoc/justchatting/feature/pronouns/domain/model/Pronoun;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/pronouns/domain/model/UserPronouns;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAltPronoun ()Lfr/outadoc/justchatting/feature/pronouns/domain/model/Pronoun;
-	public final fun getMainPronoun ()Lfr/outadoc/justchatting/feature/pronouns/domain/model/Pronoun;
-	public final fun getUserId ()Ljava/lang/String;
-	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -3137,53 +2878,6 @@ public final class fr/outadoc/justchatting/feature/search/presentation/ChannelSe
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface class fr/outadoc/justchatting/feature/shared/domain/LocalStreamsApi {
-	public abstract fun cleanup (Lkotlin/time/Instant;Lkotlin/time/Instant;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getFutureStreams (Lkotlin/time/Instant;Lkotlin/time/Instant;)Lkotlinx/coroutines/flow/Flow;
-	public abstract fun getLiveStreams ()Lkotlinx/coroutines/flow/Flow;
-	public abstract fun getMostRecentPastStream (Lfr/outadoc/justchatting/feature/shared/domain/model/User;)Lkotlinx/coroutines/flow/Flow;
-	public abstract fun getPastStreams (Lkotlin/time/Instant;Lkotlin/time/Instant;)Lkotlinx/coroutines/flow/Flow;
-	public abstract fun getUserIdsToSync ()Lkotlinx/coroutines/flow/Flow;
-	public abstract fun saveAndReplaceLiveStreams (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun saveFutureStreams (Lfr/outadoc/justchatting/feature/shared/domain/model/User;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun savePastStreams (Lfr/outadoc/justchatting/feature/shared/domain/model/User;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public abstract interface class fr/outadoc/justchatting/feature/shared/domain/LocalUsersApi {
-	public abstract fun forgetRecentChannel (Ljava/lang/String;)V
-	public abstract fun getFollowedChannels ()Lkotlinx/coroutines/flow/Flow;
-	public abstract fun getRecentChannels ()Lkotlinx/coroutines/flow/Flow;
-	public abstract fun getUserById (Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
-	public abstract fun getUserIdsToUpdate ()Lkotlinx/coroutines/flow/Flow;
-	public abstract fun getUsersById (Ljava/util/List;)Lkotlinx/coroutines/flow/Flow;
-	public abstract fun isFollowedUsersCacheExpired (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun saveAndReplaceFollowedChannels (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun saveUser (Ljava/lang/String;Lkotlin/time/Instant;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun saveUser$default (Lfr/outadoc/justchatting/feature/shared/domain/LocalUsersApi;Ljava/lang/String;Lkotlin/time/Instant;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public abstract fun saveUserInfo (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public final class fr/outadoc/justchatting/feature/shared/domain/LocalUsersApi$DefaultImpls {
-	public static synthetic fun saveUser$default (Lfr/outadoc/justchatting/feature/shared/domain/LocalUsersApi;Ljava/lang/String;Lkotlin/time/Instant;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-}
-
-public abstract interface class fr/outadoc/justchatting/feature/shared/domain/TwitchApi {
-	public abstract fun getChannelBadges-gIAlu-s (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getChannelSchedule-BWLJW6A (Ljava/lang/String;Lkotlin/time/Instant;Lkotlin/time/Instant;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getChannelVideos-0E7RQCE (Ljava/lang/String;Lkotlin/time/Instant;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getCheerEmotes-gIAlu-s (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getEmotesFromSet-gIAlu-s (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getFollowedChannels-gIAlu-s (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getFollowedStreams-gIAlu-s (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getGlobalBadges-IoAF18A (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getStreamsByUserId-gIAlu-s (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getStreamsByUserLogin-gIAlu-s (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getUsersById (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getUsersByLogin (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun searchChannels (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun sendChatMessage-yxL6bBk (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
 public abstract interface class fr/outadoc/justchatting/feature/shared/domain/TwitchRepository {
 	public abstract fun forgetRecentChannel (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getChannelBadges-gIAlu-s (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -3202,52 +2896,6 @@ public abstract interface class fr/outadoc/justchatting/feature/shared/domain/Tw
 	public abstract fun syncFollowedChannels (Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun syncFollowedChannelsSchedule (Lkotlinx/datetime/LocalDate;Lkotlinx/datetime/TimeZone;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun syncFollowedStreams (Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public final class fr/outadoc/justchatting/feature/shared/domain/TwitchRepositoryImpl : fr/outadoc/justchatting/feature/shared/domain/TwitchRepository {
-	public static final field $stable I
-	public fun <init> (Lfr/outadoc/justchatting/feature/shared/domain/TwitchApi;Lfr/outadoc/justchatting/feature/shared/domain/LocalUsersApi;Lfr/outadoc/justchatting/feature/shared/domain/LocalStreamsApi;)V
-	public fun forgetRecentChannel (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun getChannelBadges-gIAlu-s (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun getCheerEmotes-gIAlu-s (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun getEmotesFromSet-gIAlu-s (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun getFollowedChannels (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun getFollowedChannelsSchedule (Lkotlinx/datetime/LocalDate;Lkotlinx/datetime/TimeZone;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun getGlobalBadges-IoAF18A (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun getRecentChannels (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun getStreamByUserId (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun getUserById (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun getUsersById (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun markChannelAsVisited (Ljava/lang/String;Lkotlin/time/Instant;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun searchChannels (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun sendChatMessage-yxL6bBk (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun syncFollowedChannels (Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun syncFollowedChannelsSchedule (Lkotlinx/datetime/LocalDate;Lkotlinx/datetime/TimeZone;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun syncFollowedStreams (Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public final class fr/outadoc/justchatting/feature/shared/domain/model/MessageNotSentException : java/lang/Exception {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun getDropReasonCode ()Ljava/lang/String;
-	public final fun getDropReasonMessage ()Ljava/lang/String;
-}
-
-public abstract class fr/outadoc/justchatting/feature/shared/domain/model/Pagination {
-	public static final field $stable I
-}
-
-public final class fr/outadoc/justchatting/feature/shared/domain/model/Pagination$Next : fr/outadoc/justchatting/feature/shared/domain/model/Pagination {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;)Lfr/outadoc/justchatting/feature/shared/domain/model/Pagination$Next;
-	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/shared/domain/model/Pagination$Next;Ljava/lang/String;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/shared/domain/model/Pagination$Next;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getCursor ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
 }
 
 public final class fr/outadoc/justchatting/feature/shared/domain/model/User {
@@ -3358,7 +3006,6 @@ public final class fr/outadoc/justchatting/feature/shared/presentation/DetailScr
 
 public final class fr/outadoc/justchatting/feature/shared/presentation/MainRouterViewModel : androidx/lifecycle/ViewModel, fr/outadoc/justchatting/feature/shared/presentation/DeeplinkReceiver {
 	public static final field $stable I
-	public fun <init> (Lfr/outadoc/justchatting/feature/preferences/domain/AuthRepository;Lfr/outadoc/justchatting/feature/deeplink/DeeplinkParser;Lfr/outadoc/justchatting/feature/auth/data/AuthCallbackWebServer;)V
 	public final fun getEvents ()Lkotlinx/coroutines/flow/SharedFlow;
 	public final fun getState ()Lkotlinx/coroutines/flow/StateFlow;
 	public fun onDeeplinkReceived (Lcom/eygraber/uri/Uri;)V
@@ -3491,12 +3138,6 @@ public final class fr/outadoc/justchatting/feature/shared/presentation/Screen$Se
 public final class fr/outadoc/justchatting/feature/shared/presentation/ScreenKt {
 	public static final fun getDefaultScreen ()Lfr/outadoc/justchatting/feature/shared/presentation/Screen$Live;
 	public static final fun getScreenNavBackStackConfig ()Landroidx/savedstate/serialization/SavedStateConfiguration;
-}
-
-public final class fr/outadoc/justchatting/feature/timeline/domain/TimelineConfig {
-	public static final field $stable I
-	public static final field INSTANCE Lfr/outadoc/justchatting/feature/timeline/domain/TimelineConfig;
-	public final fun getMaxDaysAhead ()Lkotlinx/datetime/DatePeriod;
 }
 
 public final class fr/outadoc/justchatting/feature/timeline/domain/model/ChannelScheduleSegment {
@@ -4075,12 +3716,6 @@ public final class fr/outadoc/justchatting/shared/String3_commonMainKt {
 	public static final fun getYes (Lfr/outadoc/justchatting/shared/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 }
 
-public final class fr/outadoc/justchatting/utils/core/ConnectivityNetworkStateObserver : fr/outadoc/justchatting/utils/core/NetworkStateObserver {
-	public static final field $stable I
-	public fun <init> (Ldev/jordond/connectivity/Connectivity;)V
-	public fun getState ()Lkotlinx/coroutines/flow/Flow;
-}
-
 public final class fr/outadoc/justchatting/utils/core/DispatchersProvider {
 	public static final field $stable I
 	public static final field INSTANCE Lfr/outadoc/justchatting/utils/core/DispatchersProvider;
@@ -4088,16 +3723,6 @@ public final class fr/outadoc/justchatting/utils/core/DispatchersProvider {
 	public final fun getIo ()Lkotlinx/coroutines/CoroutineDispatcher;
 	public final fun getMain ()Lkotlinx/coroutines/CoroutineDispatcher;
 	public final fun getUnconfined ()Lkotlinx/coroutines/CoroutineDispatcher;
-}
-
-public final class fr/outadoc/justchatting/utils/core/InstantUnixEpochSerializer : kotlinx/serialization/KSerializer {
-	public static final field $stable I
-	public static final field INSTANCE Lfr/outadoc/justchatting/utils/core/InstantUnixEpochSerializer;
-	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/time/Instant;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lkotlin/time/Instant;)V
 }
 
 public final class fr/outadoc/justchatting/utils/core/JsonExtKt {
@@ -4114,30 +3739,6 @@ public final class fr/outadoc/justchatting/utils/core/MapExtKt {
 	public static final fun filterValuesNotNull (Lkotlinx/collections/immutable/ImmutableMap;)Lkotlinx/collections/immutable/ImmutableMap;
 }
 
-public abstract interface class fr/outadoc/justchatting/utils/core/NetworkStateObserver {
-	public abstract fun getState ()Lkotlinx/coroutines/flow/Flow;
-}
-
-public abstract class fr/outadoc/justchatting/utils/core/NetworkStateObserver$NetworkState {
-	public static final field $stable I
-}
-
-public final class fr/outadoc/justchatting/utils/core/NetworkStateObserver$NetworkState$Available : fr/outadoc/justchatting/utils/core/NetworkStateObserver$NetworkState {
-	public static final field $stable I
-	public static final field INSTANCE Lfr/outadoc/justchatting/utils/core/NetworkStateObserver$NetworkState$Available;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class fr/outadoc/justchatting/utils/core/NetworkStateObserver$NetworkState$Unavailable : fr/outadoc/justchatting/utils/core/NetworkStateObserver$NetworkState {
-	public static final field $stable I
-	public static final field INSTANCE Lfr/outadoc/justchatting/utils/core/NetworkStateObserver$NetworkState$Unavailable;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public final class fr/outadoc/justchatting/utils/core/NumberOddnessExtKt {
 	public static final fun isEven (I)Z
 	public static final fun isOdd (I)Z
@@ -4149,56 +3750,9 @@ public final class fr/outadoc/justchatting/utils/core/TwitchExtKt {
 	public static final fun createVideoExternalLink (Ljava/lang/String;)Ljava/lang/String;
 }
 
-public abstract interface class fr/outadoc/justchatting/utils/http/BaseHttpClientProvider {
-	public abstract fun get (Lkotlin/jvm/functions/Function1;)Lio/ktor/client/HttpClient;
-	public static synthetic fun get$default (Lfr/outadoc/justchatting/utils/http/BaseHttpClientProvider;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lio/ktor/client/HttpClient;
-}
-
-public final class fr/outadoc/justchatting/utils/http/BaseHttpClientProvider$DefaultImpls {
-	public static synthetic fun get$default (Lfr/outadoc/justchatting/utils/http/BaseHttpClientProvider;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lio/ktor/client/HttpClient;
-}
-
-public final class fr/outadoc/justchatting/utils/http/FrameLogger : io/ktor/websocket/WebSocketExtension {
-	public static final field $stable I
-	public static final field Companion Lfr/outadoc/justchatting/utils/http/FrameLogger$Companion;
-	public fun <init> ()V
-	public fun clientNegotiation (Ljava/util/List;)Z
-	public fun getFactory ()Lio/ktor/websocket/WebSocketExtensionFactory;
-	public fun getProtocols ()Ljava/util/List;
-	public fun processIncomingFrame (Lio/ktor/websocket/Frame;)Lio/ktor/websocket/Frame;
-	public fun processOutgoingFrame (Lio/ktor/websocket/Frame;)Lio/ktor/websocket/Frame;
-	public fun serverNegotiation (Ljava/util/List;)Ljava/util/List;
-}
-
-public final class fr/outadoc/justchatting/utils/http/FrameLogger$Companion : io/ktor/websocket/WebSocketExtensionFactory {
-	public fun getKey ()Lio/ktor/util/AttributeKey;
-	public fun getRsv1 ()Z
-	public fun getRsv2 ()Z
-	public fun getRsv3 ()Z
-	public fun install (Lkotlin/jvm/functions/Function1;)Lfr/outadoc/justchatting/utils/http/FrameLogger;
-	public synthetic fun install (Lkotlin/jvm/functions/Function1;)Lio/ktor/websocket/WebSocketExtension;
-}
-
-public final class fr/outadoc/justchatting/utils/http/FrameLogger$Config {
-	public static final field $stable I
-	public fun <init> ()V
-}
-
-public final class fr/outadoc/justchatting/utils/http/TwitchHttpClientProvider {
-	public static final field $stable I
-	public fun <init> (Lfr/outadoc/justchatting/utils/http/BaseHttpClientProvider;Lfr/outadoc/justchatting/feature/preferences/domain/PreferenceRepository;Lfr/outadoc/justchatting/feature/auth/domain/model/OAuthAppCredentials;)V
-	public final fun get ()Lio/ktor/client/HttpClient;
-}
-
 public final class fr/outadoc/justchatting/utils/http/UriExtKt {
 	public static final fun toKtorUrl (Lcom/eygraber/uri/Uri;)Lio/ktor/http/Url;
 	public static final fun toUri (Ljava/lang/String;)Lcom/eygraber/uri/Uri;
-}
-
-public final class fr/outadoc/justchatting/utils/koin/KoinCustomLogger : org/koin/core/logger/Logger {
-	public static final field $stable I
-	public static final field INSTANCE Lfr/outadoc/justchatting/utils/koin/KoinCustomLogger;
-	public fun display (Lorg/koin/core/logger/Level;Ljava/lang/String;)V
 }
 
 public final class fr/outadoc/justchatting/utils/logging/JvmLogStrategy : fr/outadoc/justchatting/utils/logging/LogStrategy {
@@ -4238,12 +3792,6 @@ public final class fr/outadoc/justchatting/utils/logging/LoggerExtKt {
 	public static final fun logInfo (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
 	public static final fun logVerbose (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
 	public static final fun logWarning (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
-}
-
-public final class fr/outadoc/justchatting/utils/logging/NoopLogStrategy : fr/outadoc/justchatting/utils/logging/LogStrategy {
-	public static final field $stable I
-	public static final field INSTANCE Lfr/outadoc/justchatting/utils/logging/NoopLogStrategy;
-	public fun println (Lfr/outadoc/justchatting/utils/logging/Logger$Level;Ljava/lang/String;Ljava/lang/String;)V
 }
 
 public abstract interface class fr/outadoc/justchatting/utils/parcel/Parcelable {

@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-public class SettingsViewModel(
+public class SettingsViewModel internal constructor(
     private val preferenceRepository: PreferenceRepository,
     private val logRepository: LogRepository,
     private val twitchRepository: TwitchRepository,

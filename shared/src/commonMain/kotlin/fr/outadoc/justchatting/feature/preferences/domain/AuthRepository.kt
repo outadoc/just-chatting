@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 
-public class AuthRepository(
+public class AuthRepository internal constructor(
     private val preferenceRepository: PreferenceRepository,
     private val authApi: AuthApi,
     private val oAuthAppCredentials: OAuthAppCredentials,

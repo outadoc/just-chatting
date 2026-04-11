@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableSet
 
 @Immutable
-public class AuthValidationResponse(
+internal class AuthValidationResponse(
     public val clientId: String,
     public val login: String,
     public val userId: String,

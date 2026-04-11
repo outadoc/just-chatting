@@ -12,7 +12,7 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentSet
 import kotlin.time.Instant
 
-public class ChatStateReducer {
+internal class ChatStateReducer {
     public fun reduce(
         action: ChatViewModel.Action,
         state: ChatViewModel.State,

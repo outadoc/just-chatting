@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.feature.pronouns.domain.model.UserPronounIds
 import fr.outadoc.justchatting.feature.pronouns.domain.model.UserPronouns
 import kotlinx.coroutines.flow.Flow
 
-public interface LocalPronounsApi {
+internal interface LocalPronounsApi {
     public suspend fun arePronounsSynced(): Boolean
 
     public suspend fun saveAndReplacePronouns(pronouns: List<Pronoun>)

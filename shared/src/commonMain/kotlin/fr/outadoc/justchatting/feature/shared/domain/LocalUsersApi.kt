@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.feature.shared.domain.model.User
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
 
-public interface LocalUsersApi {
+internal interface LocalUsersApi {
     public fun getUserById(id: String): Flow<User>
 
     public fun getUsersById(ids: List<String>): Flow<List<User>>

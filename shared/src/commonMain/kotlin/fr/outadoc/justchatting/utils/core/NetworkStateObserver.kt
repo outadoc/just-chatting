@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.utils.core
 
 import kotlinx.coroutines.flow.Flow
 
-public interface NetworkStateObserver {
+internal interface NetworkStateObserver {
     public val state: Flow<NetworkState>
 
     public sealed class NetworkState {

@@ -66,6 +66,16 @@ internal fun FollowedChannelsList(
         viewModel.synchronize()
     }
 
+    LaunchedEffect(viewModel.events) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is FollowedChannelsViewModel.Event.NavigateToChannel -> {
+                    onItemClick(event.userId)
+                }
+            }
+        }
+    }
+
     MainNavigation(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         selectedScreen = Screen.Followed,
@@ -110,7 +120,7 @@ internal fun FollowedChannelsList(
                 items = state.data,
                 isRefreshing = state.isLoading,
                 onItemClick = { channel ->
-                    onItemClick(channel.user.id)
+                    viewModel.onChannelClick(channel.user.id)
                 },
             )
         },

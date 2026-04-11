@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.auth.data.AuthCallbackWebServer
+import fr.outadoc.justchatting.feature.shared.presentation.ui.Screen
 import fr.outadoc.justchatting.feature.deeplink.Deeplink
 import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
@@ -45,6 +46,10 @@ internal class MainRouterViewModel(
         data class ShowAuthPage(
             val uri: Uri,
         ) : Event()
+
+        data class NavigateToTab(
+            val screen: Screen,
+        ) : Event()
     }
 
     val state: StateFlow<State> =
@@ -80,6 +85,12 @@ internal class MainRouterViewModel(
             authCallbackWebServer.receivedUris.collect { uri ->
                 onDeeplinkReceived(uri)
             }
+        }
+    }
+
+    fun onTabSelected(screen: Screen) {
+        viewModelScope.launch {
+            _events.emit(Event.NavigateToTab(screen))
         }
     }
 

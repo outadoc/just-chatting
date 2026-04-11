@@ -54,6 +54,16 @@ internal fun LiveTimelineScreen(
         viewModel.syncLiveStreamsPeriodically()
     }
 
+    LaunchedEffect(viewModel.events) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is LiveTimelineViewModel.Event.NavigateToChannel -> {
+                    onChannelClick(event.userId)
+                }
+            }
+        }
+    }
+
     val listState = rememberLazyListState()
 
     MainNavigation(
@@ -106,7 +116,7 @@ internal fun LiveTimelineScreen(
                 live = state.live,
                 listState = listState,
                 onChannelClick = { user ->
-                    onChannelClick(user.id)
+                    viewModel.onChannelClick(user.id)
                 },
                 onOpenInBubble = { user ->
                     notifier.notify(

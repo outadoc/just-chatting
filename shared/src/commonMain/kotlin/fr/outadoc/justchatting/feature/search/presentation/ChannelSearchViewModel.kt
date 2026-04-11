@@ -15,7 +15,10 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -29,11 +32,18 @@ import kotlin.time.Duration.Companion.seconds
 internal class ChannelSearchViewModel(
     private val twitchRepository: TwitchRepository,
 ) : ViewModel() {
+    sealed class Event {
+        data class NavigateToChannel(val userId: String) : Event()
+    }
+
     data class State(
         val query: String = "",
         val isSearchExpanded: Boolean = false,
         val recentChannels: ImmutableList<User> = persistentListOf(),
     )
+
+    private val _events = MutableSharedFlow<Event>()
+    val events: SharedFlow<Event> = _events.asSharedFlow()
 
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
@@ -60,6 +70,12 @@ internal class ChannelSearchViewModel(
                     )
                 }
             }.cachedIn(viewModelScope)
+
+    fun onChannelClick(userId: String) {
+        viewModelScope.launch {
+            _events.emit(Event.NavigateToChannel(userId))
+        }
+    }
 
     fun onStart() {
         viewModelScope.launch {

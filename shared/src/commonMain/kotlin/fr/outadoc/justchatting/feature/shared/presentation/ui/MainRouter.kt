@@ -9,6 +9,7 @@ import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -31,9 +32,11 @@ import fr.outadoc.justchatting.feature.preferences.presentation.ui.SettingsSecti
 import fr.outadoc.justchatting.feature.preferences.presentation.ui.SettingsSectionNotifications
 import fr.outadoc.justchatting.feature.preferences.presentation.ui.SettingsSectionThirdParties
 import fr.outadoc.justchatting.feature.search.presentation.ui.SearchScreen
+import fr.outadoc.justchatting.feature.shared.presentation.MainRouterViewModel
 import fr.outadoc.justchatting.feature.timeline.presentation.ui.FutureTimelineScreen
 import fr.outadoc.justchatting.feature.timeline.presentation.ui.LiveTimelineScreen
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -48,15 +51,27 @@ internal fun MainRouter(
     onChannelClick: (String) -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
+    val mainRouterViewModel: MainRouterViewModel = koinInject()
 
     ThreePaneScaffoldPredictiveBackHandler(
         navigator = navigator,
         backBehavior = BackNavigationBehavior.PopUntilScaffoldValueChange,
     )
 
+    LaunchedEffect(mainRouterViewModel.events) {
+        mainRouterViewModel.events.collect { event ->
+            when (event) {
+                is MainRouterViewModel.Event.NavigateToTab -> {
+                    backStack.clear()
+                    backStack.add(event.screen)
+                }
+                else -> Unit
+            }
+        }
+    }
+
     val onNavigate: (Screen) -> Unit = { screen ->
-        backStack.clear()
-        backStack.add(screen)
+        mainRouterViewModel.onTabSelected(screen)
     }
 
     val saveableDecorator = rememberSaveableStateHolderNavEntryDecorator<NavKey>()

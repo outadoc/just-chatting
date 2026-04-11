@@ -67,6 +67,10 @@ public fun App(
                 is MainRouterViewModel.Event.ShowAuthPage -> {
                     onShowAuthPage(event.uri)
                 }
+
+                is MainRouterViewModel.Event.NavigateToTab -> {
+                    // Handled by MainRouter
+                }
             }
         }
     }

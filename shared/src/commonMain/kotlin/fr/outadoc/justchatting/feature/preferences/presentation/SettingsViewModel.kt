@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
+import fr.outadoc.justchatting.feature.shared.presentation.ui.DetailScreen
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
@@ -36,6 +37,10 @@ internal class SettingsViewModel(
     sealed class Event {
         data class ShareLogs(
             val uri: Uri,
+        ) : Event()
+
+        data class NavigateToDetail(
+            val screen: DetailScreen,
         ) : Event()
     }
 
@@ -85,6 +90,12 @@ internal class SettingsViewModel(
             started = SharingStarted.WhileSubscribed(),
             initialValue = State(),
         )
+
+    fun onNavigateToDetail(screen: DetailScreen) {
+        viewModelScope.launch {
+            _events.emit(Event.NavigateToDetail(screen))
+        }
+    }
 
     fun updatePreferences(appPreferences: AppPreferences) {
         viewModelScope.launch(DispatchersProvider.io) {

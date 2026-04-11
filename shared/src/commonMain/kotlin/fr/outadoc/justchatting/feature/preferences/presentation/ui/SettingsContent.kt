@@ -40,6 +40,9 @@ internal fun SettingsContent(
                 is SettingsViewModel.Event.ShareLogs -> {
                     onShareLogs(event.uri)
                 }
+                is SettingsViewModel.Event.NavigateToDetail -> {
+                    onNavigateDetails(event.screen)
+                }
             }
         }
     }
@@ -58,11 +61,11 @@ internal fun SettingsContent(
             SettingsList(
                 loggedInUser = state.user,
                 onLogoutClick = viewModel::logout,
-                onOpenDependencyCredits = { onNavigateDetails(DetailScreen.DependencyCredits) },
-                onOpenThirdPartiesSection = { onNavigateDetails(DetailScreen.ThirdParties) },
-                onOpenAboutSection = { onNavigateDetails(DetailScreen.About) },
-                onOpenAppearanceSection = { onNavigateDetails(DetailScreen.Appearance) },
-                onOpenNotificationSection = { onNavigateDetails(DetailScreen.Notifications) },
+                onOpenDependencyCredits = { viewModel.onNavigateToDetail(DetailScreen.DependencyCredits) },
+                onOpenThirdPartiesSection = { viewModel.onNavigateToDetail(DetailScreen.ThirdParties) },
+                onOpenAboutSection = { viewModel.onNavigateToDetail(DetailScreen.About) },
+                onOpenAppearanceSection = { viewModel.onNavigateToDetail(DetailScreen.Appearance) },
+                onOpenNotificationSection = { viewModel.onNavigateToDetail(DetailScreen.Notifications) },
                 insets = insets,
             )
         },

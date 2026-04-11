@@ -52,6 +52,16 @@ internal fun SearchScreen(
         viewModel.onStart()
     }
 
+    LaunchedEffect(viewModel.events) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is ChannelSearchViewModel.Event.NavigateToChannel -> {
+                    onChannelClick(event.userId)
+                }
+            }
+        }
+    }
+
     MainNavigation(
         selectedScreen = Screen.Search,
         onSelectedTabChange = onNavigate,
@@ -67,7 +77,7 @@ internal fun SearchScreen(
                     searchResults = searchResults,
                     query = state.query,
                     isSearchExpanded = state.isSearchExpanded,
-                    onChannelClick = onChannelClick,
+                    onChannelClick = viewModel::onChannelClick,
                     onQueryChange = viewModel::onQueryChange,
                     onSearchActiveChange = viewModel::onSearchExpandedChange,
                     onClear = viewModel::onClearSearchBar,
@@ -81,7 +91,7 @@ internal fun SearchScreen(
                 insets = insets,
                 users = state.recentChannels,
                 onChannelClick = { user ->
-                    onChannelClick(user.id)
+                    viewModel.onChannelClick(user.id)
                 },
                 onRemoveChannelClick = viewModel::onRemoveRecentChannel,
             )

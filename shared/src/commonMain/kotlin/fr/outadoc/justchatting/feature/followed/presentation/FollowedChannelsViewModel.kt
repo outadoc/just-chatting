@@ -12,8 +12,11 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
@@ -24,11 +27,18 @@ internal class FollowedChannelsViewModel(
     private val repository: TwitchRepository,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
+    sealed class Event {
+        data class NavigateToChannel(val userId: String) : Event()
+    }
+
     @Immutable
     data class State(
         val data: ImmutableList<ChannelFollow> = persistentListOf(),
         val isLoading: Boolean = true,
     )
+
+    private val _events = MutableSharedFlow<Event>()
+    val events: SharedFlow<Event> = _events.asSharedFlow()
 
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
@@ -46,6 +56,12 @@ internal class FollowedChannelsViewModel(
                         )
                     }
                 }
+        }
+    }
+
+    fun onChannelClick(userId: String) {
+        viewModelScope.launch {
+            _events.emit(Event.NavigateToChannel(userId))
         }
     }
 

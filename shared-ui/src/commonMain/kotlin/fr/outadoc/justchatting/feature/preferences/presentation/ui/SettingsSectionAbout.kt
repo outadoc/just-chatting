@@ -99,10 +99,10 @@ private fun SettingsSectionAboutContent(
                 subtitle = {
                     Text(
                         text =
-                            stringResource(
-                                Res.string.settings_about_version,
-                                state.appVersionName.orEmpty(),
-                            ),
+                        stringResource(
+                            Res.string.settings_about_version,
+                            state.appVersionName.orEmpty(),
+                        ),
                     )
                 },
             )
@@ -118,11 +118,11 @@ private fun SettingsSectionAboutContent(
                 subtitle = {
                     Text(
                         text =
-                            stringResource(
-                                Res.string.settings_about_license_subtitle,
-                                stringResource(Res.string.app_name),
-                                stringResource(Res.string.app_license_name),
-                            ),
+                        stringResource(
+                            Res.string.settings_about_license_subtitle,
+                            stringResource(Res.string.app_name),
+                            stringResource(Res.string.app_license_name),
+                        ),
                     )
                 },
                 trailingIcon = {
@@ -143,10 +143,10 @@ private fun SettingsSectionAboutContent(
                 subtitle = {
                     Text(
                         text =
-                            stringResource(
-                                Res.string.settings_about_xtra_subtitle,
-                                stringResource(Res.string.app_name),
-                            ),
+                        stringResource(
+                            Res.string.settings_about_xtra_subtitle,
+                            stringResource(Res.string.app_name),
+                        ),
                     )
                 },
                 trailingIcon = {

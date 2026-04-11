@@ -67,10 +67,10 @@ internal fun ChatAutoCompleteRow(
         modifier = modifier.fillMaxWidth(),
         state = listState,
         horizontalArrangement =
-            Arrangement.spacedBy(
-                space = 8.dp,
-                alignment = Alignment.Start,
-            ),
+        Arrangement.spacedBy(
+            space = 8.dp,
+            alignment = Alignment.Start,
+        ),
         contentPadding = contentPadding,
     ) {
         items(

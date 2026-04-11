@@ -39,9 +39,9 @@ internal fun SettingsSwitch(
         ) {
             Column(
                 modifier =
-                    Modifier
-                        .padding(vertical = 8.dp)
-                        .weight(1f, fill = true),
+                Modifier
+                    .padding(vertical = 8.dp)
+                    .weight(1f, fill = true),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 CompositionLocalProvider(

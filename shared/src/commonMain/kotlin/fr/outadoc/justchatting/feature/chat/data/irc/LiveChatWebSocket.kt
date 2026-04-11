@@ -67,34 +67,33 @@ internal class LiveChatWebSocket(
         channelId: String,
         channelLogin: String,
         appUser: AppUser.LoggedIn,
-    ): Flow<ChatEvent> =
-        channelFlow {
-            var lastMessageReceivedAt: Instant? = null
-            _connectionStatus.update { it.copy(registeredListeners = 1) }
-            try {
-                networkStateObserver.state.collectLatest { netState ->
-                    if (netState is NetworkStateObserver.NetworkState.Available) {
-                        logDebug<LiveChatWebSocket> { "Network is available, listening" }
-                        loadRecentMessages(channelLogin, lastMessageReceivedAt)
-                        while (currentCoroutineContext().isActive) {
-                            _connectionStatus.update { it.copy(isAlive = true) }
-                            try {
-                                lastMessageReceivedAt = listen(channelLogin, lastMessageReceivedAt)
-                            } catch (e: Exception) {
-                                logError<LiveChatWebSocket>(e) { "Socket was closed" }
-                            }
-                            _connectionStatus.update { it.copy(isAlive = false) }
-                            delayWithJitter(1.seconds, maxJitter = 3.seconds)
+    ): Flow<ChatEvent> = channelFlow {
+        var lastMessageReceivedAt: Instant? = null
+        _connectionStatus.update { it.copy(registeredListeners = 1) }
+        try {
+            networkStateObserver.state.collectLatest { netState ->
+                if (netState is NetworkStateObserver.NetworkState.Available) {
+                    logDebug<LiveChatWebSocket> { "Network is available, listening" }
+                    loadRecentMessages(channelLogin, lastMessageReceivedAt)
+                    while (currentCoroutineContext().isActive) {
+                        _connectionStatus.update { it.copy(isAlive = true) }
+                        try {
+                            lastMessageReceivedAt = listen(channelLogin, lastMessageReceivedAt)
+                        } catch (e: Exception) {
+                            logError<LiveChatWebSocket>(e) { "Socket was closed" }
                         }
-                    } else {
-                        logDebug<LiveChatWebSocket> { "Network is out, waiting" }
                         _connectionStatus.update { it.copy(isAlive = false) }
+                        delayWithJitter(1.seconds, maxJitter = 3.seconds)
                     }
+                } else {
+                    logDebug<LiveChatWebSocket> { "Network is out, waiting" }
+                    _connectionStatus.update { it.copy(isAlive = false) }
                 }
-            } finally {
-                _connectionStatus.update { it.copy(registeredListeners = 0) }
             }
-        }.flowOn(DispatchersProvider.io)
+        } finally {
+            _connectionStatus.update { it.copy(registeredListeners = 0) }
+        }
+    }.flowOn(DispatchersProvider.io)
 
     private suspend fun ProducerScope<ChatEvent>.listen(
         channelLogin: String,

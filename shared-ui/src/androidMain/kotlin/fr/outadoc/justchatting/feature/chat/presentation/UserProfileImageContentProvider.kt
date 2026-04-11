@@ -32,14 +32,13 @@ public class UserProfileImageContentProvider : ContentProvider() {
         fun createForUser(
             context: Context,
             userId: String,
-        ): Uri =
-            Uri
-                .Builder()
-                .scheme(ContentResolver.SCHEME_CONTENT)
-                .authority("${context.applicationContext.packageName}.user-image-provider")
-                .appendPath(PATH_ID)
-                .appendPath(userId)
-                .build()
+        ): Uri = Uri
+            .Builder()
+            .scheme(ContentResolver.SCHEME_CONTENT)
+            .authority("${context.applicationContext.packageName}.user-image-provider")
+            .appendPath(PATH_ID)
+            .appendPath(userId)
+            .build()
     }
 
     private val apiRepository by inject<TwitchRepository>()

@@ -54,8 +54,8 @@ internal fun PredictionOutcome(
 
             Column(
                 modifier =
-                    Modifier
-                        .weight(1f, fill = true),
+                Modifier
+                    .weight(1f, fill = true),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Text(
@@ -68,10 +68,10 @@ internal fun PredictionOutcome(
                 LinearProgressIndicator(
                     progress = { ratio },
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .clip(MaterialTheme.shapes.medium)
-                            .height(8.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .clip(MaterialTheme.shapes.medium)
+                        .height(8.dp),
                     color = color,
                     trackColor = MaterialTheme.colorScheme.outlineVariant,
                 )

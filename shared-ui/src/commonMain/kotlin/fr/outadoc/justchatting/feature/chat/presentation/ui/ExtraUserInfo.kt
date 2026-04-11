@@ -36,9 +36,9 @@ internal fun ExtraUserInfo(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 modifier =
-                    Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp),
+                Modifier
+                    .size(24.dp)
+                    .padding(end = 8.dp),
                 imageVector = Icons.Default.Cake,
                 contentDescription = null,
             )

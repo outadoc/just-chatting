@@ -14,8 +14,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import fr.outadoc.justchatting.feature.shared.presentation.DetailScreen
-import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
 import fr.outadoc.justchatting.feature.shared.presentation.Screen
+import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.settings
 import org.jetbrains.compose.resources.stringResource

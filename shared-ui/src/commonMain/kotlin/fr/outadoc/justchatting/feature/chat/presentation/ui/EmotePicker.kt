@@ -55,16 +55,16 @@ internal fun EmotePicker(
                         emotes = emotes.toImmutableList(),
                         onEmoteClick = onEmoteClick,
                         contentPadding =
-                            PaddingValues(
-                                start = 16.dp,
-                                end = 16.dp,
-                                top = 16.dp,
-                                bottom =
-                                    16.dp +
-                                        WindowInsets.navigationBars
-                                            .asPaddingValues()
-                                            .calculateBottomPadding(),
-                            ),
+                        PaddingValues(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = 16.dp,
+                            bottom =
+                            16.dp +
+                                WindowInsets.navigationBars
+                                    .asPaddingValues()
+                                    .calculateBottomPadding(),
+                        ),
                     )
                 }
             }

@@ -112,10 +112,10 @@ internal fun MainNavigation(
                 topBar = topBar,
                 content = content,
                 contentWindowInsets =
-                    when (navSuiteType) {
-                        NavigationSuiteType.NavigationBar -> WindowInsets.statusBars
-                        else -> ScaffoldDefaults.contentWindowInsets
-                    },
+                when (navSuiteType) {
+                    NavigationSuiteType.NavigationBar -> WindowInsets.statusBars
+                    else -> ScaffoldDefaults.contentWindowInsets
+                },
             )
         },
     )

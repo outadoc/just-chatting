@@ -18,12 +18,12 @@ internal fun GlanceCard(
     ) {
         Column(
             modifier =
-                modifier
-                    .padding(
-                        horizontal = 12.dp,
-                        vertical = 8.dp,
-                    ).appCornerRadius()
-                    .background(GlanceTheme.colors.surfaceVariant),
+            modifier
+                .padding(
+                    horizontal = 12.dp,
+                    vertical = 8.dp,
+                ).appCornerRadius()
+                .background(GlanceTheme.colors.surfaceVariant),
         ) {
             content()
         }

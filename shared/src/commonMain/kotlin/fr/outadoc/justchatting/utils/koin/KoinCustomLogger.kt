@@ -11,13 +11,13 @@ internal object KoinCustomLogger : Logger() {
     ) {
         fr.outadoc.justchatting.utils.logging.Logger.println(
             level =
-                when (level) {
-                    Level.DEBUG -> fr.outadoc.justchatting.utils.logging.Logger.Level.Debug
-                    Level.INFO -> fr.outadoc.justchatting.utils.logging.Logger.Level.Info
-                    Level.WARNING -> fr.outadoc.justchatting.utils.logging.Logger.Level.Warning
-                    Level.ERROR -> fr.outadoc.justchatting.utils.logging.Logger.Level.Error
-                    Level.NONE -> fr.outadoc.justchatting.utils.logging.Logger.Level.Verbose
-                },
+            when (level) {
+                Level.DEBUG -> fr.outadoc.justchatting.utils.logging.Logger.Level.Debug
+                Level.INFO -> fr.outadoc.justchatting.utils.logging.Logger.Level.Info
+                Level.WARNING -> fr.outadoc.justchatting.utils.logging.Logger.Level.Warning
+                Level.ERROR -> fr.outadoc.justchatting.utils.logging.Logger.Level.Error
+                Level.NONE -> fr.outadoc.justchatting.utils.logging.Logger.Level.Verbose
+            },
             tag = "Koin",
             content = { msg },
         )

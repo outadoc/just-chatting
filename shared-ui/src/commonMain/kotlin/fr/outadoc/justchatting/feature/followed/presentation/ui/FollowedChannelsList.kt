@@ -32,9 +32,9 @@ import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.followed.presentation.FollowedChannelsViewModel
+import fr.outadoc.justchatting.feature.shared.presentation.Screen
 import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
 import fr.outadoc.justchatting.feature.shared.presentation.ui.NoContent
-import fr.outadoc.justchatting.feature.shared.presentation.Screen
 import fr.outadoc.justchatting.feature.shared.presentation.ui.UserItemCard
 import fr.outadoc.justchatting.feature.shared.presentation.ui.UserItemCardPlaceholder
 import fr.outadoc.justchatting.shared.Res
@@ -84,11 +84,11 @@ internal fun FollowedChannelsList(
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
                 modifier =
-                    Modifier
-                        .hazeEffect(
-                            state = hazeState,
-                            style = HazeMaterials.regular(),
-                        ),
+                Modifier
+                    .hazeEffect(
+                        state = hazeState,
+                        style = HazeMaterials.regular(),
+                    ),
                 title = { Text(stringResource(Res.string.channels)) },
                 scrollBehavior = scrollBehavior,
                 actions = {
@@ -113,9 +113,9 @@ internal fun FollowedChannelsList(
         content = { insets ->
             InnerFollowedChannelsList(
                 modifier =
-                    Modifier
-                        .haze(hazeState)
-                        .fillMaxSize(),
+                Modifier
+                    .haze(hazeState)
+                    .fillMaxSize(),
                 insets = insets,
                 items = state.data,
                 isRefreshing = state.isLoading,
@@ -139,12 +139,12 @@ private fun InnerFollowedChannelsList(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding =
-            insets +
-                PaddingValues(
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 16.dp,
-                ),
+        insets +
+            PaddingValues(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 16.dp,
+            ),
     ) {
         if (items.isEmpty()) {
             if (!isRefreshing) {
@@ -165,9 +165,9 @@ private fun InnerFollowedChannelsList(
             ) { item ->
                 UserItemCard(
                     modifier =
-                        Modifier
-                            .animateItem()
-                            .fillMaxWidth(),
+                    Modifier
+                        .animateItem()
+                        .fillMaxWidth(),
                     displayName = item.user.displayName,
                     profileImageUrl = item.user.profileImageUrl,
                     followedAt = item.followedAt,

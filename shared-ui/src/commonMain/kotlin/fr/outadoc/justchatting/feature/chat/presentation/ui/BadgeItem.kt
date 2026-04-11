@@ -21,12 +21,12 @@ internal fun BadgeItem(
         modifier = modifier.fillMaxSize(),
         contentScale = ContentScale.Fit,
         model =
-            remoteImageModel(
-                badge.urls.getBestUrl(
-                    screenDensity = density,
-                    isDarkTheme = MaterialTheme.colorScheme.isDark,
-                ),
+        remoteImageModel(
+            badge.urls.getBestUrl(
+                screenDensity = density,
+                isDarkTheme = MaterialTheme.colorScheme.isDark,
             ),
+        ),
         contentDescription = badge.title,
     )
 }

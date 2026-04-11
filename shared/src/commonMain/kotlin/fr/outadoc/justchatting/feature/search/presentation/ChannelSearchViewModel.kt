@@ -64,11 +64,11 @@ public class ChannelSearchViewModel(
                     flowOf(
                         PagingData.empty(
                             sourceLoadStates =
-                                LoadStates(
-                                    prepend = LoadState.NotLoading(endOfPaginationReached = true),
-                                    append = LoadState.NotLoading(endOfPaginationReached = true),
-                                    refresh = LoadState.NotLoading(endOfPaginationReached = true),
-                                ),
+                            LoadStates(
+                                prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                                append = LoadState.NotLoading(endOfPaginationReached = true),
+                                refresh = LoadState.NotLoading(endOfPaginationReached = true),
+                            ),
                         ),
                     )
                 }

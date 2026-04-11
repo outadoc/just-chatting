@@ -54,9 +54,9 @@ internal fun ChatEvents(
     ) {
         Spacer(
             modifier =
-                Modifier.padding(
-                    top = insets.calculateTopPadding(),
-                ),
+            Modifier.padding(
+                top = insets.calculateTopPadding(),
+            ),
         )
         AnimatedVisibility(
             visible = roomState != RoomState.Default,

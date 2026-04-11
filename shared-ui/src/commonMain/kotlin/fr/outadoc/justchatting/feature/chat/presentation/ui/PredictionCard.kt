@@ -59,9 +59,9 @@ internal fun PredictionCard(
         modifier = modifier,
         onClick = { isExpanded = !isExpanded },
         colors =
-            CardDefaults.cardColors(
-                containerColor = color,
-            ),
+        CardDefaults.cardColors(
+            containerColor = color,
+        ),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             val status =
@@ -88,16 +88,16 @@ internal fun PredictionCard(
                     Text(
                         modifier = Modifier.padding(bottom = 4.dp),
                         text =
-                            buildString {
-                                append(stringResource(status))
-                                append(" · ")
-                                append(
-                                    stringResource(
-                                        Res.string.prediction_status_points,
-                                        totalPointsSpent.formatNumber(),
-                                    ),
-                                )
-                            },
+                        buildString {
+                            append(stringResource(status))
+                            append(" · ")
+                            append(
+                                stringResource(
+                                    Res.string.prediction_status_points,
+                                    totalPointsSpent.formatNumber(),
+                                ),
+                            )
+                        },
                         style = MaterialTheme.typography.titleSmall,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -130,22 +130,22 @@ internal fun PredictionCard(
                     prediction.outcomes.forEach { outcome ->
                         PredictionOutcome(
                             modifier =
-                                Modifier
-                                    .padding(vertical = 8.dp)
-                                    .fillMaxWidth(),
+                            Modifier
+                                .padding(vertical = 8.dp)
+                                .fillMaxWidth(),
                             title = outcome.title,
                             votes = outcome.totalPoints,
                             totalVotes = totalPointsSpent,
                             color =
-                                outcome.color
-                                    .parseHexColor()
-                                    ?.let { color ->
-                                        ensureColorIsAccessible(
-                                            foreground = color,
-                                            background = MaterialTheme.colorScheme.surface,
-                                        )
-                                    }
-                                    ?: LocalContentColor.current,
+                            outcome.color
+                                .parseHexColor()
+                                ?.let { color ->
+                                    ensureColorIsAccessible(
+                                        foreground = color,
+                                        background = MaterialTheme.colorScheme.surface,
+                                    )
+                                }
+                                ?: LocalContentColor.current,
                             icon = {
                                 badges
                                     .firstOrNull { badge ->
@@ -173,44 +173,44 @@ private val mockPrediction =
         createdAt = Instant.parse("2023-02-05T18:11:52.832Z"),
         predictionWindow = 5.minutes,
         outcomes =
-            listOf(
-                Prediction.Outcome(
-                    id = "1",
-                    title = "Étoiles",
-                    totalPoints = 12345,
-                    totalUsers = 1000,
-                    badge =
-                        Badge(
-                            id = "123",
-                            version = "5",
-                        ),
-                    color = "#00FF00",
+        listOf(
+            Prediction.Outcome(
+                id = "1",
+                title = "Étoiles",
+                totalPoints = 12345,
+                totalUsers = 1000,
+                badge =
+                Badge(
+                    id = "123",
+                    version = "5",
                 ),
-                Prediction.Outcome(
-                    id = "1",
-                    title = "AntoineDaniel",
-                    totalPoints = 102345,
-                    totalUsers = 1000,
-                    badge =
-                        Badge(
-                            id = "123",
-                            version = "5",
-                        ),
-                    color = "#FF0000",
-                ),
-                Prediction.Outcome(
-                    id = "1",
-                    title = "HortyUnderscore",
-                    totalPoints = 52450,
-                    totalUsers = 1000,
-                    badge =
-                        Badge(
-                            id = "123",
-                            version = "5",
-                        ),
-                    color = "#0000FF",
-                ),
+                color = "#00FF00",
             ),
+            Prediction.Outcome(
+                id = "1",
+                title = "AntoineDaniel",
+                totalPoints = 102345,
+                totalUsers = 1000,
+                badge =
+                Badge(
+                    id = "123",
+                    version = "5",
+                ),
+                color = "#FF0000",
+            ),
+            Prediction.Outcome(
+                id = "1",
+                title = "HortyUnderscore",
+                totalPoints = 52450,
+                totalUsers = 1000,
+                badge =
+                Badge(
+                    id = "123",
+                    version = "5",
+                ),
+                color = "#0000FF",
+            ),
+        ),
     )
 
 @Preview

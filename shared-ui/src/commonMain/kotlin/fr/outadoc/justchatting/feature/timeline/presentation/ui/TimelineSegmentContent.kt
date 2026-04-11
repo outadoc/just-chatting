@@ -37,12 +37,12 @@ internal fun TimelineSegmentContent(
         ) {
             AsyncImage(
                 modifier =
-                    Modifier
-                        .padding(end = 8.dp)
-                        .size(56.dp)
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(MaterialTheme.colorScheme.surface)
-                        .clickable(onClick = onUserClick),
+                Modifier
+                    .padding(end = 8.dp)
+                    .size(56.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surface)
+                    .clickable(onClick = onUserClick),
                 model = remoteImageModel(profileImageUrl),
                 contentDescription = null,
             )
@@ -64,9 +64,9 @@ internal fun TimelineSegmentContent(
                     ) {
                         Text(
                             modifier =
-                                Modifier
-                                    .weight(1f, fill = true)
-                                    .alignByBaseline(),
+                            Modifier
+                                .weight(1f, fill = true)
+                                .alignByBaseline(),
                             text = userName,
                             maxLines = 1,
                             style = MaterialTheme.typography.bodyMedium,
@@ -81,9 +81,9 @@ internal fun TimelineSegmentContent(
                     ) {
                         Text(
                             modifier =
-                                Modifier
-                                    .weight(1f, fill = true)
-                                    .alignByBaseline(),
+                            Modifier
+                                .weight(1f, fill = true)
+                                .alignByBaseline(),
                             text = category.name,
                             maxLines = 1,
                             style = MaterialTheme.typography.bodyMedium,

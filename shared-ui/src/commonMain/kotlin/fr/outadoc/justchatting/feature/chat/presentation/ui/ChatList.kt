@@ -125,19 +125,19 @@ internal fun ChatList(
     Box {
         LazyColumn(
             modifier =
-                modifier
-                    .onGloballyPositioned { coordinates ->
-                        val newSize = coordinates.size
-                        if (size != newSize) {
-                            size = newSize
-                        }
-                    },
+            modifier
+                .onGloballyPositioned { coordinates ->
+                    val newSize = coordinates.size
+                    if (size != newSize) {
+                        size = newSize
+                    }
+                },
             state = listState,
             reverseLayout = true,
             contentPadding =
-                PaddingValues(
-                    bottom = insets.calculateBottomPadding(),
-                ),
+            PaddingValues(
+                bottom = insets.calculateBottomPadding(),
+            ),
         ) {
             item(key = "visibility_trigger") {
                 // This item will become visible when the list is scrolled to the bottom;
@@ -194,26 +194,26 @@ internal fun ChatList(
                 ) {
                     ChatMessage(
                         modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .combinedClickable(
-                                    onClick = {},
-                                    onLongClick = {
-                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                        onMessageLongClick(item)
-                                    },
-                                    onLongClickLabel = stringResource(Res.string.chat_copyToClipboard),
-                                ).semantics {
-                                    if (canBeRepliedTo) {
-                                        customActions =
-                                            listOf(
-                                                CustomAccessibilityAction(replyToActionCd) {
-                                                    onReplyToMessage(item)
-                                                    true
-                                                },
-                                            )
-                                    }
+                        Modifier
+                            .fillMaxWidth()
+                            .combinedClickable(
+                                onClick = {},
+                                onLongClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onMessageLongClick(item)
                                 },
+                                onLongClickLabel = stringResource(Res.string.chat_copyToClipboard),
+                            ).semantics {
+                                if (canBeRepliedTo) {
+                                    customActions =
+                                        listOf(
+                                            CustomAccessibilityAction(replyToActionCd) {
+                                                onReplyToMessage(item)
+                                                true
+                                            },
+                                        )
+                                }
+                            },
                         message = item,
                         inlineContent = inlineContent,
                         removedContent = removedContent,

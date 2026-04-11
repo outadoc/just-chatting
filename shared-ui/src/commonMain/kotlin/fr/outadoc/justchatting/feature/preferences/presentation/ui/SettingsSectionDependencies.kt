@@ -95,8 +95,8 @@ private fun SettingsSectionDependenciesContent(
                     }
                 },
                 onClickLabel =
-                    stringResource(Res.string.settings_dependencies_cd)
-                        .takeIf { dependency.moduleUrl != null },
+                stringResource(Res.string.settings_dependencies_cd)
+                    .takeIf { dependency.moduleUrl != null },
                 title = { Text(text = dependency.moduleName) },
                 subtitle = {
                     dependency.moduleLicense?.let { license ->

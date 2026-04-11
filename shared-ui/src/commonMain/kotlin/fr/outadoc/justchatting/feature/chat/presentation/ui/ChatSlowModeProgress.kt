@@ -33,17 +33,17 @@ internal fun ChatSlowModeProgress(
 
             progress.snapTo(
                 targetValue =
-                    remainingSlowModeDuration.inWholeMilliseconds.toFloat() /
-                        slowModeDuration.inWholeMilliseconds.toFloat(),
+                remainingSlowModeDuration.inWholeMilliseconds.toFloat() /
+                    slowModeDuration.inWholeMilliseconds.toFloat(),
             )
 
             progress.animateTo(
                 targetValue = 0f,
                 animationSpec =
-                    tween(
-                        durationMillis = remainingSlowModeDuration.inWholeMilliseconds.toInt(),
-                        easing = LinearEasing,
-                    ),
+                tween(
+                    durationMillis = remainingSlowModeDuration.inWholeMilliseconds.toInt(),
+                    easing = LinearEasing,
+                ),
             )
         }
     }

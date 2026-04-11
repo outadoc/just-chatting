@@ -94,11 +94,10 @@ public class AuthRepository internal constructor(
         }
     }
 
-    public fun getExternalAuthorizeUrl(): Uri =
-        authApi.getExternalAuthorizeUrl(
-            oAuthAppCredentials = oAuthAppCredentials,
-            scopes = REQUIRED_SCOPES,
-        )
+    public fun getExternalAuthorizeUrl(): Uri = authApi.getExternalAuthorizeUrl(
+        oAuthAppCredentials = oAuthAppCredentials,
+        scopes = REQUIRED_SCOPES,
+    )
 
     private class InvalidClientIdException(
         message: String,

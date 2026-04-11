@@ -5,14 +5,12 @@ import platform.Foundation.NSNumberFormatter
 import platform.Foundation.NSNumberFormatterDecimalStyle
 import platform.Foundation.NSNumberFormatterPercentStyle
 
-public actual fun Float.formatPercent(): String =
-    NSNumberFormatter.localizedStringFromNumber(
-        NSNumber(this),
-        NSNumberFormatterPercentStyle,
-    )
+public actual fun Float.formatPercent(): String = NSNumberFormatter.localizedStringFromNumber(
+    NSNumber(this),
+    NSNumberFormatterPercentStyle,
+)
 
-public actual fun Int.formatNumber(): String =
-    NSNumberFormatter.localizedStringFromNumber(
-        NSNumber(this),
-        NSNumberFormatterDecimalStyle,
-    )
+public actual fun Int.formatNumber(): String = NSNumberFormatter.localizedStringFromNumber(
+    NSNumber(this),
+    NSNumberFormatterDecimalStyle,
+)

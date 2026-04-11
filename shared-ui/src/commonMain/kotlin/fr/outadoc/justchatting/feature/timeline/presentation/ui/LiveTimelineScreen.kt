@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.dp
 import coil3.PlatformContext
 import coil3.compose.LocalPlatformContext
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
-import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
 import fr.outadoc.justchatting.feature.shared.presentation.Screen
+import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
 import fr.outadoc.justchatting.feature.timeline.presentation.LiveTimelineViewModel
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.timeline_live

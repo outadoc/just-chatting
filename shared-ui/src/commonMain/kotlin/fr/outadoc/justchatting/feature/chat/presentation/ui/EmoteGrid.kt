@@ -35,9 +35,9 @@ internal fun EmoteGrid(
         modifier = modifier,
         contentPadding = contentPadding,
         columns =
-            GridCells.Adaptive(
-                minSize = emoteSize + 8.dp,
-            ),
+        GridCells.Adaptive(
+            minSize = emoteSize + 8.dp,
+        ),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         itemsIndexed(
@@ -59,9 +59,9 @@ internal fun EmoteGrid(
                 is EmoteSetItem.Header -> {
                     EmoteHeader(
                         modifier =
-                            Modifier
-                                .padding(top = if (index > 0) 8.dp else 0.dp)
-                                .semantics { heading() },
+                        Modifier
+                            .padding(top = if (index > 0) 8.dp else 0.dp)
+                            .semantics { heading() },
                         header = item,
                     )
                 }

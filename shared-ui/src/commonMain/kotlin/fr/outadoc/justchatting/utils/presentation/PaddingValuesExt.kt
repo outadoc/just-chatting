@@ -11,16 +11,16 @@ internal operator fun PaddingValues.plus(paddingValues: PaddingValues): PaddingV
     val layoutDirection = LocalLayoutDirection.current
     return PaddingValues(
         start =
-            calculateStartPadding(layoutDirection) +
-                paddingValues.calculateStartPadding(
-                    layoutDirection,
-                ),
+        calculateStartPadding(layoutDirection) +
+            paddingValues.calculateStartPadding(
+                layoutDirection,
+            ),
         top = calculateTopPadding() + paddingValues.calculateTopPadding(),
         end =
-            calculateEndPadding(layoutDirection) +
-                paddingValues.calculateEndPadding(
-                    layoutDirection,
-                ),
+        calculateEndPadding(layoutDirection) +
+            paddingValues.calculateEndPadding(
+                layoutDirection,
+            ),
         bottom = calculateBottomPadding() + paddingValues.calculateBottomPadding(),
     )
 }

@@ -19,8 +19,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
 import fr.outadoc.justchatting.feature.shared.presentation.Screen
+import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
 import fr.outadoc.justchatting.feature.timeline.presentation.FutureTimelineViewModel
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.timeline_future

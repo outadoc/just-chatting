@@ -42,15 +42,15 @@ public inline fun logError(
     )
 }
 
-internal inline fun <reified T : Any> logVerbose(noinline content: () -> String) = logVerbose(T::class.simpleName!!, content)
+public inline fun <reified T : Any> logVerbose(noinline content: () -> String): Unit = logVerbose(T::class.simpleName!!, content)
 
-internal inline fun <reified T : Any> logDebug(noinline content: () -> String) = logDebug(T::class.simpleName!!, content)
+public inline fun <reified T : Any> logDebug(noinline content: () -> String): Unit = logDebug(T::class.simpleName!!, content)
 
-internal inline fun <reified T : Any> logInfo(noinline content: () -> String) = logInfo(T::class.simpleName!!, content)
+public inline fun <reified T : Any> logInfo(noinline content: () -> String): Unit = logInfo(T::class.simpleName!!, content)
 
-internal inline fun <reified T : Any> logWarning(noinline content: () -> String) = logWarning(T::class.simpleName!!, content)
+public inline fun <reified T : Any> logWarning(noinline content: () -> String): Unit = logWarning(T::class.simpleName!!, content)
 
-internal inline fun <reified T : Any> logError(
+public inline fun <reified T : Any> logError(
     throwable: Throwable? = null,
     noinline content: () -> String,
-) = logError(T::class.simpleName!!, throwable, content)
+): Unit = logError(T::class.simpleName!!, throwable, content)

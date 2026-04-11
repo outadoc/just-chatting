@@ -153,7 +153,7 @@ internal class LiveWidget : GlanceAppWidget() {
                     maxLines = 1,
                 )
 
-                if (stream.category != null) {
+                stream.category?.let { category ->
                     Text(
                         text = " • ",
                         style =
@@ -163,7 +163,7 @@ internal class LiveWidget : GlanceAppWidget() {
                     )
 
                     Text(
-                        text = stream.category.name,
+                        text = category.name,
                         style =
                             TextDefaults.defaultTextStyle.copy(
                                 color = GlanceTheme.colors.onSurfaceVariant,

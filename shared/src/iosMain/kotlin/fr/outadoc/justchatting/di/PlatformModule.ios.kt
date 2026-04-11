@@ -70,13 +70,14 @@ internal actual val platformModule: Module
         }
 
 @OptIn(ExperimentalForeignApi::class)
-private fun getDocumentsDirectory(): Path = NSFileManager.defaultManager
-    .URLForDirectory(
-        directory = NSDocumentDirectory,
-        inDomain = NSUserDomainMask,
-        appropriateForURL = null,
-        create = false,
-        error = null,
-    )?.path
-    ?.toPath()
-    ?: error("Could not get document directory")
+private fun getDocumentsDirectory(): Path =
+    NSFileManager.defaultManager
+        .URLForDirectory(
+            directory = NSDocumentDirectory,
+            inDomain = NSUserDomainMask,
+            appropriateForURL = null,
+            create = false,
+            error = null,
+        )?.path
+        ?.toPath()
+        ?: error("Could not get document directory")

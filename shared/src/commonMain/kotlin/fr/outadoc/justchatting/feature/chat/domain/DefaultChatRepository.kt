@@ -9,15 +9,15 @@ import kotlinx.coroutines.flow.Flow
 internal class DefaultChatRepository(
     private val handler: AggregateChatEventHandler,
 ) : ChatRepository {
-
     override fun getChatEventFlow(
         user: User,
         appUser: AppUser.LoggedIn,
-    ): Flow<ChatEvent> = handler.getEventFlow(
-        channelId = user.id,
-        channelLogin = user.login,
-        appUser = appUser,
-    )
+    ): Flow<ChatEvent> =
+        handler.getEventFlow(
+            channelId = user.id,
+            channelLogin = user.login,
+            appUser = appUser,
+        )
 
     override fun getConnectionStatusFlow(
         user: User,

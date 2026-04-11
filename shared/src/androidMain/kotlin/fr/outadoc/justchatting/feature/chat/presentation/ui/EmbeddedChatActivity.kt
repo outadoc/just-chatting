@@ -19,13 +19,14 @@ public class EmbeddedChatActivity : AppCompatActivity() {
         fun createIntent(
             context: Context,
             userId: String,
-        ): Intent = Intent(context, EmbeddedChatActivity::class.java).apply {
-            data = createChannelDeeplink(userId).toAndroidUri()
-            action = Intent.ACTION_VIEW
-            flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT
+        ): Intent =
+            Intent(context, EmbeddedChatActivity::class.java).apply {
+                data = createChannelDeeplink(userId).toAndroidUri()
+                action = Intent.ACTION_VIEW
+                flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT
 
-            putExtra(CHANNEL_USER_ID, userId)
-        }
+                putExtra(CHANNEL_USER_ID, userId)
+            }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.merge
 internal class AggregateChatEventHandler(
     chatEventHandlersProvider: ChatEventHandlersProvider,
 ) : ChatEventHandler {
-
     private val handlers: List<ChatEventHandler> = chatEventHandlersProvider.get()
 
     override fun getEventFlow(

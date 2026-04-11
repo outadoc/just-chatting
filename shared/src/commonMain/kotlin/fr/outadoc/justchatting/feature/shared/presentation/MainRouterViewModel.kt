@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.auth.data.AuthCallbackWebServer
-import fr.outadoc.justchatting.feature.shared.presentation.ui.Screen
 import fr.outadoc.justchatting.feature.deeplink.Deeplink
 import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
+import fr.outadoc.justchatting.feature.shared.presentation.ui.Screen
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logInfo
 import kotlinx.coroutines.delay
@@ -94,13 +94,14 @@ internal class MainRouterViewModel(
         }
     }
 
-    fun onLoginClick() = viewModelScope.launch {
-        _events.emit(
-            Event.ShowAuthPage(
-                uri = authRepository.getExternalAuthorizeUrl(),
-            ),
-        )
-    }
+    fun onLoginClick() =
+        viewModelScope.launch {
+            _events.emit(
+                Event.ShowAuthPage(
+                    uri = authRepository.getExternalAuthorizeUrl(),
+                ),
+            )
+        }
 
     override fun onDeeplinkReceived(uriString: String) {
         onDeeplinkReceived(Uri.parse(uriString))

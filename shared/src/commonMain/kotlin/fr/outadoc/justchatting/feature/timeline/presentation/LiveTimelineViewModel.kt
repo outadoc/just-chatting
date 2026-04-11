@@ -3,10 +3,8 @@ package fr.outadoc.justchatting.feature.timeline.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
-import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
-import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.Job
@@ -14,11 +12,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -33,7 +29,9 @@ internal class LiveTimelineViewModel(
     private val authRepository: AuthRepository,
 ) : ViewModel() {
     sealed class Event {
-        data class NavigateToChannel(val userId: String) : Event()
+        data class NavigateToChannel(
+            val userId: String,
+        ) : Event()
     }
 
     data class State(

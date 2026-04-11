@@ -21,9 +21,10 @@ internal class ChatConnectionService : LifecycleService() {
         fun createReplyIntent(
             context: Context,
             channelId: String,
-        ): Intent = Intent(context, ChatConnectionService::class.java).apply {
-            data = "ccs://reply/?userId=$channelId".toUri()
-        }
+        ): Intent =
+            Intent(context, ChatConnectionService::class.java).apply {
+                data = "ccs://reply/?userId=$channelId".toUri()
+            }
     }
 
     override fun onStartCommand(

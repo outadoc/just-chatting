@@ -18,7 +18,12 @@ internal abstract class MessageParser<out T> :
     IMessageParser<T>,
     IComponentsParser<T> {
     override fun parse(message: IrcMessage): T? {
-        val components = IrcMessageComponents(tags = message.tags, prefix = message.prefix, parameters = message.parameters)
+        val components =
+            IrcMessageComponents(
+                tags = message.tags,
+                prefix = message.prefix,
+                parameters = message.parameters,
+            )
         return parseFromComponents(components)
     }
 }

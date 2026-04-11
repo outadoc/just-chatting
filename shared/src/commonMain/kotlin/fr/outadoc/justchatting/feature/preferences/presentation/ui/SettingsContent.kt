@@ -40,6 +40,7 @@ internal fun SettingsContent(
                 is SettingsViewModel.Event.ShareLogs -> {
                     onShareLogs(event.uri)
                 }
+
                 is SettingsViewModel.Event.NavigateToDetail -> {
                     onNavigateDetails(event.screen)
                 }

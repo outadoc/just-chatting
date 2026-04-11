@@ -33,7 +33,8 @@ internal object PrefixParser : IPrefixParser {
                 }
         }
 
-        val indexOfFirstExclam = raw.indexOfFirst { character -> character == CharacterCodes.EXCLAM }
+        val indexOfFirstExclam =
+            raw.indexOfFirst { character -> character == CharacterCodes.EXCLAM }
         if (indexOfFirstExclam >= 0) {
             nick = raw.substring(0, indexOfFirstExclam)
 

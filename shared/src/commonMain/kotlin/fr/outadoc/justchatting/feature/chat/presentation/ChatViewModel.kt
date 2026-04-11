@@ -313,8 +313,12 @@ internal class ChatViewModel(
     private val inputActions = MutableSharedFlow<InputAction>()
     val inputState: StateFlow<InputState> =
         inputActions
-            .runningFold(InputState()) { state: InputState, action -> reducer.reduce(action, state) }
-            .stateIn(
+            .runningFold(InputState()) { state: InputState, action ->
+                reducer.reduce(
+                    action,
+                    state,
+                )
+            }.stateIn(
                 scope = inputScope,
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = InputState(),
@@ -323,16 +327,22 @@ internal class ChatViewModel(
     init {
         state
             .filterIsInstance<State.Chatting>()
-            .map { state -> Triple(state.user.id, state.user.displayName, state.userState.emoteSets) }
-            .distinctUntilChanged()
+            .map { state ->
+                Triple(
+                    state.user.id,
+                    state.user.displayName,
+                    state.userState.emoteSets,
+                )
+            }.distinctUntilChanged()
             .onEach { (channelId, channelName, emoteSets) ->
                 defaultScope.launch {
                     withContext(DispatchersProvider.io) {
-                        val action = loadEmotesAndBadges(
-                            channelId = channelId,
-                            channelName = channelName,
-                            emoteSets = emoteSets,
-                        )
+                        val action =
+                            loadEmotesAndBadges(
+                                channelId = channelId,
+                                channelName = channelName,
+                                emoteSets = emoteSets,
+                            )
                         actions.emit(action)
                     }
                 }
@@ -468,14 +478,14 @@ internal class ChatViewModel(
                 val action =
                     Action.ChangeRecentEmotes(
                         recentEmotes =
-                        recentEmotes
-                            .filter { recentEmote -> recentEmote.name in allEmotesMap }
-                            .map { recentEmote ->
-                                Emote(
-                                    name = recentEmote.name,
-                                    urls = EmoteUrls(recentEmote.url),
-                                )
-                            },
+                            recentEmotes
+                                .filter { recentEmote -> recentEmote.name in allEmotesMap }
+                                .map { recentEmote ->
+                                    Emote(
+                                        name = recentEmote.name,
+                                        urls = EmoteUrls(recentEmote.url),
+                                    )
+                                },
                     )
 
                 actions.emit(action)
@@ -639,15 +649,16 @@ internal class ChatViewModel(
         }
 
         defaultScope.launch {
-            val errorAction = submitMessage(
-                channelUserId = chatState.user.id,
-                message = currentInputState.message,
-                inReplyToMessageId = currentInputState.replyingTo?.body?.messageId,
-                appUser = chatState.appUser,
-                allEmotesMap = chatState.allEmotesMap,
-                screenDensity = screenDensity,
-                isDarkTheme = isDarkTheme,
-            )
+            val errorAction =
+                submitMessage(
+                    channelUserId = chatState.user.id,
+                    message = currentInputState.message,
+                    inReplyToMessageId = currentInputState.replyingTo?.body?.messageId,
+                    appUser = chatState.appUser,
+                    allEmotesMap = chatState.allEmotesMap,
+                    screenDensity = screenDensity,
+                    isDarkTheme = isDarkTheme,
+                )
 
             if (errorAction != null) {
                 actions.emit(errorAction)

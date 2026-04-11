@@ -5,7 +5,6 @@ import androidx.savedstate.serialization.SavedStateConfiguration
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
-import kotlinx.serialization.modules.subclass
 
 internal sealed interface Screen : NavKey {
     @Serializable
@@ -32,13 +31,14 @@ internal val DefaultScreen = Screen.Live
  */
 internal val ScreenNavBackStackConfig: SavedStateConfiguration =
     SavedStateConfiguration {
-        serializersModule = SerializersModule {
-            polymorphic(NavKey::class) {
-                subclass(Screen.Followed::class, Screen.Followed.serializer())
-                subclass(Screen.Live::class, Screen.Live.serializer())
-                subclass(Screen.Future::class, Screen.Future.serializer())
-                subclass(Screen.Search::class, Screen.Search.serializer())
-                subclass(Screen.Settings::class, Screen.Settings.serializer())
+        serializersModule =
+            SerializersModule {
+                polymorphic(NavKey::class) {
+                    subclass(Screen.Followed::class, Screen.Followed.serializer())
+                    subclass(Screen.Live::class, Screen.Live.serializer())
+                    subclass(Screen.Future::class, Screen.Future.serializer())
+                    subclass(Screen.Search::class, Screen.Search.serializer())
+                    subclass(Screen.Settings::class, Screen.Settings.serializer())
+                }
             }
-        }
     }

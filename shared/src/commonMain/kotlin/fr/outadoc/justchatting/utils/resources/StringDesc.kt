@@ -51,10 +51,11 @@ internal sealed interface StringDesc {
         private val number: Int,
     ) : StringDesc {
         @Composable
-        override fun localized(): String = pluralStringResource(
-            resource = resource,
-            quantity = number,
-        )
+        override fun localized(): String =
+            pluralStringResource(
+                resource = resource,
+                quantity = number,
+            )
     }
 
     class PluralFormatted(

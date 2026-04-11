@@ -33,7 +33,9 @@ internal class ChannelSearchViewModel(
     private val twitchRepository: TwitchRepository,
 ) : ViewModel() {
     sealed class Event {
-        data class NavigateToChannel(val userId: String) : Event()
+        data class NavigateToChannel(
+            val userId: String,
+        ) : Event()
     }
 
     data class State(
@@ -61,11 +63,11 @@ internal class ChannelSearchViewModel(
                     flowOf(
                         PagingData.empty(
                             sourceLoadStates =
-                            LoadStates(
-                                prepend = LoadState.NotLoading(endOfPaginationReached = true),
-                                append = LoadState.NotLoading(endOfPaginationReached = true),
-                                refresh = LoadState.NotLoading(endOfPaginationReached = true),
-                            ),
+                                LoadStates(
+                                    prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                                    append = LoadState.NotLoading(endOfPaginationReached = true),
+                                    refresh = LoadState.NotLoading(endOfPaginationReached = true),
+                                ),
                         ),
                     )
                 }

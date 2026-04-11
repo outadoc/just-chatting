@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
@@ -68,33 +67,34 @@ internal class LiveChatWebSocket(
         channelId: String,
         channelLogin: String,
         appUser: AppUser.LoggedIn,
-    ): Flow<ChatEvent> = channelFlow {
-        var lastMessageReceivedAt: Instant? = null
-        _connectionStatus.update { it.copy(registeredListeners = 1) }
-        try {
-            networkStateObserver.state.collectLatest { netState ->
-                if (netState is NetworkStateObserver.NetworkState.Available) {
-                    logDebug<LiveChatWebSocket> { "Network is available, listening" }
-                    loadRecentMessages(channelLogin, lastMessageReceivedAt)
-                    while (currentCoroutineContext().isActive) {
-                        _connectionStatus.update { it.copy(isAlive = true) }
-                        try {
-                            lastMessageReceivedAt = listen(channelLogin, lastMessageReceivedAt)
-                        } catch (e: Exception) {
-                            logError<LiveChatWebSocket>(e) { "Socket was closed" }
+    ): Flow<ChatEvent> =
+        channelFlow {
+            var lastMessageReceivedAt: Instant? = null
+            _connectionStatus.update { it.copy(registeredListeners = 1) }
+            try {
+                networkStateObserver.state.collectLatest { netState ->
+                    if (netState is NetworkStateObserver.NetworkState.Available) {
+                        logDebug<LiveChatWebSocket> { "Network is available, listening" }
+                        loadRecentMessages(channelLogin, lastMessageReceivedAt)
+                        while (currentCoroutineContext().isActive) {
+                            _connectionStatus.update { it.copy(isAlive = true) }
+                            try {
+                                lastMessageReceivedAt = listen(channelLogin, lastMessageReceivedAt)
+                            } catch (e: Exception) {
+                                logError<LiveChatWebSocket>(e) { "Socket was closed" }
+                            }
+                            _connectionStatus.update { it.copy(isAlive = false) }
+                            delayWithJitter(1.seconds, maxJitter = 3.seconds)
                         }
+                    } else {
+                        logDebug<LiveChatWebSocket> { "Network is out, waiting" }
                         _connectionStatus.update { it.copy(isAlive = false) }
-                        delayWithJitter(1.seconds, maxJitter = 3.seconds)
                     }
-                } else {
-                    logDebug<LiveChatWebSocket> { "Network is out, waiting" }
-                    _connectionStatus.update { it.copy(isAlive = false) }
                 }
+            } finally {
+                _connectionStatus.update { it.copy(registeredListeners = 0) }
             }
-        } finally {
-            _connectionStatus.update { it.copy(registeredListeners = 0) }
-        }
-    }.flowOn(DispatchersProvider.io)
+        }.flowOn(DispatchersProvider.io)
 
     private suspend fun ProducerScope<ChatEvent>.listen(
         channelLogin: String,
@@ -125,12 +125,13 @@ internal class LiveChatWebSocket(
                             .lines()
                             .filter { it.isNotBlank() }
                             .forEach { line ->
-                                currentLastMessageReceivedAt = handleMessage(
-                                    received = line,
-                                    lastMessageReceivedAt = currentLastMessageReceivedAt,
-                                ) { event ->
-                                    this@listen.send(event)
-                                }
+                                currentLastMessageReceivedAt =
+                                    handleMessage(
+                                        received = line,
+                                        lastMessageReceivedAt = currentLastMessageReceivedAt,
+                                    ) { event ->
+                                        this@listen.send(event)
+                                    }
                             }
                     }
 

@@ -17,18 +17,19 @@ import androidx.compose.material.icons.outlined.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import fr.outadoc.justchatting.feature.chat.domain.model.Icon
 
-internal fun Icon.toMaterialIcon(): ImageVector = when (this) {
-    Icon.CallReceived -> Icons.AutoMirrored.Filled.CallReceived
-    Icon.Campaign -> Icons.Default.Campaign
-    Icon.Cancel -> Icons.Default.Cancel
-    Icon.FastForward -> Icons.Default.FastForward
-    Icon.Gavel -> Icons.Default.Gavel
-    Icon.Highlight -> Icons.Default.Highlight
-    Icon.Redeem -> Icons.Default.Redeem
-    Icon.Reply -> Icons.AutoMirrored.Filled.Reply
-    Icon.Send -> Icons.AutoMirrored.Filled.Send
-    Icon.Star -> Icons.Outlined.Star
-    Icon.Toll -> Icons.Default.Toll
-    Icon.VolunteerActivism -> Icons.Default.VolunteerActivism
-    Icon.WavingHand -> Icons.Default.WavingHand
-}
+internal fun Icon.toMaterialIcon(): ImageVector =
+    when (this) {
+        Icon.CallReceived -> Icons.AutoMirrored.Filled.CallReceived
+        Icon.Campaign -> Icons.Default.Campaign
+        Icon.Cancel -> Icons.Default.Cancel
+        Icon.FastForward -> Icons.Default.FastForward
+        Icon.Gavel -> Icons.Default.Gavel
+        Icon.Highlight -> Icons.Default.Highlight
+        Icon.Redeem -> Icons.Default.Redeem
+        Icon.Reply -> Icons.AutoMirrored.Filled.Reply
+        Icon.Send -> Icons.AutoMirrored.Filled.Send
+        Icon.Star -> Icons.Outlined.Star
+        Icon.Toll -> Icons.Default.Toll
+        Icon.VolunteerActivism -> Icons.Default.VolunteerActivism
+        Icon.WavingHand -> Icons.Default.WavingHand
+    }

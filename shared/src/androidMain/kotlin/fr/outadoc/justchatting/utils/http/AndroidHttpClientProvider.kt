@@ -22,48 +22,49 @@ internal class AndroidHttpClientProvider(
     private val json: Json,
     private val appVersionNameProvider: AppVersionNameProvider,
 ) : BaseHttpClientProvider {
-    override fun get(block: HttpClientConfig<*>.() -> Unit): HttpClient = HttpClient(OkHttp) {
-        install(HttpCache)
+    override fun get(block: HttpClientConfig<*>.() -> Unit): HttpClient =
+        HttpClient(OkHttp) {
+            install(HttpCache)
 
-        install(HttpTimeout) {
-            requestTimeoutMillis = 30.seconds.inWholeMilliseconds
-            connectTimeoutMillis = 10.seconds.inWholeMilliseconds
-        }
+            install(HttpTimeout) {
+                requestTimeoutMillis = 30.seconds.inWholeMilliseconds
+                connectTimeoutMillis = 10.seconds.inWholeMilliseconds
+            }
 
-        install(ContentNegotiation) {
-            json(json)
-        }
+            install(ContentNegotiation) {
+                json(json)
+            }
 
-        install(UserAgent) {
-            val appVersion = appVersionNameProvider.appVersionName.orEmpty()
-            val osVersion = android.os.Build.VERSION.SDK_INT
-            agent = "JustChatting-fr.outadoc.justchatting/$appVersion (Android/$osVersion)"
-        }
+            install(UserAgent) {
+                val appVersion = appVersionNameProvider.appVersionName.orEmpty()
+                val osVersion = android.os.Build.VERSION.SDK_INT
+                agent = "JustChatting-fr.outadoc.justchatting/$appVersion (Android/$osVersion)"
+            }
 
-        install(Logging) {
-            level = LogLevel.ALL
-            logger =
-                object : Logger {
-                    override fun log(message: String) = logDebug<HttpClient> { message }
+            install(Logging) {
+                level = LogLevel.ALL
+                logger =
+                    object : Logger {
+                        override fun log(message: String) = logDebug<HttpClient> { message }
+                    }
+            }
+
+            install(WebSockets) {
+                extensions {
+                    install(FrameLogger)
                 }
-        }
 
-        install(WebSockets) {
-            extensions {
-                install(FrameLogger)
+                contentConverter = KotlinxWebsocketSerializationConverter(json)
             }
 
-            contentConverter = KotlinxWebsocketSerializationConverter(json)
-        }
+            expectSuccess = true
 
-        expectSuccess = true
-
-        engine {
-            config {
-                followRedirects(true)
+            engine {
+                config {
+                    followRedirects(true)
+                }
             }
-        }
 
-        block()
-    }
+            block()
+        }
 }

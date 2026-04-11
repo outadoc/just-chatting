@@ -4,13 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
-import fr.outadoc.justchatting.feature.shared.presentation.ui.DetailScreen
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
-import fr.outadoc.justchatting.feature.preferences.presentation.AppVersionNameProvider
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.shared.domain.model.User
+import fr.outadoc.justchatting.feature.shared.presentation.ui.DetailScreen
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.ExperimentalCoroutinesApi

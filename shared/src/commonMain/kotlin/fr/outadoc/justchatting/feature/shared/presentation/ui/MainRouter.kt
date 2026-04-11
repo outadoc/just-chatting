@@ -10,7 +10,6 @@ import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -65,7 +64,10 @@ internal fun MainRouter(
                     backStack.clear()
                     backStack.add(event.screen)
                 }
-                else -> Unit
+
+                else -> {
+                    Unit
+                }
             }
         }
     }
@@ -75,53 +77,55 @@ internal fun MainRouter(
     }
 
     val saveableDecorator = rememberSaveableStateHolderNavEntryDecorator<NavKey>()
-    val entries = rememberDecoratedNavEntries<NavKey>(
-        backStack = backStack,
-        entryDecorators = listOf(saveableDecorator),
-        entryProvider = entryProvider {
-            entry<Screen.Followed> {
-                FollowedChannelsList(
-                    onNavigate = onNavigate,
-                    onItemClick = onChannelClick,
-                )
-            }
+    val entries =
+        rememberDecoratedNavEntries<NavKey>(
+            backStack = backStack,
+            entryDecorators = listOf(saveableDecorator),
+            entryProvider =
+                entryProvider {
+                    entry<Screen.Followed> {
+                        FollowedChannelsList(
+                            onNavigate = onNavigate,
+                            onItemClick = onChannelClick,
+                        )
+                    }
 
-            entry<Screen.Live> {
-                LiveTimelineScreen(
-                    onNavigate = onNavigate,
-                    onChannelClick = onChannelClick,
-                )
-            }
+                    entry<Screen.Live> {
+                        LiveTimelineScreen(
+                            onNavigate = onNavigate,
+                            onChannelClick = onChannelClick,
+                        )
+                    }
 
-            entry<Screen.Future> {
-                FutureTimelineScreen(
-                    onNavigate = onNavigate,
-                )
-            }
+                    entry<Screen.Future> {
+                        FutureTimelineScreen(
+                            onNavigate = onNavigate,
+                        )
+                    }
 
-            entry<Screen.Search> {
-                SearchScreen(
-                    onNavigate = onNavigate,
-                    onChannelClick = onChannelClick,
-                )
-            }
+                    entry<Screen.Search> {
+                        SearchScreen(
+                            onNavigate = onNavigate,
+                            onChannelClick = onChannelClick,
+                        )
+                    }
 
-            entry<Screen.Settings> {
-                SettingsContent(
-                    onNavigate = onNavigate,
-                    onNavigateDetails = { screen ->
-                        scope.launch {
-                            navigator.navigateTo(
-                                pane = ListDetailPaneScaffoldRole.Detail,
-                                contentKey = screen,
-                            )
-                        }
-                    },
-                    onShareLogs = onShareLogs,
-                )
-            }
-        },
-    )
+                    entry<Screen.Settings> {
+                        SettingsContent(
+                            onNavigate = onNavigate,
+                            onNavigateDetails = { screen ->
+                                scope.launch {
+                                    navigator.navigateTo(
+                                        pane = ListDetailPaneScaffoldRole.Detail,
+                                        contentKey = screen,
+                                    )
+                                }
+                            },
+                            onShareLogs = onShareLogs,
+                        )
+                    }
+                },
+        )
 
     ListDetailPaneScaffold(
         modifier = modifier,

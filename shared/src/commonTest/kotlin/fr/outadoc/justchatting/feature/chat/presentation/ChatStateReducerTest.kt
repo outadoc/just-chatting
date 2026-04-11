@@ -25,30 +25,32 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 internal class ChatStateReducerTest {
-
     private val reducer = ChatStateReducer()
 
-    private val testAppUser = AppUser.LoggedIn(
-        userId = "app-user-id",
-        userLogin = "appuser",
-        token = "token123",
-    )
+    private val testAppUser =
+        AppUser.LoggedIn(
+            userId = "app-user-id",
+            userLogin = "appuser",
+            token = "token123",
+        )
 
-    private val testUser = User(
-        id = "user-123",
-        login = "testuser",
-        displayName = "TestUser",
-        description = "A test user",
-        profileImageUrl = "https://example.com/avatar.png",
-        createdAt = Instant.fromEpochMilliseconds(1000000),
-        usedAt = null,
-    )
+    private val testUser =
+        User(
+            id = "user-123",
+            login = "testuser",
+            displayName = "TestUser",
+            description = "A test user",
+            profileImageUrl = "https://example.com/avatar.png",
+            createdAt = Instant.fromEpochMilliseconds(1000000),
+            usedAt = null,
+        )
 
-    private val testChattingState = ChatViewModel.State.Chatting(
-        user = testUser,
-        appUser = testAppUser,
-        maxAdapterCount = 100,
-    )
+    private val testChattingState =
+        ChatViewModel.State.Chatting(
+            user = testUser,
+            appUser = testAppUser,
+            maxAdapterCount = 100,
+        )
 
     private fun createMessage(
         messageId: String,
@@ -57,28 +59,32 @@ internal class ChatStateReducerTest {
         chatterLogin: String = "chatter1",
         chatterDisplayName: String = "Chatter1",
         timestamp: Instant = Instant.fromEpochMilliseconds(1000),
-    ): ChatListItem.Message.Simple = ChatListItem.Message.Simple(
-        body = ChatListItem.Message.Body(
-            messageId = messageId,
-            message = text,
-            chatter = Chatter(
-                id = chatterId,
-                login = chatterLogin,
-                displayName = chatterDisplayName,
-            ),
-        ),
-        timestamp = timestamp,
-    )
+    ): ChatListItem.Message.Simple =
+        ChatListItem.Message.Simple(
+            body =
+                ChatListItem.Message.Body(
+                    messageId = messageId,
+                    message = text,
+                    chatter =
+                        Chatter(
+                            id = chatterId,
+                            login = chatterLogin,
+                            displayName = chatterDisplayName,
+                        ),
+                ),
+            timestamp = timestamp,
+        )
 
     // region Action: LoadChat
 
     @Test
     fun `LoadChat from Initial returns Loading`() {
-        val action = ChatViewModel.Action.LoadChat(
-            userId = "user-123",
-            appUser = testAppUser,
-            maxAdapterCount = 100,
-        )
+        val action =
+            ChatViewModel.Action.LoadChat(
+                userId = "user-123",
+                appUser = testAppUser,
+                maxAdapterCount = 100,
+            )
 
         val result = reducer.reduce(action, ChatViewModel.State.Initial)
 
@@ -90,11 +96,12 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `LoadChat from Chatting with same userId is a no-op`() {
-        val action = ChatViewModel.Action.LoadChat(
-            userId = "user-123",
-            appUser = testAppUser,
-            maxAdapterCount = 100,
-        )
+        val action =
+            ChatViewModel.Action.LoadChat(
+                userId = "user-123",
+                appUser = testAppUser,
+                maxAdapterCount = 100,
+            )
 
         val result = reducer.reduce(action, testChattingState)
 
@@ -103,11 +110,12 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `LoadChat from Chatting with different userId returns Loading`() {
-        val action = ChatViewModel.Action.LoadChat(
-            userId = "other-user",
-            appUser = testAppUser,
-            maxAdapterCount = 50,
-        )
+        val action =
+            ChatViewModel.Action.LoadChat(
+                userId = "other-user",
+                appUser = testAppUser,
+                maxAdapterCount = 50,
+            )
 
         val result = reducer.reduce(action, testChattingState)
 
@@ -121,11 +129,12 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `UpdateUser from Loading transitions to Chatting`() {
-        val loadingState = ChatViewModel.State.Loading(
-            userId = "user-123",
-            appUser = testAppUser,
-            maxAdapterCount = 100,
-        )
+        val loadingState =
+            ChatViewModel.State.Loading(
+                userId = "user-123",
+                appUser = testAppUser,
+                maxAdapterCount = 100,
+            )
         val action = ChatViewModel.Action.UpdateUser(user = testUser)
 
         val result = reducer.reduce(action, loadingState)
@@ -172,14 +181,15 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `UpdateStreamDetails while Chatting sets the stream`() {
-        val stream = Stream(
-            id = "stream-1",
-            userId = "user-123",
-            category = StreamCategory(id = "cat-1", name = "Just Chatting"),
-            title = "Live stream",
-            viewerCount = 100,
-            startedAt = Instant.fromEpochMilliseconds(5000),
-        )
+        val stream =
+            Stream(
+                id = "stream-1",
+                userId = "user-123",
+                category = StreamCategory(id = "cat-1", name = "Just Chatting"),
+                title = "Live stream",
+                viewerCount = 100,
+                startedAt = Instant.fromEpochMilliseconds(5000),
+            )
         val action = ChatViewModel.Action.UpdateStreamDetails(stream = stream)
 
         val result = reducer.reduce(action, testChattingState)
@@ -190,14 +200,15 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `UpdateStreamDetails when not Chatting is a no-op`() {
-        val stream = Stream(
-            id = "stream-1",
-            userId = "user-123",
-            category = null,
-            title = "Live",
-            viewerCount = 0,
-            startedAt = Instant.fromEpochMilliseconds(5000),
-        )
+        val stream =
+            Stream(
+                id = "stream-1",
+                userId = "user-123",
+                category = null,
+                title = "Live",
+                viewerCount = 0,
+                startedAt = Instant.fromEpochMilliseconds(5000),
+            )
         val action = ChatViewModel.Action.UpdateStreamDetails(stream = stream)
 
         val result = reducer.reduce(action, ChatViewModel.State.Initial)
@@ -211,16 +222,19 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `UpdateEmotes sets new values`() {
-        val emotes = persistentListOf<fr.outadoc.justchatting.feature.emotes.domain.model.EmoteSetItem>()
-        val badges = persistentListOf<fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge>()
+        val emotes =
+            persistentListOf<fr.outadoc.justchatting.feature.emotes.domain.model.EmoteSetItem>()
+        val badges =
+            persistentListOf<fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge>()
         val cheerEmotes = persistentMapOf<String, Emote>()
 
-        val action = ChatViewModel.Action.UpdateEmotes(
-            pickableEmotes = emotes,
-            globalBadges = badges,
-            channelBadges = badges,
-            cheerEmotes = cheerEmotes,
-        )
+        val action =
+            ChatViewModel.Action.UpdateEmotes(
+                pickableEmotes = emotes,
+                globalBadges = badges,
+                channelBadges = badges,
+                cheerEmotes = cheerEmotes,
+            )
 
         val result = reducer.reduce(action, testChattingState)
 
@@ -233,28 +247,32 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `UpdateEmotes preserves existing values when new ones are null`() {
-        val existingBadges = persistentListOf(
-            fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge(
-                setId = "sub",
-                version = "1",
-                urls = EmoteUrls("https://example.com/badge.png"),
-            ),
-        )
-        val existingCheerEmotes = persistentMapOf(
-            "Cheer1" to Emote(name = "Cheer1", urls = EmoteUrls("https://example.com/cheer.png")),
-        )
-        val state = testChattingState.copy(
-            globalBadges = existingBadges,
-            channelBadges = existingBadges,
-            cheerEmotes = existingCheerEmotes,
-        )
+        val existingBadges =
+            persistentListOf(
+                fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge(
+                    setId = "sub",
+                    version = "1",
+                    urls = EmoteUrls("https://example.com/badge.png"),
+                ),
+            )
+        val existingCheerEmotes =
+            persistentMapOf(
+                "Cheer1" to Emote(name = "Cheer1", urls = EmoteUrls("https://example.com/cheer.png")),
+            )
+        val state =
+            testChattingState.copy(
+                globalBadges = existingBadges,
+                channelBadges = existingBadges,
+                cheerEmotes = existingCheerEmotes,
+            )
 
-        val action = ChatViewModel.Action.UpdateEmotes(
-            pickableEmotes = persistentListOf(),
-            globalBadges = null,
-            channelBadges = null,
-            cheerEmotes = null,
-        )
+        val action =
+            ChatViewModel.Action.UpdateEmotes(
+                pickableEmotes = persistentListOf(),
+                globalBadges = null,
+                channelBadges = null,
+                cheerEmotes = null,
+            )
 
         val result = reducer.reduce(action, state)
 
@@ -283,9 +301,10 @@ internal class ChatStateReducerTest {
     @Test
     fun `AddMessages deduplicates messages`() {
         val msg = createMessage(messageId = "msg-1")
-        val stateWithMsg = testChattingState.copy(
-            chatMessages = persistentListOf(msg),
-        )
+        val stateWithMsg =
+            testChattingState.copy(
+                chatMessages = persistentListOf(msg),
+            )
         val action = ChatViewModel.Action.AddMessages(messages = listOf(msg))
 
         val result = reducer.reduce(action, stateWithMsg)
@@ -296,12 +315,13 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `AddMessages updates chatters`() {
-        val msg = createMessage(
-            messageId = "msg-1",
-            chatterId = "new-chatter",
-            chatterLogin = "newchatter",
-            chatterDisplayName = "NewChatter",
-        )
+        val msg =
+            createMessage(
+                messageId = "msg-1",
+                chatterId = "new-chatter",
+                chatterLogin = "newchatter",
+                chatterDisplayName = "NewChatter",
+            )
         val action = ChatViewModel.Action.AddMessages(messages = listOf(msg))
 
         val result = reducer.reduce(action, testChattingState)
@@ -314,13 +334,14 @@ internal class ChatStateReducerTest {
     @Test
     fun `AddMessages updates lastSentMessageInstant for own messages`() {
         val timestamp = Instant.fromEpochMilliseconds(99999)
-        val msg = createMessage(
-            messageId = "msg-1",
-            chatterId = testAppUser.userId,
-            chatterLogin = testAppUser.userLogin,
-            chatterDisplayName = "AppUser",
-            timestamp = timestamp,
-        )
+        val msg =
+            createMessage(
+                messageId = "msg-1",
+                chatterId = testAppUser.userId,
+                chatterLogin = testAppUser.userLogin,
+                chatterDisplayName = "AppUser",
+                timestamp = timestamp,
+            )
         val action = ChatViewModel.Action.AddMessages(messages = listOf(msg))
 
         val result = reducer.reduce(action, testChattingState)
@@ -356,9 +377,10 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `ChangeConnectionStatus when not Chatting is a no-op`() {
-        val action = ChatViewModel.Action.ChangeConnectionStatus(
-            connectionStatus = ConnectionStatus(isAlive = true, registeredListeners = 1),
-        )
+        val action =
+            ChatViewModel.Action.ChangeConnectionStatus(
+                connectionStatus = ConnectionStatus(isAlive = true, registeredListeners = 1),
+            )
 
         val result = reducer.reduce(action, ChatViewModel.State.Initial)
 
@@ -386,9 +408,10 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `ChangeRoomState merges delta into existing room state`() {
-        val state = testChattingState.copy(
-            roomState = RoomState(isEmoteOnly = false, isSubOnly = false),
-        )
+        val state =
+            testChattingState.copy(
+                roomState = RoomState(isEmoteOnly = false, isSubOnly = false),
+            )
         val delta = ChatListItem.RoomStateDelta(isEmoteOnly = true)
         val action = ChatViewModel.Action.ChangeRoomState(delta = delta)
 
@@ -401,12 +424,14 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `ChangeRoomState partial update preserves existing values`() {
-        val state = testChattingState.copy(
-            roomState = RoomState(
-                slowModeDuration = 30.seconds,
-                isEmoteOnly = true,
-            ),
-        )
+        val state =
+            testChattingState.copy(
+                roomState =
+                    RoomState(
+                        slowModeDuration = 30.seconds,
+                        isEmoteOnly = true,
+                    ),
+            )
         val delta = ChatListItem.RoomStateDelta(isSubOnly = true)
         val action = ChatViewModel.Action.ChangeRoomState(delta = delta)
 
@@ -424,10 +449,11 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `RemoveContent appends to the removed content list`() {
-        val removed = ChatListItem.RemoveContent(
-            upUntil = Instant.fromEpochMilliseconds(5000),
-            matchingUserId = "banned-user",
-        )
+        val removed =
+            ChatListItem.RemoveContent(
+                upUntil = Instant.fromEpochMilliseconds(5000),
+                matchingUserId = "banned-user",
+            )
         val action = ChatViewModel.Action.RemoveContent(removedContent = removed)
 
         val result = reducer.reduce(action, testChattingState)
@@ -443,9 +469,10 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `ChangeRecentEmotes replaces the recent emotes list`() {
-        val emotes = listOf(
-            Emote(name = "Kappa", urls = EmoteUrls("https://example.com/kappa.png")),
-        )
+        val emotes =
+            listOf(
+                Emote(name = "Kappa", urls = EmoteUrls("https://example.com/kappa.png")),
+            )
         val action = ChatViewModel.Action.ChangeRecentEmotes(recentEmotes = emotes)
 
         val result = reducer.reduce(action, testChattingState)
@@ -460,17 +487,18 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `UpdatePoll sets the poll in ongoing events`() {
-        val poll = Poll(
-            pollId = "poll-1",
-            status = Poll.Status.Active,
-            title = "Test poll",
-            startedAt = Instant.fromEpochMilliseconds(1000),
-            choices = emptyList(),
-            duration = 5.minutes,
-            remainingDuration = 3.minutes,
-            totalVoters = 0,
-            votes = Poll.Votes(total = 0, bits = 0, channelPoints = 0, base = 0),
-        )
+        val poll =
+            Poll(
+                pollId = "poll-1",
+                status = Poll.Status.Active,
+                title = "Test poll",
+                startedAt = Instant.fromEpochMilliseconds(1000),
+                choices = emptyList(),
+                duration = 5.minutes,
+                remainingDuration = 3.minutes,
+                totalVoters = 0,
+                votes = Poll.Votes(total = 0, bits = 0, channelPoints = 0, base = 0),
+            )
         val action = ChatViewModel.Action.UpdatePoll(poll = poll)
 
         val result = reducer.reduce(action, testChattingState)
@@ -485,14 +513,15 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `UpdatePrediction sets the prediction in ongoing events`() {
-        val prediction = Prediction(
-            id = "pred-1",
-            title = "Test prediction",
-            status = Prediction.Status.Active,
-            createdAt = Instant.fromEpochMilliseconds(1000),
-            outcomes = emptyList(),
-            predictionWindow = 5.minutes,
-        )
+        val prediction =
+            Prediction(
+                id = "pred-1",
+                title = "Test prediction",
+                status = Prediction.Status.Active,
+                createdAt = Instant.fromEpochMilliseconds(1000),
+                outcomes = emptyList(),
+                predictionWindow = 5.minutes,
+            )
         val action = ChatViewModel.Action.UpdatePrediction(prediction = prediction)
 
         val result = reducer.reduce(action, testChattingState)
@@ -507,14 +536,15 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `UpdateStreamMetadata updates the stream title`() {
-        val stream = Stream(
-            id = "stream-1",
-            userId = "user-123",
-            category = null,
-            title = "Old title",
-            viewerCount = 100,
-            startedAt = Instant.fromEpochMilliseconds(5000),
-        )
+        val stream =
+            Stream(
+                id = "stream-1",
+                userId = "user-123",
+                category = null,
+                title = "Old title",
+                viewerCount = 100,
+                startedAt = Instant.fromEpochMilliseconds(5000),
+            )
         val state = testChattingState.copy(stream = stream)
         val action = ChatViewModel.Action.UpdateStreamMetadata(streamTitle = "New title")
 
@@ -527,14 +557,15 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `UpdateStreamMetadata updates the viewer count`() {
-        val stream = Stream(
-            id = "stream-1",
-            userId = "user-123",
-            category = null,
-            title = "Title",
-            viewerCount = 100,
-            startedAt = Instant.fromEpochMilliseconds(5000),
-        )
+        val stream =
+            Stream(
+                id = "stream-1",
+                userId = "user-123",
+                category = null,
+                title = "Title",
+                viewerCount = 100,
+                startedAt = Instant.fromEpochMilliseconds(5000),
+            )
         val state = testChattingState.copy(stream = stream)
         val action = ChatViewModel.Action.UpdateStreamMetadata(viewerCount = 500)
 
@@ -547,14 +578,15 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `UpdateStreamMetadata updates the category`() {
-        val stream = Stream(
-            id = "stream-1",
-            userId = "user-123",
-            category = null,
-            title = "Title",
-            viewerCount = 100,
-            startedAt = Instant.fromEpochMilliseconds(5000),
-        )
+        val stream =
+            Stream(
+                id = "stream-1",
+                userId = "user-123",
+                category = null,
+                title = "Title",
+                viewerCount = 100,
+                startedAt = Instant.fromEpochMilliseconds(5000),
+            )
         val state = testChattingState.copy(stream = stream)
         val newCategory = StreamCategory(id = "cat-1", name = "Gaming")
         val action = ChatViewModel.Action.UpdateStreamMetadata(streamCategory = newCategory)
@@ -581,14 +613,15 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `AddRichEmbed adds embed to the map keyed by messageId`() {
-        val embed = ChatListItem.RichEmbed(
-            messageId = "msg-1",
-            title = "Embed title",
-            requestUrl = "https://example.com",
-            thumbnailUrl = "https://example.com/thumb.png",
-            authorName = "Author",
-            channelName = "Channel",
-        )
+        val embed =
+            ChatListItem.RichEmbed(
+                messageId = "msg-1",
+                title = "Embed title",
+                requestUrl = "https://example.com",
+                thumbnailUrl = "https://example.com/thumb.png",
+                authorName = "Author",
+                channelName = "Channel",
+            )
         val action = ChatViewModel.Action.AddRichEmbed(richEmbed = embed)
 
         val result = reducer.reduce(action, testChattingState)
@@ -604,15 +637,17 @@ internal class ChatStateReducerTest {
     @Test
     fun `UpdateChatterPronouns merges pronouns into existing map`() {
         val chatter = Chatter(id = "c1", login = "c1", displayName = "C1")
-        val pronoun = fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun(
-            id = "they",
-            nominative = "they",
-            objective = "them",
-            isSingular = true,
-        )
-        val action = ChatViewModel.Action.UpdateChatterPronouns(
-            pronouns = mapOf(chatter to pronoun),
-        )
+        val pronoun =
+            fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun(
+                id = "they",
+                nominative = "they",
+                objective = "them",
+                isSingular = true,
+            )
+        val action =
+            ChatViewModel.Action.UpdateChatterPronouns(
+                pronouns = mapOf(chatter to pronoun),
+            )
 
         val result = reducer.reduce(action, testChattingState)
 
@@ -637,20 +672,23 @@ internal class ChatStateReducerTest {
     @Test
     fun `UpdatePinnedMessage with matching message pins it`() {
         val msg = createMessage(messageId = "pinned-msg-1")
-        val state = testChattingState.copy(
-            chatMessages = persistentListOf(msg),
-        )
-        val pinnedMessage = PinnedMessage(
-            pinId = "pin-1",
-            pinnedBy = PinnedMessage.User(userId = "mod-1", displayName = "Mod"),
-            message = PinnedMessage.Message(
-                messageId = "pinned-msg-1",
-                sender = PinnedMessage.User(userId = "chatter-1", displayName = "Chatter1"),
-                content = PinnedMessage.Message.Content(text = "hello"),
-                startsAt = Instant.fromEpochMilliseconds(1000),
-                endsAt = Instant.fromEpochMilliseconds(9000),
-            ),
-        )
+        val state =
+            testChattingState.copy(
+                chatMessages = persistentListOf(msg),
+            )
+        val pinnedMessage =
+            PinnedMessage(
+                pinId = "pin-1",
+                pinnedBy = PinnedMessage.User(userId = "mod-1", displayName = "Mod"),
+                message =
+                    PinnedMessage.Message(
+                        messageId = "pinned-msg-1",
+                        sender = PinnedMessage.User(userId = "chatter-1", displayName = "Chatter1"),
+                        content = PinnedMessage.Message.Content(text = "hello"),
+                        startsAt = Instant.fromEpochMilliseconds(1000),
+                        endsAt = Instant.fromEpochMilliseconds(9000),
+                    ),
+            )
         val action = ChatViewModel.Action.UpdatePinnedMessage(pinnedMessage = pinnedMessage)
 
         val result = reducer.reduce(action, state)
@@ -665,17 +703,19 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `UpdatePinnedMessage with no matching message clears the pinned message`() {
-        val pinnedMessage = PinnedMessage(
-            pinId = "pin-1",
-            pinnedBy = PinnedMessage.User(userId = "mod-1", displayName = "Mod"),
-            message = PinnedMessage.Message(
-                messageId = "nonexistent-msg",
-                sender = PinnedMessage.User(userId = "chatter-1", displayName = "Chatter1"),
-                content = PinnedMessage.Message.Content(text = "hello"),
-                startsAt = Instant.fromEpochMilliseconds(1000),
-                endsAt = Instant.fromEpochMilliseconds(9000),
-            ),
-        )
+        val pinnedMessage =
+            PinnedMessage(
+                pinId = "pin-1",
+                pinnedBy = PinnedMessage.User(userId = "mod-1", displayName = "Mod"),
+                message =
+                    PinnedMessage.Message(
+                        messageId = "nonexistent-msg",
+                        sender = PinnedMessage.User(userId = "chatter-1", displayName = "Chatter1"),
+                        content = PinnedMessage.Message.Content(text = "hello"),
+                        startsAt = Instant.fromEpochMilliseconds(1000),
+                        endsAt = Instant.fromEpochMilliseconds(9000),
+                    ),
+            )
         val action = ChatViewModel.Action.UpdatePinnedMessage(pinnedMessage = pinnedMessage)
 
         val result = reducer.reduce(action, testChattingState)
@@ -690,13 +730,14 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `UpdateRaidAnnouncement sets the outgoing raid`() {
-        val raid = Raid.Preparing(
-            targetId = "target-1",
-            targetLogin = "target",
-            targetDisplayName = "Target",
-            targetProfileImageUrl = null,
-            viewerCount = 50,
-        )
+        val raid =
+            Raid.Preparing(
+                targetId = "target-1",
+                targetLogin = "target",
+                targetDisplayName = "Target",
+                targetProfileImageUrl = null,
+                viewerCount = 50,
+            )
         val action = ChatViewModel.Action.UpdateRaidAnnouncement(raid = raid)
 
         val result = reducer.reduce(action, testChattingState)
@@ -707,17 +748,20 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `UpdateRaidAnnouncement with null clears the outgoing raid`() {
-        val state = testChattingState.copy(
-            ongoingEvents = OngoingEvents(
-                outgoingRaid = Raid.Preparing(
-                    targetId = "t",
-                    targetLogin = "t",
-                    targetDisplayName = "T",
-                    targetProfileImageUrl = null,
-                    viewerCount = 10,
-                ),
-            ),
-        )
+        val state =
+            testChattingState.copy(
+                ongoingEvents =
+                    OngoingEvents(
+                        outgoingRaid =
+                            Raid.Preparing(
+                                targetId = "t",
+                                targetLogin = "t",
+                                targetDisplayName = "T",
+                                targetProfileImageUrl = null,
+                                viewerCount = 10,
+                            ),
+                    ),
+            )
         val action = ChatViewModel.Action.UpdateRaidAnnouncement(raid = null)
 
         val result = reducer.reduce(action, state)
@@ -782,11 +826,12 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `ClearAfterSubmit clears message and stores last sent message`() {
-        val inputState = ChatViewModel.InputState(
-            message = "hello world",
-            selectionRange = 0..11,
-            replyingTo = createMessage(messageId = "reply-to"),
-        )
+        val inputState =
+            ChatViewModel.InputState(
+                message = "hello world",
+                selectionRange = 0..11,
+                replyingTo = createMessage(messageId = "reply-to"),
+            )
         val action = ChatViewModel.InputAction.ClearAfterSubmit(sentMessage = "hello world")
 
         val result = reducer.reduce(action, inputState)
@@ -804,10 +849,11 @@ internal class ChatStateReducerTest {
     @Test
     fun `ChangeMessageInput updates message and selection range`() {
         val inputState = ChatViewModel.InputState()
-        val action = ChatViewModel.InputAction.ChangeMessageInput(
-            message = "new text",
-            selectionRange = 4..4,
-        )
+        val action =
+            ChatViewModel.InputAction.ChangeMessageInput(
+                message = "new text",
+                selectionRange = 4..4,
+            )
 
         val result = reducer.reduce(action, inputState)
 
@@ -821,10 +867,11 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `AppendEmote appends emote name to empty input`() {
-        val inputState = ChatViewModel.InputState(
-            message = "",
-            selectionRange = 0..0,
-        )
+        val inputState =
+            ChatViewModel.InputState(
+                message = "",
+                selectionRange = 0..0,
+            )
         val emote = Emote(name = "Kappa", urls = EmoteUrls("https://example.com/kappa.png"))
         val action = ChatViewModel.InputAction.AppendEmote(emote = emote, autocomplete = false)
 
@@ -836,10 +883,11 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `AppendEmote appends emote name to existing input`() {
-        val inputState = ChatViewModel.InputState(
-            message = "hello ",
-            selectionRange = 6..6,
-        )
+        val inputState =
+            ChatViewModel.InputState(
+                message = "hello ",
+                selectionRange = 6..6,
+            )
         val emote = Emote(name = "PogChamp", urls = EmoteUrls("https://example.com/pog.png"))
         val action = ChatViewModel.InputAction.AppendEmote(emote = emote, autocomplete = false)
 
@@ -851,10 +899,11 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `AppendEmote with autocomplete replaces the last word`() {
-        val inputState = ChatViewModel.InputState(
-            message = "hello Kap",
-            selectionRange = 9..9,
-        )
+        val inputState =
+            ChatViewModel.InputState(
+                message = "hello Kap",
+                selectionRange = 9..9,
+            )
         val emote = Emote(name = "Kappa", urls = EmoteUrls("https://example.com/kappa.png"))
         val action = ChatViewModel.InputAction.AppendEmote(emote = emote, autocomplete = true)
 
@@ -870,12 +919,14 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `AppendChatter appends at-display-name to input`() {
-        val inputState = ChatViewModel.InputState(
-            message = "",
-            selectionRange = 0..0,
-        )
+        val inputState =
+            ChatViewModel.InputState(
+                message = "",
+                selectionRange = 0..0,
+            )
         val chatter = Chatter(id = "c1", login = "testchatter", displayName = "TestChatter")
-        val action = ChatViewModel.InputAction.AppendChatter(chatter = chatter, autocomplete = false)
+        val action =
+            ChatViewModel.InputAction.AppendChatter(chatter = chatter, autocomplete = false)
 
         val result = reducer.reduce(action, inputState)
 
@@ -885,10 +936,11 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `AppendChatter with autocomplete replaces the last word`() {
-        val inputState = ChatViewModel.InputState(
-            message = "hello @Test",
-            selectionRange = 11..11,
-        )
+        val inputState =
+            ChatViewModel.InputState(
+                message = "hello @Test",
+                selectionRange = 11..11,
+            )
         val chatter = Chatter(id = "c1", login = "testchatter", displayName = "TestChatter")
         val action = ChatViewModel.InputAction.AppendChatter(chatter = chatter, autocomplete = true)
 
@@ -915,9 +967,10 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `ReplyToMessage with null clears the reply`() {
-        val inputState = ChatViewModel.InputState(
-            replyingTo = createMessage(messageId = "msg-1"),
-        )
+        val inputState =
+            ChatViewModel.InputState(
+                replyingTo = createMessage(messageId = "msg-1"),
+            )
         val action = ChatViewModel.InputAction.ReplyToMessage(chatListItem = null)
 
         val result = reducer.reduce(action, inputState)
@@ -932,11 +985,12 @@ internal class ChatStateReducerTest {
     @Test
     fun `UpdateAutoCompleteItems sets the autocomplete items`() {
         val inputState = ChatViewModel.InputState()
-        val items = persistentListOf<AutoCompleteItem>(
-            AutoCompleteItem.Emote(
-                emote = Emote(name = "Kappa", urls = EmoteUrls("https://example.com/kappa.png")),
-            ),
-        )
+        val items =
+            persistentListOf<AutoCompleteItem>(
+                AutoCompleteItem.Emote(
+                    emote = Emote(name = "Kappa", urls = EmoteUrls("https://example.com/kappa.png")),
+                ),
+            )
         val action = ChatViewModel.InputAction.UpdateAutoCompleteItems(items = items)
 
         val result = reducer.reduce(action, inputState)
@@ -950,10 +1004,11 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `ReplaceInputWithLastSentMessage replaces empty input with last sent message`() {
-        val inputState = ChatViewModel.InputState(
-            message = "",
-            lastSentMessage = "previous message",
-        )
+        val inputState =
+            ChatViewModel.InputState(
+                message = "",
+                lastSentMessage = "previous message",
+            )
         val action = ChatViewModel.InputAction.ReplaceInputWithLastSentMessage
 
         val result = reducer.reduce(action, inputState)
@@ -965,11 +1020,12 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `ReplaceInputWithLastSentMessage with non-empty input is a no-op`() {
-        val inputState = ChatViewModel.InputState(
-            message = "some text",
-            lastSentMessage = "previous message",
-            selectionRange = 9..9,
-        )
+        val inputState =
+            ChatViewModel.InputState(
+                message = "some text",
+                lastSentMessage = "previous message",
+                selectionRange = 9..9,
+            )
         val action = ChatViewModel.InputAction.ReplaceInputWithLastSentMessage
 
         val result = reducer.reduce(action, inputState)
@@ -980,10 +1036,11 @@ internal class ChatStateReducerTest {
 
     @Test
     fun `ReplaceInputWithLastSentMessage with no last message is a no-op`() {
-        val inputState = ChatViewModel.InputState(
-            message = "",
-            lastSentMessage = null,
-        )
+        val inputState =
+            ChatViewModel.InputState(
+                message = "",
+                lastSentMessage = null,
+            )
         val action = ChatViewModel.InputAction.ReplaceInputWithLastSentMessage
 
         val result = reducer.reduce(action, inputState)

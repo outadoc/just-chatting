@@ -74,7 +74,9 @@ Always run `spotlessApply` before committing. CI enforces formatting on PRs.
 ## Architecture
 
 This project is a Kotlin Multiplatform app targeting Android, iOS, and JVM desktop. 
-The common code (both logic and UI) is included in the `shared` module.
+The common business logic is included in the `shared` module, and common UI code in `shared-ui`.
+
+Then, by platform:
 
 - `app-android` contains the Android-specific code;
 - `app-desktop` contains the JVM desktop-specific code;

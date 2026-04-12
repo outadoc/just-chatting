@@ -6,13 +6,13 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
-public interface ChatRepository {
-    public fun getChatEventFlow(
+internal interface ChatRepository {
+    fun getChatEventFlow(
         user: User,
         appUser: AppUser.LoggedIn,
     ): Flow<ChatEvent>
 
-    public fun getConnectionStatusFlow(
+    fun getConnectionStatusFlow(
         user: User,
         appUser: AppUser.LoggedIn,
     ): Flow<ConnectionStatus>

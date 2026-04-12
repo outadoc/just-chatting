@@ -92,7 +92,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import kotlin.time.Clock
 
-public val sharedModule: Module
+internal val sharedModule: Module
     get() =
         module {
             single<Clock> { Clock.System }

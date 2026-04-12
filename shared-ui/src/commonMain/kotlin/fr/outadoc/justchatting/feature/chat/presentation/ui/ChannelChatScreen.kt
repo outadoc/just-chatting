@@ -81,10 +81,10 @@ internal fun ChannelChatScreen(
                 viewModel.onMessageInputChanged(
                     message = textFieldValue.text,
                     selectionRange =
-                    IntRange(
-                        start = textFieldValue.selection.start,
-                        endInclusive = textFieldValue.selection.end,
-                    ),
+                        IntRange(
+                            start = textFieldValue.selection.start,
+                            endInclusive = textFieldValue.selection.end,
+                        ),
                 )
             },
             onToggleEmotePicker = {
@@ -102,7 +102,6 @@ internal fun ChannelChatScreen(
             onOpenBubbleClicked = {
                 if (user != null) {
                     notifier.notify(
-                        context = context,
                         user = user,
                     )
                 }

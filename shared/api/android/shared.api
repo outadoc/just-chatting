@@ -560,10 +560,6 @@ public final class fr/outadoc/justchatting/di/SharedKoinKt {
 	public static synthetic fun startSharedKoin$default (Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/koin/core/KoinApplication;
 }
 
-public final class fr/outadoc/justchatting/di/SharedModuleKt {
-	public static final fun getSharedModule ()Lorg/koin/core/module/Module;
-}
-
 public final class fr/outadoc/justchatting/feature/auth/domain/model/OAuthAppCredentials {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
@@ -576,11 +572,6 @@ public final class fr/outadoc/justchatting/feature/auth/domain/model/OAuthAppCre
 	public final fun getRedirectUri ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-}
-
-public abstract interface class fr/outadoc/justchatting/feature/chat/domain/ChatRepository {
-	public abstract fun getChatEventFlow (Lfr/outadoc/justchatting/feature/shared/domain/model/User;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;)Lkotlinx/coroutines/flow/Flow;
-	public abstract fun getConnectionStatusFlow (Lfr/outadoc/justchatting/feature/shared/domain/model/User;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;)Lkotlinx/coroutines/flow/Flow;
 }
 
 public final class fr/outadoc/justchatting/feature/chat/domain/model/Badge {
@@ -2615,12 +2606,6 @@ public final class fr/outadoc/justchatting/feature/preferences/domain/model/AppU
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class fr/outadoc/justchatting/feature/preferences/presentation/DefaultReadExternalDependenciesList : fr/outadoc/justchatting/feature/preferences/presentation/ReadExternalDependenciesList {
-	public static final field $stable I
-	public fun <init> ()V
-	public fun invoke (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
 public final class fr/outadoc/justchatting/feature/preferences/presentation/Dependency {
 	public static final field $stable I
 	public static final field Companion Lfr/outadoc/justchatting/feature/preferences/presentation/Dependency$Companion;
@@ -2657,24 +2642,6 @@ public final synthetic class fr/outadoc/justchatting/feature/preferences/present
 
 public final class fr/outadoc/justchatting/feature/preferences/presentation/Dependency$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
-}
-
-public abstract interface class fr/outadoc/justchatting/feature/preferences/presentation/LogRepository {
-	public abstract fun dumpLogs (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun isSupported ()Z
-}
-
-public final class fr/outadoc/justchatting/feature/preferences/presentation/NoopLogRepository : fr/outadoc/justchatting/feature/preferences/presentation/LogRepository {
-	public static final field $stable I
-	public fun <init> ()V
-	public fun dumpLogs (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun isSupported ()Z
-}
-
-public final class fr/outadoc/justchatting/feature/preferences/presentation/NoopReadExternalDependenciesList : fr/outadoc/justchatting/feature/preferences/presentation/ReadExternalDependenciesList {
-	public static final field $stable I
-	public fun <init> ()V
-	public fun invoke (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract interface class fr/outadoc/justchatting/feature/preferences/presentation/ReadExternalDependenciesList {
@@ -3737,12 +3704,6 @@ public final class fr/outadoc/justchatting/utils/core/JsonExtKt {
 
 public final class fr/outadoc/justchatting/utils/core/ListExtKt {
 	public static final fun flatListOf (Ljava/lang/Object;[Ljava/util/List;)Ljava/util/List;
-}
-
-public final class fr/outadoc/justchatting/utils/core/MapExtKt {
-	public static final fun filterKeysNotNull (Ljava/util/Map;)Ljava/util/Map;
-	public static final fun filterValuesNotNull (Ljava/util/Map;)Ljava/util/Map;
-	public static final fun filterValuesNotNull (Lkotlinx/collections/immutable/ImmutableMap;)Lkotlinx/collections/immutable/ImmutableMap;
 }
 
 public final class fr/outadoc/justchatting/utils/core/NumberOddnessExtKt {

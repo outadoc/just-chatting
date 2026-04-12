@@ -29,6 +29,7 @@ import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.ui.NoContent
 import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
+import fr.outadoc.justchatting.utils.datetime.JCLocalDate
 import fr.outadoc.justchatting.utils.presentation.formatDate
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.datetime.LocalDate
@@ -38,7 +39,7 @@ import kotlinx.datetime.LocalDate
 internal fun FutureTimelineContent(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
-    future: ImmutableMap<LocalDate, List<ChannelScheduleSegment>>,
+    future: ImmutableMap<JCLocalDate, List<ChannelScheduleSegment>>,
     listState: LazyListState,
 ) {
     var showUserDetails: User? by remember { mutableStateOf(null) }
@@ -67,11 +68,11 @@ internal fun FutureTimelineContent(
         ) {
             future.keys.forEach { date ->
                 stickyHeader(
-                    key = "header-${date.toEpochDays()}",
+                    key = "header-${date.localDate.toEpochDays()}",
                     contentType = "header",
                 ) {
                     SectionHeader(
-                        title = { Text(date.formatDate(isFuture = true)) },
+                        title = { Text(date.localDate.formatDate(isFuture = true)) },
                     )
                 }
 

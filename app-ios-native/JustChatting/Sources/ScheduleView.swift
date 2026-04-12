@@ -22,13 +22,8 @@ struct ScheduleView: View {
                             systemImage: "calendar.badge.exclamationmark"
                         )
                     } else {
-                        let sortedDates = state.future.keys.sorted { a, b in
-                            if a.year != b.year { return a.year < b.year }
-                            if a.monthNumber != b.monthNumber { return a.monthNumber < b.monthNumber }
-                            return a.dayOfMonth < b.dayOfMonth
-                        }
                         List {
-                            ForEach(sortedDates, id: \.self) { localDate in
+                            ForEach(Array(state.future.keys), id: \.self) { localDate in
                                 Section(header: Text(sectionTitle(for: localDate))) {
                                     ForEach(state.future[localDate] ?? [], id: \.id) { segment in
                                         ScheduleSegmentRowView(segment: segment)
@@ -50,10 +45,10 @@ struct ScheduleView: View {
         }
     }
 
-    private func sectionTitle(for localDate: LocalDate) -> String {
+    private func sectionTitle(for localDate: JCLocalDate) -> String {
         let components = localDate.toNSDateComponents() as DateComponents
         guard let date = Calendar.current.date(from: components) else {
-            return "\(localDate.year)-\(localDate.monthNumber)-\(localDate.dayOfMonth)"
+            return "\(components.year)-\(components.month)-\(components.day)"
         }
         return date.formatted(.dateTime.weekday(.wide).month().day())
     }

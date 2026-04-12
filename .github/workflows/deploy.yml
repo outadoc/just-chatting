@@ -9,7 +9,7 @@ jobs:
   deploy-ios:
     name: Deploy iOS app
     environment: deploy
-    runs-on: macos-15
+    runs-on: macos-26
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
@@ -140,7 +140,7 @@ jobs:
 
   deploy-desktop-macos:
     name: Deploy macOS
-    runs-on: macos-15
+    runs-on: macos-26
     environment: deploy
 
     steps:

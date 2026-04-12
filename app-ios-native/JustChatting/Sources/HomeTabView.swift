@@ -13,7 +13,7 @@ struct HomeTabView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             Tab("Live", systemImage: "house", value: 0) {
-                Text("Live") // placeholder
+                LiveChannelsView()
             }
             Tab("Schedule", systemImage: "calendar.badge.clock", value: 1) {
                 Text("Schedule") // placeholder

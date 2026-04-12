@@ -7,7 +7,7 @@
 //
 
 import AuthenticationServices
-import JCShared
+import JCSharedUI
 import SwiftUI
 
 struct MainView: View {

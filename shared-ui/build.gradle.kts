@@ -37,8 +37,9 @@ kotlin {
     ).forEach { iosTarget ->
         iosTarget.binaries {
             framework {
-                baseName = "JCShared"
+                baseName = "JCSharedUI"
                 isStatic = true
+                export(project(":shared"))
             }
         }
     }

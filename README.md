@@ -56,16 +56,16 @@ Shared modules contain ABI files to precisely control what's exposed publicly to
 They can be found in the modules' `abi/` directory.
 
 ```bash
-./gradlew :shared:updateKotlinAbi        # Generate ABI files
-./gradlew :shared:checkKotlinAbi         # Check ABI compatibility
+./gradlew updateKotlinAbi        # Generate ABI files
+./gradlew checkKotlinAbi         # Check ABI compatibility
 ̀```
 
 ## Testing
 
 ```bash
-./gradlew :shared:testDebugUnitTest         # Run shared module unit tests (Android)
-./gradlew :konsist-checks:test              # Run architecture validation tests
-./gradlew :shared:verifySqlDelightMigration # Validate SQLDelight migrations
+./gradlew :shared:testDebugUnitTest                  # Run shared module unit tests (Android)
+./gradlew :konsist-checks:test                       # Run architecture validation tests
+./gradlew :shared-internal:verifySqlDelightMigration # Validate SQLDelight migrations
 ```
 
 Unit tests are located in `shared/src/androidUnitTest/kotlin/`.

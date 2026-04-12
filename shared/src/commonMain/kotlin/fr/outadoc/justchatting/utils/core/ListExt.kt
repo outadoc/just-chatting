@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.utils.core
 
-public fun <T> flatListOf(
+internal fun <T> flatListOf(
     head: T,
     vararg lists: List<T>,
 ): List<T> {

@@ -9,7 +9,7 @@ import io.ktor.websocket.WebSocketExtensionHeader
 import io.ktor.websocket.readText
 
 internal class FrameLogger : WebSocketExtension<FrameLogger.Config> {
-    public class Config
+    class Config
 
     override val factory: WebSocketExtensionFactory<Config, out WebSocketExtension<Config>>
         get() = Companion
@@ -50,7 +50,7 @@ internal class FrameLogger : WebSocketExtension<FrameLogger.Config> {
 
     override fun serverNegotiation(requestedProtocols: List<WebSocketExtensionHeader>): List<WebSocketExtensionHeader> = emptyList()
 
-    public companion object : WebSocketExtensionFactory<Config, FrameLogger> {
+    companion object : WebSocketExtensionFactory<Config, FrameLogger> {
         override val key: AttributeKey<FrameLogger> = AttributeKey("frame-logger")
 
         override val rsv1: Boolean = false

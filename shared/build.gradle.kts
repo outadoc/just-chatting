@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.licenseReport)
-    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -38,7 +37,14 @@ kotlin {
     listOf(
         iosArm64(),
         iosSimulatorArm64(),
-    )
+    ).forEach { iosTarget ->
+        iosTarget.binaries {
+            framework {
+                baseName = "JCShared"
+                isStatic = true
+            }
+        }
+    }
 
     jvm("desktop") {
         compilerOptions {
@@ -55,6 +61,8 @@ kotlin {
 
         commonMain {
             dependencies {
+                implementation(project(":shared-internal"))
+
                 api(libs.kotlinx.coroutines)
                 api(libs.kotlinx.datetime)
                 api(libs.kotlinx.serialization.json)
@@ -63,8 +71,6 @@ kotlin {
                 implementation(libs.androidx.datastore.preferences)
                 implementation(libs.androidx.lifecycle.viewmodel)
                 implementation(libs.androidx.paging.common)
-                implementation(libs.coil.core)
-                implementation(libs.coil.ktor)
                 implementation(libs.compose.components.resources)
                 implementation(libs.compose.navigation3.ui)
                 implementation(libs.compose.runtime)
@@ -92,7 +98,10 @@ kotlin {
                 implementation(libs.androidx.appcompat)
                 implementation(libs.androidx.browser)
                 implementation(libs.androidx.emoji2.core)
+                implementation(libs.androidx.lifecycle.service)
                 implementation(libs.androidx.paging.runtime.android)
+                implementation(libs.coil.core)
+                implementation(libs.coil.ktor)
                 implementation(libs.connectivity.android)
                 implementation(libs.koin.android)
                 implementation(libs.ktor.client.okhttp)
@@ -147,11 +156,6 @@ kotlin {
     }
 }
 
-compose.resources {
-    packageOfResClass = "fr.outadoc.justchatting.shared"
-    publicResClass = true
-}
-
 android {
     namespace = "fr.outadoc.justchatting.shared"
     compileSdk = 36
@@ -170,21 +174,13 @@ android {
 }
 
 licenseReport {
-    outputDir = file("src/commonMain/composeResources/files").path
+    outputDir = project(":shared-internal").file("src/commonMain/composeResources/files").path
     configurations = arrayOf("releaseRuntimeClasspath")
     renderers = arrayOf(JsonReportRenderer("dependencies.json"))
 }
 
 tasks.named("generateLicenseReport") {
     outputs.upToDateWhen { false }
-}
-
-sqldelight {
-    databases {
-        create("AppDatabase") {
-            packageName.set("fr.outadoc.justchatting.data.db")
-        }
-    }
 }
 
 dependencies {

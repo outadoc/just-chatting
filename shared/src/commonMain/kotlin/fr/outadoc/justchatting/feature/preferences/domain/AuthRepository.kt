@@ -14,12 +14,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 
-public class AuthRepository internal constructor(
+internal class AuthRepository internal constructor(
     private val preferenceRepository: PreferenceRepository,
     private val authApi: AuthApi,
     private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
-    public val currentUser: Flow<AppUser> =
+    val currentUser: Flow<AppUser> =
         preferenceRepository
             .currentPreferences
             .map { prefs -> prefs.apiToken }
@@ -63,13 +63,13 @@ public class AuthRepository internal constructor(
                 logInfo<AuthRepository> { "User is now $user" }
             }
 
-    public suspend fun saveToken(token: String) {
+    suspend fun saveToken(token: String) {
         preferenceRepository.updatePreferences { prefs ->
             prefs.copy(apiToken = token)
         }
     }
 
-    public suspend fun logout() {
+    suspend fun logout() {
         withContext(DispatchersProvider.io) {
             val token = preferenceRepository.currentPreferences.first().apiToken
 
@@ -94,7 +94,7 @@ public class AuthRepository internal constructor(
         }
     }
 
-    public fun getExternalAuthorizeUrl(): Uri = authApi.getExternalAuthorizeUrl(
+    fun getExternalAuthorizeUrl(): Uri = authApi.getExternalAuthorizeUrl(
         oAuthAppCredentials = oAuthAppCredentials,
         scopes = REQUIRED_SCOPES,
     )

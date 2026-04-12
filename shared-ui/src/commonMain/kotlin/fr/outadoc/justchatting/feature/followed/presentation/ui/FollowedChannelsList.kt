@@ -37,9 +37,9 @@ import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
 import fr.outadoc.justchatting.feature.shared.presentation.ui.NoContent
 import fr.outadoc.justchatting.feature.shared.presentation.ui.UserItemCard
 import fr.outadoc.justchatting.feature.shared.presentation.ui.UserItemCardPlaceholder
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.channels
-import fr.outadoc.justchatting.shared.timeline_refresh_action_cd
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.channels
+import fr.outadoc.justchatting.shared.internal.timeline_refresh_action_cd
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.plus
 import org.jetbrains.compose.resources.stringResource

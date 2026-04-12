@@ -7,8 +7,8 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.RecentEmote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.shared.domain.model.MessageNotSentException
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.chat_send_msg_error
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.chat_send_msg_error
 import fr.outadoc.justchatting.utils.resources.desc
 import kotlinx.collections.immutable.ImmutableMap
 import kotlin.time.Clock
@@ -18,7 +18,7 @@ internal class SubmitMessageUseCase(
     private val twitchRepository: TwitchRepository,
     private val insertRecentEmotes: InsertRecentEmotesUseCase,
 ) {
-    public suspend operator fun invoke(
+    suspend operator fun invoke(
         channelUserId: String,
         message: String,
         inReplyToMessageId: String?,

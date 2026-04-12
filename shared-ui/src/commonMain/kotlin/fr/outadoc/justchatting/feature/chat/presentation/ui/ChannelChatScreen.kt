@@ -12,7 +12,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.platform.LocalDensity
-import coil3.compose.LocalPlatformContext
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
@@ -42,7 +41,6 @@ internal fun ChannelChatScreen(
 
     val prefs by preferencesRepository.currentPreferences.collectAsState(initial = AppPreferences())
 
-    val context = LocalPlatformContext.current
     val density = LocalDensity.current.density
 
     val user = (state as? ChatViewModel.State.Chatting)?.user
@@ -63,10 +61,7 @@ internal fun ChannelChatScreen(
     OnLifecycleEvent(
         onPause = {
             if (user != null && canOpenInBubble) {
-                notifier.notify(
-                    context = context,
-                    user = user,
-                )
+                notifier.notify(user = user)
             }
         },
     )
@@ -107,7 +102,6 @@ internal fun ChannelChatScreen(
             onOpenBubbleClicked = {
                 if (user != null) {
                     notifier.notify(
-                        context = context,
                         user = user,
                     )
                 }

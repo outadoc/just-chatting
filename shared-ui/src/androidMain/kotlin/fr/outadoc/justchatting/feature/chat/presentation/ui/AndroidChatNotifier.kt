@@ -16,7 +16,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageIcon
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.shared.domain.model.User
-import fr.outadoc.justchatting.shared.R
+import fr.outadoc.justchatting.shared.ui.R
 import fr.outadoc.justchatting.utils.core.toPendingActivityIntent
 import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
 import fr.outadoc.justchatting.utils.logging.logError
@@ -55,10 +55,7 @@ internal class AndroidChatNotifier(
             }
         }
 
-    override fun notify(
-        context: Context,
-        user: User,
-    ) {
+    override fun notify(user: User) {
         if (areNotificationsEnabled) {
             createGenericBubbleChannelIfNeeded(context) ?: return
 

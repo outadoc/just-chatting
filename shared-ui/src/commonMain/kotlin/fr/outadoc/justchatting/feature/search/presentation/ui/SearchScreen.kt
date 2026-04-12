@@ -27,8 +27,8 @@ import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.Screen
 import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
 import fr.outadoc.justchatting.feature.shared.presentation.ui.UserItemCard
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.search_recentChannels_remove_action
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.search_recentChannels_remove_action
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.plus
 import kotlinx.collections.immutable.ImmutableList

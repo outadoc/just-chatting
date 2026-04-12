@@ -1,0 +1,8 @@
+app_identifier("fr.outadoc.justchatting") # The bundle identifier of your app
+apple_id("apple-dev@candellier.me") # Your Apple Developer Portal username
+
+itc_team_id("127370281") # App Store Connect Team ID
+team_id("C38RDC5QNT") # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile

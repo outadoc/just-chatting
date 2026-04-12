@@ -26,10 +26,10 @@ import java.io.File
 import java.io.FileNotFoundException
 
 public class UserProfileImageContentProvider : ContentProvider() {
-    internal companion object {
+    public companion object {
         private const val PATH_ID = "id"
 
-        fun createForUser(
+        public fun createForUser(
             context: Context,
             userId: String,
         ): Uri = Uri

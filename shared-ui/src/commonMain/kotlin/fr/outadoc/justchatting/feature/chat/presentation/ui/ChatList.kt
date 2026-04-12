@@ -39,9 +39,9 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.shared.presentation.ui.SwipeActionBox
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.chat_copyToClipboard
-import fr.outadoc.justchatting.shared.chat_replyTo
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.chat_copyToClipboard
+import fr.outadoc.justchatting.shared.internal.chat_replyTo
 import fr.outadoc.justchatting.utils.core.isEven
 import fr.outadoc.justchatting.utils.core.isOdd
 import kotlinx.collections.immutable.ImmutableList

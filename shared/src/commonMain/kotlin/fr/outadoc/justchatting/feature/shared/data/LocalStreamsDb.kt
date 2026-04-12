@@ -36,6 +36,8 @@ internal class LocalStreamsDb(
         .mapToList(DispatchersProvider.io)
         .map { streams ->
             streams.map { stream ->
+                val categoryId = stream.category_id
+                val categoryName = stream.category_name
                 ChannelScheduleSegment(
                     id = stream.id,
                     user =
@@ -60,10 +62,10 @@ internal class LocalStreamsDb(
                         ?.let { Instant.fromEpochMilliseconds(it) },
                     title = stream.title,
                     category =
-                    if (stream.category_id != null && stream.category_name != null) {
+                    if (categoryId != null && categoryName != null) {
                         StreamCategory(
-                            id = stream.category_id,
-                            name = stream.category_name,
+                            id = categoryId,
+                            name = categoryName,
                         )
                     } else {
                         null
@@ -86,6 +88,8 @@ internal class LocalStreamsDb(
         .mapToList(DispatchersProvider.io)
         .map { streams ->
             streams.map { stream ->
+                val categoryId = stream.category_id
+                val categoryName = stream.category_name
                 Stream(
                     id = stream.id,
                     userId = stream.user_id,
@@ -93,10 +97,10 @@ internal class LocalStreamsDb(
                     title = stream.title,
                     viewerCount = stream.viewer_count,
                     category =
-                    if (stream.category_id != null && stream.category_name != null) {
+                    if (categoryId != null && categoryName != null) {
                         StreamCategory(
-                            id = stream.category_id,
-                            name = stream.category_name,
+                            id = categoryId,
+                            name = categoryName,
                         )
                     } else {
                         null
@@ -117,6 +121,8 @@ internal class LocalStreamsDb(
         .mapToList(DispatchersProvider.io)
         .map { streams ->
             streams.map { stream ->
+                val categoryId = stream.category_id
+                val categoryName = stream.category_name
                 ChannelScheduleSegment(
                     id = stream.id,
                     user =
@@ -141,10 +147,10 @@ internal class LocalStreamsDb(
                         ?.let { Instant.fromEpochMilliseconds(it) },
                     title = stream.title,
                     category =
-                    if (stream.category_id != null && stream.category_name != null) {
+                    if (categoryId != null && categoryName != null) {
                         StreamCategory(
-                            id = stream.category_id,
-                            name = stream.category_name,
+                            id = categoryId,
+                            name = categoryName,
                         )
                     } else {
                         null

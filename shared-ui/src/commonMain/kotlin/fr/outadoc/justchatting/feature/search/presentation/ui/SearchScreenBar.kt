@@ -28,10 +28,10 @@ import androidx.paging.LoadState
 import androidx.window.core.layout.WindowHeightSizeClass
 import app.cash.paging.compose.LazyPagingItems
 import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.all_goBack
-import fr.outadoc.justchatting.shared.search_clear_cd
-import fr.outadoc.justchatting.shared.search_hint
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.all_goBack
+import fr.outadoc.justchatting.shared.internal.search_clear_cd
+import fr.outadoc.justchatting.shared.internal.search_hint
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import org.jetbrains.compose.resources.stringResource
 

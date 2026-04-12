@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 internal class GetRecentEmotesUseCase(
     private val recentEmotesApi: RecentEmotesApi,
 ) {
-    public operator fun invoke(): Flow<List<RecentEmote>> = recentEmotesApi.getAll()
+    operator fun invoke(): Flow<List<RecentEmote>> = recentEmotesApi.getAll()
 }

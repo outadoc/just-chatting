@@ -6,11 +6,11 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import kotlinx.coroutines.flow.Flow
 
 internal interface ChatEventHandler {
-    public fun getEventFlow(
+    fun getEventFlow(
         channelId: String,
         channelLogin: String,
         appUser: AppUser.LoggedIn,
     ): Flow<ChatEvent>
 
-    public val connectionStatus: Flow<ConnectionStatus>
+    val connectionStatus: Flow<ConnectionStatus>
 }

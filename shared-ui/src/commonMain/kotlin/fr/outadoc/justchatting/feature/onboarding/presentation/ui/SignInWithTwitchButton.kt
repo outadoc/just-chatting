@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.tooling.preview.Preview
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.onboarding_login_action
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.onboarding_login_action
 import fr.outadoc.justchatting.shared.presentation.icons.TwitchIcon
 import org.jetbrains.compose.resources.stringResource
 

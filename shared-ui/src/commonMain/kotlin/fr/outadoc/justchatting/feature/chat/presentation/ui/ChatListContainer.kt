@@ -29,8 +29,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.scroll_down
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.scroll_down
 import fr.outadoc.justchatting.utils.core.filterValuesNotNull
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource

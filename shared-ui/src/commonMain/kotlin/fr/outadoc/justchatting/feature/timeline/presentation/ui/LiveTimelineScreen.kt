@@ -19,16 +19,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import coil3.PlatformContext
-import coil3.compose.LocalPlatformContext
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.shared.presentation.Screen
 import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
 import fr.outadoc.justchatting.feature.timeline.presentation.LiveTimelineViewModel
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.timeline_live
-import fr.outadoc.justchatting.shared.timeline_refresh_action_cd
-import fr.outadoc.justchatting.shared.timeline_today_action_cd
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.timeline_live
+import fr.outadoc.justchatting.shared.internal.timeline_refresh_action_cd
+import fr.outadoc.justchatting.shared.internal.timeline_today_action_cd
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -46,7 +44,6 @@ internal fun LiveTimelineScreen(
     val state by viewModel.state.collectAsState()
 
     val notifier: ChatNotifier = koinInject()
-    val context: PlatformContext = LocalPlatformContext.current
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -119,10 +116,7 @@ internal fun LiveTimelineScreen(
                     viewModel.onChannelClick(user.id)
                 },
                 onOpenInBubble = { user ->
-                    notifier.notify(
-                        context = context,
-                        user = user,
-                    )
+                    notifier.notify(user = user)
                 },
             )
         },

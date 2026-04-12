@@ -20,9 +20,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.chat_message_standardSeparator
-import fr.outadoc.justchatting.shared.chat_replyingTo
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.chat_message_standardSeparator
+import fr.outadoc.justchatting.shared.internal.chat_replyingTo
 import kotlinx.collections.immutable.ImmutableList
 import org.jetbrains.compose.resources.stringResource
 

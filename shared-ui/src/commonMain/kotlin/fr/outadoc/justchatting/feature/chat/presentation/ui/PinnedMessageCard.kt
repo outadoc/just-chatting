@@ -26,9 +26,9 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.presentation.ui.preview.ChatMessagePreviewProvider
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.poll_collapse_action
-import fr.outadoc.justchatting.shared.poll_expand_action
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.poll_collapse_action
+import fr.outadoc.justchatting.shared.internal.poll_expand_action
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap

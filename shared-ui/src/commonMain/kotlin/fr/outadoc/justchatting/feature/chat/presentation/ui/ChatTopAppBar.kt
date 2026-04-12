@@ -30,9 +30,9 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.all_goBack
-import fr.outadoc.justchatting.shared.stream_info
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.all_goBack
+import fr.outadoc.justchatting.shared.internal.stream_info
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import org.jetbrains.compose.resources.stringResource
 

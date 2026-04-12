@@ -3,11 +3,11 @@ package fr.outadoc.justchatting.utils.core
 import kotlinx.coroutines.flow.Flow
 
 internal interface NetworkStateObserver {
-    public val state: Flow<NetworkState>
+    val state: Flow<NetworkState>
 
-    public sealed class NetworkState {
-        public data object Available : NetworkState()
+    sealed class NetworkState {
+        data object Available : NetworkState()
 
-        public data object Unavailable : NetworkState()
+        data object Unavailable : NetworkState()
     }
 }

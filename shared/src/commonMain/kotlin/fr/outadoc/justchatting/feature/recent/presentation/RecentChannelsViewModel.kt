@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-public class RecentChannelsViewModel(
+public class RecentChannelsViewModel internal constructor(
     private val repository: TwitchRepository,
 ) : ViewModel() {
     public sealed class State {

@@ -19,10 +19,10 @@ import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.chat_openBubble_action
-import fr.outadoc.justchatting.shared.chat_open_action
-import fr.outadoc.justchatting.shared.watch_live
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.chat_openBubble_action
+import fr.outadoc.justchatting.shared.internal.chat_open_action
+import fr.outadoc.justchatting.shared.internal.watch_live
 import fr.outadoc.justchatting.utils.core.createChannelExternalLink
 import fr.outadoc.justchatting.utils.presentation.areBubblesSupported
 import org.jetbrains.compose.resources.stringResource

@@ -5,14 +5,14 @@ import fr.outadoc.justchatting.feature.auth.domain.model.AuthValidationResponse
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 
 internal interface AuthApi {
-    public suspend fun validateToken(token: String): Result<AuthValidationResponse>
+    suspend fun validateToken(token: String): Result<AuthValidationResponse>
 
-    public suspend fun revokeToken(
+    suspend fun revokeToken(
         clientId: String,
         token: String,
     ): Result<Unit>
 
-    public fun getExternalAuthorizeUrl(
+    fun getExternalAuthorizeUrl(
         oAuthAppCredentials: OAuthAppCredentials,
         scopes: Set<String>,
     ): Uri

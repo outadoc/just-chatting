@@ -3,7 +3,7 @@ name: Check DB migrations
 on:
   pull_request:
     paths:
-      - 'shared/src/commonMain/sqldelight/**'
+      - 'shared-internal/src/commonMain/sqldelight/**'
 
 jobs:
   verify:
@@ -30,4 +30,4 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Check SQLDelight migrations
-        run: ./gradlew shared:verifySqlDelightMigration
+        run: ./gradlew shared-internal:verifySqlDelightMigration

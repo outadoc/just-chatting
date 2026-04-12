@@ -35,10 +35,10 @@ import fr.outadoc.justchatting.feature.chat.presentation.ui.BasicUserInfo
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
 import fr.outadoc.justchatting.feature.shared.presentation.ui.SwipeActionBox
 import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.all_showDetails_cd
-import fr.outadoc.justchatting.shared.stream_info
-import fr.outadoc.justchatting.shared.timeline_openVod_action
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.all_showDetails_cd
+import fr.outadoc.justchatting.shared.internal.stream_info
+import fr.outadoc.justchatting.shared.internal.timeline_openVod_action
 import fr.outadoc.justchatting.utils.core.createVideoExternalLink
 import fr.outadoc.justchatting.utils.presentation.format
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute

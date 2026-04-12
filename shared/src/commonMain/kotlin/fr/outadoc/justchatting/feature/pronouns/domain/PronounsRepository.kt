@@ -20,7 +20,7 @@ internal class PronounsRepository(
 ) {
     private val cacheMutex = Mutex()
 
-    public suspend fun fillPronounsFor(chatters: Set<Chatter>): Map<Chatter, Pronoun?> = withContext(DispatchersProvider.io) {
+    suspend fun fillPronounsFor(chatters: Set<Chatter>): Map<Chatter, Pronoun?> = withContext(DispatchersProvider.io) {
         if (!preferenceRepository.currentPreferences.first().enablePronouns) {
             return@withContext emptyMap()
         }

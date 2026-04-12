@@ -256,7 +256,10 @@ internal class ChatStateReducerTest {
             )
         val existingCheerEmotes =
             persistentMapOf(
-                "Cheer1" to Emote(name = "Cheer1", urls = EmoteUrls("https://example.com/cheer.png")),
+                "Cheer1" to Emote(
+                    name = "Cheer1",
+                    urls = EmoteUrls("https://example.com/cheer.png"),
+                ),
             )
         val state =
             testChattingState.copy(
@@ -987,7 +990,10 @@ internal class ChatStateReducerTest {
         val items =
             persistentListOf<AutoCompleteItem>(
                 AutoCompleteItem.Emote(
-                    emote = Emote(name = "Kappa", urls = EmoteUrls("https://example.com/kappa.png")),
+                    emote = Emote(
+                        name = "Kappa",
+                        urls = EmoteUrls("https://example.com/kappa.png"),
+                    ),
                 ),
             )
         val action = ChatViewModel.InputAction.UpdateAutoCompleteItems(items = items)

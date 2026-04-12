@@ -13,12 +13,12 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
-internal class ChatConnectionService : LifecycleService() {
-    companion object {
+public class ChatConnectionService : LifecycleService() {
+    public companion object {
         private const val ACTION_REPLY = "reply"
         private const val KEY_QUICK_REPLY_TEXT = "quick_reply"
 
-        fun createReplyIntent(
+        public fun createReplyIntent(
             context: Context,
             channelId: String,
         ): Intent = Intent(context, ChatConnectionService::class.java).apply {

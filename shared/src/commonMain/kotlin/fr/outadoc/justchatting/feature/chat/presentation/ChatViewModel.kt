@@ -25,8 +25,8 @@ import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.chat_header_recent
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.chat_header_recent
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.flatListOf
 import fr.outadoc.justchatting.utils.logging.logError
@@ -90,87 +90,87 @@ public class ChatViewModel internal constructor(
 
     private val reducer = ChatStateReducer()
 
-    public sealed class Action {
-        public data class AddMessages(
+    internal sealed class Action {
+        data class AddMessages(
             val messages: List<ChatListItem.Message>,
         ) : Action()
 
-        public data class ChangeRecentEmotes(
+        data class ChangeRecentEmotes(
             val recentEmotes: List<Emote>,
         ) : Action()
 
-        public data class ChangeRoomState(
+        data class ChangeRoomState(
             val delta: ChatListItem.RoomStateDelta,
         ) : Action()
 
-        public data class ChangeConnectionStatus(
+        data class ChangeConnectionStatus(
             val connectionStatus: ConnectionStatus,
         ) : Action()
 
-        public data class ChangeUserState(
+        data class ChangeUserState(
             val userState: ChatListItem.UserState,
         ) : Action()
 
-        public data class RemoveContent(
+        data class RemoveContent(
             val removedContent: ChatListItem.RemoveContent,
         ) : Action()
 
-        public data class UpdatePoll(
+        data class UpdatePoll(
             val poll: Poll,
         ) : Action()
 
-        public data class UpdatePrediction(
+        data class UpdatePrediction(
             val prediction: Prediction,
         ) : Action()
 
-        public data class UpdateRaidAnnouncement(
+        data class UpdateRaidAnnouncement(
             val raid: Raid?,
         ) : Action()
 
-        public data class UpdatePinnedMessage(
+        data class UpdatePinnedMessage(
             val pinnedMessage: PinnedMessage?,
         ) : Action()
 
-        public data class AddRichEmbed(
+        data class AddRichEmbed(
             val richEmbed: ChatListItem.RichEmbed,
         ) : Action()
 
-        public data class UpdateStreamMetadata(
+        data class UpdateStreamMetadata(
             val viewerCount: Long? = null,
             val streamTitle: String? = null,
             val streamCategory: StreamCategory? = null,
         ) : Action()
 
-        public data class UpdateEmotes(
+        data class UpdateEmotes(
             val pickableEmotes: PersistentList<EmoteSetItem>,
             val globalBadges: PersistentList<TwitchBadge>?,
             val channelBadges: PersistentList<TwitchBadge>?,
             val cheerEmotes: PersistentMap<String, Emote>?,
         ) : Action()
 
-        public data class LoadChat(
+        data class LoadChat(
             val userId: String,
             val appUser: AppUser.LoggedIn,
             val maxAdapterCount: Int,
         ) : Action()
 
-        public data class UpdateChatterPronouns(
+        data class UpdateChatterPronouns(
             val pronouns: Map<Chatter, Pronoun?>,
         ) : Action()
 
-        public data class UpdateStreamDetails(
+        data class UpdateStreamDetails(
             val stream: Stream,
         ) : Action()
 
-        public data class ShowUserInfo(
+        data class ShowUserInfo(
             val userId: String?,
         ) : Action()
 
-        public data class UpdateStreamInfoVisibility(
+        data class UpdateStreamInfoVisibility(
             val isVisible: Boolean,
         ) : Action()
 
-        public data class UpdateUser(
+        data class UpdateUser(
             val user: User,
         ) : Action()
     }
@@ -250,33 +250,33 @@ public class ChatViewModel internal constructor(
         }
     }
 
-    public sealed class InputAction {
-        public data class AppendChatter(
+    internal sealed class InputAction {
+        data class AppendChatter(
             val chatter: Chatter,
             val autocomplete: Boolean,
         ) : InputAction()
 
-        public data class AppendEmote(
+        data class AppendEmote(
             val emote: Emote,
             val autocomplete: Boolean,
         ) : InputAction()
 
-        public data class ChangeMessageInput(
+        data class ChangeMessageInput(
             val message: String,
             val selectionRange: IntRange,
         ) : InputAction()
 
-        public data object ReplaceInputWithLastSentMessage : InputAction()
+        data object ReplaceInputWithLastSentMessage : InputAction()
 
-        public data class ReplyToMessage(
+        data class ReplyToMessage(
             val chatListItem: ChatListItem.Message? = null,
         ) : InputAction()
 
-        public data class UpdateAutoCompleteItems(
+        data class UpdateAutoCompleteItems(
             val items: ImmutableList<AutoCompleteItem>,
         ) : InputAction()
 
-        public data class ClearAfterSubmit(
+        data class ClearAfterSubmit(
             val sentMessage: String,
         ) : InputAction()
     }

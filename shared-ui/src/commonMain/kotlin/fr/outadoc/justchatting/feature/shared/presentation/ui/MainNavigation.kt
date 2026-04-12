@@ -20,12 +20,12 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import fr.outadoc.justchatting.feature.shared.presentation.Screen
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.channels
-import fr.outadoc.justchatting.shared.search
-import fr.outadoc.justchatting.shared.settings
-import fr.outadoc.justchatting.shared.timeline_future
-import fr.outadoc.justchatting.shared.timeline_live
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.channels
+import fr.outadoc.justchatting.shared.internal.search
+import fr.outadoc.justchatting.shared.internal.settings
+import fr.outadoc.justchatting.shared.internal.timeline_future
+import fr.outadoc.justchatting.shared.internal.timeline_live
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

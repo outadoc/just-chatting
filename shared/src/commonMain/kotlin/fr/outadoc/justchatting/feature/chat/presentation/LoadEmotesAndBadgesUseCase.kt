@@ -17,7 +17,7 @@ internal class LoadEmotesAndBadgesUseCase(
     private val twitchRepository: TwitchRepository,
     private val emoteListSourcesProvider: EmoteListSourcesProvider,
 ) {
-    public suspend operator fun invoke(
+    suspend operator fun invoke(
         channelId: String,
         channelName: String,
         emoteSets: List<String>,

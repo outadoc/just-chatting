@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
-public class UserInfoViewModel(
+public class UserInfoViewModel internal constructor(
     private val twitchRepository: TwitchRepository,
 ) : ViewModel() {
     public sealed class State {

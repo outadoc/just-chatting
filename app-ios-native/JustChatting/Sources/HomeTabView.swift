@@ -16,7 +16,7 @@ struct HomeTabView: View {
                 LiveChannelsView()
             }
             Tab("Schedule", systemImage: "calendar.badge.clock", value: 1) {
-                Text("Schedule") // placeholder
+                ScheduleView()
             }
             Tab("Following", systemImage: "heart", value: 2) {
                 FollowedChannelsView()

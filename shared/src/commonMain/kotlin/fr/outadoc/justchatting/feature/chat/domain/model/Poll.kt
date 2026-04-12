@@ -5,7 +5,7 @@ import kotlin.time.Duration
 import kotlin.time.Instant
 
 @Immutable
-internal data class Poll(
+public data class Poll(
     val pollId: String,
     val status: Status,
     val title: String,
@@ -21,14 +21,14 @@ internal data class Poll(
     val votes: Votes,
 ) {
     @Immutable
-    enum class Status {
+    public enum class Status {
         Active,
         Completed,
         Archived,
     }
 
     @Immutable
-    data class Choice(
+    public data class Choice(
         val choiceId: String,
         val title: String,
         val votes: Votes,
@@ -36,7 +36,7 @@ internal data class Poll(
     )
 
     @Immutable
-    data class Votes(
+    public data class Votes(
         val total: Int,
         val bits: Int,
         val channelPoints: Int,

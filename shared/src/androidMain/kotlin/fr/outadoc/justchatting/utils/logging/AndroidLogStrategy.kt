@@ -11,12 +11,11 @@ public object AndroidLogStrategy : LogStrategy {
         Log.println(level.toPlatform(), tag, content)
     }
 
-    private fun Logger.Level.toPlatform(): Int =
-        when (this) {
-            Logger.Level.Verbose -> Log.VERBOSE
-            Logger.Level.Debug -> Log.DEBUG
-            Logger.Level.Info -> Log.INFO
-            Logger.Level.Warning -> Log.WARN
-            Logger.Level.Error -> Log.ERROR
-        }
+    private fun Logger.Level.toPlatform(): Int = when (this) {
+        Logger.Level.Verbose -> Log.VERBOSE
+        Logger.Level.Debug -> Log.DEBUG
+        Logger.Level.Info -> Log.INFO
+        Logger.Level.Warning -> Log.WARN
+        Logger.Level.Error -> Log.ERROR
+    }
 }

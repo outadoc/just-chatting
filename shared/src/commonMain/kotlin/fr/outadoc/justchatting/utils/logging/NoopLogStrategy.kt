@@ -5,5 +5,5 @@ internal object NoopLogStrategy : LogStrategy {
         level: Logger.Level,
         tag: String?,
         content: String,
-    ) = Unit
+    ): Unit = Unit
 }

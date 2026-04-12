@@ -4,7 +4,7 @@ public object Logger {
     public var logStrategy: LogStrategy = NoopLogStrategy
 
     public enum class Level(
-        internal val tag: String,
+        public val tag: String,
     ) {
         Verbose("V"),
         Debug("D"),
@@ -13,7 +13,7 @@ public object Logger {
         Error("E"),
     }
 
-    internal fun println(
+    public fun println(
         level: Level,
         tag: String,
         content: () -> String,

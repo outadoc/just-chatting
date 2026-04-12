@@ -12,7 +12,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
 internal class FilterAutocompleteItemsUseCase {
-    operator fun invoke(
+    public operator fun invoke(
         filter: CharSequence,
         recentEmotes: List<Emote>,
         allEmotesMap: ImmutableMap<String, Emote>,

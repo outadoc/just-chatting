@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.preferences.domain.model
 
-internal data class AppPreferences(
+public data class AppPreferences(
     val apiToken: String? = null,
     val showTimestamps: Boolean = true,
     val enableRecentMessages: Boolean = true,
@@ -10,8 +10,8 @@ internal data class AppPreferences(
     val enablePronouns: Boolean = true,
     val enableNotifications: Boolean = false,
 ) {
-    object Defaults {
-        const val ChatBufferLimit = 1_000
-        const val RecentChatLimit = 500
+    public object Defaults {
+        public const val ChatBufferLimit: Int = 1_000
+        public const val RecentChatLimit: Int = 500
     }
 }

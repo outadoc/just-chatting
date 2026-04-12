@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.utils.logging
 
-internal object JvmLogStrategy : LogStrategy {
+public object JvmLogStrategy : LogStrategy {
     override fun println(
         level: Logger.Level,
         tag: String?,

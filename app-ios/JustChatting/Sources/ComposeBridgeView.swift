@@ -6,7 +6,7 @@
 //  Copyright © 2024 Baptiste Candellier. All rights reserved.
 //
 
-import JCShared
+import JCSharedUI
 import SwiftUI
 import UIKit
 

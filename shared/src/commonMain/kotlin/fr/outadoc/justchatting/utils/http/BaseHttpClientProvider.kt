@@ -4,5 +4,5 @@ import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 
 internal interface BaseHttpClientProvider {
-    fun get(block: HttpClientConfig<*>.() -> Unit = {}): HttpClient
+    public fun get(block: HttpClientConfig<*>.() -> Unit = {}): HttpClient
 }

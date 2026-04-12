@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.feature.shared.domain.model.User
 import kotlin.time.Instant
 
 @Immutable
-internal data class ChannelScheduleSegment(
+public data class ChannelScheduleSegment(
     val id: String,
     val user: User,
     val startTime: Instant,

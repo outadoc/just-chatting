@@ -8,36 +8,36 @@ import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
 
 internal interface LocalStreamsApi {
-    fun getPastStreams(
+    public fun getPastStreams(
         notBefore: Instant,
         notAfter: Instant,
     ): Flow<List<ChannelScheduleSegment>>
 
-    fun getMostRecentPastStream(user: User): Flow<Instant?>
+    public fun getMostRecentPastStream(user: User): Flow<Instant?>
 
-    fun getLiveStreams(): Flow<List<Stream>>
+    public fun getLiveStreams(): Flow<List<Stream>>
 
-    fun getFutureStreams(
+    public fun getFutureStreams(
         notBefore: Instant,
         notAfter: Instant,
     ): Flow<List<ChannelScheduleSegment>>
 
-    suspend fun cleanup(
+    public suspend fun cleanup(
         notBefore: Instant,
         notAfter: Instant,
     )
 
-    suspend fun savePastStreams(
+    public suspend fun savePastStreams(
         user: User,
         videos: List<Video>,
     )
 
-    suspend fun saveAndReplaceLiveStreams(streams: List<Stream>)
+    public suspend fun saveAndReplaceLiveStreams(streams: List<Stream>)
 
-    suspend fun saveFutureStreams(
+    public suspend fun saveFutureStreams(
         user: User,
         segments: List<ChannelScheduleSegment>,
     )
 
-    fun getUserIdsToSync(): Flow<List<String>>
+    public fun getUserIdsToSync(): Flow<List<String>>
 }

@@ -5,8 +5,8 @@ import kotlinx.collections.immutable.ImmutableSet
 
 @Immutable
 internal class AuthValidationResponse(
-    val clientId: String,
-    val login: String,
-    val userId: String,
-    val scopes: ImmutableSet<String>,
+    public val clientId: String,
+    public val login: String,
+    public val userId: String,
+    public val scopes: ImmutableSet<String>,
 )

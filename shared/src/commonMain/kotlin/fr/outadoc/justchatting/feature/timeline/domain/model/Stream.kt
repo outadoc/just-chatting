@@ -6,7 +6,7 @@ import kotlinx.collections.immutable.persistentSetOf
 import kotlin.time.Instant
 
 @Immutable
-internal data class Stream(
+public data class Stream(
     val id: String,
     val userId: String,
     val category: StreamCategory?,

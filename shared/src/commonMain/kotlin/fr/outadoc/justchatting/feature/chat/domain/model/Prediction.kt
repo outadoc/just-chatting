@@ -5,7 +5,7 @@ import kotlin.time.Duration
 import kotlin.time.Instant
 
 @Immutable
-internal data class Prediction(
+public data class Prediction(
     val id: String,
     val title: String,
     val status: Status,
@@ -17,10 +17,10 @@ internal data class Prediction(
     val winningOutcome: Outcome? = null,
 ) {
     @Immutable
-    enum class Status { Active, Locked, ResolvePending, Resolved }
+    public enum class Status { Active, Locked, ResolvePending, Resolved }
 
     @Immutable
-    data class Outcome(
+    public data class Outcome(
         val id: String,
         val title: String,
         val color: String,

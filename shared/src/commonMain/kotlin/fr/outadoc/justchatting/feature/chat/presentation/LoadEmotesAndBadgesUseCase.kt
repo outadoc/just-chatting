@@ -17,93 +17,91 @@ internal class LoadEmotesAndBadgesUseCase(
     private val twitchRepository: TwitchRepository,
     private val emoteListSourcesProvider: EmoteListSourcesProvider,
 ) {
-    suspend operator fun invoke(
+    public suspend operator fun invoke(
         channelId: String,
         channelName: String,
         emoteSets: List<String>,
-    ): ChatViewModel.Action.UpdateEmotes =
-        coroutineScope {
-            val globalBadges =
-                async {
-                    twitchRepository
-                        .getGlobalBadges()
-                        .fold(
-                            onSuccess = { badges -> badges.toPersistentList() },
-                            onFailure = { exception ->
-                                logError<LoadEmotesAndBadgesUseCase>(exception) { "Failed to load global badges" }
-                                null
-                            },
-                        )
-                }
-
-            val channelBadges =
-                async {
-                    twitchRepository
-                        .getChannelBadges(channelId)
-                        .fold(
-                            onSuccess = { badges -> badges.toPersistentList() },
-                            onFailure = { exception ->
-                                logError<LoadEmotesAndBadgesUseCase>(exception) { "Failed to load badges for channel $channelId" }
-                                null
-                            },
-                        )
-                }
-
-            val cheerEmotes: PersistentMap<String, Emote>? =
+    ): ChatViewModel.Action.UpdateEmotes = coroutineScope {
+        val globalBadges =
+            async {
                 twitchRepository
-                    .getCheerEmotes(userId = channelId)
+                    .getGlobalBadges()
                     .fold(
-                        onSuccess = { emotes ->
-                            emotes
-                                .associateBy { emote -> emote.name }
-                                .toPersistentHashMap()
-                        },
+                        onSuccess = { badges -> badges.toPersistentList() },
                         onFailure = { exception ->
-                            logError<LoadEmotesAndBadgesUseCase>(exception) { "Failed to load cheer emotes for channel $channelId" }
+                            logError<LoadEmotesAndBadgesUseCase>(exception) { "Failed to load global badges" }
                             null
                         },
                     )
+            }
 
-            val pickableEmotes: PersistentList<EmoteSetItem> =
-                loadPickableEmotes(
-                    channelId = channelId,
-                    channelName = channelName,
-                    emoteSets = emoteSets,
+        val channelBadges =
+            async {
+                twitchRepository
+                    .getChannelBadges(channelId)
+                    .fold(
+                        onSuccess = { badges -> badges.toPersistentList() },
+                        onFailure = { exception ->
+                            logError<LoadEmotesAndBadgesUseCase>(exception) { "Failed to load badges for channel $channelId" }
+                            null
+                        },
+                    )
+            }
+
+        val cheerEmotes: PersistentMap<String, Emote>? =
+            twitchRepository
+                .getCheerEmotes(userId = channelId)
+                .fold(
+                    onSuccess = { emotes ->
+                        emotes
+                            .associateBy { emote -> emote.name }
+                            .toPersistentHashMap()
+                    },
+                    onFailure = { exception ->
+                        logError<LoadEmotesAndBadgesUseCase>(exception) { "Failed to load cheer emotes for channel $channelId" }
+                        null
+                    },
                 )
 
-            ChatViewModel.Action.UpdateEmotes(
-                pickableEmotes = pickableEmotes,
-                globalBadges = globalBadges.await(),
-                channelBadges = channelBadges.await(),
-                cheerEmotes = cheerEmotes,
+        val pickableEmotes: PersistentList<EmoteSetItem> =
+            loadPickableEmotes(
+                channelId = channelId,
+                channelName = channelName,
+                emoteSets = emoteSets,
             )
-        }
+
+        ChatViewModel.Action.UpdateEmotes(
+            pickableEmotes = pickableEmotes,
+            globalBadges = globalBadges.await(),
+            channelBadges = channelBadges.await(),
+            cheerEmotes = cheerEmotes,
+        )
+    }
 
     private suspend fun loadPickableEmotes(
         channelId: String,
         channelName: String,
         emoteSets: List<String>,
-    ): PersistentList<EmoteSetItem> =
-        coroutineScope {
-            emoteListSourcesProvider
-                .getSources()
-                .map { source ->
-                    async {
-                        source
-                            .getEmotes(
-                                channelId = channelId,
-                                channelName = channelName,
-                                emoteSets = emoteSets,
-                            ).fold(
-                                onSuccess = { emotes -> emotes },
-                                onFailure = { exception ->
-                                    logError<LoadEmotesAndBadgesUseCase>(exception) { "Failed to load emotes from source $source" }
-                                    emptyList()
-                                },
-                            )
-                    }
-                }.awaitAll()
-                .flatten()
-                .toPersistentList()
-        }
+    ): PersistentList<EmoteSetItem> = coroutineScope {
+        emoteListSourcesProvider
+            .getSources()
+            .map { source ->
+                async {
+                    source
+                        .getEmotes(
+                            channelId = channelId,
+                            channelName = channelName,
+                            emoteSets = emoteSets,
+                        ).fold(
+                            onSuccess = { emotes -> emotes },
+                            onFailure = { exception ->
+                                logError<LoadEmotesAndBadgesUseCase>(exception) { "Failed to load emotes from source $source" }
+                                emptyList()
+                            },
+                        )
+                }
+            }.awaitAll()
+            .flatten()
+            .toPersistentList()
+    }
 }

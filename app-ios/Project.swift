@@ -7,7 +7,7 @@ let project = Project(
     settings: .settings(base: [
         "ENABLE_USER_SCRIPT_SANDBOXING": "NO",
         "ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS": "NO",
-        "FRAMEWORK_SEARCH_PATHS": "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
+        "FRAMEWORK_SEARCH_PATHS": "$(SRCROOT)/../shared-ui/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
     ]),
     targets: [
         .target(
@@ -51,7 +51,7 @@ let project = Project(
             scripts: [
                 .pre(
                     script: """
-                    "$SRCROOT/../gradlew" -p "$SRCROOT/../" :shared:embedAndSignAppleFrameworkForXcode
+                    "$SRCROOT/../gradlew" -p "$SRCROOT/../" :shared-ui:embedAndSignAppleFrameworkForXcode
                     """,
                     name: "Generate shared framework",
                     basedOnDependencyAnalysis: false

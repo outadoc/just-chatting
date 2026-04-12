@@ -14,12 +14,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 
-internal class AuthRepository(
+public class AuthRepository internal constructor(
     private val preferenceRepository: PreferenceRepository,
     private val authApi: AuthApi,
     private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
-    val currentUser: Flow<AppUser> =
+    public val currentUser: Flow<AppUser> =
         preferenceRepository
             .currentPreferences
             .map { prefs -> prefs.apiToken }
@@ -63,13 +63,13 @@ internal class AuthRepository(
                 logInfo<AuthRepository> { "User is now $user" }
             }
 
-    suspend fun saveToken(token: String) {
+    public suspend fun saveToken(token: String) {
         preferenceRepository.updatePreferences { prefs ->
             prefs.copy(apiToken = token)
         }
     }
 
-    suspend fun logout() {
+    public suspend fun logout() {
         withContext(DispatchersProvider.io) {
             val token = preferenceRepository.currentPreferences.first().apiToken
 
@@ -94,11 +94,10 @@ internal class AuthRepository(
         }
     }
 
-    fun getExternalAuthorizeUrl(): Uri =
-        authApi.getExternalAuthorizeUrl(
-            oAuthAppCredentials = oAuthAppCredentials,
-            scopes = REQUIRED_SCOPES,
-        )
+    public fun getExternalAuthorizeUrl(): Uri = authApi.getExternalAuthorizeUrl(
+        oAuthAppCredentials = oAuthAppCredentials,
+        scopes = REQUIRED_SCOPES,
+    )
 
     private class InvalidClientIdException(
         message: String,

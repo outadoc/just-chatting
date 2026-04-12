@@ -10,25 +10,25 @@ import kotlin.time.Duration
 import kotlin.time.Instant
 
 @Immutable
-internal sealed interface ChatListItem {
+public sealed interface ChatListItem {
     @Immutable
-    sealed class Message : ChatListItem {
-        abstract val body: Body?
-        abstract val timestamp: Instant
+    public sealed class Message : ChatListItem {
+        public abstract val body: Body?
+        public abstract val timestamp: Instant
 
         @Immutable
-        data class Simple(
+        public data class Simple(
             override val body: Body,
             override val timestamp: Instant,
         ) : Message()
 
         @Immutable
-        data class Highlighted(
+        public data class Highlighted(
             override val timestamp: Instant,
             override val body: Body?,
             val metadata: Metadata,
         ) : Message() {
-            data class Metadata(
+            public data class Metadata(
                 val title: StringDesc,
                 val titleIcon: Icon? = null,
                 val subtitle: StringDesc?,
@@ -36,7 +36,7 @@ internal sealed interface ChatListItem {
             )
 
             @Immutable
-            enum class Level {
+            public enum class Level {
                 Base,
                 One,
                 Two,
@@ -52,7 +52,7 @@ internal sealed interface ChatListItem {
         }
 
         @Immutable
-        data class Notice(
+        public data class Notice(
             override val timestamp: Instant,
             val text: StringDesc,
         ) : Message() {
@@ -60,7 +60,7 @@ internal sealed interface ChatListItem {
         }
 
         @Immutable
-        data class Body(
+        public data class Body(
             val messageId: String?,
             val message: String?,
             val chatter: Chatter,
@@ -71,7 +71,7 @@ internal sealed interface ChatListItem {
             val inReplyTo: InReplyTo? = null,
         ) {
             @Immutable
-            data class InReplyTo(
+            public data class InReplyTo(
                 val message: String?,
                 val mentions: ImmutableList<String>,
             )
@@ -79,7 +79,7 @@ internal sealed interface ChatListItem {
     }
 
     @Immutable
-    data class RoomStateDelta(
+    public data class RoomStateDelta(
         val isEmoteOnly: Boolean? = null,
         val minFollowDuration: Duration? = null,
         val uniqueMessagesOnly: Boolean? = null,
@@ -88,50 +88,50 @@ internal sealed interface ChatListItem {
     ) : ChatListItem
 
     @Immutable
-    data class UserState(
+    public data class UserState(
         val emoteSets: ImmutableList<String> = persistentListOf(),
     ) : ChatListItem
 
     @Immutable
-    data class RemoveContent(
+    public data class RemoveContent(
         val upUntil: Instant,
         val matchingUserId: String? = null,
         val matchingMessageId: String? = null,
     ) : ChatListItem
 
     @Immutable
-    data class PollUpdate(
+    public data class PollUpdate(
         val poll: Poll,
     ) : ChatListItem
 
     @Immutable
-    data class BroadcastSettingsUpdate(
+    public data class BroadcastSettingsUpdate(
         val streamTitle: String,
         val streamCategory: StreamCategory,
     ) : ChatListItem
 
     @Immutable
-    data class ViewerCountUpdate(
+    public data class ViewerCountUpdate(
         val viewerCount: Long,
     ) : ChatListItem
 
     @Immutable
-    data class PredictionUpdate(
+    public data class PredictionUpdate(
         val prediction: Prediction,
     ) : ChatListItem
 
     @Immutable
-    data class RaidUpdate(
+    public data class RaidUpdate(
         val raid: Raid?,
     ) : ChatListItem
 
     @Immutable
-    data class PinnedMessageUpdate(
+    public data class PinnedMessageUpdate(
         val pinnedMessage: PinnedMessage?,
     ) : ChatListItem
 
     @Immutable
-    data class RichEmbed(
+    public data class RichEmbed(
         val messageId: String,
         val title: String,
         val requestUrl: String,

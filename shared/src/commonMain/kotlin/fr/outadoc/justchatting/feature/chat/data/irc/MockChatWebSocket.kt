@@ -58,32 +58,31 @@ internal class MockChatWebSocket(
         channelId: String,
         channelLogin: String,
         appUser: AppUser.LoggedIn,
-    ): Flow<ChatEvent> =
-        channelFlow {
-            _connectionStatus.update { it.copy(registeredListeners = 1) }
-            try {
-                networkStateObserver.state.collectLatest { netState ->
-                    if (netState is NetworkStateObserver.NetworkState.Available) {
-                        logDebug<MockChatWebSocket> { "Network is available, listening" }
-                        while (currentCoroutineContext().isActive) {
-                            _connectionStatus.update { it.copy(isAlive = true) }
-                            try {
-                                listen(channelLogin)
-                            } catch (e: Exception) {
-                                logError<MockChatWebSocket>(e) { "Socket was closed" }
-                            }
-                            _connectionStatus.update { it.copy(isAlive = false) }
-                            delayWithJitter(1.seconds, maxJitter = 3.seconds)
+    ): Flow<ChatEvent> = channelFlow {
+        _connectionStatus.update { it.copy(registeredListeners = 1) }
+        try {
+            networkStateObserver.state.collectLatest { netState ->
+                if (netState is NetworkStateObserver.NetworkState.Available) {
+                    logDebug<MockChatWebSocket> { "Network is available, listening" }
+                    while (currentCoroutineContext().isActive) {
+                        _connectionStatus.update { it.copy(isAlive = true) }
+                        try {
+                            listen(channelLogin)
+                        } catch (e: Exception) {
+                            logError<MockChatWebSocket>(e) { "Socket was closed" }
                         }
-                    } else {
-                        logDebug<MockChatWebSocket> { "Network is out, waiting" }
                         _connectionStatus.update { it.copy(isAlive = false) }
+                        delayWithJitter(1.seconds, maxJitter = 3.seconds)
                     }
+                } else {
+                    logDebug<MockChatWebSocket> { "Network is out, waiting" }
+                    _connectionStatus.update { it.copy(isAlive = false) }
                 }
-            } finally {
-                _connectionStatus.update { it.copy(registeredListeners = 0) }
             }
-        }.flowOn(DispatchersProvider.io)
+        } finally {
+            _connectionStatus.update { it.copy(registeredListeners = 0) }
+        }
+    }.flowOn(DispatchersProvider.io)
 
     private suspend fun ProducerScope<ChatEvent>.listen(channelLogin: String) {
         httpClient.webSocket(ENDPOINT) {

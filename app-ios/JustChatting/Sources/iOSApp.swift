@@ -1,4 +1,4 @@
-import JCShared
+import JCSharedUI
 import SwiftUI
 
 @main

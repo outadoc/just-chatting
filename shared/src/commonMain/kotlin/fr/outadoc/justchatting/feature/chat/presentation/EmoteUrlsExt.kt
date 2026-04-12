@@ -2,11 +2,10 @@ package fr.outadoc.justchatting.feature.chat.presentation
 
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 
-internal fun EmoteUrls.getBestUrl(
+public fun EmoteUrls.getBestUrl(
     screenDensity: Float,
     isDarkTheme: Boolean,
-): String =
-    (if (isDarkTheme) dark else light)
-        .minByOrNull { (density, _) -> screenDensity - density }
-        ?.value
-        ?: error("No urls available for this emote")
+): String = (if (isDarkTheme) dark else light)
+    .minByOrNull { (density, _) -> screenDensity - density }
+    ?.value
+    ?: error("No urls available for this emote")

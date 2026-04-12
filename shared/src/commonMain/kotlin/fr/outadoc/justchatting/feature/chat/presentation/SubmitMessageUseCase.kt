@@ -18,7 +18,7 @@ internal class SubmitMessageUseCase(
     private val twitchRepository: TwitchRepository,
     private val insertRecentEmotes: InsertRecentEmotesUseCase,
 ) {
-    suspend operator fun invoke(
+    public suspend operator fun invoke(
         channelUserId: String,
         message: String,
         inReplyToMessageId: String?,
@@ -44,13 +44,13 @@ internal class SubmitMessageUseCase(
                                 ChatListItem.Message.Highlighted(
                                     timestamp = clock.now(),
                                     metadata =
-                                        ChatListItem.Message.Highlighted.Metadata(
-                                            title = Res.string.chat_send_msg_error.desc(),
-                                            subtitle =
-                                                (exception as? MessageNotSentException)
-                                                    ?.dropReasonMessage
-                                                    ?.desc(),
-                                        ),
+                                    ChatListItem.Message.Highlighted.Metadata(
+                                        title = Res.string.chat_send_msg_error.desc(),
+                                        subtitle =
+                                        (exception as? MessageNotSentException)
+                                            ?.dropReasonMessage
+                                            ?.desc(),
+                                    ),
                                     body = null,
                                 ),
                             ),
@@ -66,10 +66,10 @@ internal class SubmitMessageUseCase(
                         RecentEmote(
                             name = word,
                             url =
-                                emote.urls.getBestUrl(
-                                    screenDensity = screenDensity,
-                                    isDarkTheme = isDarkTheme,
-                                ),
+                            emote.urls.getBestUrl(
+                                screenDensity = screenDensity,
+                                isDarkTheme = isDarkTheme,
+                            ),
                             usedAt = currentTime,
                         )
                     }

@@ -3,9 +3,9 @@ package fr.outadoc.justchatting.feature.auth.data
 import kotlinx.coroutines.flow.SharedFlow
 
 internal interface AuthCallbackWebServer {
-    val receivedUris: SharedFlow<String>
+    public val receivedUris: SharedFlow<String>
 
-    fun start()
+    public fun start()
 
-    fun stop()
+    public fun stop()
 }

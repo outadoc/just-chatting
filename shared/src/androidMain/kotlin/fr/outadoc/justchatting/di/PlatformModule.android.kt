@@ -13,10 +13,6 @@ import fr.outadoc.justchatting.data.db.AppDatabase
 import fr.outadoc.justchatting.feature.auth.data.AuthCallbackWebServer
 import fr.outadoc.justchatting.feature.auth.data.NoopAuthCallbackWebServer
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
-import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
-import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
-import fr.outadoc.justchatting.feature.chat.presentation.ui.AndroidChatNotifier
-import fr.outadoc.justchatting.feature.chat.presentation.ui.AndroidCreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.preferences.presentation.AndroidAppVersionNameProvider
 import fr.outadoc.justchatting.feature.preferences.presentation.AndroidLogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.AppVersionNameProvider
@@ -36,9 +32,6 @@ internal actual val platformModule: Module
                     redirectUri = "https://just-chatting.app/auth/callback.html",
                 )
             }
-
-            single<ChatNotifier> { AndroidChatNotifier(get(), get()) }
-            single<CreateShortcutForChannelUseCase> { AndroidCreateShortcutForChannelUseCase(get()) }
 
             single<SqlDriver> {
                 AndroidSqliteDriver(

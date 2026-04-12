@@ -29,22 +29,21 @@ internal class AndroidLogRepository(
         return logsPath / "$uuid.log.gz"
     }
 
-    override suspend fun dumpLogs(): Uri =
-        withContext(DispatchersProvider.io) {
-            val process: Process =
-                Runtime.getRuntime().exec("logcat -d")
+    override suspend fun dumpLogs(): Uri = withContext(DispatchersProvider.io) {
+        val process: Process =
+            Runtime.getRuntime().exec("logcat -d")
 
-            val outPath: Path = getRandomFilePath()
+        val outPath: Path = getRandomFilePath()
 
-            val source: BufferedSource = process.inputStream.source().buffer()
-            val sink: Sink = outPath.toFile().sink().gzip()
+        val source: BufferedSource = process.inputStream.source().buffer()
+        val sink: Sink = outPath.toFile().sink().gzip()
 
-            source.use {
-                sink.use {
-                    source.readAll(sink)
-                }
+        source.use {
+            sink.use {
+                source.readAll(sink)
             }
-
-            LogFileProvider.getUri(applicationContext, outPath)
         }
+
+        LogFileProvider.getUri(applicationContext, outPath)
+    }
 }

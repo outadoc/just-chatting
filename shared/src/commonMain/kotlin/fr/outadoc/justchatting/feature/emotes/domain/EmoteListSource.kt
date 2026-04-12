@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.emotes.domain
 
 internal interface EmoteListSource<T> {
-    suspend fun getEmotes(
+    public suspend fun getEmotes(
         channelId: String,
         channelName: String,
         emoteSets: List<String>,

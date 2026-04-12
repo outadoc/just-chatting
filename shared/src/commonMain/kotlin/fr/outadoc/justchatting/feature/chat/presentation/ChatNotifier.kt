@@ -3,10 +3,10 @@ package fr.outadoc.justchatting.feature.chat.presentation
 import coil3.PlatformContext
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 
-internal interface ChatNotifier {
-    val areNotificationsEnabled: Boolean
+public interface ChatNotifier {
+    public val areNotificationsEnabled: Boolean
 
-    fun notify(
+    public fun notify(
         context: PlatformContext,
         user: User,
     )

@@ -23,4 +23,5 @@ rootProject.name = "just-chatting"
 include(":app-android")
 include(":app-desktop")
 include(":shared")
+include(":shared-ui")
 include(":konsist-checks")

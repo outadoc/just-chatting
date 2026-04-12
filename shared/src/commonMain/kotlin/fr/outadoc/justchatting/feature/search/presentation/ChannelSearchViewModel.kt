@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
@@ -29,29 +30,29 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
-internal class ChannelSearchViewModel(
+public class ChannelSearchViewModel(
     private val twitchRepository: TwitchRepository,
 ) : ViewModel() {
-    sealed class Event {
-        data class NavigateToChannel(
+    public sealed class Event {
+        public data class NavigateToChannel(
             val userId: String,
         ) : Event()
     }
 
-    data class State(
+    public data class State(
         val query: String = "",
         val isSearchExpanded: Boolean = false,
         val recentChannels: ImmutableList<User> = persistentListOf(),
     )
 
     private val _events = MutableSharedFlow<Event>()
-    val events: SharedFlow<Event> = _events.asSharedFlow()
+    public val events: SharedFlow<Event> = _events.asSharedFlow()
 
     private val _state = MutableStateFlow(State())
-    val state = _state.asStateFlow()
+    public val state: StateFlow<State> = _state.asStateFlow()
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    val pagingData: Flow<PagingData<ChannelSearchResult>> =
+    public val pagingData: Flow<PagingData<ChannelSearchResult>> =
         state
             .mapNotNull { state -> state.query }
             .distinctUntilChanged()
@@ -63,23 +64,23 @@ internal class ChannelSearchViewModel(
                     flowOf(
                         PagingData.empty(
                             sourceLoadStates =
-                                LoadStates(
-                                    prepend = LoadState.NotLoading(endOfPaginationReached = true),
-                                    append = LoadState.NotLoading(endOfPaginationReached = true),
-                                    refresh = LoadState.NotLoading(endOfPaginationReached = true),
-                                ),
+                            LoadStates(
+                                prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                                append = LoadState.NotLoading(endOfPaginationReached = true),
+                                refresh = LoadState.NotLoading(endOfPaginationReached = true),
+                            ),
                         ),
                     )
                 }
             }.cachedIn(viewModelScope)
 
-    fun onChannelClick(userId: String) {
+    public fun onChannelClick(userId: String) {
         viewModelScope.launch {
             _events.emit(Event.NavigateToChannel(userId))
         }
     }
 
-    fun onStart() {
+    public fun onStart() {
         viewModelScope.launch {
             twitchRepository
                 .getRecentChannels()
@@ -93,13 +94,13 @@ internal class ChannelSearchViewModel(
         }
     }
 
-    fun onQueryChange(query: String) {
+    public fun onQueryChange(query: String) {
         _state.update { state ->
             state.copy(query = query)
         }
     }
 
-    fun onSearchExpandedChange(isExpanded: Boolean) {
+    public fun onSearchExpandedChange(isExpanded: Boolean) {
         _state.update { state ->
             state.copy(
                 isSearchExpanded = isExpanded,
@@ -108,19 +109,19 @@ internal class ChannelSearchViewModel(
         }
     }
 
-    fun onDismissSearchBar() {
+    public fun onDismissSearchBar() {
         _state.update { state ->
             state.copy(isSearchExpanded = false)
         }
     }
 
-    fun onClearSearchBar() {
+    public fun onClearSearchBar() {
         _state.update { state ->
             state.copy(query = "")
         }
     }
 
-    fun onRemoveRecentChannel(user: User) {
+    public fun onRemoveRecentChannel(user: User) {
         viewModelScope.launch {
             twitchRepository.forgetRecentChannel(user.id)
         }

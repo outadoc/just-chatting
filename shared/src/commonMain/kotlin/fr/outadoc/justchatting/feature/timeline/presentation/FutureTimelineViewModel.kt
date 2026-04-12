@@ -10,6 +10,7 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
@@ -19,19 +20,19 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 
-internal class FutureTimelineViewModel(
+public class FutureTimelineViewModel(
     private val twitchRepository: TwitchRepository,
     private val clock: Clock,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
-    data class State(
+    public data class State(
         val isLoading: Boolean = false,
         val future: ImmutableMap<LocalDate, List<ChannelScheduleSegment>> = persistentMapOf(),
         val timeZone: TimeZone = TimeZone.currentSystemDefault(),
     )
 
     private val _state = MutableStateFlow(State())
-    val state = _state.asStateFlow()
+    public val state: StateFlow<State> = _state.asStateFlow()
 
     private var syncJob: Job? = null
 
@@ -52,7 +53,7 @@ internal class FutureTimelineViewModel(
         }
     }
 
-    fun syncLiveStreamsNow() {
+    public fun syncLiveStreamsNow() {
         viewModelScope.launch(DispatchersProvider.io) {
             twitchRepository.syncFollowedStreams(
                 appUser = authRepository.currentUser.first(),
@@ -60,7 +61,7 @@ internal class FutureTimelineViewModel(
         }
     }
 
-    fun syncEverythingNow() {
+    public fun syncEverythingNow() {
         syncJob?.cancel()
         syncJob =
             viewModelScope.launch(DispatchersProvider.io) {

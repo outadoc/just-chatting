@@ -8,11 +8,13 @@ import fr.outadoc.justchatting.feature.deeplink.Deeplink
 import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
-import fr.outadoc.justchatting.feature.shared.presentation.ui.Screen
+import fr.outadoc.justchatting.feature.shared.presentation.Screen
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logInfo
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -22,37 +24,37 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
-internal class MainRouterViewModel(
+public class MainRouterViewModel internal constructor(
     private val authRepository: AuthRepository,
     private val deeplinkParser: DeeplinkParser,
     private val authCallbackWebServer: AuthCallbackWebServer,
 ) : ViewModel(),
     DeeplinkReceiver {
-    sealed class State {
-        data object Loading : State()
+    public sealed class State {
+        public data object Loading : State()
 
-        data object LoggedOut : State()
+        public data object LoggedOut : State()
 
-        data class LoggedIn(
+        public data class LoggedIn(
             val appUser: AppUser.LoggedIn,
         ) : State()
     }
 
-    sealed class Event {
-        data class ViewChannel(
+    public sealed class Event {
+        public data class ViewChannel(
             val userId: String,
         ) : Event()
 
-        data class ShowAuthPage(
+        public data class ShowAuthPage(
             val uri: Uri,
         ) : Event()
 
-        data class NavigateToTab(
+        public data class NavigateToTab(
             val screen: Screen,
         ) : Event()
     }
 
-    val state: StateFlow<State> =
+    public val state: StateFlow<State> =
         authRepository.currentUser
             .map { appUser ->
                 when (appUser) {
@@ -78,9 +80,9 @@ internal class MainRouterViewModel(
             )
 
     private val _events = MutableSharedFlow<Event>()
-    val events = _events.asSharedFlow()
+    public val events: SharedFlow<Event> = _events.asSharedFlow()
 
-    fun onStart() {
+    public fun onStart() {
         viewModelScope.launch {
             authCallbackWebServer.receivedUris.collect { uri ->
                 onDeeplinkReceived(uri)
@@ -88,13 +90,13 @@ internal class MainRouterViewModel(
         }
     }
 
-    fun onTabSelected(screen: Screen) {
+    public fun onTabSelected(screen: Screen) {
         viewModelScope.launch {
             _events.emit(Event.NavigateToTab(screen))
         }
     }
 
-    fun onLoginClick() =
+    public fun onLoginClick() {
         viewModelScope.launch {
             _events.emit(
                 Event.ShowAuthPage(
@@ -102,6 +104,7 @@ internal class MainRouterViewModel(
                 ),
             )
         }
+    }
 
     override fun onDeeplinkReceived(uriString: String) {
         onDeeplinkReceived(Uri.parse(uriString))

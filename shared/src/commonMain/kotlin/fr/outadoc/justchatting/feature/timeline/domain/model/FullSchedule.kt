@@ -9,7 +9,7 @@ import kotlinx.datetime.LocalDate
 
 @Immutable
 public data class FullSchedule(
-    val past: ImmutableMap<LocalDate, List<ChannelScheduleSegment>> = persistentMapOf(),
+    val past: ImmutableList<DaySchedule> = persistentListOf(),
     val live: ImmutableList<UserStream> = persistentListOf(),
-    val future: ImmutableMap<LocalDate, List<ChannelScheduleSegment>> = persistentMapOf(),
+    val future: ImmutableList<DaySchedule> = persistentListOf(),
 )

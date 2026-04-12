@@ -23,9 +23,9 @@ struct ScheduleView: View {
                         )
                     } else {
                         List {
-                            ForEach(Array(state.future.keys), id: \.self) { localDate in
-                                Section(header: Text(sectionTitle(for: localDate))) {
-                                    ForEach(state.future[localDate] ?? [], id: \.id) { segment in
+                            ForEach(state.future, id: \.self) { daySchedule in
+                                Section(header: Text(sectionTitle(for: daySchedule.date))) {
+                                    ForEach(daySchedule.schedule, id: \.id) { segment in
                                         ScheduleSegmentRowView(segment: segment)
                                     }
                                 }

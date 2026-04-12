@@ -51,7 +51,7 @@ let project = Project(
             scripts: [
                 .pre(
                     script: """
-                    "$SRCROOT/../gradlew" -p "$SRCROOT/../" :shared:embedSwiftExportForXcode
+                    "$SRCROOT/../gradlew" -p "$SRCROOT/../" :shared:embedAndSignAppleFrameworkForXcode
                     """,
                     name: "Generate shared framework",
                     basedOnDependencyAnalysis: false

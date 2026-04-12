@@ -19,8 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import coil3.PlatformContext
-import coil3.compose.LocalPlatformContext
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.shared.presentation.Screen
 import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
@@ -46,7 +44,6 @@ internal fun LiveTimelineScreen(
     val state by viewModel.state.collectAsState()
 
     val notifier: ChatNotifier = koinInject()
-    val context: PlatformContext = LocalPlatformContext.current
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -119,10 +116,7 @@ internal fun LiveTimelineScreen(
                     viewModel.onChannelClick(user.id)
                 },
                 onOpenInBubble = { user ->
-                    notifier.notify(
-                        context = context,
-                        user = user,
-                    )
+                    notifier.notify(user = user)
                 },
             )
         },

@@ -68,8 +68,6 @@ kotlin {
                 implementation(libs.androidx.datastore.preferences)
                 implementation(libs.androidx.lifecycle.viewmodel)
                 implementation(libs.androidx.paging.common)
-                implementation(libs.coil.core)
-                implementation(libs.coil.ktor)
                 implementation(libs.compose.components.resources)
                 implementation(libs.compose.navigation3.ui)
                 implementation(libs.compose.runtime)

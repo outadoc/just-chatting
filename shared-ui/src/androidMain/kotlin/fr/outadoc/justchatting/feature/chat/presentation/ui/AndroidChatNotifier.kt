@@ -55,10 +55,7 @@ internal class AndroidChatNotifier(
             }
         }
 
-    override fun notify(
-        context: Context,
-        user: User,
-    ) {
+    override fun notify(user: User) {
         if (areNotificationsEnabled) {
             createGenericBubbleChannelIfNeeded(context) ?: return
 

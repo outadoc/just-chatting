@@ -1762,7 +1762,7 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/AutoComplet
 
 public abstract interface class fr/outadoc/justchatting/feature/chat/presentation/ChatNotifier {
 	public abstract fun getAreNotificationsEnabled ()Z
-	public abstract fun notify (Landroid/content/Context;Lfr/outadoc/justchatting/feature/shared/domain/model/User;)V
+	public abstract fun notify (Lfr/outadoc/justchatting/feature/shared/domain/model/User;)V
 }
 
 public final class fr/outadoc/justchatting/feature/chat/presentation/ChatPrefixConstants {
@@ -2247,13 +2247,6 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/ChatViewMod
 	public final fun getUserId ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-}
-
-public final class fr/outadoc/justchatting/feature/chat/presentation/CoilReducedAnimationTransformation : coil3/transform/Transformation {
-	public static final field $stable I
-	public fun <init> ()V
-	public fun getCacheKey ()Ljava/lang/String;
-	public fun transform (Landroid/graphics/Bitmap;Lcoil3/size/Size;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract interface class fr/outadoc/justchatting/feature/chat/presentation/CreateShortcutForChannelUseCase {

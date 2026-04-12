@@ -1,0 +1,331 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "About" : {
+      "comment" : "Settings section header for app information",
+      "extractionState" : "stale",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À propos"
+          }
+        }
+      }
+    },
+    "Appearance" : {
+      "comment" : "Settings section label and navigation title for appearance settings",
+      "extractionState" : "stale",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apparence"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "comment" : "Generic cancel button label",
+      "extractionState" : "stale",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
+          }
+        }
+      }
+    },
+    "Canceled" : {
+      "comment" : "Badge label shown on canceled scheduled streams",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annulé"
+          }
+        }
+      }
+    },
+    "Display pronouns next to usernames in chat." : {
+      "comment" : "Footer text for the pronouns section in third-party settings",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Récupérer et afficher les pronoms préférés des utilisateur·rice·s, grâce aux données de pronouns.alejo.io."
+          }
+        }
+      }
+    },
+    "Emotes" : {
+      "comment" : "Section header for third-party emote provider integrations",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Émotes"
+          }
+        }
+      }
+    },
+    "Find Twitch channels by name" : {
+      "comment" : "Description text in the empty search state, before the user types a query",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cherchez le nom d’une chaine Twitch"
+          }
+        }
+      }
+    },
+    "Following" : {
+      "comment" : "Tab bar label and navigation title for the followed channels screen",
+      "extractionState" : "stale",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suivies"
+          }
+        }
+      }
+    },
+    "Following since %@" : {
+      "comment" : "Shows how long the current user has been following a channel. The argument is a relative date string (e.g. '3 months ago').",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suivi·e depuis le %@"
+          }
+        }
+      }
+    },
+    "Just Chatting" : {
+      "comment" : "App name, do not translate",
+      "shouldTranslate" : false
+    },
+    "Live" : {
+      "comment" : "Tab bar label for live channels, navigation title for live screen, and live status badge in search results",
+      "extractionState" : "stale",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En direct"
+          }
+        }
+      }
+    },
+    "Load recent messages when opening a chat." : {
+      "comment" : "Footer text for the recent messages section in third-party settings",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lorsque vous rejoignez une conversation, les messages récents sont récupérés et affichés grâce aux données de recent-messages.robotty.de."
+          }
+        }
+      }
+    },
+    "Load third-party emote sets in chat." : {
+      "comment" : "Footer text for the emote providers section in third-party settings",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Charger les emotes tierces dans le tchat."
+          }
+        }
+      }
+    },
+    "Log out" : {
+      "comment" : "Destructive button label to sign out of the app",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se déconnecter"
+          }
+        }
+      }
+    },
+    "Log out?" : {
+      "comment" : "Title of the confirmation alert shown before logging out",
+      "extractionState" : "stale",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se déconnecter ?"
+          }
+        }
+      }
+    },
+    "Pronouns" : {
+      "comment" : "Section header for the pronouns integration in third-party settings",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pronoms"
+          }
+        }
+      }
+    },
+    "Recent messages" : {
+      "comment" : "Toggle label and section header for loading recent chat messages on join",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Messages récents"
+          }
+        }
+      }
+    },
+    "Reduce motion in chat using iOS accessibility settings." : {
+      "comment" : "Footer explaining how to reduce motion/animated emotes via iOS system settings",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous pouvez désactiver l'animation des émotes en activant l'option « Suppression des animations » dans les réglages de votre appareil."
+          }
+        }
+      }
+    },
+    "Schedule" : {
+      "comment" : "Tab bar label and navigation title for the upcoming stream schedule screen",
+      "extractionState" : "stale",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Programme"
+          }
+        }
+      }
+    },
+    "Search" : {
+      "comment" : "Tab bar label and navigation title for the channel search screen",
+      "extractionState" : "stale",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recherche"
+          }
+        }
+      }
+    },
+    "Search channels" : {
+      "comment" : "Placeholder text displayed in the search bar",
+      "extractionState" : "stale",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher une chaîne…"
+          }
+        }
+      }
+    },
+    "Set your pronouns" : {
+      "comment" : "Button label that opens the pronouns.alejo.io website to set pronouns",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renseignez vos propres pronoms"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "comment" : "Tab bar label and navigation title for the settings screen",
+      "extractionState" : "stale",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages"
+          }
+        }
+      }
+    },
+    "Show pronouns" : {
+      "comment" : "Toggle label to enable displaying pronouns next to usernames in chat",
+      "extractionState" : "stale",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher les pronoms"
+          }
+        }
+      }
+    },
+    "Show timestamps" : {
+      "comment" : "Toggle label to show timestamps on chat messages",
+      "extractionState" : "stale",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Horodatage des messages"
+          }
+        }
+      }
+    },
+    "Sign in with Twitch" : {
+      "comment" : "Button label on the onboarding screen to start the Twitch authentication flow",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuer avec Twitch"
+          }
+        }
+      }
+    },
+    "System animations" : {
+      "comment" : "Button label that links to iOS accessibility settings to control animations (Reduce Motion)",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Animations système"
+          }
+        }
+      }
+    },
+    "Third-party integrations" : {
+      "comment" : "Settings section label and navigation title for third-party service integrations",
+      "extractionState" : "stale",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intégrations tierces"
+          }
+        }
+      }
+    },
+    "You will need to log in again to use the app." : {
+      "comment" : "Body message of the logout confirmation alert",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous devrez vous reconnecter afin de pouvoir utiliser l’application."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

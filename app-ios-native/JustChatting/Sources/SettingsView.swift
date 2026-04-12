@@ -72,7 +72,7 @@ struct SettingsView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(user.displayName)
                             .font(.body.weight(.semibold))
-                        Text("@\(user.login)")
+                        Text(verbatim: "@\(user.login)")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }

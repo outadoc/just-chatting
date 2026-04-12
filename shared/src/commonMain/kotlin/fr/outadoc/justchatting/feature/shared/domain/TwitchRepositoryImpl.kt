@@ -237,7 +237,7 @@ internal class TwitchRepositoryImpl(
                 past
                     .groupBy { segment ->
                         segment.startTime.toLocalDateTime(timeZone).date
-                    }.map { (date, schedule)->
+                    }.map { (date, schedule) ->
                         DaySchedule(
                             date = JCLocalDate(date),
                             schedule = schedule,
@@ -248,7 +248,7 @@ internal class TwitchRepositoryImpl(
                 future
                     .groupBy { segment ->
                         segment.startTime.toLocalDateTime(timeZone).date
-                    }.map { (date, schedule)->
+                    }.map { (date, schedule) ->
                         DaySchedule(
                             date = JCLocalDate(date),
                             schedule = schedule,

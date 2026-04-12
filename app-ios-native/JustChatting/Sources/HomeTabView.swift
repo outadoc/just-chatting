@@ -22,7 +22,7 @@ struct HomeTabView: View {
                 FollowedChannelsView()
             }
             Tab("Search", systemImage: "magnifyingglass", value: 3) {
-                Text("Search") // placeholder
+                SearchView()
             }
             Tab("Settings", systemImage: "person.circle", value: 4) {
                 Text("Settings") // placeholder

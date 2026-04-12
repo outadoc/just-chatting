@@ -28,18 +28,16 @@ import fr.outadoc.justchatting.feature.chat.presentation.ui.ExtraUserInfo
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.ui.NoContent
-import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
-import fr.outadoc.justchatting.utils.datetime.JCLocalDate
+import fr.outadoc.justchatting.feature.timeline.domain.model.DaySchedule
 import fr.outadoc.justchatting.utils.presentation.formatDate
-import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.datetime.LocalDate
+import kotlinx.collections.immutable.ImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FutureTimelineContent(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
-    future: ImmutableMap<JCLocalDate, List<ChannelScheduleSegment>>,
+    future: ImmutableList<DaySchedule>,
     listState: LazyListState,
 ) {
     var showUserDetails: User? by remember { mutableStateOf(null) }
@@ -66,18 +64,18 @@ internal fun FutureTimelineContent(
             ),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            future.keys.forEach { date ->
+            future.forEach { daySchedule ->
                 stickyHeader(
-                    key = "header-${date.localDate.toEpochDays()}",
+                    key = "header-${daySchedule.date.localDate.toEpochDays()}",
                     contentType = "header",
                 ) {
                     SectionHeader(
-                        title = { Text(date.localDate.formatDate(isFuture = true)) },
+                        title = { Text(daySchedule.date.localDate.formatDate(isFuture = true)) },
                     )
                 }
 
                 items(
-                    items = future[date].orEmpty(),
+                    items = daySchedule.schedule,
                     key = { segment -> segment.id },
                     contentType = { "segment" },
                 ) { segment ->

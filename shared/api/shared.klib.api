@@ -1569,6 +1569,7 @@ final class fr.outadoc.justchatting.feature.shared.presentation/KoinHelper : org
 
     final fun getDeeplinkReceiver(): fr.outadoc.justchatting.feature.shared.presentation/DeeplinkReceiver // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getDeeplinkReceiver|getDeeplinkReceiver(){}[0]
     final fun getFollowedChannelsViewModel(): fr.outadoc.justchatting.feature.followed.presentation/FollowedChannelsViewModel // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getFollowedChannelsViewModel|getFollowedChannelsViewModel(){}[0]
+    final fun getFutureTimelineViewModel(): fr.outadoc.justchatting.feature.timeline.presentation/FutureTimelineViewModel // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getFutureTimelineViewModel|getFutureTimelineViewModel(){}[0]
     final fun getLiveTimelineViewModel(): fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getLiveTimelineViewModel|getLiveTimelineViewModel(){}[0]
     final fun getMainRouterViewModel(): fr.outadoc.justchatting.feature.shared.presentation/MainRouterViewModel // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getMainRouterViewModel|getMainRouterViewModel(){}[0]
 }
@@ -2417,6 +2418,7 @@ final fun (kotlin/Int).fr.outadoc.justchatting.utils.presentation/formatNumber()
 final fun (kotlin/String).fr.outadoc.justchatting.utils.http/toUri(): com.eygraber.uri/Uri // fr.outadoc.justchatting.utils.http/toUri|toUri@kotlin.String(){}[0]
 final fun (kotlin/String).fr.outadoc.justchatting.utils.presentation/isValidWebUrl(): kotlin/Boolean // fr.outadoc.justchatting.utils.presentation/isValidWebUrl|isValidWebUrl@kotlin.String(){}[0]
 final fun (kotlin/String).fr.outadoc.justchatting.utils.resources/desc(): fr.outadoc.justchatting.utils.resources/StringDesc // fr.outadoc.justchatting.utils.resources/desc|desc@kotlin.String(){}[0]
+final fun (kotlinx.datetime/LocalDate).fr.outadoc.justchatting.utils.presentation/toNSDateComponents(): platform.Foundation/NSDateComponents // fr.outadoc.justchatting.utils.presentation/toNSDateComponents|toNSDateComponents@kotlinx.datetime.LocalDate(){}[0]
 final fun (org.jetbrains.compose.resources/PluralStringResource).fr.outadoc.justchatting.utils.resources/desc(kotlin/Int): fr.outadoc.justchatting.utils.resources/StringDesc // fr.outadoc.justchatting.utils.resources/desc|desc@org.jetbrains.compose.resources.PluralStringResource(kotlin.Int){}[0]
 final fun (org.jetbrains.compose.resources/PluralStringResource).fr.outadoc.justchatting.utils.resources/desc(kotlin/Int, kotlin/Array<out kotlin/Any>...): fr.outadoc.justchatting.utils.resources/StringDesc // fr.outadoc.justchatting.utils.resources/desc|desc@org.jetbrains.compose.resources.PluralStringResource(kotlin.Int;kotlin.Array<out|kotlin.Any>...){}[0]
 final fun (org.jetbrains.compose.resources/StringResource).fr.outadoc.justchatting.utils.resources/desc(): fr.outadoc.justchatting.utils.resources/StringDesc // fr.outadoc.justchatting.utils.resources/desc|desc@org.jetbrains.compose.resources.StringResource(){}[0]

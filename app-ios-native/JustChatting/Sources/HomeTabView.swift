@@ -25,7 +25,7 @@ struct HomeTabView: View {
                 SearchView()
             }
             Tab("Settings", systemImage: "person.circle", value: 4) {
-                Text("Settings") // placeholder
+                SettingsView()
             }
         }
         .collect(flow: viewModel.events) { event in

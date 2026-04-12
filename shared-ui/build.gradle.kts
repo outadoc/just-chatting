@@ -99,7 +99,6 @@ kotlin {
                 implementation(libs.androidx.emoji2.core)
                 implementation(libs.androidx.glance.appwidget)
                 implementation(libs.androidx.glance.material3)
-                implementation(libs.androidx.lifecycle.service)
                 implementation(libs.androidx.palette)
                 implementation(libs.androidx.paging.runtime.android)
                 implementation(libs.androidx.splashscreen)

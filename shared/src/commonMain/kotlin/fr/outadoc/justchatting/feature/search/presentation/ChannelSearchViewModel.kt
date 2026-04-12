@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
-public class ChannelSearchViewModel(
+public class ChannelSearchViewModel internal constructor(
     private val twitchRepository: TwitchRepository,
 ) : ViewModel() {
     public sealed class Event {

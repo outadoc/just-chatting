@@ -6,18 +6,6 @@ public final class fr/outadoc/justchatting/di/KoinInitializer : androidx/startup
 	public fun dependencies ()Ljava/util/List;
 }
 
-public final class fr/outadoc/justchatting/feature/chat/presentation/UserProfileImageContentProvider : android/content/ContentProvider {
-	public static final field $stable I
-	public fun <init> ()V
-	public fun delete (Landroid/net/Uri;Ljava/lang/String;[Ljava/lang/String;)I
-	public fun getType (Landroid/net/Uri;)Ljava/lang/String;
-	public fun insert (Landroid/net/Uri;Landroid/content/ContentValues;)Landroid/net/Uri;
-	public fun onCreate ()Z
-	public fun openFile (Landroid/net/Uri;Ljava/lang/String;)Landroid/os/ParcelFileDescriptor;
-	public fun query (Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;
-	public fun update (Landroid/net/Uri;Landroid/content/ContentValues;Ljava/lang/String;[Ljava/lang/String;)I
-}
-
 public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$AutoCompleteEmoteItemKt {
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$AutoCompleteEmoteItemKt;
 	public fun <init> ()V

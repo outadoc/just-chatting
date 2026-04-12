@@ -39,7 +39,7 @@ import fr.outadoc.justchatting.feature.shared.presentation.glance.GlanceCard
 import fr.outadoc.justchatting.feature.shared.presentation.ui.MainActivity
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.feature.timeline.presentation.LiveTimelineViewModel
-import fr.outadoc.justchatting.shared.R
+import fr.outadoc.justchatting.shared.ui.R
 import org.koin.compose.koinInject
 
 internal class LiveWidget : GlanceAppWidget() {

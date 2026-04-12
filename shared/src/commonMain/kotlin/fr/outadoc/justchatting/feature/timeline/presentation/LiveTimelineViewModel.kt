@@ -24,7 +24,7 @@ import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
 
-public class LiveTimelineViewModel(
+public class LiveTimelineViewModel internal constructor(
     private val twitchRepository: TwitchRepository,
     private val clock: Clock,
     private val authRepository: AuthRepository,

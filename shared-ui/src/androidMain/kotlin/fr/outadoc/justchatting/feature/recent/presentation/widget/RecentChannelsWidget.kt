@@ -30,7 +30,7 @@ import fr.outadoc.justchatting.feature.recent.presentation.RecentChannelsViewMod
 import fr.outadoc.justchatting.feature.shared.presentation.glance.GlanceUserItem
 import fr.outadoc.justchatting.feature.shared.presentation.glance.adaptiveGridCellsCompat
 import fr.outadoc.justchatting.feature.shared.presentation.ui.MainActivity
-import fr.outadoc.justchatting.shared.R
+import fr.outadoc.justchatting.shared.ui.R
 import org.koin.compose.koinInject
 
 internal class RecentChannelsWidget : GlanceAppWidget() {

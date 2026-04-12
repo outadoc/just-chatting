@@ -20,7 +20,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 
-public class FutureTimelineViewModel(
+public class FutureTimelineViewModel internal constructor(
     private val twitchRepository: TwitchRepository,
     private val clock: Clock,
     private val authRepository: AuthRepository,

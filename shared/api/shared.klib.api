@@ -50,26 +50,6 @@ abstract interface fr.outadoc.justchatting.feature.preferences.presentation/Read
     abstract suspend fun invoke(): kotlin.collections/List<fr.outadoc.justchatting.feature.preferences.presentation/Dependency> // fr.outadoc.justchatting.feature.preferences.presentation/ReadExternalDependenciesList.invoke|invoke(){}[0]
 }
 
-abstract interface fr.outadoc.justchatting.feature.shared.domain/TwitchRepository { // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository|null[0]
-    abstract suspend fun forgetRecentChannel(kotlin/String) // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.forgetRecentChannel|forgetRecentChannel(kotlin.String){}[0]
-    abstract suspend fun getChannelBadges(kotlin/String): kotlin/Result<kotlin.collections/List<fr.outadoc.justchatting.feature.chat.domain.model/TwitchBadge>> // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.getChannelBadges|getChannelBadges(kotlin.String){}[0]
-    abstract suspend fun getCheerEmotes(kotlin/String): kotlin/Result<kotlin.collections/List<fr.outadoc.justchatting.feature.emotes.domain.model/Emote>> // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.getCheerEmotes|getCheerEmotes(kotlin.String){}[0]
-    abstract suspend fun getEmotesFromSet(kotlin.collections/List<kotlin/String>): kotlin/Result<kotlin.collections/List<fr.outadoc.justchatting.feature.emotes.domain.model/Emote>> // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.getEmotesFromSet|getEmotesFromSet(kotlin.collections.List<kotlin.String>){}[0]
-    abstract suspend fun getFollowedChannels(): kotlinx.coroutines.flow/Flow<kotlin.collections/List<fr.outadoc.justchatting.feature.followed.domain.model/ChannelFollow>> // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.getFollowedChannels|getFollowedChannels(){}[0]
-    abstract suspend fun getFollowedChannelsSchedule(kotlinx.datetime/LocalDate, kotlinx.datetime/TimeZone): kotlinx.coroutines.flow/Flow<fr.outadoc.justchatting.feature.timeline.domain.model/FullSchedule> // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.getFollowedChannelsSchedule|getFollowedChannelsSchedule(kotlinx.datetime.LocalDate;kotlinx.datetime.TimeZone){}[0]
-    abstract suspend fun getGlobalBadges(): kotlin/Result<kotlin.collections/List<fr.outadoc.justchatting.feature.chat.domain.model/TwitchBadge>> // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.getGlobalBadges|getGlobalBadges(){}[0]
-    abstract suspend fun getRecentChannels(): kotlinx.coroutines.flow/Flow<kotlin.collections/List<fr.outadoc.justchatting.feature.shared.domain.model/User>> // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.getRecentChannels|getRecentChannels(){}[0]
-    abstract suspend fun getStreamByUserId(kotlin/String): kotlinx.coroutines.flow/Flow<kotlin/Result<fr.outadoc.justchatting.feature.timeline.domain.model/Stream>> // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.getStreamByUserId|getStreamByUserId(kotlin.String){}[0]
-    abstract suspend fun getUserById(kotlin/String): kotlinx.coroutines.flow/Flow<kotlin/Result<fr.outadoc.justchatting.feature.shared.domain.model/User>> // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.getUserById|getUserById(kotlin.String){}[0]
-    abstract suspend fun getUsersById(kotlin.collections/List<kotlin/String>): kotlinx.coroutines.flow/Flow<kotlin/Result<kotlin.collections/List<fr.outadoc.justchatting.feature.shared.domain.model/User>>> // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.getUsersById|getUsersById(kotlin.collections.List<kotlin.String>){}[0]
-    abstract suspend fun markChannelAsVisited(kotlin/String, kotlin.time/Instant) // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.markChannelAsVisited|markChannelAsVisited(kotlin.String;kotlin.time.Instant){}[0]
-    abstract suspend fun searchChannels(kotlin/String): kotlinx.coroutines.flow/Flow<androidx.paging/PagingData<fr.outadoc.justchatting.feature.search.domain.model/ChannelSearchResult>> // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.searchChannels|searchChannels(kotlin.String){}[0]
-    abstract suspend fun sendChatMessage(kotlin/String, kotlin/String, kotlin/String?, fr.outadoc.justchatting.feature.preferences.domain.model/AppUser): kotlin/Result<kotlin/String> // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.sendChatMessage|sendChatMessage(kotlin.String;kotlin.String;kotlin.String?;fr.outadoc.justchatting.feature.preferences.domain.model.AppUser){}[0]
-    abstract suspend fun syncFollowedChannels(fr.outadoc.justchatting.feature.preferences.domain.model/AppUser) // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.syncFollowedChannels|syncFollowedChannels(fr.outadoc.justchatting.feature.preferences.domain.model.AppUser){}[0]
-    abstract suspend fun syncFollowedChannelsSchedule(kotlinx.datetime/LocalDate, kotlinx.datetime/TimeZone, fr.outadoc.justchatting.feature.preferences.domain.model/AppUser) // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.syncFollowedChannelsSchedule|syncFollowedChannelsSchedule(kotlinx.datetime.LocalDate;kotlinx.datetime.TimeZone;fr.outadoc.justchatting.feature.preferences.domain.model.AppUser){}[0]
-    abstract suspend fun syncFollowedStreams(fr.outadoc.justchatting.feature.preferences.domain.model/AppUser) // fr.outadoc.justchatting.feature.shared.domain/TwitchRepository.syncFollowedStreams|syncFollowedStreams(fr.outadoc.justchatting.feature.preferences.domain.model.AppUser){}[0]
-}
-
 abstract interface fr.outadoc.justchatting.feature.shared.presentation/DeeplinkReceiver { // fr.outadoc.justchatting.feature.shared.presentation/DeeplinkReceiver|null[0]
     abstract fun onDeeplinkReceived(com.eygraber.uri/Uri) // fr.outadoc.justchatting.feature.shared.presentation/DeeplinkReceiver.onDeeplinkReceived|onDeeplinkReceived(com.eygraber.uri.Uri){}[0]
     abstract fun onDeeplinkReceived(kotlin/String) // fr.outadoc.justchatting.feature.shared.presentation/DeeplinkReceiver.onDeeplinkReceived|onDeeplinkReceived(kotlin.String){}[0]
@@ -1497,8 +1477,6 @@ final class fr.outadoc.justchatting.feature.chat.presentation/RoomState { // fr.
 }
 
 final class fr.outadoc.justchatting.feature.chat.presentation/UserInfoViewModel : androidx.lifecycle/ViewModel { // fr.outadoc.justchatting.feature.chat.presentation/UserInfoViewModel|null[0]
-    constructor <init>(fr.outadoc.justchatting.feature.shared.domain/TwitchRepository) // fr.outadoc.justchatting.feature.chat.presentation/UserInfoViewModel.<init>|<init>(fr.outadoc.justchatting.feature.shared.domain.TwitchRepository){}[0]
-
     final val state // fr.outadoc.justchatting.feature.chat.presentation/UserInfoViewModel.state|{}state[0]
         final fun <get-state>(): kotlinx.coroutines.flow/StateFlow<fr.outadoc.justchatting.feature.chat.presentation/UserInfoViewModel.State> // fr.outadoc.justchatting.feature.chat.presentation/UserInfoViewModel.state.<get-state>|<get-state>(){}[0]
 
@@ -1605,8 +1583,6 @@ final class fr.outadoc.justchatting.feature.followed.domain.model/ChannelFollow 
 }
 
 final class fr.outadoc.justchatting.feature.followed.presentation/FollowedChannelsViewModel : androidx.lifecycle/ViewModel { // fr.outadoc.justchatting.feature.followed.presentation/FollowedChannelsViewModel|null[0]
-    constructor <init>(fr.outadoc.justchatting.feature.shared.domain/TwitchRepository, fr.outadoc.justchatting.feature.preferences.domain/AuthRepository) // fr.outadoc.justchatting.feature.followed.presentation/FollowedChannelsViewModel.<init>|<init>(fr.outadoc.justchatting.feature.shared.domain.TwitchRepository;fr.outadoc.justchatting.feature.preferences.domain.AuthRepository){}[0]
-
     final val events // fr.outadoc.justchatting.feature.followed.presentation/FollowedChannelsViewModel.events|{}events[0]
         final fun <get-events>(): kotlinx.coroutines.flow/SharedFlow<fr.outadoc.justchatting.feature.followed.presentation/FollowedChannelsViewModel.Event> // fr.outadoc.justchatting.feature.followed.presentation/FollowedChannelsViewModel.events.<get-events>|<get-events>(){}[0]
     final val state // fr.outadoc.justchatting.feature.followed.presentation/FollowedChannelsViewModel.state|{}state[0]
@@ -1686,15 +1662,6 @@ final class fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferen
         final const val RecentChatLimit // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.Defaults.RecentChatLimit|{}RecentChatLimit[0]
             final fun <get-RecentChatLimit>(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.Defaults.RecentChatLimit.<get-RecentChatLimit>|<get-RecentChatLimit>(){}[0]
     }
-}
-
-final class fr.outadoc.justchatting.feature.preferences.domain/AuthRepository { // fr.outadoc.justchatting.feature.preferences.domain/AuthRepository|null[0]
-    final val currentUser // fr.outadoc.justchatting.feature.preferences.domain/AuthRepository.currentUser|{}currentUser[0]
-        final fun <get-currentUser>(): kotlinx.coroutines.flow/Flow<fr.outadoc.justchatting.feature.preferences.domain.model/AppUser> // fr.outadoc.justchatting.feature.preferences.domain/AuthRepository.currentUser.<get-currentUser>|<get-currentUser>(){}[0]
-
-    final fun getExternalAuthorizeUrl(): com.eygraber.uri/Uri // fr.outadoc.justchatting.feature.preferences.domain/AuthRepository.getExternalAuthorizeUrl|getExternalAuthorizeUrl(){}[0]
-    final suspend fun logout() // fr.outadoc.justchatting.feature.preferences.domain/AuthRepository.logout|logout(){}[0]
-    final suspend fun saveToken(kotlin/String) // fr.outadoc.justchatting.feature.preferences.domain/AuthRepository.saveToken|saveToken(kotlin.String){}[0]
 }
 
 final class fr.outadoc.justchatting.feature.preferences.presentation/Dependency { // fr.outadoc.justchatting.feature.preferences.presentation/Dependency|null[0]
@@ -1819,8 +1786,6 @@ final class fr.outadoc.justchatting.feature.pronouns.domain.model/Pronoun { // f
 }
 
 final class fr.outadoc.justchatting.feature.recent.presentation/RecentChannelsViewModel : androidx.lifecycle/ViewModel { // fr.outadoc.justchatting.feature.recent.presentation/RecentChannelsViewModel|null[0]
-    constructor <init>(fr.outadoc.justchatting.feature.shared.domain/TwitchRepository) // fr.outadoc.justchatting.feature.recent.presentation/RecentChannelsViewModel.<init>|<init>(fr.outadoc.justchatting.feature.shared.domain.TwitchRepository){}[0]
-
     final val state // fr.outadoc.justchatting.feature.recent.presentation/RecentChannelsViewModel.state|{}state[0]
         final fun <get-state>(): kotlinx.coroutines.flow/StateFlow<fr.outadoc.justchatting.feature.recent.presentation/RecentChannelsViewModel.State> // fr.outadoc.justchatting.feature.recent.presentation/RecentChannelsViewModel.state.<get-state>|<get-state>(){}[0]
 
@@ -1883,8 +1848,6 @@ final class fr.outadoc.justchatting.feature.search.domain.model/ChannelSearchRes
 }
 
 final class fr.outadoc.justchatting.feature.search.presentation/ChannelSearchViewModel : androidx.lifecycle/ViewModel { // fr.outadoc.justchatting.feature.search.presentation/ChannelSearchViewModel|null[0]
-    constructor <init>(fr.outadoc.justchatting.feature.shared.domain/TwitchRepository) // fr.outadoc.justchatting.feature.search.presentation/ChannelSearchViewModel.<init>|<init>(fr.outadoc.justchatting.feature.shared.domain.TwitchRepository){}[0]
-
     final val events // fr.outadoc.justchatting.feature.search.presentation/ChannelSearchViewModel.events|{}events[0]
         final fun <get-events>(): kotlinx.coroutines.flow/SharedFlow<fr.outadoc.justchatting.feature.search.presentation/ChannelSearchViewModel.Event> // fr.outadoc.justchatting.feature.search.presentation/ChannelSearchViewModel.events.<get-events>|<get-events>(){}[0]
     final val pagingData // fr.outadoc.justchatting.feature.search.presentation/ChannelSearchViewModel.pagingData|{}pagingData[0]
@@ -2161,8 +2124,6 @@ final class fr.outadoc.justchatting.feature.timeline.domain.model/UserStream { /
 }
 
 final class fr.outadoc.justchatting.feature.timeline.presentation/FutureTimelineViewModel : androidx.lifecycle/ViewModel { // fr.outadoc.justchatting.feature.timeline.presentation/FutureTimelineViewModel|null[0]
-    constructor <init>(fr.outadoc.justchatting.feature.shared.domain/TwitchRepository, kotlin.time/Clock, fr.outadoc.justchatting.feature.preferences.domain/AuthRepository) // fr.outadoc.justchatting.feature.timeline.presentation/FutureTimelineViewModel.<init>|<init>(fr.outadoc.justchatting.feature.shared.domain.TwitchRepository;kotlin.time.Clock;fr.outadoc.justchatting.feature.preferences.domain.AuthRepository){}[0]
-
     final val state // fr.outadoc.justchatting.feature.timeline.presentation/FutureTimelineViewModel.state|{}state[0]
         final fun <get-state>(): kotlinx.coroutines.flow/StateFlow<fr.outadoc.justchatting.feature.timeline.presentation/FutureTimelineViewModel.State> // fr.outadoc.justchatting.feature.timeline.presentation/FutureTimelineViewModel.state.<get-state>|<get-state>(){}[0]
 
@@ -2190,8 +2151,6 @@ final class fr.outadoc.justchatting.feature.timeline.presentation/FutureTimeline
 }
 
 final class fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel : androidx.lifecycle/ViewModel { // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel|null[0]
-    constructor <init>(fr.outadoc.justchatting.feature.shared.domain/TwitchRepository, kotlin.time/Clock, fr.outadoc.justchatting.feature.preferences.domain/AuthRepository) // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.<init>|<init>(fr.outadoc.justchatting.feature.shared.domain.TwitchRepository;kotlin.time.Clock;fr.outadoc.justchatting.feature.preferences.domain.AuthRepository){}[0]
-
     final val events // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.events|{}events[0]
         final fun <get-events>(): kotlinx.coroutines.flow/SharedFlow<fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.Event> // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.events.<get-events>|<get-events>(){}[0]
     final val state // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.state|{}state[0]
@@ -2729,7 +2688,6 @@ final val fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_ju
 final val fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser$stableprop // fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser$stableprop|#static{}fr_outadoc_justchatting_feature_preferences_domain_model_AppUser$stableprop[0]
 final val fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_LoggedIn$stableprop // fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_LoggedIn$stableprop|#static{}fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_LoggedIn$stableprop[0]
 final val fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_NotLoggedIn$stableprop // fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_NotLoggedIn$stableprop|#static{}fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_NotLoggedIn$stableprop[0]
-final val fr.outadoc.justchatting.feature.preferences.domain/fr_outadoc_justchatting_feature_preferences_domain_AuthRepository$stableprop // fr.outadoc.justchatting.feature.preferences.domain/fr_outadoc_justchatting_feature_preferences_domain_AuthRepository$stableprop|#static{}fr_outadoc_justchatting_feature_preferences_domain_AuthRepository$stableprop[0]
 final val fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_Dependency$stableprop // fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_Dependency$stableprop|#static{}fr_outadoc_justchatting_feature_preferences_presentation_Dependency$stableprop[0]
 final val fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_DependencyList_$serializer$stableprop // fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_DependencyList_$serializer$stableprop|#static{}fr_outadoc_justchatting_feature_preferences_presentation_DependencyList_$serializer$stableprop[0]
 final val fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_Dependency_$serializer$stableprop // fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_Dependency_$serializer$stableprop|#static{}fr_outadoc_justchatting_feature_preferences_presentation_Dependency_$serializer$stableprop[0]
@@ -3741,7 +3699,6 @@ final fun fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_ju
 final fun fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser$stableprop_getter(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser$stableprop_getter|fr_outadoc_justchatting_feature_preferences_domain_model_AppUser$stableprop_getter(){}[0]
 final fun fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_LoggedIn$stableprop_getter(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_LoggedIn$stableprop_getter|fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_LoggedIn$stableprop_getter(){}[0]
 final fun fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_NotLoggedIn$stableprop_getter(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_NotLoggedIn$stableprop_getter|fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_NotLoggedIn$stableprop_getter(){}[0]
-final fun fr.outadoc.justchatting.feature.preferences.domain/fr_outadoc_justchatting_feature_preferences_domain_AuthRepository$stableprop_getter(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.domain/fr_outadoc_justchatting_feature_preferences_domain_AuthRepository$stableprop_getter|fr_outadoc_justchatting_feature_preferences_domain_AuthRepository$stableprop_getter(){}[0]
 final fun fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_Dependency$stableprop_getter(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_Dependency$stableprop_getter|fr_outadoc_justchatting_feature_preferences_presentation_Dependency$stableprop_getter(){}[0]
 final fun fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_DependencyList_$serializer$stableprop_getter(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_DependencyList_$serializer$stableprop_getter|fr_outadoc_justchatting_feature_preferences_presentation_DependencyList_$serializer$stableprop_getter(){}[0]
 final fun fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_Dependency_$serializer$stableprop_getter(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_Dependency_$serializer$stableprop_getter|fr_outadoc_justchatting_feature_preferences_presentation_Dependency_$serializer$stableprop_getter(){}[0]

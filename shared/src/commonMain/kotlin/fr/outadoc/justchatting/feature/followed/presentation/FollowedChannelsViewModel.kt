@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-public class FollowedChannelsViewModel(
+public class FollowedChannelsViewModel internal constructor(
     private val repository: TwitchRepository,
     private val authRepository: AuthRepository,
 ) : ViewModel() {

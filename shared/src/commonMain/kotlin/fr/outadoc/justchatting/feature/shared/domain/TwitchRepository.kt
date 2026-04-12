@@ -14,53 +14,53 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlin.time.Instant
 
-public interface TwitchRepository {
-    public suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>>
+internal interface TwitchRepository {
+    suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>>
 
-    public suspend fun getFollowedChannels(): Flow<List<ChannelFollow>>
+    suspend fun getFollowedChannels(): Flow<List<ChannelFollow>>
 
-    public suspend fun getStreamByUserId(userId: String): Flow<Result<Stream>>
+    suspend fun getStreamByUserId(userId: String): Flow<Result<Stream>>
 
-    public suspend fun getUserById(id: String): Flow<Result<User>>
+    suspend fun getUserById(id: String): Flow<Result<User>>
 
-    public suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>>
+    suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>>
 
-    public suspend fun getCheerEmotes(userId: String): Result<List<Emote>>
+    suspend fun getCheerEmotes(userId: String): Result<List<Emote>>
 
-    public suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>>
+    suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>>
 
-    public suspend fun getRecentChannels(): Flow<List<User>>
+    suspend fun getRecentChannels(): Flow<List<User>>
 
-    public suspend fun forgetRecentChannel(userId: String)
+    suspend fun forgetRecentChannel(userId: String)
 
-    public suspend fun getFollowedChannelsSchedule(
+    suspend fun getFollowedChannelsSchedule(
         today: LocalDate,
         timeZone: TimeZone,
     ): Flow<FullSchedule>
 
-    public suspend fun markChannelAsVisited(
+    suspend fun markChannelAsVisited(
         userId: String,
         visitedAt: Instant,
     )
 
-    public suspend fun getGlobalBadges(): Result<List<TwitchBadge>>
+    suspend fun getGlobalBadges(): Result<List<TwitchBadge>>
 
-    public suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>>
+    suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>>
 
-    public suspend fun sendChatMessage(
+    suspend fun sendChatMessage(
         channelUserId: String,
         message: String,
         inReplyToMessageId: String?,
         appUser: AppUser,
     ): Result<String>
 
-    public suspend fun syncFollowedChannelsSchedule(
+    suspend fun syncFollowedChannelsSchedule(
         today: LocalDate,
         timeZone: TimeZone,
         appUser: AppUser,
     )
 
-    public suspend fun syncFollowedStreams(appUser: AppUser)
+    suspend fun syncFollowedStreams(appUser: AppUser)
 
-    public suspend fun syncFollowedChannels(appUser: AppUser)
+    suspend fun syncFollowedChannels(appUser: AppUser)
 }

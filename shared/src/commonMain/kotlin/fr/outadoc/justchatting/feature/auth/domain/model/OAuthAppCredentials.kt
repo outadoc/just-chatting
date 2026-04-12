@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.auth.domain.model
 
-public data class OAuthAppCredentials(
+internal data class OAuthAppCredentials(
     val clientId: String,
     val redirectUri: String,
 )

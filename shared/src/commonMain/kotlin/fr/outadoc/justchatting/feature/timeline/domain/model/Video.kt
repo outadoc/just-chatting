@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.feature.timeline.domain.model
 import kotlin.time.Duration
 import kotlin.time.Instant
 
-public data class Video(
+internal data class Video(
     val id: String,
     val streamId: String?,
     val userId: String,

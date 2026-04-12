@@ -8,29 +8,13 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.licenseReport)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
-    explicitApi()
-
-    @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
-    abiValidation {
-        enabled = true
-        klib {
-            keepUnsupportedTargets = false
-        }
-    }
-
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
-            freeCompilerArgs.addAll(
-                "-P",
-                "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=fr.outadoc.justchatting.utils.parcel.Parcelize",
-                "-P",
-                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${project.buildDir}/reports/composeReports",
-            )
         }
     }
 
@@ -38,11 +22,6 @@ kotlin {
         iosArm64(),
         iosSimulatorArm64(),
     )
-
-    swiftExport {
-        moduleName = "JCShared"
-        flattenPackage = "fr.outadoc.justchatting"
-    }
 
     jvm("desktop") {
         compilerOptions {
@@ -59,8 +38,6 @@ kotlin {
 
         commonMain {
             dependencies {
-                implementation(project(":shared-internal"))
-
                 api(libs.kotlinx.coroutines)
                 api(libs.kotlinx.datetime)
                 api(libs.kotlinx.serialization.json)
@@ -151,11 +128,6 @@ kotlin {
     }
 }
 
-compose.resources {
-    packageOfResClass = "fr.outadoc.justchatting.shared"
-    publicResClass = true
-}
-
 android {
     namespace = "fr.outadoc.justchatting.shared"
     compileSdk = 36
@@ -169,20 +141,13 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-        isCoreLibraryDesugaringEnabled = true
     }
 }
 
-licenseReport {
-    outputDir = file("src/commonMain/composeResources/files").path
-    configurations = arrayOf("releaseRuntimeClasspath")
-    renderers = arrayOf(JsonReportRenderer("dependencies.json"))
-}
-
-tasks.named("generateLicenseReport") {
-    outputs.upToDateWhen { false }
-}
-
-dependencies {
-    coreLibraryDesugaring(libs.desugar)
+sqldelight {
+    databases {
+        create("AppDatabase") {
+            packageName.set("fr.outadoc.justchatting.data.db")
+        }
+    }
 }

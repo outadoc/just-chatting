@@ -97,13 +97,13 @@ internal class PubSubWebSocket(
             sendSerialized<PubSubClientMessage>(
                 PubSubClientMessage.Listen(
                     data =
-                    PubSubClientMessage.Listen.Data(
-                        topics =
-                        pubSubPluginsProvider
-                            .get()
-                            .map { plugin -> plugin.getTopic(channelId) },
-                        authToken = appUser.token,
-                    ),
+                        PubSubClientMessage.Listen.Data(
+                            topics =
+                                pubSubPluginsProvider
+                                    .get()
+                                    .map { plugin -> plugin.getTopic(channelId) },
+                            authToken = appUser.token,
+                        ),
                 ),
             )
 

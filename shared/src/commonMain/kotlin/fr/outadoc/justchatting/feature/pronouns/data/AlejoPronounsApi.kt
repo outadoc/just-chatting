@@ -23,24 +23,25 @@ internal class AlejoPronounsApi(
             }
         }
 
-    override suspend fun getUserPronouns(chatter: Chatter): Result<UserPronounIds> = alejoPronounsClient
-        .getPronounsForUser(chatter.login)
-        .map { response: List<UserPronounResponse> ->
-            val data = response.firstOrNull()
-            UserPronounIds(
-                userId = chatter.id,
-                mainPronounId = data?.pronounId,
-                altPronounId = null,
-            )
-        }.recoverCatching { exception ->
-            if (exception is ClientRequestException && exception.response.status.value == 404) {
+    override suspend fun getUserPronouns(chatter: Chatter): Result<UserPronounIds> =
+        alejoPronounsClient
+            .getPronounsForUser(chatter.login)
+            .map { response: List<UserPronounResponse> ->
+                val data = response.firstOrNull()
                 UserPronounIds(
                     userId = chatter.id,
-                    mainPronounId = null,
+                    mainPronounId = data?.pronounId,
                     altPronounId = null,
                 )
-            } else {
-                throw exception
+            }.recoverCatching { exception ->
+                if (exception is ClientRequestException && exception.response.status.value == 404) {
+                    UserPronounIds(
+                        userId = chatter.id,
+                        mainPronounId = null,
+                        altPronounId = null,
+                    )
+                } else {
+                    throw exception
+                }
             }
-        }
 }

@@ -38,11 +38,11 @@ internal class LocalUsersDb(
                     description = userInfo.description,
                     createdAt = Instant.fromEpochMilliseconds(userInfo.created_at),
                     usedAt =
-                    if (userInfo.used_at > 0) {
-                        Instant.fromEpochMilliseconds(userInfo.used_at)
-                    } else {
-                        null
-                    },
+                        if (userInfo.used_at > 0) {
+                            Instant.fromEpochMilliseconds(userInfo.used_at)
+                        } else {
+                            null
+                        },
                 )
             }
         }.flowOn(DispatchersProvider.io)
@@ -60,20 +60,20 @@ internal class LocalUsersDb(
             users.map { userInfo ->
                 ChannelFollow(
                     user =
-                    User(
-                        id = userInfo.id,
-                        login = userInfo.login,
-                        displayName = userInfo.display_name,
-                        profileImageUrl = userInfo.profile_image_url,
-                        description = userInfo.description,
-                        createdAt = Instant.fromEpochMilliseconds(userInfo.created_at),
-                        usedAt =
-                        if (userInfo.used_at > 0) {
-                            Instant.fromEpochMilliseconds(userInfo.used_at)
-                        } else {
-                            null
-                        },
-                    ),
+                        User(
+                            id = userInfo.id,
+                            login = userInfo.login,
+                            displayName = userInfo.display_name,
+                            profileImageUrl = userInfo.profile_image_url,
+                            description = userInfo.description,
+                            createdAt = Instant.fromEpochMilliseconds(userInfo.created_at),
+                            usedAt =
+                                if (userInfo.used_at > 0) {
+                                    Instant.fromEpochMilliseconds(userInfo.used_at)
+                                } else {
+                                    null
+                                },
+                        ),
                     followedAt = Instant.fromEpochMilliseconds(userInfo.followed_at),
                 )
             }
@@ -143,26 +143,27 @@ internal class LocalUsersDb(
         }
     }
 
-    override suspend fun saveAndReplaceFollowedChannels(follows: List<ChannelFollow>) = withContext(DispatchersProvider.io) {
-        val now = clock.now()
-        userQueries.transaction {
-            follows.forEach { channelFollow ->
-                userQueries.ensureCreated(
-                    id = channelFollow.user.id,
-                    inserted_at = now.toEpochMilliseconds(),
-                )
+    override suspend fun saveAndReplaceFollowedChannels(follows: List<ChannelFollow>) =
+        withContext(DispatchersProvider.io) {
+            val now = clock.now()
+            userQueries.transaction {
+                follows.forEach { channelFollow ->
+                    userQueries.ensureCreated(
+                        id = channelFollow.user.id,
+                        inserted_at = now.toEpochMilliseconds(),
+                    )
 
-                userQueries.updateFollowedAt(
-                    id = channelFollow.user.id,
-                    followed_at = channelFollow.followedAt.toEpochMilliseconds(),
+                    userQueries.updateFollowedAt(
+                        id = channelFollow.user.id,
+                        followed_at = channelFollow.followedAt.toEpochMilliseconds(),
+                    )
+                }
+
+                userQueries.setFollowedUsersUpdated(
+                    last_updated = now.toEpochMilliseconds(),
                 )
             }
-
-            userQueries.setFollowedUsersUpdated(
-                last_updated = now.toEpochMilliseconds(),
-            )
         }
-    }
 
     override fun getUserIdsToUpdate(): Flow<List<String>> {
         val minAcceptableCacheDate = clock.now() - MaxUserCacheLife
@@ -178,15 +179,16 @@ internal class LocalUsersDb(
             .flowOn(DispatchersProvider.io)
     }
 
-    override suspend fun isFollowedUsersCacheExpired(): Boolean = withContext(DispatchersProvider.io) {
-        val minAcceptableCacheDate = clock.now() - MaxFollowedUsersCacheLife
-        val updatedAt =
-            userQueries
-                .getFollowedUsersUpdatedAt()
-                .executeAsOneOrNull()
+    override suspend fun isFollowedUsersCacheExpired(): Boolean =
+        withContext(DispatchersProvider.io) {
+            val minAcceptableCacheDate = clock.now() - MaxFollowedUsersCacheLife
+            val updatedAt =
+                userQueries
+                    .getFollowedUsersUpdatedAt()
+                    .executeAsOneOrNull()
 
-        updatedAt == null || updatedAt < minAcceptableCacheDate.toEpochMilliseconds()
-    }
+            updatedAt == null || updatedAt < minAcceptableCacheDate.toEpochMilliseconds()
+        }
 
     private companion object {
         val MaxUserCacheLife = 1.days

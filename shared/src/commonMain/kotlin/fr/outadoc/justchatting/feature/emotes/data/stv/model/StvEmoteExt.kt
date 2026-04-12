@@ -11,22 +11,22 @@ internal fun StvEmote.map(): Emote = Emote(
     ownerId = null,
     isZeroWidth = flags.hasFlag(FLAG_IS_ZERO_WIDTH),
     ratio =
-    supportedFiles.first().let { file ->
-        file.width.toFloat() / file.height.toFloat()
-    },
+        supportedFiles.first().let { file ->
+            file.width.toFloat() / file.height.toFloat()
+        },
     urls =
-    EmoteUrls(
-        anyTheme =
-        mapOf(
-            0f to
-                Uri
-                    .parse("https:${data.host.baseUrl}")
-                    .buildUpon()
-                    .appendPath(supportedFiles.first().name)
-                    .build()
-                    .toString(),
+        EmoteUrls(
+            anyTheme =
+                mapOf(
+                    0f to
+                            Uri
+                                .parse("https:${data.host.baseUrl}")
+                                .buildUpon()
+                                .appendPath(supportedFiles.first().name)
+                                .build()
+                                .toString(),
+                ),
         ),
-    ),
 )
 
 private val StvEmote.supportedFiles: List<StvEmoteFiles>

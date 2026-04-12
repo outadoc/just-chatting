@@ -133,7 +133,7 @@ internal class MockChatWebSocket(
             is ChatEvent.Command.RoomStateDelta,
             is ChatEvent.Command.ClearChat,
             is ChatEvent.Command.ClearMessage,
-            -> {
+                -> {
                 emit(command)
             }
 

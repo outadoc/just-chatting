@@ -6,26 +6,26 @@ import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
 
 internal interface LocalUsersApi {
-    public fun getUserById(id: String): Flow<User>
+    fun getUserById(id: String): Flow<User>
 
-    public fun getUsersById(ids: List<String>): Flow<List<User>>
+    fun getUsersById(ids: List<String>): Flow<List<User>>
 
-    public fun getRecentChannels(): Flow<List<User>>
+    fun getRecentChannels(): Flow<List<User>>
 
-    public fun getFollowedChannels(): Flow<List<ChannelFollow>>
+    fun getFollowedChannels(): Flow<List<ChannelFollow>>
 
-    public fun forgetRecentChannel(userId: String)
+    fun forgetRecentChannel(userId: String)
 
-    public fun getUserIdsToUpdate(): Flow<List<String>>
+    fun getUserIdsToUpdate(): Flow<List<String>>
 
-    public suspend fun saveUser(
+    suspend fun saveUser(
         userId: String,
         visitedAt: Instant? = null,
     )
 
-    public suspend fun saveAndReplaceFollowedChannels(follows: List<ChannelFollow>)
+    suspend fun saveAndReplaceFollowedChannels(follows: List<ChannelFollow>)
 
-    public suspend fun saveUserInfo(users: List<User>)
+    suspend fun saveUserInfo(users: List<User>)
 
-    public suspend fun isFollowedUsersCacheExpired(): Boolean
+    suspend fun isFollowedUsersCacheExpired(): Boolean
 }

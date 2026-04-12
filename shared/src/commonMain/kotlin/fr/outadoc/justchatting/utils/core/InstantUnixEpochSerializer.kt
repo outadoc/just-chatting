@@ -12,7 +12,8 @@ internal object InstantUnixEpochSerializer : KSerializer<Instant> {
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("Instant", PrimitiveKind.LONG)
 
-    override fun deserialize(decoder: Decoder): Instant = Instant.fromEpochSeconds(decoder.decodeLong())
+    override fun deserialize(decoder: Decoder): Instant =
+        Instant.fromEpochSeconds(decoder.decodeLong())
 
     override fun serialize(
         encoder: Encoder,

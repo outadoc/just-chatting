@@ -16,9 +16,10 @@ private fun PubSubPinnedMessage.Pin.Message.map(): PinnedMessage.Message = Pinne
     endsAt = endsAt,
 )
 
-private fun PubSubPinnedMessage.Pin.Message.Content.map(): PinnedMessage.Message.Content = PinnedMessage.Message.Content(
-    text = text,
-)
+private fun PubSubPinnedMessage.Pin.Message.Content.map(): PinnedMessage.Message.Content =
+    PinnedMessage.Message.Content(
+        text = text,
+    )
 
 private fun PubSubPinnedMessage.Pin.User.map(): PinnedMessage.User = PinnedMessage.User(
     userId = userId,

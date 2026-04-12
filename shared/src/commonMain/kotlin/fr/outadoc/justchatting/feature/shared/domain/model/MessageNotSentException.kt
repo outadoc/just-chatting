@@ -2,6 +2,6 @@ package fr.outadoc.justchatting.feature.shared.domain.model
 
 internal class MessageNotSentException(
     message: String,
-    public val dropReasonCode: String? = null,
-    public val dropReasonMessage: String? = null,
+    val dropReasonCode: String? = null,
+    val dropReasonMessage: String? = null,
 ) : Exception(message)

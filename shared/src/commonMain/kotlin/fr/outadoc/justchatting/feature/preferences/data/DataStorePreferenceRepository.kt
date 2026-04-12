@@ -33,26 +33,26 @@ internal class DataStorePreferenceRepository(
 
     private fun Preferences.read(): AppPreferences = AppPreferences(
         showTimestamps =
-        this[CHAT_ACCESSIBILITY_TIMESTAMPS]
-            ?: defaultPreferences.showTimestamps,
+            this[CHAT_ACCESSIBILITY_TIMESTAMPS]
+                ?: defaultPreferences.showTimestamps,
         enableRecentMessages =
-        this[THIRDPARTY_ENABLE_RECENT]
-            ?: defaultPreferences.enableRecentMessages,
+            this[THIRDPARTY_ENABLE_RECENT]
+                ?: defaultPreferences.enableRecentMessages,
         enableBttvEmotes =
-        this[THIRDPARTY_ENABLE_BTTV]
-            ?: defaultPreferences.enableBttvEmotes,
+            this[THIRDPARTY_ENABLE_BTTV]
+                ?: defaultPreferences.enableBttvEmotes,
         enableFfzEmotes =
-        this[THIRDPARTY_ENABLE_FFZ]
-            ?: defaultPreferences.enableFfzEmotes,
+            this[THIRDPARTY_ENABLE_FFZ]
+                ?: defaultPreferences.enableFfzEmotes,
         enableStvEmotes =
-        this[THIRDPARTY_ENABLE_STV]
-            ?: defaultPreferences.enableStvEmotes,
+            this[THIRDPARTY_ENABLE_STV]
+                ?: defaultPreferences.enableStvEmotes,
         enablePronouns =
-        this[THIRDPARTY_ENABLE_PRONOUNS]
-            ?: defaultPreferences.enablePronouns,
+            this[THIRDPARTY_ENABLE_PRONOUNS]
+                ?: defaultPreferences.enablePronouns,
         enableNotifications =
-        this[ENABLE_NOTIFICATIONS]
-            ?: defaultPreferences.enableNotifications,
+            this[ENABLE_NOTIFICATIONS]
+                ?: defaultPreferences.enableNotifications,
         apiToken = this[USER_TOKEN]?.takeUnless { it.isBlank() },
     )
 

@@ -8,10 +8,8 @@ import fr.outadoc.justchatting.feature.deeplink.Deeplink
 import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
-import fr.outadoc.justchatting.feature.shared.presentation.Screen
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logInfo
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -69,7 +67,7 @@ public class MainRouterViewModel internal constructor(
 
                     is State.Loading,
                     is State.LoggedIn,
-                    -> {
+                        -> {
                         authCallbackWebServer.stop()
                     }
                 }

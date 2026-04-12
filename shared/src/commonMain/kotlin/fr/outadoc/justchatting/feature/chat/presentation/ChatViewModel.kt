@@ -478,14 +478,14 @@ public class ChatViewModel internal constructor(
                 val action =
                     Action.ChangeRecentEmotes(
                         recentEmotes =
-                        recentEmotes
-                            .filter { recentEmote -> recentEmote.name in allEmotesMap }
-                            .map { recentEmote ->
-                                Emote(
-                                    name = recentEmote.name,
-                                    urls = EmoteUrls(recentEmote.url),
-                                )
-                            },
+                            recentEmotes
+                                .filter { recentEmote -> recentEmote.name in allEmotesMap }
+                                .map { recentEmote ->
+                                    Emote(
+                                        name = recentEmote.name,
+                                        urls = EmoteUrls(recentEmote.url),
+                                    )
+                                },
                     )
 
                 actions.emit(action)

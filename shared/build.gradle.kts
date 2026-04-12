@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.licenseReport)
+    alias(libs.plugins.skie)
 }
 
 kotlin {
@@ -170,6 +171,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
         isCoreLibraryDesugaringEnabled = true
+    }
+}
+
+skie {
+    features {
+        enableSwiftUIObservingPreview = true
     }
 }
 

@@ -154,11 +154,6 @@ kotlin {
     }
 }
 
-compose.resources {
-    packageOfResClass = "fr.outadoc.justchatting.shared"
-    publicResClass = true
-}
-
 android {
     namespace = "fr.outadoc.justchatting.shared"
     compileSdk = 36
@@ -177,7 +172,7 @@ android {
 }
 
 licenseReport {
-    outputDir = file("src/commonMain/composeResources/files").path
+    outputDir = project(":shared-internal").file("src/commonMain/composeResources/files").path
     configurations = arrayOf("releaseRuntimeClasspath")
     renderers = arrayOf(JsonReportRenderer("dependencies.json"))
 }

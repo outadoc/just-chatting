@@ -1,4 +1,3 @@
-import com.github.jk1.license.render.JsonReportRenderer
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -129,7 +128,7 @@ kotlin {
 }
 
 android {
-    namespace = "fr.outadoc.justchatting.shared"
+    namespace = "fr.outadoc.justchatting.shared.internal"
     compileSdk = 36
 
     defaultConfig {
@@ -142,6 +141,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+}
+
+compose.resources {
+    packageOfResClass = "fr.outadoc.justchatting.shared.internal"
+    publicResClass = true
 }
 
 sqldelight {

@@ -3,8 +3,8 @@ package fr.outadoc.justchatting.feature.emotes.data.stv
 import fr.outadoc.justchatting.feature.emotes.domain.CachedEmoteListSource
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteSetItem
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.chat_source_stv
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.chat_source_stv
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.flatListOf
 import fr.outadoc.justchatting.utils.resources.desc

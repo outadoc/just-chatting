@@ -13,8 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.nothing_here
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.nothing_here
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import org.jetbrains.compose.resources.stringResource
 

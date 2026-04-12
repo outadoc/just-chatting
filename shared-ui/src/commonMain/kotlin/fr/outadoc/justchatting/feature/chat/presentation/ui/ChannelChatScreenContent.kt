@@ -54,8 +54,8 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.MessagePostConstraint
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.timeline.presentation.ui.LiveDetailsDialog
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.chat_copiedToClipboard
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.chat_copiedToClipboard
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource

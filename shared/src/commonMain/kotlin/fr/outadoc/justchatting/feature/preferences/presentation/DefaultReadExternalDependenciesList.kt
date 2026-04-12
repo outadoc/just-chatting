@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.preferences.presentation
 
-import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json

@@ -16,9 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.uptime
-import fr.outadoc.justchatting.shared.viewers
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.uptime
+import fr.outadoc.justchatting.shared.internal.viewers
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 import org.jetbrains.compose.resources.pluralStringResource

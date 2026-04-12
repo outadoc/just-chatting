@@ -20,8 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import fr.outadoc.justchatting.feature.chat.presentation.ui.remoteImageModel
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.followed_at
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.followed_at
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatDate
 import kotlinx.collections.immutable.ImmutableList

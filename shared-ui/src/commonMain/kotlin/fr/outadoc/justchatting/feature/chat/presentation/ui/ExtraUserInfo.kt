@@ -14,8 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.shared.domain.model.User
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.created_at
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.created_at
 import fr.outadoc.justchatting.utils.presentation.formatDate
 import org.jetbrains.compose.resources.stringResource
 

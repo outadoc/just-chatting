@@ -13,8 +13,8 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import fr.outadoc.justchatting.feature.shared.presentation.ui.SwipeActionBox
 import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.stream_info
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.stream_info
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

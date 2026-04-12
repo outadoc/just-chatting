@@ -23,10 +23,10 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.preferences.presentation.Dependency
 import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.all_goBack
-import fr.outadoc.justchatting.shared.settings_dependencies_cd
-import fr.outadoc.justchatting.shared.settings_dependencies_header
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.all_goBack
+import fr.outadoc.justchatting.shared.internal.settings_dependencies_cd
+import fr.outadoc.justchatting.shared.internal.settings_dependencies_header
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.plus
 import org.jetbrains.compose.resources.stringResource

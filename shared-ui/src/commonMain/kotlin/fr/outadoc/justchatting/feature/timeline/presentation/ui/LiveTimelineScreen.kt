@@ -23,10 +23,10 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.shared.presentation.Screen
 import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
 import fr.outadoc.justchatting.feature.timeline.presentation.LiveTimelineViewModel
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.timeline_live
-import fr.outadoc.justchatting.shared.timeline_refresh_action_cd
-import fr.outadoc.justchatting.shared.timeline_today_action_cd
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.timeline_live
+import fr.outadoc.justchatting.shared.internal.timeline_refresh_action_cd
+import fr.outadoc.justchatting.shared.internal.timeline_today_action_cd
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource

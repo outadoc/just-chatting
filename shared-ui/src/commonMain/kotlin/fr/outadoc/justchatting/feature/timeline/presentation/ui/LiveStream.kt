@@ -30,9 +30,9 @@ import coil3.compose.AsyncImage
 import fr.outadoc.justchatting.feature.chat.presentation.ui.TagList
 import fr.outadoc.justchatting.feature.chat.presentation.ui.remoteImageModel
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.all_showDetails_cd
-import fr.outadoc.justchatting.shared.chat_open_action
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.all_showDetails_cd
+import fr.outadoc.justchatting.shared.internal.chat_open_action
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 import fr.outadoc.justchatting.utils.presentation.formatTimeSince

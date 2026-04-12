@@ -25,10 +25,10 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.raid_go_action
-import fr.outadoc.justchatting.shared.raid_go_message
-import fr.outadoc.justchatting.shared.raid_go_title
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.raid_go_action
+import fr.outadoc.justchatting.shared.internal.raid_go_message
+import fr.outadoc.justchatting.shared.internal.raid_go_title
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import org.jetbrains.compose.resources.stringResource
 

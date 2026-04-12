@@ -60,6 +60,7 @@ kotlin {
         commonMain {
             dependencies {
                 api(project(":shared"))
+                implementation(project(":shared-internal"))
 
                 implementation(libs.androidx.paging.compose.common)
                 implementation(libs.coil.compose)

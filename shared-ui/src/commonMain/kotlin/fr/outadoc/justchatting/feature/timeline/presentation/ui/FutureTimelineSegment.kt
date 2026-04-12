@@ -33,8 +33,8 @@ import fr.outadoc.justchatting.feature.chat.presentation.ui.BasicUserInfo
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
 import fr.outadoc.justchatting.feature.shared.presentation.ui.SwipeActionBox
 import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.stream_info
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.stream_info
 import fr.outadoc.justchatting.utils.presentation.format
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import org.jetbrains.compose.resources.stringResource

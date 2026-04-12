@@ -16,8 +16,8 @@ import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewMode
 import fr.outadoc.justchatting.feature.shared.presentation.DetailScreen
 import fr.outadoc.justchatting.feature.shared.presentation.Screen
 import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.settings
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.settings
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 

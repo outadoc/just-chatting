@@ -15,8 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import fr.outadoc.justchatting.feature.chat.presentation.UserInfoViewModel
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
-import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.info_loadError
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.info_loadError
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 

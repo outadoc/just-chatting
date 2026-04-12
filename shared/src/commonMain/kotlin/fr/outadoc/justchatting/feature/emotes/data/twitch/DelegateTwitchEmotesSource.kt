@@ -46,15 +46,15 @@ internal class DelegateTwitchEmotesSource(
             twitchRepository
                 .getUsersById(
                     ids =
-                        emotes
-                            .mapNotNull { emote -> emote.ownerId }
-                            .toSet()
-                            .mapNotNull { ownerId ->
-                                ownerId
-                                    .toLongOrNull()
-                                    ?.takeIf { id -> id > 0 }
-                                    ?.toString()
-                            },
+                    emotes
+                        .mapNotNull { emote -> emote.ownerId }
+                        .toSet()
+                        .mapNotNull { ownerId ->
+                            ownerId
+                                .toLongOrNull()
+                                ?.takeIf { id -> id > 0 }
+                                ?.toString()
+                        },
                 ).first()
                 .fold(
                     onSuccess = { users -> users },
@@ -67,13 +67,13 @@ internal class DelegateTwitchEmotesSource(
         Result.success(
             CachedResult(
                 channelEmotes =
-                    emotes
-                        .filter { emote -> emote.ownerId == params.channelId }
-                        .groupBy { emoteOwners[params.channelId] },
+                emotes
+                    .filter { emote -> emote.ownerId == params.channelId }
+                    .groupBy { emoteOwners[params.channelId] },
                 globalEmotes =
-                    emotes
-                        .filter { emote -> emote.ownerId != params.channelId }
-                        .groupBy { emote -> emoteOwners[emote.ownerId] },
+                emotes
+                    .filter { emote -> emote.ownerId != params.channelId }
+                    .groupBy { emote -> emoteOwners[emote.ownerId] },
             ),
         )
     }

@@ -29,27 +29,27 @@ internal class TwitchIrcCommandParserTest {
                 color = "#0D4200",
                 isAction = false,
                 embeddedEmotes =
-                    listOf(
-                        ChatEmote(
-                            id = "25",
-                            name = "Kappa",
-                        ).map(),
-                        ChatEmote(
-                            id = "25",
-                            name = "Kappa",
-                        ).map(),
-                        ChatEmote(
-                            id = "1902",
-                            name = "Keepo",
-                        ).map(),
-                    ),
+                listOf(
+                    ChatEmote(
+                        id = "25",
+                        name = "Kappa",
+                    ).map(),
+                    ChatEmote(
+                        id = "25",
+                        name = "Kappa",
+                    ).map(),
+                    ChatEmote(
+                        id = "1902",
+                        name = "Keepo",
+                    ).map(),
+                ),
                 badges =
-                    listOf(
-                        Badge(
-                            id = "turbo",
-                            version = "1",
-                        ),
+                listOf(
+                    Badge(
+                        id = "turbo",
+                        version = "1",
                     ),
+                ),
                 isFirstMessageByUser = false,
                 timestamp = Instant.parse("2017-10-05T23:36:12.675Z"),
                 rewardId = null,
@@ -74,16 +74,16 @@ internal class TwitchIrcCommandParserTest {
                 isAction = true,
                 embeddedEmotes = emptyList(),
                 badges =
-                    listOf(
-                        Badge(
-                            id = "moderator",
-                            version = "1",
-                        ),
-                        Badge(
-                            id = "subscriber",
-                            version = "3009",
-                        ),
+                listOf(
+                    Badge(
+                        id = "moderator",
+                        version = "1",
                     ),
+                    Badge(
+                        id = "subscriber",
+                        version = "3009",
+                    ),
+                ),
                 isFirstMessageByUser = false,
                 timestamp = Instant.parse("2022-07-08T16:47:29.487Z"),
                 rewardId = null,
@@ -168,41 +168,41 @@ internal class TwitchIrcCommandParserTest {
                 cumulativeMonths = 41,
                 subscriptionPlan = "Prime",
                 userMessage =
-                    ChatEvent.Message.ChatMessage(
-                        id = "4c5a38ff-6bb3-4cad-a555-dc8a736cfc38",
-                        userId = "99037844",
-                        userLogin = "frfun",
-                        userName = "Frfun",
-                        message = "coxPet pat pat le requin moumou4Content",
-                        color = "#FFFFFF",
-                        isAction = false,
-                        embeddedEmotes =
-                            listOf(
-                                ChatEmote(
-                                    id = "emotesv2_53f30305e78246aea4bc24d299dd09e7",
-                                    name = "coxPet",
-                                ).map(),
-                                ChatEmote(
-                                    id = "emotesv2_f6bd60f5f3ef490aa4e40c7ee792c8c8",
-                                    name = "moumou4Content",
-                                ).map(),
-                            ),
-                        badges =
-                            listOf(
-                                Badge(
-                                    id = "subscriber",
-                                    version = "36",
-                                ),
-                                Badge(
-                                    id = "bits",
-                                    version = "1000",
-                                ),
-                            ),
-                        isFirstMessageByUser = false,
-                        timestamp = Instant.parse("2022-07-08T16:49:19.852Z"),
-                        rewardId = null,
-                        inReplyTo = null,
+                ChatEvent.Message.ChatMessage(
+                    id = "4c5a38ff-6bb3-4cad-a555-dc8a736cfc38",
+                    userId = "99037844",
+                    userLogin = "frfun",
+                    userName = "Frfun",
+                    message = "coxPet pat pat le requin moumou4Content",
+                    color = "#FFFFFF",
+                    isAction = false,
+                    embeddedEmotes =
+                    listOf(
+                        ChatEmote(
+                            id = "emotesv2_53f30305e78246aea4bc24d299dd09e7",
+                            name = "coxPet",
+                        ).map(),
+                        ChatEmote(
+                            id = "emotesv2_f6bd60f5f3ef490aa4e40c7ee792c8c8",
+                            name = "moumou4Content",
+                        ).map(),
                     ),
+                    badges =
+                    listOf(
+                        Badge(
+                            id = "subscriber",
+                            version = "36",
+                        ),
+                        Badge(
+                            id = "bits",
+                            version = "1000",
+                        ),
+                    ),
+                    isFirstMessageByUser = false,
+                    timestamp = Instant.parse("2022-07-08T16:49:19.852Z"),
+                    rewardId = null,
+                    inReplyTo = null,
+                ),
             )
         }
     }
@@ -216,29 +216,29 @@ internal class TwitchIrcCommandParserTest {
             ChatEvent.Message.Announcement(
                 timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
                 userMessage =
-                    ChatEvent.Message.ChatMessage(
-                        id = "54b4d931-8db5-47ad-b6e7-6687cdbbb8ec",
-                        userId = "651859616",
-                        userLogin = "pepitipepibot",
-                        userName = "pepitipepibot",
-                        message = "LEZGONGUE LA MIXTAPE ELLE EST LAAAAAAAA : https://open.spotify.com/album/0X9kU5VLUmXoi6Hk6ou3PP?si=85JnJJSARpqCJ_ugsGNVhQ !! Pepe a 2 track : Dig dig deep deep & Light you up !",
-                        color = "#8A2BE2",
-                        embeddedEmotes = emptyList(),
-                        badges =
-                            listOf(
-                                Badge(
-                                    id = "moderator",
-                                    version = "1",
-                                ),
-                                Badge(
-                                    id = "subscriber",
-                                    version = "3009",
-                                ),
-                            ),
-                        timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
-                        rewardId = null,
-                        inReplyTo = null,
+                ChatEvent.Message.ChatMessage(
+                    id = "54b4d931-8db5-47ad-b6e7-6687cdbbb8ec",
+                    userId = "651859616",
+                    userLogin = "pepitipepibot",
+                    userName = "pepitipepibot",
+                    message = "LEZGONGUE LA MIXTAPE ELLE EST LAAAAAAAA : https://open.spotify.com/album/0X9kU5VLUmXoi6Hk6ou3PP?si=85JnJJSARpqCJ_ugsGNVhQ !! Pepe a 2 track : Dig dig deep deep & Light you up !",
+                    color = "#8A2BE2",
+                    embeddedEmotes = emptyList(),
+                    badges =
+                    listOf(
+                        Badge(
+                            id = "moderator",
+                            version = "1",
+                        ),
+                        Badge(
+                            id = "subscriber",
+                            version = "3009",
+                        ),
                     ),
+                    timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
+                    rewardId = null,
+                    inReplyTo = null,
+                ),
             )
         }
     }
@@ -350,19 +350,19 @@ internal class TwitchIrcCommandParserTest {
         expected {
             ChatEvent.Command.UserState(
                 emoteSets =
-                    listOf(
-                        "0",
-                        "19194",
-                        "553791",
-                        "773027",
-                        "300374282",
-                        "380519965",
-                        "477339272",
-                        "494046698",
-                        "537206155",
-                        "592920959",
-                        "610186276",
-                    ),
+                listOf(
+                    "0",
+                    "19194",
+                    "553791",
+                    "773027",
+                    "300374282",
+                    "380519965",
+                    "477339272",
+                    "494046698",
+                    "537206155",
+                    "592920959",
+                    "610186276",
+                ),
             )
         }
     }
@@ -387,13 +387,13 @@ internal class TwitchIrcCommandParserTest {
                 timestamp = Instant.parse("2022-08-23T19:01:58.667Z"),
                 rewardId = null,
                 inReplyTo =
-                    ChatEvent.Message.ChatMessage.InReplyTo(
-                        userDisplayName = "Brankhorst",
-                        message = "On dirait EVE on line",
-                        id = "7ffcf399-8d69-495c-920c-ea15a96eeee4",
-                        userId = "108193474",
-                        userLogin = "brankhorst",
-                    ),
+                ChatEvent.Message.ChatMessage.InReplyTo(
+                    userDisplayName = "Brankhorst",
+                    message = "On dirait EVE on line",
+                    id = "7ffcf399-8d69-495c-920c-ea15a96eeee4",
+                    userId = "108193474",
+                    userLogin = "brankhorst",
+                ),
             )
         }
     }
@@ -407,31 +407,31 @@ internal class TwitchIrcCommandParserTest {
             ChatEvent.Message.HighlightedMessage(
                 timestamp = Instant.parse("2022-08-25T18:32:59.625Z"),
                 userMessage =
-                    ChatEvent.Message.ChatMessage(
-                        id = "68d0ad7e-7743-4b51-b8fd-3d995eb17fd5",
-                        timestamp = Instant.parse("2022-08-25T18:32:59.625Z"),
-                        userId = "137824138",
-                        userLogin = "florianpremier",
-                        userName = "FlorianPremier",
-                        message = "vive l'argent",
-                        color = "#FF0000",
-                        isAction = false,
-                        embeddedEmotes = emptyList(),
-                        badges =
-                            listOf(
-                                Badge(
-                                    id = "subscriber",
-                                    version = "18",
-                                ),
-                                Badge(
-                                    id = "premium",
-                                    version = "1",
-                                ),
-                            ),
-                        isFirstMessageByUser = false,
-                        rewardId = null,
-                        inReplyTo = null,
+                ChatEvent.Message.ChatMessage(
+                    id = "68d0ad7e-7743-4b51-b8fd-3d995eb17fd5",
+                    timestamp = Instant.parse("2022-08-25T18:32:59.625Z"),
+                    userId = "137824138",
+                    userLogin = "florianpremier",
+                    userName = "FlorianPremier",
+                    message = "vive l'argent",
+                    color = "#FF0000",
+                    isAction = false,
+                    embeddedEmotes = emptyList(),
+                    badges =
+                    listOf(
+                        Badge(
+                            id = "subscriber",
+                            version = "18",
+                        ),
+                        Badge(
+                            id = "premium",
+                            version = "1",
+                        ),
                     ),
+                    isFirstMessageByUser = false,
+                    rewardId = null,
+                    inReplyTo = null,
+                ),
             )
         }
     }
@@ -453,16 +453,16 @@ internal class TwitchIrcCommandParserTest {
                 isAction = false,
                 embeddedEmotes = emptyList(),
                 badges =
-                    listOf(
-                        Badge(
-                            id = "subscriber",
-                            version = "24",
-                        ),
-                        Badge(
-                            id = "sub-gifter",
-                            version = "5",
-                        ),
+                listOf(
+                    Badge(
+                        id = "subscriber",
+                        version = "24",
                     ),
+                    Badge(
+                        id = "sub-gifter",
+                        version = "5",
+                    ),
+                ),
                 isFirstMessageByUser = false,
                 rewardId = null,
                 inReplyTo = null,

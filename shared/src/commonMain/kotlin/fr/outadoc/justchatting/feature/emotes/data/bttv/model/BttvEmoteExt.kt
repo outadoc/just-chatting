@@ -28,15 +28,15 @@ internal fun BttvEmote.map(): Emote = Emote(
     ownerId = null,
     isZeroWidth = code in zeroWidthEmotes,
     ratio =
-        if (height != null && width != null) {
-            width.toFloat() / height.toFloat()
-        } else {
-            1f
-        },
+    if (height != null && width != null) {
+        width.toFloat() / height.toFloat()
+    } else {
+        1f
+    },
     urls =
-        EmoteUrls(
-            availableDensities.mapValues { (_, densityStr) ->
-                "${ApiEndpoints.BTTV_EMOTE_CDN}/$id/$densityStr"
-            },
-        ),
+    EmoteUrls(
+        availableDensities.mapValues { (_, densityStr) ->
+            "${ApiEndpoints.BTTV_EMOTE_CDN}/$id/$densityStr"
+        },
+    ),
 )

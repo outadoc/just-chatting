@@ -26,21 +26,20 @@ internal class TwitchAuthApi(
             }
         }
 
-    override suspend fun validateToken(token: String): Result<AuthValidationResponse> =
-        runCatching {
-            client
-                .get {
-                    url { path("validate") }
-                    headers { append("Authorization", "Bearer $token") }
-                }.body<TwitchAuthValidationResponse>()
-        }.map { response ->
-            AuthValidationResponse(
-                clientId = response.clientId,
-                login = response.login,
-                userId = response.userId,
-                scopes = response.scopes.toImmutableSet(),
-            )
-        }
+    override suspend fun validateToken(token: String): Result<AuthValidationResponse> = runCatching {
+        client
+            .get {
+                url { path("validate") }
+                headers { append("Authorization", "Bearer $token") }
+            }.body<TwitchAuthValidationResponse>()
+    }.map { response ->
+        AuthValidationResponse(
+            clientId = response.clientId,
+            login = response.login,
+            userId = response.userId,
+            scopes = response.scopes.toImmutableSet(),
+        )
+    }
 
     override suspend fun revokeToken(
         clientId: String,

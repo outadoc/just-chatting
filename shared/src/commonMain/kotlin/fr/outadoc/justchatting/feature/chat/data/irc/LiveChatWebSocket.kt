@@ -151,7 +151,7 @@ internal class LiveChatWebSocket(
         when (val command: ChatEvent? = parser.parse(received)) {
             is ChatEvent.Command.UserState,
             is ChatEvent.Message.Notice,
-                -> {
+            -> {
                 // Handled by LoggedInChatWebSocket
             }
 
@@ -163,7 +163,7 @@ internal class LiveChatWebSocket(
             is ChatEvent.Command.RoomStateDelta,
             is ChatEvent.Command.ClearChat,
             is ChatEvent.Command.ClearMessage,
-                -> {
+            -> {
                 emit(command)
             }
 

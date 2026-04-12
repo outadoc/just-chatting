@@ -41,35 +41,35 @@ internal class LocalStreamsDb(
                 ChannelScheduleSegment(
                     id = stream.id,
                     user =
-                        User(
-                            id = stream.user_id,
-                            login = stream.login,
-                            displayName = stream.display_name,
-                            profileImageUrl = stream.profile_image_url,
-                            description = stream.description,
-                            createdAt = Instant.fromEpochMilliseconds(stream.created_at),
-                            usedAt =
-                                if (stream.used_at > 0) {
-                                    Instant.fromEpochMilliseconds(stream.used_at)
-                                } else {
-                                    null
-                                },
-                        ),
-                    startTime = Instant.fromEpochMilliseconds(stream.start_time),
-                    endTime =
-                        stream.end_time
-                            .takeIf { it > 0 }
-                            ?.let { Instant.fromEpochMilliseconds(it) },
-                    title = stream.title,
-                    category =
-                        if (categoryId != null && categoryName != null) {
-                            StreamCategory(
-                                id = categoryId,
-                                name = categoryName,
-                            )
+                    User(
+                        id = stream.user_id,
+                        login = stream.login,
+                        displayName = stream.display_name,
+                        profileImageUrl = stream.profile_image_url,
+                        description = stream.description,
+                        createdAt = Instant.fromEpochMilliseconds(stream.created_at),
+                        usedAt =
+                        if (stream.used_at > 0) {
+                            Instant.fromEpochMilliseconds(stream.used_at)
                         } else {
                             null
                         },
+                    ),
+                    startTime = Instant.fromEpochMilliseconds(stream.start_time),
+                    endTime =
+                    stream.end_time
+                        .takeIf { it > 0 }
+                        ?.let { Instant.fromEpochMilliseconds(it) },
+                    title = stream.title,
+                    category =
+                    if (categoryId != null && categoryName != null) {
+                        StreamCategory(
+                            id = categoryId,
+                            name = categoryName,
+                        )
+                    } else {
+                        null
+                    },
                 )
             }
         }.flowOn(DispatchersProvider.io)
@@ -97,14 +97,14 @@ internal class LocalStreamsDb(
                     title = stream.title,
                     viewerCount = stream.viewer_count,
                     category =
-                        if (categoryId != null && categoryName != null) {
-                            StreamCategory(
-                                id = categoryId,
-                                name = categoryName,
-                            )
-                        } else {
-                            null
-                        },
+                    if (categoryId != null && categoryName != null) {
+                        StreamCategory(
+                            id = categoryId,
+                            name = categoryName,
+                        )
+                    } else {
+                        null
+                    },
                     tags = stream.tags.split(',').toPersistentSet(),
                 )
             }
@@ -126,35 +126,35 @@ internal class LocalStreamsDb(
                 ChannelScheduleSegment(
                     id = stream.id,
                     user =
-                        User(
-                            id = stream.user_id,
-                            login = stream.login,
-                            displayName = stream.display_name,
-                            profileImageUrl = stream.profile_image_url,
-                            description = stream.description,
-                            createdAt = Instant.fromEpochMilliseconds(stream.created_at),
-                            usedAt =
-                                if (stream.used_at > 0) {
-                                    Instant.fromEpochMilliseconds(stream.used_at)
-                                } else {
-                                    null
-                                },
-                        ),
-                    startTime = Instant.fromEpochMilliseconds(stream.start_time),
-                    endTime =
-                        stream.end_time
-                            .takeIf { it > 0 }
-                            ?.let { Instant.fromEpochMilliseconds(it) },
-                    title = stream.title,
-                    category =
-                        if (categoryId != null && categoryName != null) {
-                            StreamCategory(
-                                id = categoryId,
-                                name = categoryName,
-                            )
+                    User(
+                        id = stream.user_id,
+                        login = stream.login,
+                        displayName = stream.display_name,
+                        profileImageUrl = stream.profile_image_url,
+                        description = stream.description,
+                        createdAt = Instant.fromEpochMilliseconds(stream.created_at),
+                        usedAt =
+                        if (stream.used_at > 0) {
+                            Instant.fromEpochMilliseconds(stream.used_at)
                         } else {
                             null
                         },
+                    ),
+                    startTime = Instant.fromEpochMilliseconds(stream.start_time),
+                    endTime =
+                    stream.end_time
+                        .takeIf { it > 0 }
+                        ?.let { Instant.fromEpochMilliseconds(it) },
+                    title = stream.title,
+                    category =
+                    if (categoryId != null && categoryName != null) {
+                        StreamCategory(
+                            id = categoryId,
+                            name = categoryName,
+                        )
+                    } else {
+                        null
+                    },
                 )
             }
         }.flowOn(DispatchersProvider.io)

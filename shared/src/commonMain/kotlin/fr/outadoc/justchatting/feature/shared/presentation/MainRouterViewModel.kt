@@ -67,7 +67,7 @@ public class MainRouterViewModel internal constructor(
 
                     is State.Loading,
                     is State.LoggedIn,
-                        -> {
+                    -> {
                         authCallbackWebServer.stop()
                     }
                 }

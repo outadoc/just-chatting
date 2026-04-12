@@ -20,23 +20,22 @@ internal class ChannelStvEmotesSource(
         next: Params,
     ): Boolean = previous.channelId == next.channelId && previous.channelName == next.channelName
 
-    override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> =
-        withContext(DispatchersProvider.io) {
-            val prefs = preferencesRepository.currentPreferences.first()
-            if (!prefs.enableStvEmotes) {
-                return@withContext Result.success(emptyList())
-            }
-
-            stvEmotesApi
-                .getStvEmotes(params.channelId)
-                .map { emotes ->
-                    flatListOf(
-                        EmoteSetItem.Header(
-                            title = params.channelName.desc(),
-                            source = Res.string.chat_source_stv.desc(),
-                        ),
-                        emotes.map { emote -> EmoteSetItem.Emote(emote) },
-                    )
-                }
+    override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> = withContext(DispatchersProvider.io) {
+        val prefs = preferencesRepository.currentPreferences.first()
+        if (!prefs.enableStvEmotes) {
+            return@withContext Result.success(emptyList())
         }
+
+        stvEmotesApi
+            .getStvEmotes(params.channelId)
+            .map { emotes ->
+                flatListOf(
+                    EmoteSetItem.Header(
+                        title = params.channelName.desc(),
+                        source = Res.string.chat_source_stv.desc(),
+                    ),
+                    emotes.map { emote -> EmoteSetItem.Emote(emote) },
+                )
+            }
+    }
 }

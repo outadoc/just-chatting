@@ -29,30 +29,26 @@ public inline fun logError(
         level = Logger.Level.Error,
         tag = tag,
         content =
-            if (throwable != null) {
-                {
-                    buildString {
-                        appendLine(content())
-                        appendLine(throwable.stackTraceToString())
-                    }
+        if (throwable != null) {
+            {
+                buildString {
+                    appendLine(content())
+                    appendLine(throwable.stackTraceToString())
                 }
-            } else {
-                content
-            },
+            }
+        } else {
+            content
+        },
     )
 }
 
-public inline fun <reified T : Any> logVerbose(noinline content: () -> String): Unit =
-    logVerbose(T::class.simpleName!!, content)
+public inline fun <reified T : Any> logVerbose(noinline content: () -> String): Unit = logVerbose(T::class.simpleName!!, content)
 
-public inline fun <reified T : Any> logDebug(noinline content: () -> String): Unit =
-    logDebug(T::class.simpleName!!, content)
+public inline fun <reified T : Any> logDebug(noinline content: () -> String): Unit = logDebug(T::class.simpleName!!, content)
 
-public inline fun <reified T : Any> logInfo(noinline content: () -> String): Unit =
-    logInfo(T::class.simpleName!!, content)
+public inline fun <reified T : Any> logInfo(noinline content: () -> String): Unit = logInfo(T::class.simpleName!!, content)
 
-public inline fun <reified T : Any> logWarning(noinline content: () -> String): Unit =
-    logWarning(T::class.simpleName!!, content)
+public inline fun <reified T : Any> logWarning(noinline content: () -> String): Unit = logWarning(T::class.simpleName!!, content)
 
 public inline fun <reified T : Any> logError(
     throwable: Throwable? = null,

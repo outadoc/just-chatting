@@ -61,16 +61,16 @@ internal class ChatStateReducerTest {
         timestamp: Instant = Instant.fromEpochMilliseconds(1000),
     ): ChatListItem.Message.Simple = ChatListItem.Message.Simple(
         body =
-            ChatListItem.Message.Body(
-                messageId = messageId,
-                message = text,
-                chatter =
-                    Chatter(
-                        id = chatterId,
-                        login = chatterLogin,
-                        displayName = chatterDisplayName,
-                    ),
+        ChatListItem.Message.Body(
+            messageId = messageId,
+            message = text,
+            chatter =
+            Chatter(
+                id = chatterId,
+                login = chatterLogin,
+                displayName = chatterDisplayName,
             ),
+        ),
         timestamp = timestamp,
     )
 
@@ -258,7 +258,7 @@ internal class ChatStateReducerTest {
             persistentMapOf(
                 "Cheer1" to Emote(
                     name = "Cheer1",
-                    urls = EmoteUrls("https://example.com/cheer.png")
+                    urls = EmoteUrls("https://example.com/cheer.png"),
                 ),
             )
         val state =
@@ -429,10 +429,10 @@ internal class ChatStateReducerTest {
         val state =
             testChattingState.copy(
                 roomState =
-                    RoomState(
-                        slowModeDuration = 30.seconds,
-                        isEmoteOnly = true,
-                    ),
+                RoomState(
+                    slowModeDuration = 30.seconds,
+                    isEmoteOnly = true,
+                ),
             )
         val delta = ChatListItem.RoomStateDelta(isSubOnly = true)
         val action = ChatViewModel.Action.ChangeRoomState(delta = delta)
@@ -683,13 +683,13 @@ internal class ChatStateReducerTest {
                 pinId = "pin-1",
                 pinnedBy = PinnedMessage.User(userId = "mod-1", displayName = "Mod"),
                 message =
-                    PinnedMessage.Message(
-                        messageId = "pinned-msg-1",
-                        sender = PinnedMessage.User(userId = "chatter-1", displayName = "Chatter1"),
-                        content = PinnedMessage.Message.Content(text = "hello"),
-                        startsAt = Instant.fromEpochMilliseconds(1000),
-                        endsAt = Instant.fromEpochMilliseconds(9000),
-                    ),
+                PinnedMessage.Message(
+                    messageId = "pinned-msg-1",
+                    sender = PinnedMessage.User(userId = "chatter-1", displayName = "Chatter1"),
+                    content = PinnedMessage.Message.Content(text = "hello"),
+                    startsAt = Instant.fromEpochMilliseconds(1000),
+                    endsAt = Instant.fromEpochMilliseconds(9000),
+                ),
             )
         val action = ChatViewModel.Action.UpdatePinnedMessage(pinnedMessage = pinnedMessage)
 
@@ -710,13 +710,13 @@ internal class ChatStateReducerTest {
                 pinId = "pin-1",
                 pinnedBy = PinnedMessage.User(userId = "mod-1", displayName = "Mod"),
                 message =
-                    PinnedMessage.Message(
-                        messageId = "nonexistent-msg",
-                        sender = PinnedMessage.User(userId = "chatter-1", displayName = "Chatter1"),
-                        content = PinnedMessage.Message.Content(text = "hello"),
-                        startsAt = Instant.fromEpochMilliseconds(1000),
-                        endsAt = Instant.fromEpochMilliseconds(9000),
-                    ),
+                PinnedMessage.Message(
+                    messageId = "nonexistent-msg",
+                    sender = PinnedMessage.User(userId = "chatter-1", displayName = "Chatter1"),
+                    content = PinnedMessage.Message.Content(text = "hello"),
+                    startsAt = Instant.fromEpochMilliseconds(1000),
+                    endsAt = Instant.fromEpochMilliseconds(9000),
+                ),
             )
         val action = ChatViewModel.Action.UpdatePinnedMessage(pinnedMessage = pinnedMessage)
 
@@ -753,16 +753,16 @@ internal class ChatStateReducerTest {
         val state =
             testChattingState.copy(
                 ongoingEvents =
-                    OngoingEvents(
-                        outgoingRaid =
-                            Raid.Preparing(
-                                targetId = "t",
-                                targetLogin = "t",
-                                targetDisplayName = "T",
-                                targetProfileImageUrl = null,
-                                viewerCount = 10,
-                            ),
+                OngoingEvents(
+                    outgoingRaid =
+                    Raid.Preparing(
+                        targetId = "t",
+                        targetLogin = "t",
+                        targetDisplayName = "T",
+                        targetProfileImageUrl = null,
+                        viewerCount = 10,
                     ),
+                ),
             )
         val action = ChatViewModel.Action.UpdateRaidAnnouncement(raid = null)
 
@@ -992,7 +992,7 @@ internal class ChatStateReducerTest {
                 AutoCompleteItem.Emote(
                     emote = Emote(
                         name = "Kappa",
-                        urls = EmoteUrls("https://example.com/kappa.png")
+                        urls = EmoteUrls("https://example.com/kappa.png"),
                     ),
                 ),
             )

@@ -25,21 +25,20 @@ internal data class DeeplinkParser(
         return null
     }
 
-    private fun Uri.isViewChannelUrl(): Boolean =
-        scheme == DeeplinkDefinitions.ViewChannel.scheme &&
-                host == DeeplinkDefinitions.ViewChannel.host
+    private fun Uri.isViewChannelUrl(): Boolean = scheme == DeeplinkDefinitions.ViewChannel.scheme &&
+        host == DeeplinkDefinitions.ViewChannel.host
 
     private fun Uri.isRedirectUrl(): Boolean {
         val redirectUri = Uri.parse(oAuthAppCredentials.redirectUri)
         val isFromUniversalLink =
             scheme == redirectUri.scheme &&
-                    host == redirectUri.host &&
-                    path == redirectUri.path
+                host == redirectUri.host &&
+                path == redirectUri.path
 
         val isFromDeeplink =
             scheme == DeeplinkDefinitions.AuthCallback.scheme &&
-                    host == DeeplinkDefinitions.AuthCallback.host &&
-                    path == DeeplinkDefinitions.AuthCallback.path
+                host == DeeplinkDefinitions.AuthCallback.host &&
+                path == DeeplinkDefinitions.AuthCallback.path
 
         return isFromDeeplink || isFromUniversalLink
     }

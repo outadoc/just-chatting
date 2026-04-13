@@ -188,15 +188,20 @@ struct ChatView: View {
 
     @ViewBuilder
     private func emoteView(emote: Emote) -> some View {
-        AsyncImage(url: imageUrl(urls: emote.urls)) { phase in
-            switch phase {
-            case .success(let image):
-                image.resizable().scaledToFit()
-            default:
-                Color.clear
+        EmoteView(url: imageUrl(urls: emote.urls))
+    }
+
+    private struct EmoteView: View {
+        let url: URL?
+        @State private var aspectRatio: CGFloat = 1
+
+        var body: some View {
+            AnimatedImageView(url: url) { size in
+                guard size.height > 0 else { return }
+                aspectRatio = size.width / size.height
             }
+            .frame(width: 20 * aspectRatio, height: 20)
         }
-        .frame(height: 20)
     }
 
     private func imageUrl(urls: EmoteUrls) -> URL? {

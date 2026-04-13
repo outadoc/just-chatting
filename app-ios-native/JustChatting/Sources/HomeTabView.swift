@@ -9,23 +9,40 @@ import SwiftUI
 struct HomeTabView: View {
     let viewModel: MainRouterViewModel
     @State private var selectedTab: Int = 0 // 0 = Live (DefaultScreen)
+    @State private var selectedUserId: String?
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            Tab("Live", systemImage: "house", value: 0) {
-                LiveChannelsView()
+        NavigationSplitView {
+            TabView(selection: $selectedTab) {
+                Tab("Live", systemImage: "house", value: 0) {
+                    LiveChannelsView { userId in
+                        selectedUserId = userId
+                    }
+                }
+                Tab("Schedule", systemImage: "calendar.badge.clock", value: 1) {
+                    ScheduleView()
+                }
+                Tab("Following", systemImage: "heart", value: 2) {
+                    FollowedChannelsView { userId in
+                        selectedUserId = userId
+                    }
+                }
+                Tab("Search", systemImage: "magnifyingglass", value: 3) {
+                    SearchView { userId in
+                        selectedUserId = userId
+                    }
+                }
+                Tab("Settings", systemImage: "person.circle", value: 4) {
+                    SettingsView()
+                }
             }
-            Tab("Schedule", systemImage: "calendar.badge.clock", value: 1) {
-                ScheduleView()
-            }
-            Tab("Following", systemImage: "heart", value: 2) {
-                FollowedChannelsView()
-            }
-            Tab("Search", systemImage: "magnifyingglass", value: 3) {
-                SearchView()
-            }
-            Tab("Settings", systemImage: "person.circle", value: 4) {
-                SettingsView()
+        } detail: {
+            if let userId = selectedUserId {
+                ChatView(userId: userId)
+                    .id(userId)
+                    .onDisappear { selectedUserId = nil }
+            } else {
+                ContentUnavailableView("Select a channel", systemImage: "message")
             }
         }
         .collect(flow: viewModel.events) { event in

@@ -7,28 +7,23 @@ import JCShared
 import SwiftUI
 
 struct SearchView: View {
+    var navigateToChannel: (String) -> Void
     @State private var viewModel = KoinHelper().getChannelSearchViewModel()
     @State private var pager = SearchResultsPager()
     @State private var query: String = ""
     @State private var items: [ChannelSearchResult] = []
     @State private var isLoading = false
-    @State private var navigationPath = NavigationPath()
 
     var body: some View {
-        NavigationStack(path: $navigationPath) {
-            Observing(viewModel.state) { state in
-                if query.isEmpty {
-                    recentChannelsView(state: state)
-                } else {
-                    searchResultsView
-                }
-            }
-            .searchable(text: $query, prompt: "Search channels")
-            .navigationTitle("Search")
-            .navigationDestination(for: String.self) { userId in
-                ChatView(userId: userId)
+        Observing(viewModel.state) { state in
+            if query.isEmpty {
+                recentChannelsView(state: state)
+            } else {
+                searchResultsView
             }
         }
+        .searchable(text: $query, prompt: "Search channels")
+        .navigationTitle("Search")
         .onAppear {
             viewModel.onStart()
         }
@@ -51,7 +46,7 @@ struct SearchView: View {
         .collect(flow: viewModel.events) { event in
             switch onEnum(of: event) {
             case .navigateToChannel(let e):
-                navigationPath.append(e.userId)
+                navigateToChannel(e.userId)
             }
         }
     }

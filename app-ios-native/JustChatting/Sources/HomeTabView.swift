@@ -8,43 +8,34 @@ import SwiftUI
 
 struct HomeTabView: View {
     let viewModel: MainRouterViewModel
-    @State private var selectedTab: Int = 0 // 0 = Live (DefaultScreen)
-    @State private var selectedUserId: String?
-    @State private var preferredCompactColumn: NavigationSplitViewColumn = .sidebar
+    @State private var selectedTab: Int = 0
 
     var body: some View {
-        NavigationSplitView(preferredCompactColumn: $preferredCompactColumn) {
-            TabView(selection: $selectedTab) {
-                Tab("Live", systemImage: "house", value: 0) {
-                    LiveChannelsView { userId in
-                        selectedUserId = userId
-                        preferredCompactColumn = .detail
-                    }
-                }
-                Tab("Schedule", systemImage: "calendar.badge.clock", value: 1) {
-                    ScheduleView()
-                }
-                Tab("Following", systemImage: "heart", value: 2) {
-                    FollowedChannelsView { userId in
-                        selectedUserId = userId
-                        preferredCompactColumn = .detail
-                    }
-                }
-                Tab("Search", systemImage: "magnifyingglass", value: 3) {
-                    SearchView { userId in
-                        selectedUserId = userId
-                        preferredCompactColumn = .detail
-                    }
-                }
-                Tab("Settings", systemImage: "person.circle", value: 4) {
-                    SettingsView()
+        TabView(selection: $selectedTab) {
+            Tab("Live", systemImage: "house", value: 0) {
+                ChannelBrowserTab { navigate in
+                    LiveChannelsView(navigateToChannel: navigate)
                 }
             }
-        } detail: {
-            if let userId = selectedUserId {
-                ChatView(userId: userId)
-            } else {
-                ContentUnavailableView("Select a channel", systemImage: "message")
+            Tab("Schedule", systemImage: "calendar.badge.clock", value: 1) {
+                NavigationStack {
+                    ScheduleView()
+                }
+            }
+            Tab("Following", systemImage: "heart", value: 2) {
+                ChannelBrowserTab { navigate in
+                    FollowedChannelsView(navigateToChannel: navigate)
+                }
+            }
+            Tab("Search", systemImage: "magnifyingglass", value: 3) {
+                ChannelBrowserTab { navigate in
+                    SearchView(navigateToChannel: navigate)
+                }
+            }
+            Tab("Settings", systemImage: "person.circle", value: 4) {
+                NavigationStack {
+                    SettingsView()
+                }
             }
         }
         .collect(flow: viewModel.events) { event in
@@ -70,6 +61,31 @@ struct HomeTabView: View {
             default: ScreenLive()
             }
             viewModel.onTabSelected(screen: screen)
+        }
+    }
+}
+
+private struct ChannelBrowserTab<Content: View>: View {
+    let content: (@escaping (String) -> Void) -> Content
+    @State private var selectedUserId: String?
+    @State private var preferredCompactColumn: NavigationSplitViewColumn = .sidebar
+
+    init(_ content: @escaping (@escaping (String) -> Void) -> Content) {
+        self.content = content
+    }
+
+    var body: some View {
+        NavigationSplitView(preferredCompactColumn: $preferredCompactColumn) {
+            content { userId in
+                selectedUserId = userId
+                preferredCompactColumn = .detail
+            }
+        } detail: {
+            if let userId = selectedUserId {
+                ChatView(userId: userId)
+            } else {
+                ContentUnavailableView("Select a channel", systemImage: "message")
+            }
         }
     }
 }

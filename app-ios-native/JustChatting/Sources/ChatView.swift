@@ -39,12 +39,14 @@ struct ChatView: View {
     @ViewBuilder
     private func chattingView(chatting: ChatViewModel.StateChatting) -> some View {
         let messages = chatting.chatMessages.reversed()
+        let globalEmotes = chatting.allEmotesMap
+            .merging(chatting.cheerEmotes) { _, cheer in cheer }
         VStack(spacing: 0) {
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 2) {
                         ForEach(Array(messages.enumerated()), id: \.offset) { index, message in
-                            messageRow(message: message)
+                            messageRow(message: message, globalEmotes: globalEmotes)
                                 .id(index)
                         }
                     }
@@ -104,14 +106,14 @@ struct ChatView: View {
     }
 
     @ViewBuilder
-    private func messageRow(message: ChatListItemMessage) -> some View {
+    private func messageRow(message: ChatListItemMessage, globalEmotes: [String: Emote]) -> some View {
         switch onEnum(of: message) {
         case .simple(let simple):
-            chatMessageView(body: simple.body)
+            chatMessageView(body: simple.body, globalEmotes: globalEmotes)
 
         case .highlighted(let highlighted):
             if let body = highlighted.body {
-                chatMessageView(body: body)
+                chatMessageView(body: body, globalEmotes: globalEmotes)
                     .padding(6)
                     .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
             }
@@ -122,11 +124,9 @@ struct ChatView: View {
     }
 
     @ViewBuilder
-    private func chatMessageView(body: ChatListItemMessage.Body) -> some View {
-        let emotesByName = Dictionary(
-            body.embeddedEmotes.map { ($0.name, $0) },
-            uniquingKeysWith: { first, _ in first }
-        )
+    private func chatMessageView(body: ChatListItemMessage.Body, globalEmotes: [String: Emote]) -> some View {
+        let emotesByName = globalEmotes
+            .merging(body.embeddedEmotes.map { ($0.name, $0) }) { _, specific in specific }
         let tokens = tokenize(message: body.message, emotesByName: emotesByName)
 
         FlowLayout(spacing: 2) {

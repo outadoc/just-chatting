@@ -10,7 +10,10 @@ struct ChatView: View {
     let userId: String
 
     @State private var viewModel = KoinHelper().getChatViewModel()
+    
+    // TODO use VM state instead
     @State private var messageText = ""
+
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
@@ -44,34 +47,39 @@ struct ChatView: View {
         let messages = chatting.chatMessages.reversed()
         let globalEmotes = chatting.allEmotesMap
             .merging(chatting.cheerEmotes) { _, cheer in cheer }
-        VStack(spacing: 0) {
-            ScrollViewReader { proxy in
-                ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 2) {
-                        ForEach(Array(messages.enumerated()), id: \.offset) { index, message in
-                            messageRow(message: message, globalEmotes: globalEmotes)
-                                .id(index)
-                        }
+        ScrollViewReader { proxy in
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 0) {
+                    ForEach(Array(messages.enumerated()), id: \.offset) { index, message in
+                        messageRow(message: message, globalEmotes: globalEmotes, index: index)
+                            .id(index)
                     }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
                 }
-                .onAppear {
+                .padding(.vertical, 4)
+            }
+            .onAppear {
+                proxy.scrollTo(messages.count - 1, anchor: .bottom)
+            }
+            .onChange(of: messages.count) { _, _ in
+                withAnimation {
                     proxy.scrollTo(messages.count - 1, anchor: .bottom)
                 }
-                .onChange(of: messages.count) { _, _ in
-                    withAnimation {
-                        proxy.scrollTo(messages.count - 1, anchor: .bottom)
-                    }
-                }
             }
-
-            Divider()
-
-            Observing(viewModel.inputState) { _ in
-                HStack(spacing: 8) {
-                    TextField("Send a message", text: $messageText)
-                        .textFieldStyle(.roundedBorder)
+        }
+        .navigationTitle(chatting.user.displayName)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Circle()
+                    .fill(chatting.connectionStatus.isAlive ? Color.green : Color.red)
+                    .frame(width: 10, height: 10)
+            }
+            ToolbarItem(placement: .bottomBar) {
+                HStack(alignment: .center, spacing: 8) {
+                    TextField("Send a message", text: $messageText, axis: .vertical)
+                        .textFieldStyle(.plain)
+                        .lineLimit(1...5)
+                        .frame(maxWidth: .infinity)
                         .onChange(of: messageText) { _, newValue in
                             viewModel.onMessageInputChanged(
                                 message: newValue,
@@ -89,36 +97,41 @@ struct ChatView: View {
                         )
                         messageText = ""
                     } label: {
-                        Image(systemName: "paperplane.fill")
+                        Image(systemName: "arrow.up")
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.white)
+                            .frame(width: 32, height: 32)
+                            .background(
+                                messageText.isEmpty ? Color(.systemGray3) : Color.accentColor,
+                                in: Circle()
+                            )
                     }
                     .disabled(messageText.isEmpty)
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-            }
-        }
-        .navigationTitle(chatting.user.displayName)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Circle()
-                    .fill(chatting.connectionStatus.isAlive ? Color.green : Color.red)
-                    .frame(width: 10, height: 10)
             }
         }
     }
 
     @ViewBuilder
-    private func messageRow(message: ChatListItemMessage, globalEmotes: [String: Emote]) -> some View {
+    private func messageRow(message: ChatListItemMessage, globalEmotes: [String: Emote], index: Int) -> some View {
+        let rowBackground: Color = index.isMultiple(of: 2) ? Color(.systemBackground) : Color(.secondarySystemBackground)
         switch onEnum(of: message) {
         case .simple(let simple):
             chatMessageView(body: simple.body, globalEmotes: globalEmotes)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(rowBackground)
 
         case .highlighted(let highlighted):
             if let body = highlighted.body {
                 chatMessageView(body: body, globalEmotes: globalEmotes)
-                    .padding(6)
+                    .padding(8)
                     .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(rowBackground)
             }
 
         case .notice:
@@ -150,7 +163,6 @@ struct ChatView: View {
                 }
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     @ViewBuilder

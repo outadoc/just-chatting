@@ -12,9 +12,10 @@ struct SearchView: View {
     @State private var query: String = ""
     @State private var items: [ChannelSearchResult] = []
     @State private var isLoading = false
+    @State private var navigationPath = NavigationPath()
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             Observing(viewModel.state) { state in
                 if query.isEmpty {
                     recentChannelsView(state: state)
@@ -24,6 +25,9 @@ struct SearchView: View {
             }
             .searchable(text: $query, prompt: "Search channels")
             .navigationTitle("Search")
+            .navigationDestination(for: String.self) { userId in
+                ChatView(userId: userId)
+            }
         }
         .onAppear {
             viewModel.onStart()
@@ -47,7 +51,7 @@ struct SearchView: View {
         .collect(flow: viewModel.events) { event in
             switch onEnum(of: event) {
             case .navigateToChannel(let e):
-                _ = e.userId // TODO: push channel/chat view
+                navigationPath.append(e.userId)
             }
         }
     }

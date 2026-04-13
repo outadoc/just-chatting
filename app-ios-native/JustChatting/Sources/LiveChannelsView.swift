@@ -20,10 +20,12 @@ struct LiveChannelsView: View {
                     ContentUnavailableView("No live channels", systemImage: "tv.slash")
                 } else {
                     List(state.live, id: \.user.id) { userStream in
-                        LiveStreamRowView(userStream: userStream)
-                            .onTapGesture {
-                                viewModel.onChannelClick(userId: userStream.user.id)
-                            }
+                        Button {
+                            viewModel.onChannelClick(userId: userStream.user.id)
+                        } label: {
+                            LiveStreamRowView(userStream: userStream)
+                        }
+                        .buttonStyle(.plain)
                     }
                     .listStyle(.plain)
                     .refreshable {

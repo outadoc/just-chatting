@@ -20,10 +20,12 @@ struct FollowedChannelsView: View {
                     ContentUnavailableView("No followed channels", systemImage: "heart.slash")
                 } else {
                     List(state.data, id: \.user.id) { follow in
-                        ChannelRowView(channelFollow: follow)
-                            .onTapGesture {
-                                viewModel.onChannelClick(userId: follow.user.id)
-                            }
+                        Button {
+                            viewModel.onChannelClick(userId: follow.user.id)
+                        } label: {
+                            ChannelRowView(channelFollow: follow)
+                        }
+                        .buttonStyle(.plain)
                     }
                     .listStyle(.plain)
                     .refreshable {

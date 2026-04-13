@@ -34,7 +34,6 @@ struct ChatView: View {
                 chattingView(chatting: chatting)
             }
         }
-        .toolbar(.hidden, for: .tabBar)
         .onAppear {
             viewModel.loadChat(userId: userId)
         }

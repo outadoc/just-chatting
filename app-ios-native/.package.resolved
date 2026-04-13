@@ -1,0 +1,15 @@
+{
+  "originHash" : "6e25c0693230baab91cf5a7e30367af2fa1fff29dc20d65d97e33aa5c65d5ad0",
+  "pins" : [
+    {
+      "identity" : "nuke",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kean/Nuke.git",
+      "state" : {
+        "revision" : "83e19143355b02e9261edb2323b3e1e93287ebb9",
+        "version" : "12.9.0"
+      }
+    }
+  ],
+  "version" : 3
+}

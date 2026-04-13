@@ -123,15 +123,68 @@ struct ChatView: View {
 
     @ViewBuilder
     private func chatMessageView(body: ChatListItemMessage.Body) -> some View {
-        (
-            Text(body.chatter.displayName)
+        let emotesByName = Dictionary(
+            body.embeddedEmotes.map { ($0.name, $0) },
+            uniquingKeysWith: { first, _ in first }
+        )
+        let tokens = tokenize(message: body.message, emotesByName: emotesByName)
+
+        FlowLayout(spacing: 2) {
+            Text(body.chatter.displayName + ": ")
                 .fontWeight(.semibold)
                 .foregroundStyle(color(from: body.color))
-                + Text(": ")
-                + Text(body.message ?? "")
-        )
-        .font(.callout)
+                .font(.callout)
+                .fixedSize()
+
+            ForEach(Array(tokens.enumerated()), id: \.offset) { _, token in
+                switch token {
+                case .text(let word):
+                    Text(word)
+                        .font(.callout)
+                        .fixedSize()
+                case .emote(let emote):
+                    emoteView(emote: emote)
+                }
+            }
+        }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    @ViewBuilder
+    private func emoteView(emote: Emote) -> some View {
+        AsyncImage(url: emoteUrl(emote: emote)) { phase in
+            switch phase {
+            case .success(let image):
+                image.resizable().scaledToFit()
+            default:
+                Color.clear
+            }
+        }
+        .frame(height: 20)
+    }
+
+    private func emoteUrl(emote: Emote) -> URL? {
+        let dict = colorScheme == .dark ? emote.urls.dark : emote.urls.light
+        for scale: Float in [2.0, 1.0, 3.0] {
+            if let urlStr = dict[KotlinFloat(value: scale)] as? String {
+                return URL(string: urlStr)
+            }
+        }
+        return dict.values.first.flatMap { URL(string: $0) }
+    }
+
+    private enum MessageToken {
+        case text(String)
+        case emote(Emote)
+    }
+
+    private func tokenize(message: String?, emotesByName: [String: Emote]) -> [MessageToken] {
+        guard let message else { return [] }
+        return message.split(separator: " ", omittingEmptySubsequences: false).map { word in
+            let w = String(word)
+            if let emote = emotesByName[w] { return .emote(emote) }
+            return .text(w)
+        }
     }
 
     private func color(from hex: String?) -> Color {

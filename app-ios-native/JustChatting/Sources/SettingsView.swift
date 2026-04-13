@@ -11,33 +11,31 @@ struct SettingsView: View {
     @State private var showLogoutConfirmation = false
 
     var body: some View {
-        NavigationStack {
-            Observing(viewModel.state) { state in
-                List {
-                    accountSection(state: state)
+        Observing(viewModel.state) { state in
+            List {
+                accountSection(state: state)
 
-                    Section {
-                        NavigationLink {
-                            SettingsThirdPartiesView(viewModel: viewModel)
-                        } label: {
-                            Label("Third-party integrations", systemImage: "puzzlepiece.extension")
-                        }
-
-                        NavigationLink {
-                            SettingsAppearanceView(viewModel: viewModel)
-                        } label: {
-                            Label("Appearance", systemImage: "paintpalette")
-                        }
+                Section {
+                    NavigationLink {
+                        SettingsThirdPartiesView(viewModel: viewModel)
+                    } label: {
+                        Label("Third-party integrations", systemImage: "puzzlepiece.extension")
                     }
 
-                    if let version = state.appVersionName {
-                        Section("About") {
-                            LabeledContent("Version", value: version)
-                        }
+                    NavigationLink {
+                        SettingsAppearanceView(viewModel: viewModel)
+                    } label: {
+                        Label("Appearance", systemImage: "paintpalette")
                     }
                 }
-                .navigationTitle("Settings")
+
+                if let version = state.appVersionName {
+                    Section("About") {
+                        LabeledContent("Version", value: version)
+                    }
+                }
             }
+            .navigationTitle("Settings")
         }
         .alert("Log out?", isPresented: $showLogoutConfirmation) {
             Button("Log out", role: .destructive) {

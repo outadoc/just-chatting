@@ -120,6 +120,9 @@
         }
       }
     },
+    "LIVE" : {
+
+    },
     "Load recent messages when opening a chat." : {
       "comment" : "Footer text for the recent messages section in third-party settings",
       "localizations" : {

@@ -34,6 +34,9 @@ struct ChatView: View {
         .onAppear {
             viewModel.loadChat(userId: userId)
         }
+        .onChange(of: userId) { _, newUserId in
+            viewModel.loadChat(userId: newUserId)
+        }
     }
 
     @ViewBuilder

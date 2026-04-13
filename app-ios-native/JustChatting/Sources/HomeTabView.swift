@@ -10,13 +10,15 @@ struct HomeTabView: View {
     let viewModel: MainRouterViewModel
     @State private var selectedTab: Int = 0 // 0 = Live (DefaultScreen)
     @State private var selectedUserId: String?
+    @State private var preferredCompactColumn: NavigationSplitViewColumn = .sidebar
 
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(preferredCompactColumn: $preferredCompactColumn) {
             TabView(selection: $selectedTab) {
                 Tab("Live", systemImage: "house", value: 0) {
                     LiveChannelsView { userId in
                         selectedUserId = userId
+                        preferredCompactColumn = .detail
                     }
                 }
                 Tab("Schedule", systemImage: "calendar.badge.clock", value: 1) {
@@ -25,11 +27,13 @@ struct HomeTabView: View {
                 Tab("Following", systemImage: "heart", value: 2) {
                     FollowedChannelsView { userId in
                         selectedUserId = userId
+                        preferredCompactColumn = .detail
                     }
                 }
                 Tab("Search", systemImage: "magnifyingglass", value: 3) {
                     SearchView { userId in
                         selectedUserId = userId
+                        preferredCompactColumn = .detail
                     }
                 }
                 Tab("Settings", systemImage: "person.circle", value: 4) {
@@ -39,8 +43,6 @@ struct HomeTabView: View {
         } detail: {
             if let userId = selectedUserId {
                 ChatView(userId: userId)
-                    .id(userId)
-                    .onDisappear { selectedUserId = nil }
             } else {
                 ContentUnavailableView("Select a channel", systemImage: "message")
             }

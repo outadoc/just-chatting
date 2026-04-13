@@ -61,10 +61,12 @@ struct SearchView: View {
             )
         } else {
             List(state.recentChannels, id: \.id) { user in
-                recentChannelRow(user: user)
-                    .onTapGesture {
-                        viewModel.onChannelClick(userId: user.id)
-                    }
+                Button {
+                    viewModel.onChannelClick(userId: user.id)
+                } label: {
+                    recentChannelRow(user: user)
+                }
+                .buttonStyle(.plain)
             }
             .listStyle(.plain)
         }
@@ -80,15 +82,17 @@ struct SearchView: View {
         } else {
             List {
                 ForEach(Array(items.enumerated()), id: \.offset) { index, result in
-                    SearchResultRowView(result: result)
-                        .onAppear {
-                            if index >= items.count - 5 {
-                                _ = pager.getItem(index: Int32(index))
-                            }
+                    Button {
+                        viewModel.onChannelClick(userId: result.user.id)
+                    } label: {
+                        SearchResultRowView(result: result)
+                    }
+                    .buttonStyle(.plain)
+                    .onAppear {
+                        if index >= items.count - 5 {
+                            _ = pager.getItem(index: Int32(index))
                         }
-                        .onTapGesture {
-                            viewModel.onChannelClick(userId: result.user.id)
-                        }
+                    }
                 }
             }
             .listStyle(.plain)

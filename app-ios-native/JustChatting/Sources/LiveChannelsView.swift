@@ -8,9 +8,10 @@ import SwiftUI
 
 struct LiveChannelsView: View {
     @State private var viewModel = KoinHelper().getLiveTimelineViewModel()
+    @State private var navigationPath = NavigationPath()
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             Observing(viewModel.state) { state in
                 Group {
                     if state.live.isEmpty && state.isLoading {
@@ -33,6 +34,9 @@ struct LiveChannelsView: View {
                 }
             }
             .navigationTitle("Live")
+            .navigationDestination(for: String.self) { userId in
+                ChatView(userId: userId)
+            }
         }
         .onAppear {
             viewModel.syncLiveStreamsPeriodically()
@@ -40,7 +44,7 @@ struct LiveChannelsView: View {
         .collect(flow: viewModel.events) { event in
             switch onEnum(of: event) {
             case .navigateToChannel(let e):
-                _ = e.userId // TODO: push channel/chat view
+                navigationPath.append(e.userId)
             }
         }
     }

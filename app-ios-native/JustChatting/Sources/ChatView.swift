@@ -10,7 +10,7 @@ struct ChatView: View {
     let userId: String
 
     @State private var viewModel = KoinHelper().getChatViewModel()
-    
+
     // TODO use VM state instead
     @State private var messageText = ""
 
@@ -47,11 +47,12 @@ struct ChatView: View {
         let messages = chatting.chatMessages.reversed()
         let globalEmotes = chatting.allEmotesMap
             .merging(chatting.cheerEmotes) { _, cheer in cheer }
+        let allBadges = Array(chatting.globalBadges) + Array(chatting.channelBadges)
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 0) {
                     ForEach(Array(messages.enumerated()), id: \.offset) { index, message in
-                        messageRow(message: message, globalEmotes: globalEmotes, index: index)
+                        messageRow(message: message, globalEmotes: globalEmotes, allBadges: allBadges, index: index)
                             .id(index)
                     }
                 }
@@ -113,11 +114,11 @@ struct ChatView: View {
     }
 
     @ViewBuilder
-    private func messageRow(message: ChatListItemMessage, globalEmotes: [String: Emote], index: Int) -> some View {
+    private func messageRow(message: ChatListItemMessage, globalEmotes: [String: Emote], allBadges: [TwitchBadge], index: Int) -> some View {
         let rowBackground: Color = index.isMultiple(of: 2) ? Color(.systemBackground) : Color(.secondarySystemBackground)
         switch onEnum(of: message) {
         case .simple(let simple):
-            chatMessageView(body: simple.body, globalEmotes: globalEmotes)
+            chatMessageView(body: simple.body, globalEmotes: globalEmotes, allBadges: allBadges)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -125,7 +126,7 @@ struct ChatView: View {
 
         case .highlighted(let highlighted):
             if let body = highlighted.body {
-                chatMessageView(body: body, globalEmotes: globalEmotes)
+                chatMessageView(body: body, globalEmotes: globalEmotes, allBadges: allBadges)
                     .padding(8)
                     .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
                     .padding(.horizontal, 12)
@@ -140,12 +141,19 @@ struct ChatView: View {
     }
 
     @ViewBuilder
-    private func chatMessageView(body: ChatListItemMessage.Body, globalEmotes: [String: Emote]) -> some View {
+    private func chatMessageView(body: ChatListItemMessage.Body, globalEmotes: [String: Emote], allBadges: [TwitchBadge]) -> some View {
         let emotesByName = globalEmotes
             .merging(body.embeddedEmotes.map { ($0.name, $0) }) { _, specific in specific }
         let tokens = tokenize(message: body.message, emotesByName: emotesByName)
+        let resolvedBadges = Array(body.badges).compactMap { badge in
+            allBadges.first { $0.setId == badge.id && $0.version == badge.version }
+        }
 
         FlowLayout(spacing: 2) {
+            ForEach(resolvedBadges, id: \.setId) { badge in
+                badgeView(badge: badge)
+            }
+
             Text(body.chatter.displayName + ": ")
                 .fontWeight(.semibold)
                 .foregroundStyle(color(from: body.color))
@@ -166,8 +174,21 @@ struct ChatView: View {
     }
 
     @ViewBuilder
+    private func badgeView(badge: TwitchBadge) -> some View {
+        AsyncImage(url: imageUrl(urls: badge.urls)) { phase in
+            switch phase {
+            case .success(let image):
+                image.resizable().scaledToFit()
+            default:
+                Color.clear
+            }
+        }
+        .frame(height: 18)
+    }
+
+    @ViewBuilder
     private func emoteView(emote: Emote) -> some View {
-        AsyncImage(url: emoteUrl(emote: emote)) { phase in
+        AsyncImage(url: imageUrl(urls: emote.urls)) { phase in
             switch phase {
             case .success(let image):
                 image.resizable().scaledToFit()
@@ -178,9 +199,9 @@ struct ChatView: View {
         .frame(height: 20)
     }
 
-    private func emoteUrl(emote: Emote) -> URL? {
-        let dict = colorScheme == .dark ? emote.urls.dark : emote.urls.light
-        for scale: Float in [2.0, 1.0, 3.0] {
+    private func imageUrl(urls: EmoteUrls) -> URL? {
+        let dict = colorScheme == .dark ? urls.dark : urls.light
+        for scale: Float in [2.0, 1.0, 4.0] {
             if let urlStr = dict[KotlinFloat(value: scale)] as? String {
                 return URL(string: urlStr)
             }

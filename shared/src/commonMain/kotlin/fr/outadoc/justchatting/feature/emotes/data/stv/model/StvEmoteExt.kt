@@ -30,10 +30,12 @@ internal fun StvEmote.map(): Emote = Emote(
 )
 
 private val StvEmote.supportedFiles: List<StvEmoteFiles>
-    get() =
-        data.host.files
-            .filter { file -> file.format == "WEBP" }
-            .sortedByDescending { file -> file.width }
+    get() {
+        // Animated WEBP are not supported everywhere, so prefer GIFs
+        val gifs = data.host.files.filter { file -> file.format == "GIF" }
+        val webp = data.host.files.filter { file -> file.format == "WEBP" }
+        return gifs.takeIf { it.isNotEmpty() } ?: webp
+    }
 
 /**
  * Checks if the given bit position is set on the bitfield.

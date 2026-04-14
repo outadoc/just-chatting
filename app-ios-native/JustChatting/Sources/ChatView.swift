@@ -44,7 +44,13 @@ struct ChatView: View {
 
     @ViewBuilder
     private func chattingView(chatting: ChatViewModel.StateChatting) -> some View {
-        let messages = chatting.chatMessages.reversed()
+        let messages = chatting.chatMessages.reversed().filter { message in
+            switch onEnum(of: message) {
+            case .notice: return false
+            case .highlighted(let h): return h.body != nil
+            default: return true
+            }
+        }
         let globalEmotes = chatting.allEmotesMap
             .merging(chatting.cheerEmotes) { _, cheer in cheer }
         let allBadges = Array(chatting.globalBadges) + Array(chatting.channelBadges)

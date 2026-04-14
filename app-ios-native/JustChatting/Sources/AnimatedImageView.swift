@@ -22,6 +22,10 @@ struct AnimatedImageView: UIViewRepresentable {
     func makeUIView(context: Context) -> GIFImageView {
         let view = GIFImageView()
         view.contentMode = .scaleAspectFit
+        view.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        view.setContentHuggingPriority(.defaultLow, for: .vertical)
+        view.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        view.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
         return view
     }
 

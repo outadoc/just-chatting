@@ -194,13 +194,14 @@ struct ChatView: View {
     private struct EmoteView: View {
         let url: URL?
         @State private var aspectRatio: CGFloat = 1
+        @ScaledMetric(relativeTo: .callout) private var emoteHeight: CGFloat = 30
 
         var body: some View {
             AnimatedImageView(url: url) { size in
                 guard size.height > 0 else { return }
                 aspectRatio = size.width / size.height
             }
-            .frame(width: 20 * aspectRatio, height: 20)
+            .frame(width: emoteHeight * aspectRatio, height: emoteHeight)
         }
     }
 

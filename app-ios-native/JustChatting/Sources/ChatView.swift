@@ -168,6 +168,10 @@ struct ChatView: View {
                         .fixedSize()
                 case .emote(let emote):
                     emoteView(emote: emote)
+                case .link(let url):
+                    Link(url.absoluteString, destination: url)
+                        .font(.callout)
+                        .fixedSize()
                 }
             }
         }
@@ -218,6 +222,7 @@ struct ChatView: View {
     private enum MessageToken {
         case text(String)
         case emote(Emote)
+        case link(URL)
     }
 
     private func tokenize(message: String?, emotesByName: [String: Emote]) -> [MessageToken] {
@@ -225,6 +230,7 @@ struct ChatView: View {
         return message.split(separator: " ", omittingEmptySubsequences: false).map { word in
             let w = String(word)
             if let emote = emotesByName[w] { return .emote(emote) }
+            if let url = URL(string: w), UIApplication.shared.canOpenURL(url) { return .link(url) }
             return .text(w)
         }
     }

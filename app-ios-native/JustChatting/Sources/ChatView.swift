@@ -44,13 +44,7 @@ struct ChatView: View {
 
     @ViewBuilder
     private func chattingView(chatting: ChatViewModel.StateChatting) -> some View {
-        let messages = chatting.chatMessages.reversed().filter { message in
-            switch onEnum(of: message) {
-            case .notice: return false
-            case .highlighted(let h): return h.body != nil
-            default: return true
-            }
-        }
+        let messages = chatting.chatMessages.reversed()
         let globalEmotes = chatting.allEmotesMap
             .merging(chatting.cheerEmotes) { _, cheer in cheer }
         let allBadges = Array(chatting.globalBadges) + Array(chatting.channelBadges)
@@ -131,19 +125,68 @@ struct ChatView: View {
                 .background(rowBackground)
 
         case .highlighted(let highlighted):
-            if let body = highlighted.body {
-                chatMessageView(body: body, globalEmotes: globalEmotes, allBadges: allBadges)
-                    .padding(8)
-                    .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(rowBackground)
-            }
+            highlightedMessageView(highlighted: highlighted, globalEmotes: globalEmotes, allBadges: allBadges)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 2)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(rowBackground)
 
-        case .notice:
-            EmptyView()
+        case .notice(let notice):
+            noticeMessageView(notice: notice)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 2)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(rowBackground)
         }
+    }
+
+    @ViewBuilder
+    private func highlightedMessageView(highlighted: ChatListItemMessage.Highlighted, globalEmotes: [String: Emote], allBadges: [TwitchBadge]) -> some View {
+        let accentColor = color(forLevel: highlighted.metadata.level)
+        HStack(spacing: 0) {
+            accentColor.frame(width: 4)
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 4) {
+                    if let icon = highlighted.metadata.titleIcon {
+                        Image(systemName: symbolName(forIcon: icon))
+                            .font(.callout)
+                    }
+                    Text(highlighted.metadata.title.localizedString())
+                        .font(.callout)
+                        .fontWeight(.semibold)
+                }
+                .foregroundStyle(accentColor)
+
+                if let subtitle = highlighted.metadata.subtitle {
+                    Text(subtitle.localizedString())
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                if let body = highlighted.body {
+                    chatMessageView(body: body, globalEmotes: globalEmotes, allBadges: allBadges)
+                }
+            }
+            .padding(8)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(.secondarySystemBackground))
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 4))
+        .padding(.vertical, 4)
+    }
+
+    @ViewBuilder
+    private func noticeMessageView(notice: ChatListItemMessage.Notice) -> some View {
+        HStack(spacing: 0) {
+            Color.accentColor.frame(width: 4)
+            Text(notice.text.localizedString())
+                .font(.callout)
+                .padding(8)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(.secondarySystemBackground))
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 4))
+        .padding(.vertical, 4)
     }
 
     @ViewBuilder
@@ -238,6 +281,42 @@ struct ChatView: View {
             if let emote = emotesByName[w] { return .emote(emote) }
             if let url = URL(string: w), UIApplication.shared.canOpenURL(url) { return .link(url) }
             return .text(w)
+        }
+    }
+
+    private func color(forLevel level: ChatListItemMessage.HighlightedLevel) -> Color {
+        switch level {
+        case .base:  return .accentColor
+        case .one:   return Color(red: 0x6b/255, green: 0x81/255, blue: 0x6e/255)
+        case .two:   return Color(red: 0x32/255, green: 0x84/255, blue: 0x3b/255)
+        case .three: return Color(red: 0x00/255, green: 0x7a/255, blue: 0x6c/255)
+        case .four:  return Color(red: 0x00/255, green: 0x80/255, blue: 0xa9/255)
+        case .five:  return Color(red: 0x00/255, green: 0x70/255, blue: 0xdb/255)
+        case .six:   return Color(red: 0x01/255, green: 0x6c/255, blue: 0xd9/255)
+        case .seven: return Color(red: 0x73/255, green: 0x1a/255, blue: 0xcb/255)
+        case .eight: return Color(red: 0xbe/255, green: 0x0b/255, blue: 0xb7/255)
+        case .nine:  return Color(red: 0xab/255, green: 0x20/255, blue: 0x78/255)
+        case .ten:   return Color(red: 0xc9/255, green: 0x02/255, blue: 0x16/255)
+        default:     return .accentColor
+        }
+    }
+
+    private func symbolName(forIcon icon: Icon) -> String {
+        switch icon {
+        case .callReceived:      return "phone.arrow.down.left"
+        case .campaign:          return "megaphone.fill"
+        case .cancel:            return "xmark.circle.fill"
+        case .fastForward:       return "forward.fill"
+        case .gavel:             return "hammer.fill"
+        case .highlight:         return "star.fill"
+        case .redeem:            return "gift.fill"
+        case .reply:             return "arrowshape.turn.up.left.fill"
+        case .send:              return "paperplane.fill"
+        case .star:              return "star.fill"
+        case .toll:              return "bell.fill"
+        case .volunteerActivism: return "heart.fill"
+        case .wavingHand:        return "hand.wave.fill"
+        default:                 return "info.circle.fill"
         }
     }
 

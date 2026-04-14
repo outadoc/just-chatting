@@ -1,8 +1,11 @@
 package fr.outadoc.justchatting.utils.resources
 
 import androidx.compose.runtime.Composable
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.PluralStringResource
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getPluralString
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -10,11 +13,15 @@ public sealed interface StringDesc {
     @Composable
     public fun localized(): String
 
+    public fun localizedString(): String
+
     public class Raw(
         public val value: String,
     ) : StringDesc {
         @Composable
         override fun localized(): String = value
+
+        override fun localizedString(): String = value
     }
 
     public class Resource(
@@ -22,6 +29,8 @@ public sealed interface StringDesc {
     ) : StringDesc {
         @Composable
         override fun localized(): String = stringResource(resource)
+
+        override fun localizedString(): String = runBlocking { getString(resource) }
     }
 
     public class Formatted(
@@ -44,6 +53,18 @@ public sealed interface StringDesc {
                 *formattedArgs,
             )
         }
+
+        override fun localizedString(): String = runBlocking {
+            val formattedArgs: Array<Any> =
+                args
+                    .map { desc ->
+                        when (desc) {
+                            is StringDesc -> desc.localizedString()
+                            else -> desc
+                        }
+                    }.toTypedArray()
+            getString(resource = resource, *formattedArgs)
+        }
     }
 
     public class Plural(
@@ -55,6 +76,8 @@ public sealed interface StringDesc {
             resource = resource,
             quantity = number,
         )
+
+        override fun localizedString(): String = runBlocking { getPluralString(resource, number) }
     }
 
     public class PluralFormatted(
@@ -78,6 +101,18 @@ public sealed interface StringDesc {
                 quantity = number,
                 *formattedArgs,
             )
+        }
+
+        override fun localizedString(): String = runBlocking {
+            val formattedArgs: Array<Any> =
+                args
+                    .map { desc ->
+                        when (desc) {
+                            is StringDesc -> desc.localizedString()
+                            else -> desc
+                        }
+                    }.toTypedArray()
+            getPluralString(resource, number, *formattedArgs)
         }
     }
 }

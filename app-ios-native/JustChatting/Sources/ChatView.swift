@@ -15,6 +15,7 @@ struct ChatView: View {
     @State private var messageText = ""
 
     @Environment(\.colorScheme) var colorScheme
+    @State private var isAtBottom = true
 
     var body: some View {
         Observing(viewModel.state) { state in
@@ -55,16 +56,20 @@ struct ChatView: View {
                         messageRow(message: message, globalEmotes: globalEmotes, allBadges: allBadges, index: index)
                             .id(index)
                     }
+                    Color.clear
+                        .frame(height: 0)
+                        .id("bottom")
+                        .onAppear { isAtBottom = true }
+                        .onDisappear { isAtBottom = false }
                 }
                 .padding(.vertical, 4)
             }
             .onAppear {
-                proxy.scrollTo(messages.count - 1, anchor: .bottom)
+                proxy.scrollTo("bottom")
             }
             .onChange(of: messages.count) { _, _ in
-                withAnimation {
-                    proxy.scrollTo(messages.count - 1, anchor: .bottom)
-                }
+                guard isAtBottom else { return }
+                proxy.scrollTo("bottom")
             }
         }
         .navigationTitle(chatting.user.displayName)
@@ -198,32 +203,49 @@ struct ChatView: View {
             allBadges.first { $0.setId == badge.id && $0.version == badge.version }
         }
 
-        FlowLayout(spacing: 2) {
-            ForEach(resolvedBadges, id: \.setId) { badge in
-                badgeView(badge: badge)
+        VStack(alignment: .leading, spacing: 4) {
+            if let inReplyTo = body.inReplyTo {
+                inReplyToView(inReplyTo: inReplyTo)
             }
 
-            Text(body.chatter.displayName + ": ")
-                .fontWeight(.semibold)
-                .foregroundStyle(color(from: body.color))
-                .font(.callout)
-                .fixedSize()
+            FlowLayout(spacing: 2) {
+                ForEach(resolvedBadges, id: \.setId) { badge in
+                    badgeView(badge: badge)
+                }
 
-            ForEach(Array(tokens.enumerated()), id: \.offset) { _, token in
-                switch token {
-                case .text(let word):
-                    Text(word)
-                        .font(.callout)
-                        .fixedSize()
-                case .emote(let emote):
-                    emoteView(emote: emote)
-                case .link(let url):
-                    Link(url.absoluteString, destination: url)
-                        .font(.callout)
-                        .fixedSize()
+                Text(body.chatter.displayName + ": ")
+                    .fontWeight(.semibold)
+                    .foregroundStyle(color(from: body.color))
+                    .font(.callout)
+                    .fixedSize()
+
+                ForEach(Array(tokens.enumerated()), id: \.offset) { _, token in
+                    switch token {
+                    case .text(let word):
+                        Text(word)
+                            .font(.callout)
+                            .fixedSize()
+                    case .emote(let emote):
+                        emoteView(emote: emote)
+                    case .link(let url):
+                        Link(url.absoluteString, destination: url)
+                            .font(.callout)
+                            .fixedSize()
+                    }
                 }
             }
         }
+    }
+
+    @ViewBuilder
+    private func inReplyToView(inReplyTo: ChatListItemMessage.BodyInReplyTo) -> some View {
+        let mentions = Array(inReplyTo.mentions).map { "@\($0)" }.joined(separator: " ")
+        let text = inReplyTo.message.map { ": \($0)" } ?? ""
+        Label(mentions + text, systemImage: "arrowshape.turn.up.left.fill")
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .lineLimit(2)
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     @ViewBuilder

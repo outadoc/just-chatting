@@ -493,23 +493,27 @@ sealed interface fr.outadoc.justchatting.feature.shared.presentation/Screen : an
 
 sealed interface fr.outadoc.justchatting.utils.resources/StringDesc { // fr.outadoc.justchatting.utils.resources/StringDesc|null[0]
     abstract fun localized(androidx.compose.runtime/Composer?, kotlin/Int): kotlin/String // fr.outadoc.justchatting.utils.resources/StringDesc.localized|localized(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+    abstract fun localizedString(): kotlin/String // fr.outadoc.justchatting.utils.resources/StringDesc.localizedString|localizedString(){}[0]
 
     final class Formatted : fr.outadoc.justchatting.utils.resources/StringDesc { // fr.outadoc.justchatting.utils.resources/StringDesc.Formatted|null[0]
         constructor <init>(org.jetbrains.compose.resources/StringResource, kotlin/Array<out kotlin/Any>) // fr.outadoc.justchatting.utils.resources/StringDesc.Formatted.<init>|<init>(org.jetbrains.compose.resources.StringResource;kotlin.Array<out|kotlin.Any>){}[0]
 
         final fun localized(androidx.compose.runtime/Composer?, kotlin/Int): kotlin/String // fr.outadoc.justchatting.utils.resources/StringDesc.Formatted.localized|localized(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+        final fun localizedString(): kotlin/String // fr.outadoc.justchatting.utils.resources/StringDesc.Formatted.localizedString|localizedString(){}[0]
     }
 
     final class Plural : fr.outadoc.justchatting.utils.resources/StringDesc { // fr.outadoc.justchatting.utils.resources/StringDesc.Plural|null[0]
         constructor <init>(org.jetbrains.compose.resources/PluralStringResource, kotlin/Int) // fr.outadoc.justchatting.utils.resources/StringDesc.Plural.<init>|<init>(org.jetbrains.compose.resources.PluralStringResource;kotlin.Int){}[0]
 
         final fun localized(androidx.compose.runtime/Composer?, kotlin/Int): kotlin/String // fr.outadoc.justchatting.utils.resources/StringDesc.Plural.localized|localized(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+        final fun localizedString(): kotlin/String // fr.outadoc.justchatting.utils.resources/StringDesc.Plural.localizedString|localizedString(){}[0]
     }
 
     final class PluralFormatted : fr.outadoc.justchatting.utils.resources/StringDesc { // fr.outadoc.justchatting.utils.resources/StringDesc.PluralFormatted|null[0]
         constructor <init>(org.jetbrains.compose.resources/PluralStringResource, kotlin/Int, kotlin/Array<out kotlin/Any>) // fr.outadoc.justchatting.utils.resources/StringDesc.PluralFormatted.<init>|<init>(org.jetbrains.compose.resources.PluralStringResource;kotlin.Int;kotlin.Array<out|kotlin.Any>){}[0]
 
         final fun localized(androidx.compose.runtime/Composer?, kotlin/Int): kotlin/String // fr.outadoc.justchatting.utils.resources/StringDesc.PluralFormatted.localized|localized(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+        final fun localizedString(): kotlin/String // fr.outadoc.justchatting.utils.resources/StringDesc.PluralFormatted.localizedString|localizedString(){}[0]
     }
 
     final class Raw : fr.outadoc.justchatting.utils.resources/StringDesc { // fr.outadoc.justchatting.utils.resources/StringDesc.Raw|null[0]
@@ -519,12 +523,14 @@ sealed interface fr.outadoc.justchatting.utils.resources/StringDesc { // fr.outa
             final fun <get-value>(): kotlin/String // fr.outadoc.justchatting.utils.resources/StringDesc.Raw.value.<get-value>|<get-value>(){}[0]
 
         final fun localized(androidx.compose.runtime/Composer?, kotlin/Int): kotlin/String // fr.outadoc.justchatting.utils.resources/StringDesc.Raw.localized|localized(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+        final fun localizedString(): kotlin/String // fr.outadoc.justchatting.utils.resources/StringDesc.Raw.localizedString|localizedString(){}[0]
     }
 
     final class Resource : fr.outadoc.justchatting.utils.resources/StringDesc { // fr.outadoc.justchatting.utils.resources/StringDesc.Resource|null[0]
         constructor <init>(org.jetbrains.compose.resources/StringResource) // fr.outadoc.justchatting.utils.resources/StringDesc.Resource.<init>|<init>(org.jetbrains.compose.resources.StringResource){}[0]
 
         final fun localized(androidx.compose.runtime/Composer?, kotlin/Int): kotlin/String // fr.outadoc.justchatting.utils.resources/StringDesc.Resource.localized|localized(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+        final fun localizedString(): kotlin/String // fr.outadoc.justchatting.utils.resources/StringDesc.Resource.localizedString|localizedString(){}[0]
     }
 }
 
@@ -1581,11 +1587,13 @@ final class fr.outadoc.justchatting.feature.shared.presentation/KoinHelper : org
     constructor <init>() // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.<init>|<init>(){}[0]
 
     final fun getChannelSearchViewModel(): fr.outadoc.justchatting.feature.search.presentation/ChannelSearchViewModel // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getChannelSearchViewModel|getChannelSearchViewModel(){}[0]
+    final fun getChatViewModel(): fr.outadoc.justchatting.feature.chat.presentation/ChatViewModel // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getChatViewModel|getChatViewModel(){}[0]
     final fun getDeeplinkReceiver(): fr.outadoc.justchatting.feature.shared.presentation/DeeplinkReceiver // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getDeeplinkReceiver|getDeeplinkReceiver(){}[0]
     final fun getFollowedChannelsViewModel(): fr.outadoc.justchatting.feature.followed.presentation/FollowedChannelsViewModel // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getFollowedChannelsViewModel|getFollowedChannelsViewModel(){}[0]
     final fun getFutureTimelineViewModel(): fr.outadoc.justchatting.feature.timeline.presentation/FutureTimelineViewModel // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getFutureTimelineViewModel|getFutureTimelineViewModel(){}[0]
     final fun getLiveTimelineViewModel(): fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getLiveTimelineViewModel|getLiveTimelineViewModel(){}[0]
     final fun getMainRouterViewModel(): fr.outadoc.justchatting.feature.shared.presentation/MainRouterViewModel // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getMainRouterViewModel|getMainRouterViewModel(){}[0]
+    final fun getSettingsViewModel(): fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getSettingsViewModel|getSettingsViewModel(){}[0]
 }
 
 final class fr.outadoc.justchatting.feature.shared.presentation/MainRouterViewModel : androidx.lifecycle/ViewModel, fr.outadoc.justchatting.feature.shared.presentation/DeeplinkReceiver { // fr.outadoc.justchatting.feature.shared.presentation/MainRouterViewModel|null[0]

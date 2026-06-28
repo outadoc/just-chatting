@@ -1883,24 +1883,28 @@ public final class fr/outadoc/justchatting/utils/presentation/StringUrlExt_deskt
 
 public abstract interface class fr/outadoc/justchatting/utils/resources/StringDesc {
 	public abstract fun localized (Landroidx/compose/runtime/Composer;I)Ljava/lang/String;
+	public abstract fun localizedString ()Ljava/lang/String;
 }
 
 public final class fr/outadoc/justchatting/utils/resources/StringDesc$Formatted : fr/outadoc/justchatting/utils/resources/StringDesc {
 	public static final field $stable I
 	public fun <init> (Lorg/jetbrains/compose/resources/StringResource;[Ljava/lang/Object;)V
 	public fun localized (Landroidx/compose/runtime/Composer;I)Ljava/lang/String;
+	public fun localizedString ()Ljava/lang/String;
 }
 
 public final class fr/outadoc/justchatting/utils/resources/StringDesc$Plural : fr/outadoc/justchatting/utils/resources/StringDesc {
 	public static final field $stable I
 	public fun <init> (Lorg/jetbrains/compose/resources/PluralStringResource;I)V
 	public fun localized (Landroidx/compose/runtime/Composer;I)Ljava/lang/String;
+	public fun localizedString ()Ljava/lang/String;
 }
 
 public final class fr/outadoc/justchatting/utils/resources/StringDesc$PluralFormatted : fr/outadoc/justchatting/utils/resources/StringDesc {
 	public static final field $stable I
 	public fun <init> (Lorg/jetbrains/compose/resources/PluralStringResource;I[Ljava/lang/Object;)V
 	public fun localized (Landroidx/compose/runtime/Composer;I)Ljava/lang/String;
+	public fun localizedString ()Ljava/lang/String;
 }
 
 public final class fr/outadoc/justchatting/utils/resources/StringDesc$Raw : fr/outadoc/justchatting/utils/resources/StringDesc {
@@ -1908,12 +1912,14 @@ public final class fr/outadoc/justchatting/utils/resources/StringDesc$Raw : fr/o
 	public fun <init> (Ljava/lang/String;)V
 	public final fun getValue ()Ljava/lang/String;
 	public fun localized (Landroidx/compose/runtime/Composer;I)Ljava/lang/String;
+	public fun localizedString ()Ljava/lang/String;
 }
 
 public final class fr/outadoc/justchatting/utils/resources/StringDesc$Resource : fr/outadoc/justchatting/utils/resources/StringDesc {
 	public static final field $stable I
 	public fun <init> (Lorg/jetbrains/compose/resources/StringResource;)V
 	public fun localized (Landroidx/compose/runtime/Composer;I)Ljava/lang/String;
+	public fun localizedString ()Ljava/lang/String;
 }
 
 public final class fr/outadoc/justchatting/utils/resources/StringDescKt {

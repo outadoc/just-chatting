@@ -3,13 +3,12 @@ accompanist = "0.37.3"
 android = "8.13.2"
 coil = "3.4.0"
 connectivity = "2.4.1"
+compose-multiplatform = "1.11.1"
+compose-navigation3 = "1.1.1"
 coroutines = "1.10.2"
 emoji = "1.6.0"
 glance = "1.1.1"
 haze = "1.7.2"
-jetbrains-compose = "1.11.0-beta02"
-jetbrains-navigation = "1.2.0"
-jetbrains-navigation3 = "1.1.0-rc01"
 junit-jupiter-engine = "6.0.3"
 kmpalette = "3.1.0"
 koin = "4.2.0"
@@ -17,6 +16,7 @@ konsist = "0.17.3"
 kotlin = "2.3.20"
 ktor = "3.4.0"
 lifecycle = "2.10.0"
+material-adaptive = "1.2.0"
 paging = "3.4.2"
 paging-multiplatform = "3.3.0-alpha02-0.5.1"
 sqldelight = "2.3.2"
@@ -25,7 +25,7 @@ stately = "2.1.0"
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
 android-library = { id = "com.android.library", version.ref = "android" }
-compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "jetbrains-compose" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.6" }
 google-services = { id = "com.google.gms.google-services", version = "4.4.4" }
@@ -61,20 +61,20 @@ coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" 
 coil-core = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 coil-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coil" }
 coil-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
-compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "jetbrains-compose" }
-compose-material-adaptive-core = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "jetbrains-navigation" }
-compose-material-adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version.ref = "jetbrains-navigation" }
-compose-material-adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "jetbrains-navigation" }
+compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-multiplatform" }
+compose-material-adaptive-core = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "material-adaptive" }
+compose-material-adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version.ref = "material-adaptive" }
+compose-material-adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "material-adaptive" }
 compose-material-adaptive-navigation-suite = { module = "org.jetbrains.compose.material3:material3-adaptive-navigation-suite", version = "1.9.0" }
 compose-material-windowSizeClass = { module = "org.jetbrains.compose.material3:material3-window-size-class", version = "1.9.0" }
 compose-material3 = { module = "org.jetbrains.compose.material3:material3", version = "1.10.0-alpha05" }
 compose-materialIcons = { module = "org.jetbrains.compose.material:material-icons-extended", version = "1.7.3" }
-compose-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "jetbrains-navigation3" }
-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "jetbrains-compose" }
-compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "jetbrains-compose" }
-compose-ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "jetbrains-compose" }
-compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "jetbrains-compose" }
-compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "jetbrains-compose" }
+compose-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "compose-navigation3" }
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-multiplatform" }
+compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose-multiplatform" }
+compose-ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "compose-multiplatform" }
+compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose-multiplatform" }
+compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-multiplatform" }
 connectivity-core = { module = "dev.jordond.connectivity:connectivity-core", version.ref = "connectivity" }
 connectivity-apple = { module = "dev.jordond.connectivity:connectivity-apple", version.ref = "connectivity" }
 connectivity-android = { module = "dev.jordond.connectivity:connectivity-android", version.ref = "connectivity" }

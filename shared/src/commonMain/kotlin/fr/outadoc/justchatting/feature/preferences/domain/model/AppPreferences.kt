@@ -12,6 +12,6 @@ public data class AppPreferences(
 ) {
     public object Defaults {
         public const val ChatBufferLimit: Int = 1_000
-        public const val RecentChatLimit: Int = 500
+        public const val RecentChatLimit: Int = 50
     }
 }

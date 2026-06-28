@@ -16,6 +16,7 @@ import io.ktor.websocket.DefaultWebSocketSession
 import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
@@ -60,7 +61,7 @@ internal class LoggedInChatWebSocket(
         channelLogin: String,
         appUser: AppUser.LoggedIn,
     ): Flow<ChatEvent> = channelFlow {
-        _connectionStatus.update { it.copy(registeredListeners = 1) }
+        _connectionStatus.update { it.copy(registeredListeners = it.registeredListeners + 1) }
         try {
             networkStateObserver.state.collectLatest { netState ->
                 if (netState is NetworkStateObserver.NetworkState.Available) {
@@ -69,6 +70,8 @@ internal class LoggedInChatWebSocket(
                         _connectionStatus.update { it.copy(isAlive = true) }
                         try {
                             listen(channelLogin, appUser)
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
                             logError<LoggedInChatWebSocket>(e) { "Socket was closed" }
                         }
@@ -81,7 +84,7 @@ internal class LoggedInChatWebSocket(
                 }
             }
         } finally {
-            _connectionStatus.update { it.copy(registeredListeners = 0) }
+            _connectionStatus.update { it.copy(registeredListeners = it.registeredListeners - 1) }
         }
     }.flowOn(DispatchersProvider.io)
 

@@ -19,6 +19,7 @@ import io.ktor.websocket.DefaultWebSocketSession
 import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
@@ -69,16 +70,22 @@ internal class LiveChatWebSocket(
         appUser: AppUser.LoggedIn,
     ): Flow<ChatEvent> = channelFlow {
         var lastMessageReceivedAt: Instant? = null
-        _connectionStatus.update { it.copy(registeredListeners = 1) }
+        var recentMessagesLoaded = false
+        _connectionStatus.update { it.copy(registeredListeners = it.registeredListeners + 1) }
         try {
             networkStateObserver.state.collectLatest { netState ->
                 if (netState is NetworkStateObserver.NetworkState.Available) {
                     logDebug<LiveChatWebSocket> { "Network is available, listening" }
-                    loadRecentMessages(channelLogin, lastMessageReceivedAt)
+                    if (!recentMessagesLoaded || lastMessageReceivedAt != null) {
+                        recentMessagesLoaded = true
+                        loadRecentMessages(channelLogin, lastMessageReceivedAt)
+                    }
                     while (currentCoroutineContext().isActive) {
                         _connectionStatus.update { it.copy(isAlive = true) }
                         try {
                             lastMessageReceivedAt = listen(channelLogin, lastMessageReceivedAt)
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
                             logError<LiveChatWebSocket>(e) { "Socket was closed" }
                         }
@@ -91,7 +98,7 @@ internal class LiveChatWebSocket(
                 }
             }
         } finally {
-            _connectionStatus.update { it.copy(registeredListeners = 0) }
+            _connectionStatus.update { it.copy(registeredListeners = it.registeredListeners - 1) }
         }
     }.flowOn(DispatchersProvider.io)
 

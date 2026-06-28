@@ -60,6 +60,7 @@ internal class AndroidHttpClientProvider(
 
         engine {
             config {
+                pingInterval(30, java.util.concurrent.TimeUnit.SECONDS)
                 followRedirects(true)
             }
         }

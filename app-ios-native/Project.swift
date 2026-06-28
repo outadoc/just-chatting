@@ -4,6 +4,16 @@ import ProjectDescription
 
 let project = Project(
     name: "JustChatting",
+    packages: [
+        .remote(
+            url: "https://github.com/kean/Nuke.git",
+            requirement: .upToNextMajor(from: "12.0.0")
+        ),
+        .remote(
+            url: "https://github.com/kaishin/Gifu.git",
+            requirement: .upToNextMajor(from: "3.0.0")
+        ),
+    ],
     settings: .settings(base: [
         "ENABLE_USER_SCRIPT_SANDBOXING": "NO",
         "ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS": "NO",
@@ -57,7 +67,10 @@ let project = Project(
                     basedOnDependencyAnalysis: false
                 ),
             ],
-            dependencies: [],
+            dependencies: [
+                .package(product: "NukeUI"),
+                .package(product: "Gifu"),
+            ],
             settings: .settings(
                 configurations: [
                     .debug(

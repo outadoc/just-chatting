@@ -10,14 +10,17 @@ import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.shared.domain.model.MessageNotSentException
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.TimelineConfig
+import fr.outadoc.justchatting.feature.timeline.domain.model.DaySchedule
 import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
+import fr.outadoc.justchatting.utils.datetime.JCLocalDate
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logInfo
 import fr.outadoc.justchatting.utils.logging.logWarning
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.async
@@ -234,13 +237,23 @@ internal class TwitchRepositoryImpl(
                 past
                     .groupBy { segment ->
                         segment.startTime.toLocalDateTime(timeZone).date
-                    }.toPersistentMap()
+                    }.map { (date, schedule) ->
+                        DaySchedule(
+                            date = JCLocalDate(date),
+                            schedule = schedule,
+                        )
+                    }.toImmutableList()
 
             val groupedFuture =
                 future
                     .groupBy { segment ->
                         segment.startTime.toLocalDateTime(timeZone).date
-                    }.toPersistentMap()
+                    }.map { (date, schedule) ->
+                        DaySchedule(
+                            date = JCLocalDate(date),
+                            schedule = schedule,
+                        )
+                    }.toImmutableList()
 
             FullSchedule(
                 past = groupedPast,

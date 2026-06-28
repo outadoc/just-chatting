@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
-import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
+import fr.outadoc.justchatting.feature.timeline.domain.model.DaySchedule
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
-import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
@@ -27,7 +26,7 @@ public class FutureTimelineViewModel internal constructor(
 ) : ViewModel() {
     public data class State(
         val isLoading: Boolean = false,
-        val future: ImmutableMap<LocalDate, List<ChannelScheduleSegment>> = persistentMapOf(),
+        val future: ImmutableList<DaySchedule> = persistentListOf(),
         val timeZone: TimeZone = TimeZone.currentSystemDefault(),
     )
 
@@ -47,7 +46,9 @@ public class FutureTimelineViewModel internal constructor(
                     timeZone = tz,
                 ).collect { schedule ->
                     _state.update { state ->
-                        state.copy(future = schedule.future)
+                        state.copy(
+                            future = schedule.future,
+                        )
                     }
                 }
         }

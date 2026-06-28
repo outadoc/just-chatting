@@ -10,6 +10,7 @@ struct iOSApp: App {
 
         // Perform dependency injection
         SharedKoinKt.startSharedKoin { _ in }
+
     }
 
     var body: some Scene {

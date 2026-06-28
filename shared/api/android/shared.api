@@ -1686,20 +1686,34 @@ public final class fr/outadoc/justchatting/feature/timeline/domain/model/Channel
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class fr/outadoc/justchatting/feature/timeline/domain/model/DaySchedule {
+	public static final field $stable I
+	public fun <init> (Lfr/outadoc/justchatting/utils/datetime/JCLocalDate;Ljava/util/List;)V
+	public final fun component1 ()Lfr/outadoc/justchatting/utils/datetime/JCLocalDate;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Lfr/outadoc/justchatting/utils/datetime/JCLocalDate;Ljava/util/List;)Lfr/outadoc/justchatting/feature/timeline/domain/model/DaySchedule;
+	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/timeline/domain/model/DaySchedule;Lfr/outadoc/justchatting/utils/datetime/JCLocalDate;Ljava/util/List;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/timeline/domain/model/DaySchedule;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDate ()Lfr/outadoc/justchatting/utils/datetime/JCLocalDate;
+	public final fun getSchedule ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class fr/outadoc/justchatting/feature/timeline/domain/model/FullSchedule {
 	public static final field $stable I
 	public fun <init> ()V
-	public fun <init> (Lkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/ImmutableList;Lkotlinx/collections/immutable/ImmutableMap;)V
-	public synthetic fun <init> (Lkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/ImmutableList;Lkotlinx/collections/immutable/ImmutableMap;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lkotlinx/collections/immutable/ImmutableMap;
+	public fun <init> (Lkotlinx/collections/immutable/ImmutableList;Lkotlinx/collections/immutable/ImmutableList;Lkotlinx/collections/immutable/ImmutableList;)V
+	public synthetic fun <init> (Lkotlinx/collections/immutable/ImmutableList;Lkotlinx/collections/immutable/ImmutableList;Lkotlinx/collections/immutable/ImmutableList;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lkotlinx/collections/immutable/ImmutableList;
 	public final fun component2 ()Lkotlinx/collections/immutable/ImmutableList;
-	public final fun component3 ()Lkotlinx/collections/immutable/ImmutableMap;
-	public final fun copy (Lkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/ImmutableList;Lkotlinx/collections/immutable/ImmutableMap;)Lfr/outadoc/justchatting/feature/timeline/domain/model/FullSchedule;
-	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/timeline/domain/model/FullSchedule;Lkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/ImmutableList;Lkotlinx/collections/immutable/ImmutableMap;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/timeline/domain/model/FullSchedule;
+	public final fun component3 ()Lkotlinx/collections/immutable/ImmutableList;
+	public final fun copy (Lkotlinx/collections/immutable/ImmutableList;Lkotlinx/collections/immutable/ImmutableList;Lkotlinx/collections/immutable/ImmutableList;)Lfr/outadoc/justchatting/feature/timeline/domain/model/FullSchedule;
+	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/timeline/domain/model/FullSchedule;Lkotlinx/collections/immutable/ImmutableList;Lkotlinx/collections/immutable/ImmutableList;Lkotlinx/collections/immutable/ImmutableList;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/timeline/domain/model/FullSchedule;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getFuture ()Lkotlinx/collections/immutable/ImmutableMap;
+	public final fun getFuture ()Lkotlinx/collections/immutable/ImmutableList;
 	public final fun getLive ()Lkotlinx/collections/immutable/ImmutableList;
-	public final fun getPast ()Lkotlinx/collections/immutable/ImmutableMap;
+	public final fun getPast ()Lkotlinx/collections/immutable/ImmutableList;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1767,15 +1781,15 @@ public final class fr/outadoc/justchatting/feature/timeline/presentation/FutureT
 public final class fr/outadoc/justchatting/feature/timeline/presentation/FutureTimelineViewModel$State {
 	public static final field $stable I
 	public fun <init> ()V
-	public fun <init> (ZLkotlinx/collections/immutable/ImmutableMap;Lkotlinx/datetime/TimeZone;)V
-	public synthetic fun <init> (ZLkotlinx/collections/immutable/ImmutableMap;Lkotlinx/datetime/TimeZone;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZLkotlinx/collections/immutable/ImmutableList;Lkotlinx/datetime/TimeZone;)V
+	public synthetic fun <init> (ZLkotlinx/collections/immutable/ImmutableList;Lkotlinx/datetime/TimeZone;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
-	public final fun component2 ()Lkotlinx/collections/immutable/ImmutableMap;
+	public final fun component2 ()Lkotlinx/collections/immutable/ImmutableList;
 	public final fun component3 ()Lkotlinx/datetime/TimeZone;
-	public final fun copy (ZLkotlinx/collections/immutable/ImmutableMap;Lkotlinx/datetime/TimeZone;)Lfr/outadoc/justchatting/feature/timeline/presentation/FutureTimelineViewModel$State;
-	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/timeline/presentation/FutureTimelineViewModel$State;ZLkotlinx/collections/immutable/ImmutableMap;Lkotlinx/datetime/TimeZone;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/timeline/presentation/FutureTimelineViewModel$State;
+	public final fun copy (ZLkotlinx/collections/immutable/ImmutableList;Lkotlinx/datetime/TimeZone;)Lfr/outadoc/justchatting/feature/timeline/presentation/FutureTimelineViewModel$State;
+	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/timeline/presentation/FutureTimelineViewModel$State;ZLkotlinx/collections/immutable/ImmutableList;Lkotlinx/datetime/TimeZone;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/timeline/presentation/FutureTimelineViewModel$State;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getFuture ()Lkotlinx/collections/immutable/ImmutableMap;
+	public final fun getFuture ()Lkotlinx/collections/immutable/ImmutableList;
 	public final fun getTimeZone ()Lkotlinx/datetime/TimeZone;
 	public fun hashCode ()I
 	public final fun isLoading ()Z
@@ -1851,6 +1865,11 @@ public final class fr/outadoc/justchatting/utils/core/TwitchExtKt {
 	public static final fun createVideoExternalLink (Ljava/lang/String;)Ljava/lang/String;
 }
 
+public final class fr/outadoc/justchatting/utils/datetime/JCLocalDate {
+	public static final field $stable I
+	public final fun getLocalDate ()Lkotlinx/datetime/LocalDate;
+}
+
 public final class fr/outadoc/justchatting/utils/http/UriExtKt {
 	public static final fun toKtorUrl (Lcom/eygraber/uri/Uri;)Lio/ktor/http/Url;
 	public static final fun toUri (Ljava/lang/String;)Lcom/eygraber/uri/Uri;
@@ -1906,24 +1925,28 @@ public final class fr/outadoc/justchatting/utils/presentation/StringUrlExt_andro
 
 public abstract interface class fr/outadoc/justchatting/utils/resources/StringDesc {
 	public abstract fun localized (Landroidx/compose/runtime/Composer;I)Ljava/lang/String;
+	public abstract fun localizedString ()Ljava/lang/String;
 }
 
 public final class fr/outadoc/justchatting/utils/resources/StringDesc$Formatted : fr/outadoc/justchatting/utils/resources/StringDesc {
 	public static final field $stable I
 	public fun <init> (Lorg/jetbrains/compose/resources/StringResource;[Ljava/lang/Object;)V
 	public fun localized (Landroidx/compose/runtime/Composer;I)Ljava/lang/String;
+	public fun localizedString ()Ljava/lang/String;
 }
 
 public final class fr/outadoc/justchatting/utils/resources/StringDesc$Plural : fr/outadoc/justchatting/utils/resources/StringDesc {
 	public static final field $stable I
 	public fun <init> (Lorg/jetbrains/compose/resources/PluralStringResource;I)V
 	public fun localized (Landroidx/compose/runtime/Composer;I)Ljava/lang/String;
+	public fun localizedString ()Ljava/lang/String;
 }
 
 public final class fr/outadoc/justchatting/utils/resources/StringDesc$PluralFormatted : fr/outadoc/justchatting/utils/resources/StringDesc {
 	public static final field $stable I
 	public fun <init> (Lorg/jetbrains/compose/resources/PluralStringResource;I[Ljava/lang/Object;)V
 	public fun localized (Landroidx/compose/runtime/Composer;I)Ljava/lang/String;
+	public fun localizedString ()Ljava/lang/String;
 }
 
 public final class fr/outadoc/justchatting/utils/resources/StringDesc$Raw : fr/outadoc/justchatting/utils/resources/StringDesc {
@@ -1931,12 +1954,14 @@ public final class fr/outadoc/justchatting/utils/resources/StringDesc$Raw : fr/o
 	public fun <init> (Ljava/lang/String;)V
 	public final fun getValue ()Ljava/lang/String;
 	public fun localized (Landroidx/compose/runtime/Composer;I)Ljava/lang/String;
+	public fun localizedString ()Ljava/lang/String;
 }
 
 public final class fr/outadoc/justchatting/utils/resources/StringDesc$Resource : fr/outadoc/justchatting/utils/resources/StringDesc {
 	public static final field $stable I
 	public fun <init> (Lorg/jetbrains/compose/resources/StringResource;)V
 	public fun localized (Landroidx/compose/runtime/Composer;I)Ljava/lang/String;
+	public fun localizedString ()Ljava/lang/String;
 }
 
 public final class fr/outadoc/justchatting/utils/resources/StringDescKt {

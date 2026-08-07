@@ -87,6 +87,11 @@ private val simpleEntries =
                     badges = persistentListOf(),
                     inReplyTo = null,
                     sourceRoomId = "203096177",
+                    sourceBadges =
+                    persistentListOf(
+                        Badge("moderator", "1"),
+                        Badge("subscriber", "12"),
+                    ),
                 ),
                 timestamp = Instant.fromEpochMilliseconds(1664399218000),
             ),

@@ -30,6 +30,7 @@ internal class ChatStateReducer {
             is ChatViewModel.Action.UpdateStreamMetadata -> action.reduce(state)
             is ChatViewModel.Action.UpdateChatterPronouns -> action.reduce(state)
             is ChatViewModel.Action.UpdateSourceChannels -> action.reduce(state)
+            is ChatViewModel.Action.UpdateSourceChannelBadges -> action.reduce(state)
             is ChatViewModel.Action.AddRichEmbed -> action.reduce(state)
             is ChatViewModel.Action.LoadChat -> action.reduce(state)
             is ChatViewModel.Action.UpdateEmotes -> action.reduce(state)
@@ -226,6 +227,16 @@ internal class ChatStateReducer {
         if (state !is ChatViewModel.State.Chatting) return state
         return state.copy(
             sourceChannels = state.sourceChannels.putAll(users.associateBy { user -> user.id }),
+        )
+    }
+
+    private fun ChatViewModel.Action.UpdateSourceChannelBadges.reduce(state: ChatViewModel.State): ChatViewModel.State {
+        if (state !is ChatViewModel.State.Chatting) return state
+        return state.copy(
+            sourceChannelBadges =
+            state.sourceChannelBadges.putAll(
+                badges.mapValues { (_, list) -> list.toPersistentList() },
+            ),
         )
     }
 

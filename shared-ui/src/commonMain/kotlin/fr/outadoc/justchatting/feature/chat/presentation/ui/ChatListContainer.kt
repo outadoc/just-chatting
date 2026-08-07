@@ -32,6 +32,8 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.scroll_down
 import fr.outadoc.justchatting.utils.core.filterValuesNotNull
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
@@ -70,6 +72,14 @@ internal fun ChatListContainer(
             removedContent = state.removedContent,
             pronouns = state.pronouns.filterValuesNotNull(),
             sourceChannels = state.sourceChannels,
+            sourceChannelBadges =
+            state.sourceRoomIds.associateWith { roomId ->
+                if (roomId == state.user.id) {
+                    state.channelBadges
+                } else {
+                    state.sourceChannelBadges[roomId] ?: persistentListOf()
+                }
+            }.mapValues { (_, roomBadges) -> state.globalBadges.addAll(roomBadges) }.toImmutableMap(),
             richEmbeds = state.richEmbeds,
             showTimestamps = showTimestamps,
             isDisconnected = !state.connectionStatus.isAlive,

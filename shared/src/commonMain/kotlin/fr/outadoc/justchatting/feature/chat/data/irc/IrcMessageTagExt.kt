@@ -41,7 +41,11 @@ internal fun Map<String, String?>.parseEmotes(message: String): List<Emote>? = t
             }.orEmpty()
     }
 
-internal fun Map<String, String?>.parseBadges(): List<Badge>? = this["badges"]
+internal fun Map<String, String?>.parseBadges(): List<Badge>? = parseBadgeList("badges")
+
+internal fun Map<String, String?>.parseSourceBadges(): List<Badge>? = parseBadgeList("source-badges")
+
+private fun Map<String, String?>.parseBadgeList(tag: String): List<Badge>? = this[tag]
     ?.splitAndMakeMap(",", "/")
     ?.entries
     ?.mapNotNull { (key, value) ->

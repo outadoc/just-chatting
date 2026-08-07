@@ -164,9 +164,19 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
             }
         }
 
-        badges.forEach { badge ->
+        val effectiveBadges = sourceBadges.takeIf { it.isNotEmpty() } ?: badges
+        val effectiveSourceRoomId = sourceRoomId
+
+        effectiveBadges.forEach { badge ->
+            val badgeId =
+                if (sourceBadges.isNotEmpty() && effectiveSourceRoomId != null) {
+                    badge.sourceInlineContentId(effectiveSourceRoomId)
+                } else {
+                    badge.inlineContentId
+                }
+
             appendInlineContent(
-                id = badge.inlineContentId,
+                id = badgeId,
                 alternateText = " ",
             )
 
@@ -294,5 +304,7 @@ private fun AnnotatedString.Builder.appendMention(
 
 private val Badge.inlineContentId: String
     get() = "badge_${id}_$version"
+
+private fun Badge.sourceInlineContentId(roomId: String): String = "source_badge:$roomId:${id}_$version"
 
 private const val CHATTER_ID_ANNOTATION_TAG = "USER_ID"

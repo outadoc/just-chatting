@@ -169,6 +169,7 @@ internal class TwitchIrcCommandParser(
             isAction = actionGroups != null,
             embeddedEmotes = ircMessage.tags.parseEmotes(message).orEmpty(),
             badges = ircMessage.tags.parseBadges(),
+            sourceBadges = ircMessage.tags.parseSourceBadges(),
             isFirstMessageByUser = ircMessage.tags.firstMsg,
             timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
             rewardId = ircMessage.tags.customRewardId,

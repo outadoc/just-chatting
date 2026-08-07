@@ -47,7 +47,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asFlow
@@ -172,6 +175,10 @@ public class ChatViewModel internal constructor(
             val users: List<User>,
         ) : Action()
 
+        data class UpdateSourceChannelBadges(
+            val badges: Map<String, List<TwitchBadge>>,
+        ) : Action()
+
         data class UpdateStreamDetails(
             val stream: Stream,
         ) : Action()
@@ -217,6 +224,7 @@ public class ChatViewModel internal constructor(
             val pronouns: PersistentMap<Chatter, Pronoun?> = persistentMapOf(),
             val sourceRoomIds: PersistentSet<String> = persistentHashSetOf(),
             val sourceChannels: PersistentMap<String, User> = persistentMapOf(),
+            val sourceChannelBadges: PersistentMap<String, PersistentList<TwitchBadge>> = persistentMapOf(),
             val cheerEmotes: PersistentMap<String, Emote> = persistentMapOf(),
             val globalBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val lastSentMessageInstant: Instant? = null,
@@ -715,6 +723,24 @@ public class ChatViewModel internal constructor(
                             logError<ChatViewModel>(exception) { "Failed to load shared chat source channels" }
                         }
                 }.catch { e -> logError<ChatViewModel>(e) { "Source channels pipeline failed" } }
+                .launchIn(scope)
+
+            state
+                .filterIsInstance<State.Chatting>()
+                .map { state -> state.sourceRoomIds - state.sourceChannelBadges.keys - state.user.id }
+                .filter { newIds -> newIds.isNotEmpty() }
+                .distinctUntilChanged()
+                .debounce(1.seconds)
+                .map { newIds ->
+                    coroutineScope {
+                        newIds
+                            .map { id -> async { id to twitchRepository.getChannelBadges(id) } }
+                            .awaitAll()
+                            .mapNotNull { (id, result) -> result.getOrNull()?.let { badges -> id to badges } }
+                            .toMap()
+                    }
+                }.onEach { newBadges -> dispatchIfCurrent(Action.UpdateSourceChannelBadges(newBadges)) }
+                .catch { e -> logError<ChatViewModel>(e) { "Source channel badges pipeline failed" } }
                 .launchIn(scope)
 
             state

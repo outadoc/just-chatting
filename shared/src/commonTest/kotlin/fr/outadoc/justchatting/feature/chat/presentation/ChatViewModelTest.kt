@@ -492,6 +492,36 @@ internal class ChatViewModelTest {
     }
 
     @Test
+    fun `source channel badges are fetched for shared chat messages`() = runTest(testDispatcher) {
+        val moderatorBadge =
+            TwitchBadge(
+                setId = "moderator",
+                version = "1",
+                urls = EmoteUrls("https://example.com/moderator.png"),
+            )
+        twitchRepository.channelBadges = listOf(moderatorBadge)
+
+        viewModel.loadChat(channelUser.id)
+        awaitChatting()
+
+        pushChatEvent(
+            chatMessageEvent(
+                id = "shared-message",
+                sourceRoomId = otherChannelUser.id,
+            ),
+        )
+
+        advanceTimeBy(2.seconds)
+
+        val state =
+            viewModel.state.first { state ->
+                state is ChatViewModel.State.Chatting && state.sourceChannelBadges.isNotEmpty()
+            } as ChatViewModel.State.Chatting
+
+        assertEquals(listOf(moderatorBadge), state.sourceChannelBadges[otherChannelUser.id]?.toList())
+    }
+
+    @Test
     fun `typing updates the input state`() {
         viewModel.onMessageInputChanged(
             message = "hello",

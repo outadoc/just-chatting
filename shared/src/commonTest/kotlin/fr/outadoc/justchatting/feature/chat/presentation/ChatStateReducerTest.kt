@@ -7,6 +7,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.PinnedMessage
 import fr.outadoc.justchatting.feature.chat.domain.model.Poll
 import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
+import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
@@ -715,6 +716,38 @@ internal class ChatStateReducerTest {
     @Test
     fun `UpdateSourceChannels when not Chatting is a no-op`() {
         val action = ChatViewModel.Action.UpdateSourceChannels(users = emptyList())
+
+        val result = reducer.reduce(action, ChatViewModel.State.Initial)
+
+        assertIs<ChatViewModel.State.Initial>(result)
+    }
+
+    // endregion
+
+    // region Action: UpdateSourceChannelBadges
+
+    @Test
+    fun `UpdateSourceChannelBadges merges badges into existing map keyed by room id`() {
+        val badge =
+            TwitchBadge(
+                setId = "moderator",
+                version = "1",
+                urls = EmoteUrls("https://example.com/moderator.png"),
+            )
+        val action =
+            ChatViewModel.Action.UpdateSourceChannelBadges(
+                badges = mapOf("source-room-1" to listOf(badge)),
+            )
+
+        val result = reducer.reduce(action, testChattingState)
+
+        assertIs<ChatViewModel.State.Chatting>(result)
+        assertEquals(listOf(badge), result.sourceChannelBadges["source-room-1"]?.toList())
+    }
+
+    @Test
+    fun `UpdateSourceChannelBadges when not Chatting is a no-op`() {
+        val action = ChatViewModel.Action.UpdateSourceChannelBadges(badges = emptyMap())
 
         val result = reducer.reduce(action, ChatViewModel.State.Initial)
 

@@ -62,6 +62,7 @@ internal fun ChatList(
     removedContent: ImmutableList<ChatListItem.RemoveContent>,
     pronouns: ImmutableMap<Chatter, Pronoun>,
     sourceChannels: ImmutableMap<String, User>,
+    sourceChannelBadges: ImmutableMap<String, ImmutableList<TwitchBadge>>,
     richEmbeds: ImmutableMap<String, ChatListItem.RichEmbed>,
     showTimestamps: Boolean,
     isDisconnected: Boolean,
@@ -124,12 +125,27 @@ internal fun ChatList(
                 }.toPersistentHashMap()
         }
 
+    val inlineSourceBadges: PersistentMap<String, InlineTextContent> =
+        remember(sourceChannelBadges) {
+            sourceChannelBadges.entries
+                .flatMap { (roomId, roomBadges) ->
+                    roomBadges.map { badge ->
+                        Pair(
+                            badge.sourceInlineContentId(roomId),
+                            badgeTextContent(badge),
+                        )
+                    }
+                }.toMap()
+                .toPersistentHashMap()
+        }
+
     val inlineContent: PersistentMap<String, InlineTextContent> =
-        remember(inlinesEmotes, inlineBadges, inlineCheerEmotes, inlineSourceChannels) {
+        remember(inlinesEmotes, inlineBadges, inlineCheerEmotes, inlineSourceChannels, inlineSourceBadges) {
             inlinesEmotes
                 .putAll(inlineBadges)
                 .putAll(inlineCheerEmotes)
                 .putAll(inlineSourceChannels)
+                .putAll(inlineSourceBadges)
         }
 
     var size by remember { mutableStateOf(IntSize.Zero) }
@@ -266,3 +282,5 @@ internal fun ChatList(
 
 private val TwitchBadge.inlineContentId: String
     get() = "badge_${setId}_$version"
+
+private fun TwitchBadge.sourceInlineContentId(roomId: String): String = "source_badge:$roomId:${setId}_$version"

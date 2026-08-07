@@ -119,6 +119,21 @@ internal class TwitchIrcCommandParserTest {
                 rewardId = null,
                 inReplyTo = null,
                 sourceRoomId = "203096177",
+                sourceBadges =
+                listOf(
+                    Badge(
+                        id = "moderator",
+                        version = "1",
+                    ),
+                    Badge(
+                        id = "subscriber",
+                        version = "12",
+                    ),
+                    Badge(
+                        id = "bingbonglove",
+                        version = "1",
+                    ),
+                ),
             )
         }
     }
@@ -306,6 +321,13 @@ internal class TwitchIrcCommandParserTest {
                     rewardId = null,
                     inReplyTo = null,
                     sourceRoomId = "203096177",
+                    sourceBadges =
+                    listOf(
+                        Badge(
+                            id = "moderator",
+                            version = "1",
+                        ),
+                    ),
                 ),
             )
         }

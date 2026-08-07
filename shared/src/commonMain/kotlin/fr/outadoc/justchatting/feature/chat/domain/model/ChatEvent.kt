@@ -20,6 +20,7 @@ internal sealed interface ChatEvent {
             val isAction: Boolean = false,
             val embeddedEmotes: List<Emote>,
             val badges: List<Badge>?,
+            val sourceBadges: List<Badge>? = null,
             val isFirstMessageByUser: Boolean = false,
             val rewardId: String?,
             val inReplyTo: InReplyTo?,

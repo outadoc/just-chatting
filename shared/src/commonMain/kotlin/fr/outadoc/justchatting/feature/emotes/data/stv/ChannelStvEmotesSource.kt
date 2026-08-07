@@ -14,13 +14,14 @@ import kotlinx.coroutines.withContext
 internal class ChannelStvEmotesSource(
     private val stvEmotesApi: StvEmotesApi,
     private val preferencesRepository: PreferenceRepository,
+    private val dispatchersProvider: DispatchersProvider,
 ) : CachedEmoteListSource<List<EmoteSetItem>>() {
     override fun shouldUseCache(
         previous: Params,
         next: Params,
     ): Boolean = previous.channelId == next.channelId && previous.channelName == next.channelName
 
-    override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> = withContext(DispatchersProvider.io) {
+    override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> = withContext(dispatchersProvider.io) {
         val prefs = preferencesRepository.currentPreferences.first()
         if (!prefs.enableStvEmotes) {
             return@withContext Result.success(emptyList())

@@ -49,11 +49,12 @@ internal class TwitchRepositoryImpl(
     private val twitchApi: TwitchApi,
     private val localUsersApi: LocalUsersApi,
     private val localStreamsApi: LocalStreamsApi,
+    private val dispatchersProvider: DispatchersProvider,
 ) : TwitchRepository {
     private val userSyncLock = Mutex()
     private val streamSyncLock = Mutex()
 
-    override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> = withContext(DispatchersProvider.io) {
+    override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> = withContext(dispatchersProvider.io) {
         twitchApi
             .searchChannels(query)
             .map { pagingData ->
@@ -77,7 +78,7 @@ internal class TwitchRepositoryImpl(
     }
 
     override suspend fun syncFollowedChannels(appUser: AppUser) {
-        withContext(DispatchersProvider.io) {
+        withContext(dispatchersProvider.io) {
             if (appUser is AppUser.LoggedIn) {
                 if (localUsersApi.isFollowedUsersCacheExpired()) {
                     syncLocalFollows(appUserId = appUser.userId)
@@ -99,9 +100,9 @@ internal class TwitchRepositoryImpl(
                         ?: error("Stream for userId $userId not found")
                 },
         )
-    }.flowOn(DispatchersProvider.io)
+    }.flowOn(dispatchersProvider.io)
 
-    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> = withContext(DispatchersProvider.io) {
+    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> = withContext(dispatchersProvider.io) {
         launch {
             ids.forEach { id ->
                 localUsersApi.saveUser(userId = id)
@@ -115,7 +116,7 @@ internal class TwitchRepositoryImpl(
             .map { users -> Result.success(users) }
     }
 
-    override suspend fun getUserById(id: String): Flow<Result<User>> = withContext(DispatchersProvider.io) {
+    override suspend fun getUserById(id: String): Flow<Result<User>> = withContext(dispatchersProvider.io) {
         getUsersById(ids = listOf(id))
             .map { result ->
                 result.mapCatching { users ->
@@ -125,20 +126,20 @@ internal class TwitchRepositoryImpl(
             }
     }
 
-    override suspend fun getCheerEmotes(userId: String): Result<List<Emote>> = withContext(DispatchersProvider.io) {
+    override suspend fun getCheerEmotes(userId: String): Result<List<Emote>> = withContext(dispatchersProvider.io) {
         twitchApi.getCheerEmotes(userId = userId)
     }
 
-    override suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>> = withContext(DispatchersProvider.io) {
+    override suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>> = withContext(dispatchersProvider.io) {
         twitchApi.getEmotesFromSet(setIds = setIds)
     }
 
-    override suspend fun getRecentChannels(): Flow<List<User>> = withContext(DispatchersProvider.io) {
+    override suspend fun getRecentChannels(): Flow<List<User>> = withContext(dispatchersProvider.io) {
         localUsersApi.getRecentChannels()
     }
 
     override suspend fun forgetRecentChannel(userId: String) {
-        withContext(DispatchersProvider.io) {
+        withContext(dispatchersProvider.io) {
             localUsersApi.forgetRecentChannel(userId = userId)
         }
     }
@@ -147,7 +148,7 @@ internal class TwitchRepositoryImpl(
         userId: String,
         visitedAt: Instant,
     ) {
-        withContext(DispatchersProvider.io) {
+        withContext(dispatchersProvider.io) {
             localUsersApi.saveUser(
                 userId = userId,
                 visitedAt = visitedAt,
@@ -203,7 +204,7 @@ internal class TwitchRepositoryImpl(
     override suspend fun getFollowedChannelsSchedule(
         today: LocalDate,
         timeZone: TimeZone,
-    ): Flow<FullSchedule> = withContext(DispatchersProvider.io) {
+    ): Flow<FullSchedule> = withContext(dispatchersProvider.io) {
         val notBefore = (today - TimelineConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
         val notAfter = (today + TimelineConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
 
@@ -274,11 +275,11 @@ internal class TwitchRepositoryImpl(
         }
     }
 
-    override suspend fun getGlobalBadges(): Result<List<TwitchBadge>> = withContext(DispatchersProvider.io) {
+    override suspend fun getGlobalBadges(): Result<List<TwitchBadge>> = withContext(dispatchersProvider.io) {
         twitchApi.getGlobalBadges()
     }
 
-    override suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>> = withContext(DispatchersProvider.io) {
+    override suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>> = withContext(dispatchersProvider.io) {
         twitchApi.getChannelBadges(channelId)
     }
 
@@ -313,7 +314,7 @@ internal class TwitchRepositoryImpl(
         notBefore: Instant,
         notAfter: Instant,
         appUserId: String,
-    ) = withContext(DispatchersProvider.io) {
+    ) = withContext(dispatchersProvider.io) {
         streamSyncLock.withLock {
             val userIdsToSync: List<String> =
                 localStreamsApi
@@ -361,7 +362,7 @@ internal class TwitchRepositoryImpl(
         followedUsers: List<User>,
         notBefore: Instant,
         notAfter: Instant,
-    ) = withContext(DispatchersProvider.io) {
+    ) = withContext(dispatchersProvider.io) {
         logDebug<TwitchRepositoryImpl> { "Loading past channel videos from $notBefore to $notAfter" }
 
         followedUsers
@@ -401,7 +402,7 @@ internal class TwitchRepositoryImpl(
             }.awaitAll()
     }
 
-    private suspend fun syncLiveStreams(appUserId: String) = withContext(DispatchersProvider.io) {
+    private suspend fun syncLiveStreams(appUserId: String) = withContext(dispatchersProvider.io) {
         logDebug<TwitchRepositoryImpl> { "Loading followed live streams" }
 
         twitchApi
@@ -423,7 +424,7 @@ internal class TwitchRepositoryImpl(
         followedUsers: List<User>,
         notBefore: Instant,
         notAfter: Instant,
-    ) = withContext(DispatchersProvider.io) {
+    ) = withContext(dispatchersProvider.io) {
         logDebug<TwitchRepositoryImpl> { "Loading channel schedule from $notBefore to $notAfter" }
 
         followedUsers
@@ -461,7 +462,7 @@ internal class TwitchRepositoryImpl(
         message: String,
         inReplyToMessageId: String?,
         appUser: AppUser,
-    ): Result<String> = withContext(DispatchersProvider.io) {
+    ): Result<String> = withContext(dispatchersProvider.io) {
         logInfo<TwitchRepositoryImpl> { "Sending message (to $channelUserId, in reply to $inReplyToMessageId): $message" }
 
         when (appUser) {

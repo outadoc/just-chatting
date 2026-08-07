@@ -18,6 +18,7 @@ internal class AuthRepository internal constructor(
     private val preferenceRepository: PreferenceRepository,
     private val authApi: AuthApi,
     private val oAuthAppCredentials: OAuthAppCredentials,
+    private val dispatchersProvider: DispatchersProvider,
 ) {
     val currentUser: Flow<AppUser> =
         preferenceRepository
@@ -70,7 +71,7 @@ internal class AuthRepository internal constructor(
     }
 
     suspend fun logout() {
-        withContext(DispatchersProvider.io) {
+        withContext(dispatchersProvider.io) {
             val token = preferenceRepository.currentPreferences.first().apiToken
 
             if (token == null) {

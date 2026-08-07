@@ -40,6 +40,7 @@ internal class MockChatWebSocket(
     private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
     private val httpClient: HttpClient,
+    private val dispatchersProvider: DispatchersProvider,
 ) : ChatEventHandler {
     companion object {
         private const val ENDPOINT = "wss://irc.fdgt.dev"
@@ -85,7 +86,7 @@ internal class MockChatWebSocket(
         } finally {
             _connectionStatus.update { it.copy(registeredListeners = it.registeredListeners - 1) }
         }
-    }.flowOn(DispatchersProvider.io)
+    }.flowOn(dispatchersProvider.io)
 
     private suspend fun ProducerScope<ChatEvent>.listen(channelLogin: String) {
         httpClient.webSocket(ENDPOINT) {

@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 internal class ChannelBttvEmotesSource(
     private val bttvEmotesApi: BttvEmotesApi,
     private val preferencesRepository: PreferenceRepository,
+    private val dispatchersProvider: DispatchersProvider,
 ) : CachedEmoteListSource<List<EmoteSetItem>>() {
     override fun shouldUseCache(
         previous: Params,
@@ -21,7 +22,7 @@ internal class ChannelBttvEmotesSource(
     ): Boolean = previous.channelId == next.channelId && previous.channelName == next.channelName
 
     override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> = withContext(
-        DispatchersProvider.io,
+        dispatchersProvider.io,
     ) {
         val prefs = preferencesRepository.currentPreferences.first()
         if (!prefs.enableBttvEmotes) {

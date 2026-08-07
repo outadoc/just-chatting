@@ -94,6 +94,7 @@ public class ChatViewModel internal constructor(
     private val chatEventViewMapper: ChatEventViewMapper,
     private val loadEmotesAndBadges: LoadEmotesAndBadgesUseCase,
     private val submitMessage: SubmitMessageUseCase,
+    private val dispatchersProvider: DispatchersProvider,
 ) : ViewModel() {
     private val defaultScope = viewModelScope + CoroutineName("defaultScope")
 
@@ -632,7 +633,7 @@ public class ChatViewModel internal constructor(
                 }.distinctUntilChanged()
                 .mapLatest { (channelName, emoteSets) ->
                     try {
-                        withContext(DispatchersProvider.io) {
+                        withContext(dispatchersProvider.io) {
                             loadEmotesAndBadges(
                                 channelId = channelId,
                                 channelName = channelName,
@@ -718,7 +719,7 @@ public class ChatViewModel internal constructor(
                                 recentEmotes = recentEmotes,
                                 chatters = chatters,
                             )
-                        }.flowOn(DispatchersProvider.default)
+                        }.flowOn(dispatchersProvider.default)
                 }.onEach { autoCompleteItems ->
                     dispatchInputIfCurrent(
                         InputAction.UpdateAutoCompleteItems(autoCompleteItems),

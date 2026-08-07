@@ -1839,15 +1839,6 @@ public final class fr/outadoc/justchatting/feature/timeline/presentation/LiveTim
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class fr/outadoc/justchatting/utils/core/DispatchersProvider {
-	public static final field $stable I
-	public static final field INSTANCE Lfr/outadoc/justchatting/utils/core/DispatchersProvider;
-	public final fun getDefault ()Lkotlinx/coroutines/CoroutineDispatcher;
-	public final fun getIo ()Lkotlinx/coroutines/CoroutineDispatcher;
-	public final fun getMain ()Lkotlinx/coroutines/CoroutineDispatcher;
-	public final fun getUnconfined ()Lkotlinx/coroutines/CoroutineDispatcher;
-}
-
 public final class fr/outadoc/justchatting/utils/core/IntentExtKt {
 	public static final fun toPendingActivityIntent (Landroid/content/Intent;Landroid/content/Context;Z)Landroid/app/PendingIntent;
 	public static synthetic fun toPendingActivityIntent$default (Landroid/content/Intent;Landroid/content/Context;ZILjava/lang/Object;)Landroid/app/PendingIntent;

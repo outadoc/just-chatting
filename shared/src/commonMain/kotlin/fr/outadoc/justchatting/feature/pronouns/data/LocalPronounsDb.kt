@@ -23,12 +23,13 @@ import kotlin.time.Instant
 internal class LocalPronounsDb(
     private val db: PronounQueries,
     private val clock: Clock,
+    private val dispatchersProvider: DispatchersProvider,
 ) : LocalPronounsApi {
     private val pronouns: Flow<PersistentMap<String, Pronoun>> =
         db
             .getPronouns()
             .asFlow()
-            .mapToList(DispatchersProvider.io)
+            .mapToList(dispatchersProvider.io)
             .map { result ->
                 result
                     .associateBy { it.id }
@@ -45,7 +46,7 @@ internal class LocalPronounsDb(
     override suspend fun arePronounsSynced(): Boolean = !pronouns.firstOrNull().isNullOrEmpty()
 
     override suspend fun saveAndReplacePronouns(pronouns: List<Pronoun>) {
-        withContext(DispatchersProvider.io) {
+        withContext(dispatchersProvider.io) {
             db.transaction {
                 db.clearPronouns()
                 pronouns.forEach { pronoun ->
@@ -61,7 +62,7 @@ internal class LocalPronounsDb(
     }
 
     override suspend fun saveUserPronouns(userPronoun: UserPronounIds) {
-        withContext(DispatchersProvider.io) {
+        withContext(dispatchersProvider.io) {
             db.saveUserPronoun(
                 user_id = userPronoun.userId,
                 pronoun_id = userPronoun.mainPronounId,
@@ -71,11 +72,11 @@ internal class LocalPronounsDb(
         }
     }
 
-    override suspend fun getPronounsForUser(userId: String): Flow<UserPronouns?> = withContext(DispatchersProvider.io) {
+    override suspend fun getPronounsForUser(userId: String): Flow<UserPronouns?> = withContext(dispatchersProvider.io) {
         db
             .getUserPronoun(userId)
             .asFlow()
-            .mapToOneOrNull(DispatchersProvider.io)
+            .mapToOneOrNull(dispatchersProvider.io)
             .combine(pronouns) { result, pronouns ->
                 when {
                     result == null -> {

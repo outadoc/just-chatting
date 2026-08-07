@@ -12,11 +12,12 @@ import kotlin.time.Instant
 
 internal class RecentEmotesDb(
     private val recentEmoteQueries: RecentEmoteQueries,
+    private val dispatchersProvider: DispatchersProvider,
 ) : RecentEmotesApi {
     override fun getAll(): Flow<List<RecentEmote>> = recentEmoteQueries
         .getAll()
         .asFlow()
-        .mapToList(DispatchersProvider.io)
+        .mapToList(dispatchersProvider.io)
         .map { emotes ->
             emotes.map { emote ->
                 RecentEmote(

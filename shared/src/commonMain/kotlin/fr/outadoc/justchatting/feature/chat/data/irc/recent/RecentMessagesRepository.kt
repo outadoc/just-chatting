@@ -8,11 +8,12 @@ import kotlinx.coroutines.withContext
 internal class RecentMessagesRepository(
     private val recentMessagesApi: RecentMessagesApi,
     private val parser: TwitchIrcCommandParser,
+    private val dispatchersProvider: DispatchersProvider,
 ) {
     suspend fun loadRecentMessages(
         channelLogin: String,
         limit: Int,
-    ): Result<List<ChatEvent>> = withContext(DispatchersProvider.io) {
+    ): Result<List<ChatEvent>> = withContext(dispatchersProvider.io) {
         recentMessagesApi
             .getRecentMessages(channelLogin, limit)
             .map { response ->

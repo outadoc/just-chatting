@@ -23,6 +23,7 @@ public class FutureTimelineViewModel internal constructor(
     private val twitchRepository: TwitchRepository,
     private val clock: Clock,
     private val authRepository: AuthRepository,
+    private val dispatchersProvider: DispatchersProvider,
 ) : ViewModel() {
     public data class State(
         val isLoading: Boolean = false,
@@ -55,7 +56,7 @@ public class FutureTimelineViewModel internal constructor(
     }
 
     public fun syncLiveStreamsNow() {
-        viewModelScope.launch(DispatchersProvider.io) {
+        viewModelScope.launch(dispatchersProvider.io) {
             twitchRepository.syncFollowedStreams(
                 appUser = authRepository.currentUser.first(),
             )
@@ -65,7 +66,7 @@ public class FutureTimelineViewModel internal constructor(
     public fun syncEverythingNow() {
         syncJob?.cancel()
         syncJob =
-            viewModelScope.launch(DispatchersProvider.io) {
+            viewModelScope.launch(dispatchersProvider.io) {
                 _state.update { state ->
                     state.copy(isLoading = true)
                 }

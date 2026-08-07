@@ -16,6 +16,7 @@ import java.util.UUID
 
 internal class AndroidLogRepository(
     private val applicationContext: Context,
+    private val dispatchersProvider: DispatchersProvider,
 ) : LogRepository {
     override val isSupported: Boolean = true
 
@@ -29,7 +30,7 @@ internal class AndroidLogRepository(
         return logsPath / "$uuid.log.gz"
     }
 
-    override suspend fun dumpLogs(): Uri = withContext(DispatchersProvider.io) {
+    override suspend fun dumpLogs(): Uri = withContext(dispatchersProvider.io) {
         val process: Process =
             Runtime.getRuntime().exec("logcat -d")
 

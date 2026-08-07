@@ -24,6 +24,7 @@ import kotlin.time.Instant
 internal class LocalStreamsDb(
     private val streamQueries: StreamQueries,
     private val clock: Clock,
+    private val dispatchersProvider: DispatchersProvider,
 ) : LocalStreamsApi {
     override fun getPastStreams(
         notBefore: Instant,
@@ -33,7 +34,7 @@ internal class LocalStreamsDb(
             notBefore = notBefore.toEpochMilliseconds(),
             notAfter = notAfter.toEpochMilliseconds(),
         ).asFlow()
-        .mapToList(DispatchersProvider.io)
+        .mapToList(dispatchersProvider.io)
         .map { streams ->
             streams.map { stream ->
                 val categoryId = stream.category_id
@@ -72,20 +73,20 @@ internal class LocalStreamsDb(
                     },
                 )
             }
-        }.flowOn(DispatchersProvider.io)
+        }.flowOn(dispatchersProvider.io)
 
     override fun getMostRecentPastStream(user: User): Flow<Instant?> = streamQueries
         .getMostRecentPastStream(user.id)
         .asFlow()
-        .mapToOneOrNull(DispatchersProvider.io)
+        .mapToOneOrNull(dispatchersProvider.io)
         .map { endTime: Long? ->
             endTime?.let { Instant.fromEpochMilliseconds(it) }
-        }.flowOn(DispatchersProvider.io)
+        }.flowOn(dispatchersProvider.io)
 
     override fun getLiveStreams(): Flow<List<Stream>> = streamQueries
         .getLiveStreams()
         .asFlow()
-        .mapToList(DispatchersProvider.io)
+        .mapToList(dispatchersProvider.io)
         .map { streams ->
             streams.map { stream ->
                 val categoryId = stream.category_id
@@ -108,7 +109,7 @@ internal class LocalStreamsDb(
                     tags = stream.tags.split(',').toPersistentSet(),
                 )
             }
-        }.flowOn(DispatchersProvider.io)
+        }.flowOn(dispatchersProvider.io)
 
     override fun getFutureStreams(
         notBefore: Instant,
@@ -118,7 +119,7 @@ internal class LocalStreamsDb(
             notBefore = notBefore.toEpochMilliseconds(),
             notAfter = notAfter.toEpochMilliseconds(),
         ).asFlow()
-        .mapToList(DispatchersProvider.io)
+        .mapToList(dispatchersProvider.io)
         .map { streams ->
             streams.map { stream ->
                 val categoryId = stream.category_id
@@ -157,13 +158,13 @@ internal class LocalStreamsDb(
                     },
                 )
             }
-        }.flowOn(DispatchersProvider.io)
+        }.flowOn(dispatchersProvider.io)
 
     override suspend fun savePastStreams(
         user: User,
         videos: List<Video>,
     ) {
-        withContext(DispatchersProvider.io) {
+        withContext(dispatchersProvider.io) {
             val now = clock.now()
             streamQueries.transaction {
                 videos.forEach { video ->
@@ -216,7 +217,7 @@ internal class LocalStreamsDb(
         user: User,
         segments: List<ChannelScheduleSegment>,
     ) {
-        withContext(DispatchersProvider.io) {
+        withContext(dispatchersProvider.io) {
             val now = clock.now()
             streamQueries.transaction {
                 segments.forEach { segment ->
@@ -255,14 +256,14 @@ internal class LocalStreamsDb(
             .getUserIdsToUpdate(
                 minUpdatedAtTimestamp = minAcceptableCacheDate.toEpochMilliseconds(),
             ).asFlow()
-            .mapToList(DispatchersProvider.io)
-            .flowOn(DispatchersProvider.io)
+            .mapToList(dispatchersProvider.io)
+            .flowOn(dispatchersProvider.io)
     }
 
     override suspend fun cleanup(
         notBefore: Instant,
         notAfter: Instant,
-    ) = withContext(DispatchersProvider.io) {
+    ) = withContext(dispatchersProvider.io) {
         val now = clock.now()
         streamQueries.transaction {
             streamQueries.cleanupPastStreams(

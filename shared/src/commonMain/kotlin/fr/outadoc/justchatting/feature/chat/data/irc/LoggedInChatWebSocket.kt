@@ -41,6 +41,7 @@ internal class LoggedInChatWebSocket(
     private val networkStateObserver: NetworkStateObserver,
     private val parser: TwitchIrcCommandParser,
     private val httpClient: HttpClient,
+    private val dispatchersProvider: DispatchersProvider,
 ) : ChatEventHandler {
     companion object {
         private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
@@ -86,7 +87,7 @@ internal class LoggedInChatWebSocket(
         } finally {
             _connectionStatus.update { it.copy(registeredListeners = it.registeredListeners - 1) }
         }
-    }.flowOn(DispatchersProvider.io)
+    }.flowOn(dispatchersProvider.io)
 
     private suspend fun ProducerScope<ChatEvent>.listen(
         channelLogin: String,

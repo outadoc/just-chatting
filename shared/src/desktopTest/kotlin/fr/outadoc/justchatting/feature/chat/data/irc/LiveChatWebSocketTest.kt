@@ -212,16 +212,16 @@ internal class LiveChatWebSocketTest {
     }
 
     @Test
-    fun `replays recent messages before joining live chat`() = webSocketTest(
+    fun `replays recent messages after joining live chat`() = webSocketTest(
         enableRecentMessages = true,
         recentMessages = listOf(SAMPLE_PRIVMSG),
     ) {
         startCollecting()
 
+        assertIs<ChatEvent.Message.Join>(awaitEvent())
+
         val recentMessage = assertIs<ChatEvent.Message.ChatMessage>(awaitEvent())
         assertEquals("Kappa Keepo Kappa", recentMessage.message)
-
-        assertIs<ChatEvent.Message.Join>(awaitEvent())
     }
 
     @Test
@@ -255,8 +255,8 @@ internal class LiveChatWebSocketTest {
     ) {
         startCollecting()
 
-        assertEquals("old message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
         assertIs<ChatEvent.Message.Join>(awaitEvent())
+        assertEquals("old message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
 
         val connection = server.awaitConnection()
         connection.send(privMsg("live message", timestamp = 1_000_000_100_000))
@@ -273,7 +273,49 @@ internal class LiveChatWebSocketTest {
         networkStateObserver.mutableState.value = NetworkStateObserver.NetworkState.Available
 
         // Only the messages newer than the last one received should be replayed
-        assertEquals("missed message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
         assertIs<ChatEvent.Message.Join>(awaitEvent())
+        assertEquals("missed message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
+    }
+
+    @Test
+    fun `does not lose messages sent while recent messages are loading`() = webSocketTest(
+        enableRecentMessages = true,
+        recentMessages = listOf(privMsg("recent message", timestamp = 1_000_000_000_000)),
+    ) {
+        recentMessagesApi.responseDelay = 500.milliseconds
+
+        startCollecting()
+
+        val connection = server.awaitConnection()
+        repeat(3) { connection.awaitLine() } // Handshake
+
+        // The channel is joined at this point, but the recent messages are
+        // still being fetched: this message should be buffered, not dropped
+        connection.send(privMsg("live message", timestamp = 1_000_000_100_000))
+
+        assertIs<ChatEvent.Message.Join>(awaitEvent())
+        assertEquals("recent message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
+        assertEquals("live message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
+    }
+
+    @Test
+    fun `does not replay the same messages twice after reconnecting`() = webSocketTest(
+        enableRecentMessages = true,
+        recentMessages = listOf(privMsg("recent message", timestamp = 1_000_000_000_000)),
+    ) {
+        startCollecting()
+
+        assertIs<ChatEvent.Message.Join>(awaitEvent())
+        assertEquals("recent message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
+
+        val firstConnection = server.awaitConnection()
+        firstConnection.close()
+
+        val secondConnection = server.awaitConnection()
+        assertIs<ChatEvent.Message.Join>(awaitEvent())
+
+        // The recent message was already replayed; the next event should be the live one
+        secondConnection.send(privMsg("live message", timestamp = 1_000_000_100_000))
+        assertEquals("live message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
     }
 }

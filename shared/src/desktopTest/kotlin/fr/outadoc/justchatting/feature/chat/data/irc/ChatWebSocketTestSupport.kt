@@ -9,10 +9,12 @@ import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlin.time.Clock
+import kotlin.time.Duration
 import kotlin.time.Instant
 
 internal val testClock =
@@ -36,8 +38,7 @@ internal const val SAMPLE_PRIVMSG =
 internal fun privMsg(
     text: String,
     timestamp: Long,
-): String =
-    "@badge-info=;badges=;color=#0D4200;display-name=ronni;emotes=;id=msg-$timestamp;mod=0;room-id=1337;subscriber=0;tmi-sent-ts=$timestamp;turbo=0;user-id=1337;user-type= :ronni!ronni@ronni.tmi.twitch.tv PRIVMSG #$TEST_CHANNEL_LOGIN :$text"
+): String = "@badge-info=;badges=;color=#0D4200;display-name=ronni;emotes=;id=msg-$timestamp;mod=0;room-id=1337;subscriber=0;tmi-sent-ts=$timestamp;turbo=0;user-id=1337;user-type= :ronni!ronni@ronni.tmi.twitch.tv PRIVMSG #$TEST_CHANNEL_LOGIN :$text"
 
 internal const val SAMPLE_NOTICE =
     "@msg-id=msg_ratelimit :tmi.twitch.tv NOTICE #channelname :Your message was not sent because you are sending messages too quickly."
@@ -60,10 +61,15 @@ internal class FakeNetworkStateObserver(
 internal class FakeRecentMessagesApi(
     var messages: List<String> = emptyList(),
 ) : RecentMessagesApi {
+    var responseDelay: Duration = Duration.ZERO
+
     override suspend fun getRecentMessages(
         channelLogin: String,
         limit: Int,
-    ): Result<RecentMessagesResponse> = Result.success(RecentMessagesResponse(messages))
+    ): Result<RecentMessagesResponse> {
+        delay(responseDelay)
+        return Result.success(RecentMessagesResponse(messages))
+    }
 }
 
 internal class FakePreferenceRepository(

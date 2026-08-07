@@ -17,6 +17,7 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
@@ -27,13 +28,16 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.withTimeout
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 /**
  * Logged in chat thread.
  *
  * Needed because user's own messages are only send when logged out. This thread handles
- * user-specific NOTICE and USERSTATE messages, and [LoggedInChatWebSocket] handles the rest.
+ * user-specific NOTICE and USERSTATE messages, and [LiveChatWebSocket] handles the rest.
  *
  * Use this class to write messages to the chat.
  */
@@ -42,9 +46,15 @@ internal class LoggedInChatWebSocket(
     private val parser: TwitchIrcCommandParser,
     private val httpClient: HttpClient,
     private val dispatchersProvider: DispatchersProvider,
+    private val endpoint: String = DEFAULT_ENDPOINT,
+    private val messageTimeout: Duration = DEFAULT_MESSAGE_TIMEOUT,
 ) : ChatEventHandler {
     companion object {
-        private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
+        private const val DEFAULT_ENDPOINT = "wss://irc-ws.chat.twitch.tv"
+
+        // Twitch pings us about every five minutes; if we go longer than this
+        // without receiving anything, assume the connection is half-open.
+        private val DEFAULT_MESSAGE_TIMEOUT = 6.minutes
     }
 
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
@@ -68,7 +78,6 @@ internal class LoggedInChatWebSocket(
                 if (netState is NetworkStateObserver.NetworkState.Available) {
                     logDebug<LoggedInChatWebSocket> { "Network is available, listening" }
                     while (currentCoroutineContext().isActive) {
-                        _connectionStatus.update { it.copy(isAlive = true) }
                         try {
                             listen(channelLogin, appUser)
                         } catch (e: CancellationException) {
@@ -76,7 +85,6 @@ internal class LoggedInChatWebSocket(
                         } catch (e: Exception) {
                             logError<LoggedInChatWebSocket>(e) { "Socket was closed" }
                         }
-                        _connectionStatus.update { it.copy(isAlive = false) }
                         delayWithJitter(1.seconds, maxJitter = 3.seconds)
                     }
                 } else {
@@ -93,31 +101,43 @@ internal class LoggedInChatWebSocket(
         channelLogin: String,
         appUser: AppUser.LoggedIn,
     ) {
-        httpClient.webSocket(ENDPOINT) {
+        httpClient.webSocket(endpoint) {
             logDebug<LoggedInChatWebSocket> { "Socket open, logging in" }
+            _connectionStatus.update { it.copy(isAlive = true) }
+            try {
+                send("PASS oauth:${appUser.token}")
+                send("NICK ${appUser.userLogin}")
+                send("CAP REQ :twitch.tv/tags twitch.tv/commands")
+                send("JOIN #$channelLogin")
 
-            send("PASS oauth:${appUser.token}")
-            send("NICK ${appUser.userLogin}")
-            send("CAP REQ :twitch.tv/tags twitch.tv/commands")
-            send("JOIN #$channelLogin")
+                // Receive messages
+                while (isActive) {
+                    val received =
+                        try {
+                            withTimeout(messageTimeout) { incoming.receive() }
+                        } catch (e: TimeoutCancellationException) {
+                            logError<LoggedInChatWebSocket>(e) { "No message received in $messageTimeout, closing socket" }
+                            break
+                        }
 
-            // Receive messages
-            while (isActive) {
-                when (val received = incoming.receive()) {
-                    is Frame.Text -> {
-                        received
-                            .readText()
-                            .lines()
-                            .filter { it.isNotBlank() }
-                            .forEach { line ->
-                                handleMessage(line) { event ->
-                                    this@listen.send(event)
+                    when (received) {
+                        is Frame.Text -> {
+                            received
+                                .readText()
+                                .lines()
+                                .filter { it.isNotBlank() }
+                                .forEach { line ->
+                                    handleMessage(line) { event ->
+                                        this@listen.send(event)
+                                    }
                                 }
-                            }
-                    }
+                        }
 
-                    else -> {}
+                        else -> {}
+                    }
                 }
+            } finally {
+                _connectionStatus.update { it.copy(isAlive = false) }
             }
         }
     }

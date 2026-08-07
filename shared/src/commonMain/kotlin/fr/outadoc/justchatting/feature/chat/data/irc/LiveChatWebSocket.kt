@@ -20,6 +20,7 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
@@ -31,8 +32,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.withTimeout
 import kotlin.random.Random
 import kotlin.time.Clock
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
@@ -50,9 +54,15 @@ internal class LiveChatWebSocket(
     private val recentMessagesRepository: RecentMessagesRepository,
     private val preferencesRepository: PreferenceRepository,
     private val dispatchersProvider: DispatchersProvider,
+    private val endpoint: String = DEFAULT_ENDPOINT,
+    private val messageTimeout: Duration = DEFAULT_MESSAGE_TIMEOUT,
 ) : ChatEventHandler {
     companion object {
-        private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
+        private const val DEFAULT_ENDPOINT = "wss://irc-ws.chat.twitch.tv"
+
+        // Twitch pings us about every five minutes; if we go longer than this
+        // without receiving anything, assume the connection is half-open.
+        private val DEFAULT_MESSAGE_TIMEOUT = 6.minutes
     }
 
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
@@ -82,15 +92,18 @@ internal class LiveChatWebSocket(
                         loadRecentMessages(channelLogin, lastMessageReceivedAt)
                     }
                     while (currentCoroutineContext().isActive) {
-                        _connectionStatus.update { it.copy(isAlive = true) }
                         try {
-                            lastMessageReceivedAt = listen(channelLogin, lastMessageReceivedAt)
+                            listen(
+                                channelLogin = channelLogin,
+                                onMessageReceived = { timestamp ->
+                                    lastMessageReceivedAt = timestamp
+                                },
+                            )
                         } catch (e: CancellationException) {
                             throw e
                         } catch (e: Exception) {
                             logError<LiveChatWebSocket>(e) { "Socket was closed" }
                         }
-                        _connectionStatus.update { it.copy(isAlive = false) }
                         delayWithJitter(1.seconds, maxJitter = 3.seconds)
                     }
                 } else {
@@ -105,55 +118,63 @@ internal class LiveChatWebSocket(
 
     private suspend fun ProducerScope<ChatEvent>.listen(
         channelLogin: String,
-        lastMessageReceivedAt: Instant?,
-    ): Instant? {
-        var currentLastMessageReceivedAt = lastMessageReceivedAt
-        httpClient.webSocket(ENDPOINT) {
+        onMessageReceived: (Instant) -> Unit,
+    ) {
+        httpClient.webSocket(endpoint) {
             logDebug<LiveChatWebSocket> { "Socket open, saying hello" }
+            _connectionStatus.update { it.copy(isAlive = true) }
+            try {
+                // random number between 1000 and 9999
+                send("NICK justinfan${Random.nextInt(1000, 10_000)}")
+                send("CAP REQ :twitch.tv/tags twitch.tv/commands")
+                send("JOIN #$channelLogin")
 
-            // random number between 1000 and 9999
-            send("NICK justinfan${Random.nextInt(1000, 10_000)}")
-            send("CAP REQ :twitch.tv/tags twitch.tv/commands")
-            send("JOIN #$channelLogin")
+                this@listen.send(
+                    ChatEvent.Message.Join(
+                        timestamp = clock.now(),
+                        channelLogin = channelLogin,
+                    ),
+                )
 
-            this@listen.send(
-                ChatEvent.Message.Join(
-                    timestamp = clock.now(),
-                    channelLogin = channelLogin,
-                ),
-            )
+                // Receive messages
+                while (isActive) {
+                    val received =
+                        try {
+                            withTimeout(messageTimeout) { incoming.receive() }
+                        } catch (e: TimeoutCancellationException) {
+                            logError<LiveChatWebSocket>(e) { "No message received in $messageTimeout, closing socket" }
+                            break
+                        }
 
-            // Receive messages
-            while (isActive) {
-                when (val received = incoming.receive()) {
-                    is Frame.Text -> {
-                        received
-                            .readText()
-                            .lines()
-                            .filter { it.isNotBlank() }
-                            .forEach { line ->
-                                currentLastMessageReceivedAt =
+                    when (received) {
+                        is Frame.Text -> {
+                            received
+                                .readText()
+                                .lines()
+                                .filter { it.isNotBlank() }
+                                .forEach { line ->
                                     handleMessage(
                                         received = line,
-                                        lastMessageReceivedAt = currentLastMessageReceivedAt,
-                                    ) { event ->
-                                        this@listen.send(event)
-                                    }
-                            }
-                    }
+                                        emit = { event -> this@listen.send(event) },
+                                        onMessageReceived = onMessageReceived,
+                                    )
+                                }
+                        }
 
-                    else -> {}
+                        else -> {}
+                    }
                 }
+            } finally {
+                _connectionStatus.update { it.copy(isAlive = false) }
             }
         }
-        return currentLastMessageReceivedAt
     }
 
     private suspend fun DefaultWebSocketSession.handleMessage(
         received: String,
-        lastMessageReceivedAt: Instant?,
         emit: suspend (ChatEvent) -> Unit,
-    ): Instant? {
+        onMessageReceived: (Instant) -> Unit,
+    ) {
         logInfo<LiveChatWebSocket> { "received: $received" }
 
         when (val command: ChatEvent? = parser.parse(received)) {
@@ -165,7 +186,7 @@ internal class LiveChatWebSocket(
 
             is ChatEvent.Message -> {
                 emit(command)
-                return command.timestamp
+                onMessageReceived(command.timestamp)
             }
 
             is ChatEvent.Command.RoomStateDelta,
@@ -181,8 +202,6 @@ internal class LiveChatWebSocket(
 
             null -> {}
         }
-
-        return lastMessageReceivedAt
     }
 
     private suspend fun ProducerScope<ChatEvent>.loadRecentMessages(

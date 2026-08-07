@@ -149,6 +149,14 @@ kotlin {
             }
         }
 
+        val desktopTest by getting {
+            dependencies {
+                implementation(libs.ktor.client.java)
+                implementation(libs.ktor.server.cio)
+                implementation(libs.ktor.server.websockets)
+            }
+        }
+
         androidUnitTest {
             dependencies {
                 implementation(libs.junit)

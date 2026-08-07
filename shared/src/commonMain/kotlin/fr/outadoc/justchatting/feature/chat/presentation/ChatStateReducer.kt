@@ -38,6 +38,7 @@ internal class ChatStateReducer {
             is ChatViewModel.Action.ShowUserInfo -> action.reduce(state)
             is ChatViewModel.Action.UpdateStreamInfoVisibility -> action.reduce(state)
             is ChatViewModel.Action.UpdateUser -> action.reduce(state)
+            is ChatViewModel.Action.ReportError -> action.reduce(state)
         }
     }
 
@@ -303,6 +304,12 @@ internal class ChatStateReducer {
                 ),
             )
         }
+    }
+
+    private fun ChatViewModel.Action.ReportError.reduce(state: ChatViewModel.State): ChatViewModel.State {
+        // An established chat session survives auxiliary errors; they are logged where dispatched.
+        if (state is ChatViewModel.State.Chatting) return state
+        return ChatViewModel.State.Failed(throwable)
     }
 
     // InputAction reducers

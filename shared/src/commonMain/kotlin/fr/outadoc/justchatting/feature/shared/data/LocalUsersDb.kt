@@ -22,11 +22,12 @@ import kotlin.time.Instant
 internal class LocalUsersDb(
     private val userQueries: UserQueries,
     private val clock: Clock,
+    private val dispatchersProvider: DispatchersProvider,
 ) : LocalUsersApi {
     override fun getRecentChannels(): Flow<List<User>> = userQueries
         .getRecent()
         .asFlow()
-        .mapToList(DispatchersProvider.io)
+        .mapToList(dispatchersProvider.io)
         .distinctUntilChanged()
         .map { users ->
             users.map { userInfo ->
@@ -45,7 +46,7 @@ internal class LocalUsersDb(
                     },
                 )
             }
-        }.flowOn(DispatchersProvider.io)
+        }.flowOn(dispatchersProvider.io)
 
     override fun forgetRecentChannel(userId: String) {
         userQueries.forgetRecentVisits(userId)
@@ -54,7 +55,7 @@ internal class LocalUsersDb(
     override fun getFollowedChannels(): Flow<List<ChannelFollow>> = userQueries
         .getFollowed()
         .asFlow()
-        .mapToList(DispatchersProvider.io)
+        .mapToList(dispatchersProvider.io)
         .distinctUntilChanged()
         .map { users ->
             users.map { userInfo ->
@@ -77,7 +78,7 @@ internal class LocalUsersDb(
                     followedAt = Instant.fromEpochMilliseconds(userInfo.followed_at),
                 )
             }
-        }.flowOn(DispatchersProvider.io)
+        }.flowOn(dispatchersProvider.io)
 
     override fun getUserById(id: String): Flow<User> = getUsersById(listOf(id))
         .mapNotNull { user -> user.firstOrNull() }
@@ -85,7 +86,7 @@ internal class LocalUsersDb(
     override fun getUsersById(ids: List<String>): Flow<List<User>> = userQueries
         .getByIds(ids)
         .asFlow()
-        .mapToList(DispatchersProvider.io)
+        .mapToList(dispatchersProvider.io)
         .distinctUntilChanged()
         .map { users ->
             users.map { userInfo ->
@@ -99,9 +100,9 @@ internal class LocalUsersDb(
                     usedAt = Instant.fromEpochMilliseconds(userInfo.used_at),
                 )
             }
-        }.flowOn(DispatchersProvider.io)
+        }.flowOn(dispatchersProvider.io)
 
-    override suspend fun saveUserInfo(users: List<User>) = withContext(DispatchersProvider.io) {
+    override suspend fun saveUserInfo(users: List<User>) = withContext(dispatchersProvider.io) {
         val updatedAt = clock.now()
         userQueries.transaction {
             users.forEach { user ->
@@ -126,7 +127,7 @@ internal class LocalUsersDb(
     override suspend fun saveUser(
         userId: String,
         visitedAt: Instant?,
-    ) = withContext(DispatchersProvider.io) {
+    ) = withContext(dispatchersProvider.io) {
         val now = clock.now()
         userQueries.transaction {
             userQueries.ensureCreated(
@@ -143,7 +144,7 @@ internal class LocalUsersDb(
         }
     }
 
-    override suspend fun saveAndReplaceFollowedChannels(follows: List<ChannelFollow>) = withContext(DispatchersProvider.io) {
+    override suspend fun saveAndReplaceFollowedChannels(follows: List<ChannelFollow>) = withContext(dispatchersProvider.io) {
         val now = clock.now()
         userQueries.transaction {
             follows.forEach { channelFollow ->
@@ -173,12 +174,12 @@ internal class LocalUsersDb(
             .getAllToUpdate(
                 minUpdatedAtTimestamp = minAcceptableCacheDate.toEpochMilliseconds(),
             ).asFlow()
-            .mapToList(DispatchersProvider.io)
+            .mapToList(dispatchersProvider.io)
             .distinctUntilChanged()
-            .flowOn(DispatchersProvider.io)
+            .flowOn(dispatchersProvider.io)
     }
 
-    override suspend fun isFollowedUsersCacheExpired(): Boolean = withContext(DispatchersProvider.io) {
+    override suspend fun isFollowedUsersCacheExpired(): Boolean = withContext(dispatchersProvider.io) {
         val minAcceptableCacheDate = clock.now() - MaxFollowedUsersCacheLife
         val updatedAt =
             userQueries

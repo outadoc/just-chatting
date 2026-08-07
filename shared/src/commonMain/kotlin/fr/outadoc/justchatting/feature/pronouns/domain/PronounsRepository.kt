@@ -17,10 +17,11 @@ internal class PronounsRepository(
     private val pronounsApi: PronounsApi,
     private val localPronounsApi: LocalPronounsApi,
     private val preferenceRepository: PreferenceRepository,
+    private val dispatchersProvider: DispatchersProvider,
 ) {
     private val cacheMutex = Mutex()
 
-    suspend fun fillPronounsFor(chatters: Set<Chatter>): Map<Chatter, Pronoun?> = withContext(DispatchersProvider.io) {
+    suspend fun fillPronounsFor(chatters: Set<Chatter>): Map<Chatter, Pronoun?> = withContext(dispatchersProvider.io) {
         if (!preferenceRepository.currentPreferences.first().enablePronouns) {
             return@withContext emptyMap()
         }

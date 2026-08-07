@@ -145,6 +145,15 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
+
+        val desktopTest by getting {
+            dependencies {
+                implementation(libs.ktor.client.java)
+                implementation(libs.ktor.server.cio)
+                implementation(libs.ktor.server.websockets)
             }
         }
 

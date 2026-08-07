@@ -824,6 +824,47 @@ internal class ChatStateReducerTest {
 
     // endregion
 
+    // region Action: ReportError
+
+    @Test
+    fun `ReportError from Initial returns Failed`() {
+        val throwable = IllegalStateException("boom")
+        val action = ChatViewModel.Action.ReportError(throwable)
+
+        val result = reducer.reduce(action, ChatViewModel.State.Initial)
+
+        assertIs<ChatViewModel.State.Failed>(result)
+        assertSame(throwable, result.throwable)
+    }
+
+    @Test
+    fun `ReportError from Loading returns Failed`() {
+        val throwable = IllegalStateException("boom")
+        val state =
+            ChatViewModel.State.Loading(
+                userId = "user-123",
+                appUser = testAppUser,
+                maxAdapterCount = 100,
+            )
+        val action = ChatViewModel.Action.ReportError(throwable)
+
+        val result = reducer.reduce(action, state)
+
+        assertIs<ChatViewModel.State.Failed>(result)
+        assertSame(throwable, result.throwable)
+    }
+
+    @Test
+    fun `ReportError from Chatting is a no-op`() {
+        val action = ChatViewModel.Action.ReportError(IllegalStateException("boom"))
+
+        val result = reducer.reduce(action, testChattingState)
+
+        assertSame(testChattingState, result)
+    }
+
+    // endregion
+
     // region InputAction: ClearAfterSubmit
 
     @Test

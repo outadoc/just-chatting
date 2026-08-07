@@ -56,7 +56,7 @@ internal actual val platformModule: Module
             single<ConnectivityManager> { get<Context>().getSystemService()!! }
             single<BaseHttpClientProvider> { AndroidHttpClientProvider(get(), get()) }
 
-            single<LogRepository> { AndroidLogRepository(get()) }
+            single<LogRepository> { AndroidLogRepository(get(), get()) }
             single<AppVersionNameProvider> { AndroidAppVersionNameProvider(get()) }
             single<AuthCallbackWebServer> { NoopAuthCallbackWebServer() }
             single<Connectivity> {

@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 public class FollowedChannelsViewModel internal constructor(
     private val repository: TwitchRepository,
     private val authRepository: AuthRepository,
+    private val dispatchersProvider: DispatchersProvider,
 ) : ViewModel() {
     public sealed class Event {
         public data class NavigateToChannel(
@@ -68,7 +69,7 @@ public class FollowedChannelsViewModel internal constructor(
     public fun synchronize() {
         syncJob?.cancel()
         syncJob =
-            viewModelScope.launch(DispatchersProvider.io) {
+            viewModelScope.launch(dispatchersProvider.io) {
                 _state.update { state ->
                     state.copy(isLoading = true)
                 }

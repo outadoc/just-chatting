@@ -32,6 +32,7 @@ public class SettingsViewModel internal constructor(
     private val twitchRepository: TwitchRepository,
     private val authRepository: AuthRepository,
     private val appVersionNameProvider: AppVersionNameProvider,
+    private val dispatchersProvider: DispatchersProvider,
 ) : ViewModel() {
     public sealed class Event {
         public data class ShareLogs(
@@ -97,13 +98,13 @@ public class SettingsViewModel internal constructor(
     }
 
     public fun updatePreferences(appPreferences: AppPreferences) {
-        viewModelScope.launch(DispatchersProvider.io) {
+        viewModelScope.launch(dispatchersProvider.io) {
             preferenceRepository.updatePreferences { appPreferences }
         }
     }
 
     public fun logout() {
-        viewModelScope.launch(DispatchersProvider.io) {
+        viewModelScope.launch(dispatchersProvider.io) {
             authRepository.logout()
         }
     }

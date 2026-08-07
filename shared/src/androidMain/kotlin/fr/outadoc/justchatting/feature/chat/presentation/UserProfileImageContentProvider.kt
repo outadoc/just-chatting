@@ -42,6 +42,7 @@ public class UserProfileImageContentProvider : ContentProvider() {
     }
 
     private val apiRepository by inject<TwitchRepository>()
+    private val dispatchersProvider by inject<DispatchersProvider>()
 
     override fun onCreate(): Boolean = true
 
@@ -68,7 +69,7 @@ public class UserProfileImageContentProvider : ContentProvider() {
                 val file = getFile(context, userId)
 
                 if (!file.exists()) {
-                    runBlocking(DispatchersProvider.io) {
+                    runBlocking(dispatchersProvider.io) {
                         downloadImage(context, userId)
                     }
                 }
@@ -99,7 +100,7 @@ public class UserProfileImageContentProvider : ContentProvider() {
     private suspend fun downloadImage(
         context: Context,
         userId: String,
-    ) = withContext(DispatchersProvider.io) {
+    ) = withContext(dispatchersProvider.io) {
         val profileImageUrl: String =
             apiRepository
                 .getUserById(userId)

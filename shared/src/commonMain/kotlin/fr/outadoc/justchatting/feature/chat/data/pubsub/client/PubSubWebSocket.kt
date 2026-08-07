@@ -40,6 +40,7 @@ internal class PubSubWebSocket(
     private val networkStateObserver: NetworkStateObserver,
     private val httpClient: HttpClient,
     private val pubSubPluginsProvider: PubSubPluginsProvider,
+    private val dispatchersProvider: DispatchersProvider,
 ) : ChatEventHandler {
     companion object {
         private const val ENDPOINT = "wss://pubsub-edge.twitch.tv"
@@ -87,7 +88,7 @@ internal class PubSubWebSocket(
         } finally {
             _connectionStatus.update { it.copy(registeredListeners = it.registeredListeners - 1) }
         }
-    }.flowOn(DispatchersProvider.io)
+    }.flowOn(dispatchersProvider.io)
 
     private suspend fun ProducerScope<ChatEvent>.listen(
         channelId: String,

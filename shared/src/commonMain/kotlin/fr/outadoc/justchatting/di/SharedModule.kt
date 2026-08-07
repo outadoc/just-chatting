@@ -81,7 +81,9 @@ import fr.outadoc.justchatting.feature.shared.presentation.MainRouterViewModel
 import fr.outadoc.justchatting.feature.timeline.presentation.FutureTimelineViewModel
 import fr.outadoc.justchatting.feature.timeline.presentation.LiveTimelineViewModel
 import fr.outadoc.justchatting.utils.core.ConnectivityNetworkStateObserver
+import fr.outadoc.justchatting.utils.core.DefaultDispatchersProvider
 import fr.outadoc.justchatting.utils.core.DefaultJson
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.http.BaseHttpClientProvider
 import fr.outadoc.justchatting.utils.http.TwitchHttpClientProvider
@@ -96,7 +98,8 @@ internal val sharedModule: Module
     get() =
         module {
             single<Clock> { Clock.System }
-            single<AuthRepository> { AuthRepository(get(), get(), get()) }
+            single<DispatchersProvider> { DefaultDispatchersProvider() }
+            single<AuthRepository> { AuthRepository(get(), get(), get(), get()) }
             single { DeeplinkParser(get()) }
 
             single<PreferenceRepository> { DataStorePreferenceRepository(get()) }
@@ -108,15 +111,16 @@ internal val sharedModule: Module
             factory<DeeplinkReceiver> { get<MainRouterViewModel>() }
 
             single { MainRouterViewModel(get(), get(), get()) }
-            viewModel { SettingsViewModel(get(), get(), get(), get(), get()) }
+            viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get()) }
             viewModel { ChannelSearchViewModel(get()) }
-            viewModel { FollowedChannelsViewModel(get(), get()) }
+            viewModel { FollowedChannelsViewModel(get(), get(), get()) }
             viewModel { RecentChannelsViewModel(get()) }
             viewModel { LiveTimelineViewModel(get(), get(), get()) }
-            viewModel { FutureTimelineViewModel(get(), get(), get()) }
+            viewModel { FutureTimelineViewModel(get(), get(), get(), get()) }
             viewModel { UserInfoViewModel(get()) }
             viewModel {
                 ChatViewModel(
+                    get(),
                     get(),
                     get(),
                     get(),
@@ -135,8 +139,8 @@ internal val sharedModule: Module
             single { LoadEmotesAndBadgesUseCase(get(), get()) }
             factory { SubmitMessageUseCase(get(), get(), get()) }
 
-            single { LiveChatWebSocket(get(), get(), get(), get(), get(), get()) }
-            single { LoggedInChatWebSocket(get(), get(), get()) }
+            single { LiveChatWebSocket(get(), get(), get(), get(), get(), get(), get()) }
+            single { LoggedInChatWebSocket(get(), get(), get(), get()) }
 
             single {
                 ChatEventHandlersProvider {
@@ -177,22 +181,22 @@ internal val sharedModule: Module
             single { TwitchIrcCommandParser(get()) }
             single { ChatEventViewMapper() }
 
-            single { RecentMessagesRepository(get(), get()) }
+            single { RecentMessagesRepository(get(), get(), get()) }
 
             single<PronounsApi> { AlejoPronounsApi(get()) }
             single { AlejoPronounsClient(get()) }
-            single { PronounsRepository(get(), get(), get()) }
+            single { PronounsRepository(get(), get(), get(), get()) }
 
             factory { GetRecentEmotesUseCase(get()) }
             factory { InsertRecentEmotesUseCase(get()) }
 
-            single { ChannelBttvEmotesSource(get(), get()) }
-            single { ChannelFfzEmotesSource(get(), get()) }
-            single { ChannelStvEmotesSource(get(), get()) }
+            single { ChannelBttvEmotesSource(get(), get(), get()) }
+            single { ChannelFfzEmotesSource(get(), get(), get()) }
+            single { ChannelStvEmotesSource(get(), get(), get()) }
             single { ChannelTwitchEmotesSource(get()) }
-            single { GlobalBttvEmotesSource(get(), get()) }
-            single { GlobalFfzEmotesSource(get(), get()) }
-            single { GlobalStvEmotesSource(get(), get()) }
+            single { GlobalBttvEmotesSource(get(), get(), get()) }
+            single { GlobalFfzEmotesSource(get(), get(), get()) }
+            single { GlobalStvEmotesSource(get(), get(), get()) }
             single { GlobalTwitchEmotesSource(get()) }
             single { DelegateTwitchEmotesSource(get()) }
 
@@ -214,20 +218,20 @@ internal val sharedModule: Module
             single { AppDatabase(get<SqlDriver>()) }
 
             single<RecentEmoteQueries> { get<AppDatabase>().recentEmoteQueries }
-            single<RecentEmotesApi> { RecentEmotesDb(get()) }
+            single<RecentEmotesApi> { RecentEmotesDb(get(), get()) }
 
             single<UserQueries> { get<AppDatabase>().userQueries }
-            single<LocalUsersApi> { LocalUsersDb(get(), get()) }
+            single<LocalUsersApi> { LocalUsersDb(get(), get(), get()) }
 
             single<StreamQueries> { get<AppDatabase>().streamQueries }
-            single<LocalStreamsApi> { LocalStreamsDb(get(), get()) }
+            single<LocalStreamsApi> { LocalStreamsDb(get(), get(), get()) }
 
             single<PronounQueries> { get<AppDatabase>().pronounQueries }
-            single<LocalPronounsApi> { LocalPronounsDb(get(), get()) }
+            single<LocalPronounsApi> { LocalPronounsDb(get(), get(), get()) }
 
             single<Json> { DefaultJson }
 
-            single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get()) }
+            single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get(), get()) }
             single<TwitchApi> { TwitchApiImpl(get()) }
             single { TwitchClient(get(named("twitch"))) }
 
@@ -236,6 +240,6 @@ internal val sharedModule: Module
             single<StvEmotesApi> { StvEmotesServer(get()) }
             single<RecentMessagesApi> { RecentMessagesServer(get()) }
 
-            single<ReadExternalDependenciesList> { DefaultReadExternalDependenciesList() }
+            single<ReadExternalDependenciesList> { DefaultReadExternalDependenciesList(get()) }
             single<NetworkStateObserver> { ConnectivityNetworkStateObserver(get()) }
         }

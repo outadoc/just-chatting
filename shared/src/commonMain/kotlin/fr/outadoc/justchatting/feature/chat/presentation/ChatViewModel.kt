@@ -41,16 +41,25 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
@@ -61,11 +70,12 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.runningFold
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.coroutines.withContext
+import kotlin.concurrent.Volatile
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -84,9 +94,9 @@ public class ChatViewModel internal constructor(
     private val chatEventViewMapper: ChatEventViewMapper,
     private val loadEmotesAndBadges: LoadEmotesAndBadgesUseCase,
     private val submitMessage: SubmitMessageUseCase,
+    private val dispatchersProvider: DispatchersProvider,
 ) : ViewModel() {
     private val defaultScope = viewModelScope + CoroutineName("defaultScope")
-    private val inputScope = viewModelScope + CoroutineName("inputScope")
 
     private val reducer = ChatStateReducer()
 
@@ -173,6 +183,10 @@ public class ChatViewModel internal constructor(
         data class UpdateUser(
             val user: User,
         ) : Action()
+
+        data class ReportError(
+            val throwable: Throwable,
+        ) : Action()
     }
 
     @Immutable
@@ -213,14 +227,7 @@ public class ChatViewModel internal constructor(
             val isStreamInfoVisible: Boolean = false,
         ) : State() {
             val allEmotesMap: ImmutableMap<String, Emote>
-                get() =
-                    pickableEmotes
-                        .asSequence()
-                        .filterIsInstance<EmoteSetItem.Emote>()
-                        .map { item -> item.emote }
-                        .distinctBy { emote -> emote.name }
-                        .associateBy { emote -> emote.name }
-                        .toImmutableMap()
+                get() = buildAllEmotesMap(pickableEmotes)
 
             val pickableEmotesWithRecent: ImmutableList<EmoteSetItem>
                 get() =
@@ -293,327 +300,122 @@ public class ChatViewModel internal constructor(
             get() = message.isBlank() && lastSentMessage.isNullOrBlank().not()
     }
 
-    private val actions =
-        MutableSharedFlow<Action>(
-            extraBufferCapacity = 16,
-            replay = 1,
-        )
+    private val _state = MutableStateFlow<State>(State.Initial)
+    public val state: StateFlow<State> = _state.asStateFlow()
 
-    @OptIn(FlowPreview::class)
-    public val state: StateFlow<State> =
-        actions
-            .runningFold(State.Initial) { state: State, action -> reducer.reduce(action, state) }
-            .debounce(100.milliseconds)
-            .stateIn(
-                scope = defaultScope,
-                started = SharingStarted.WhileSubscribed(),
-                initialValue = State.Initial,
-            )
+    private val _inputState = MutableStateFlow(InputState())
+    public val inputState: StateFlow<InputState> = _inputState.asStateFlow()
 
-    private val inputActions = MutableSharedFlow<InputAction>()
-    public val inputState: StateFlow<InputState> =
-        inputActions
-            .runningFold(InputState()) { state: InputState, action ->
-                reducer.reduce(
-                    action,
-                    state,
-                )
-            }.stateIn(
-                scope = inputScope,
-                started = SharingStarted.WhileSubscribed(),
-                initialValue = InputState(),
-            )
-
-    init {
-        state
-            .filterIsInstance<State.Chatting>()
-            .map { state ->
-                Triple(
-                    state.user.id,
-                    state.user.displayName,
-                    state.userState.emoteSets,
-                )
-            }.distinctUntilChanged()
-            .onEach { (channelId, channelName, emoteSets) ->
-                defaultScope.launch {
-                    withContext(DispatchersProvider.io) {
-                        val action =
-                            loadEmotesAndBadges(
-                                channelId = channelId,
-                                channelName = channelName,
-                                emoteSets = emoteSets,
-                            )
-                        actions.emit(action)
-                    }
-                }
-            }.launchIn(defaultScope)
-
-        state
-            .mapNotNull { state ->
-                when (state) {
-                    is State.Chatting -> state.user.id
-                    is State.Loading -> state.userId
-                    else -> null
-                }
-            }.distinctUntilChanged()
-            .onEach { userId ->
-                twitchRepository.markChannelAsVisited(
-                    userId = userId,
-                    visitedAt = clock.now(),
-                )
-            }.flatMapLatest { userId ->
-                twitchRepository.getUserById(userId)
-            }.onEach { result ->
-                result
-                    .onSuccess { user ->
-                        createShortcutForChannel(user)
-                        actions.emit(Action.UpdateUser(user))
-                    }.onFailure { exception ->
-                        logError<ChatViewModel>(exception) { "Failed to load user" }
-                    }
-            }.launchIn(defaultScope)
-
-        state
-            .filterIsInstance<State.Chatting>()
-            .mapNotNull { state -> state.user.id }
-            .distinctUntilChanged()
-            .flatMapLatest { userId ->
-                twitchRepository.getStreamByUserId(userId = userId)
-            }.onEach { result ->
-                result
-                    .onSuccess { stream ->
-                        actions.emit(Action.UpdateStreamDetails(stream))
-                    }.onFailure { exception ->
-                        logError<ChatViewModel>(exception) { "Failed to load stream details for user" }
-                    }
-            }.launchIn(defaultScope)
-
-        state
-            .filterIsInstance<State.Chatting>()
-            .map { state -> Pair(state.user, state.appUser) }
-            .distinctUntilChanged()
-            .flatMapLatest { (user, appUser) ->
-                merge(
-                    chatRepository
-                        .getChatEventFlow(user, appUser)
-                        .flatMapConcat { event ->
-                            chatEventViewMapper.map(event).asFlow()
-                        }.mapNotNull { event ->
-                            when (event) {
-                                is ChatListItem.Message -> {
-                                    Action.AddMessages(listOf(event))
-                                }
-
-                                is ChatListItem.RoomStateDelta -> {
-                                    Action.ChangeRoomState(event)
-                                }
-
-                                is ChatListItem.UserState -> {
-                                    Action.ChangeUserState(event)
-                                }
-
-                                is ChatListItem.RemoveContent -> {
-                                    Action.RemoveContent(event)
-                                }
-
-                                is ChatListItem.PollUpdate -> {
-                                    Action.UpdatePoll(event.poll)
-                                }
-
-                                is ChatListItem.PredictionUpdate -> {
-                                    Action.UpdatePrediction(event.prediction)
-                                }
-
-                                is ChatListItem.BroadcastSettingsUpdate -> {
-                                    Action.UpdateStreamMetadata(
-                                        streamTitle = event.streamTitle,
-                                        streamCategory = event.streamCategory,
-                                    )
-                                }
-
-                                is ChatListItem.ViewerCountUpdate -> {
-                                    Action.UpdateStreamMetadata(
-                                        viewerCount = event.viewerCount,
-                                    )
-                                }
-
-                                is ChatListItem.RichEmbed -> {
-                                    Action.AddRichEmbed(event)
-                                }
-
-                                is ChatListItem.RaidUpdate -> {
-                                    Action.UpdateRaidAnnouncement(
-                                        raid = event.raid,
-                                    )
-                                }
-
-                                is ChatListItem.PinnedMessageUpdate -> {
-                                    Action.UpdatePinnedMessage(
-                                        pinnedMessage = event.pinnedMessage,
-                                    )
-                                }
-                            }
-                        },
-                    chatRepository
-                        .getConnectionStatusFlow(user, appUser)
-                        .map { status -> Action.ChangeConnectionStatus(status) },
-                )
-            }.onEach { action -> actions.emit(action) }
-            .launchIn(defaultScope)
-
-        state
-            .filterIsInstance<State.Chatting>()
-            .map { state -> state.allEmotesMap }
-            .distinctUntilChanged()
-            .flatMapLatest { allEmotesMap ->
-                getRecentEmotes()
-                    .map { recentEmotes ->
-                        Pair(
-                            recentEmotes,
-                            allEmotesMap,
-                        )
-                    }
-            }.distinctUntilChanged()
-            .onEach { (recentEmotes, allEmotesMap) ->
-                val action =
-                    Action.ChangeRecentEmotes(
-                        recentEmotes =
-                        recentEmotes
-                            .filter { recentEmote -> recentEmote.name in allEmotesMap }
-                            .map { recentEmote ->
-                                Emote(
-                                    name = recentEmote.name,
-                                    urls = EmoteUrls(recentEmote.url),
-                                )
-                            },
-                    )
-
-                actions.emit(action)
-            }.launchIn(defaultScope)
-
-        state
-            .filterIsInstance<State.Chatting>()
-            .map { state -> state.chatters - state.pronouns.keys }
-            .distinctUntilChanged()
-            .debounce(3.seconds)
-            .map { chatters -> pronounsRepository.fillPronounsFor(chatters) }
-            .onEach { pronouns -> actions.emit(Action.UpdateChatterPronouns(pronouns)) }
-            .launchIn(defaultScope)
-
-        state
-            .filterIsInstance<State.Chatting>()
-            .distinctUntilChanged()
-            .map { state ->
-                Triple(
-                    state.allEmotesMap,
-                    state.chatters,
-                    state.recentEmotes,
-                )
-            }.distinctUntilChanged()
-            .flatMapLatest { (allEmotesMap, chatters, recentEmotes) ->
-                inputState
-                    .debounce(300.milliseconds)
-                    .map { inputState ->
-                        inputState.message
-                            .substring(
-                                startIndex = 0,
-                                endIndex = inputState.selectionRange.first,
-                            ).takeLastWhile { it != ' ' }
-                    }.mapLatest { word ->
-                        filterAutocompleteItemsUseCase(
-                            filter = word,
-                            allEmotesMap = allEmotesMap,
-                            recentEmotes = recentEmotes,
-                            chatters = chatters,
-                        )
-                    }.flowOn(DispatchersProvider.default)
-            }.onEach { autoCompleteItems ->
-                inputActions.emit(
-                    InputAction.UpdateAutoCompleteItems(autoCompleteItems),
-                )
-            }.launchIn(viewModelScope)
+    private fun dispatch(action: Action) {
+        _state.update { current -> reducer.reduce(action, current) }
     }
+
+    private fun dispatchInput(action: InputAction) {
+        _inputState.update { current -> reducer.reduce(action, current) }
+    }
+
+    @Volatile
+    private var currentSession: ChatSession? = null
 
     public fun loadChat(userId: String) {
         defaultScope.launch {
-            val appUser = authRepository.currentUser.first() as AppUser.LoggedIn
-            actions.emit(
-                Action.LoadChat(
-                    userId = userId,
-                    appUser = appUser,
-                    maxAdapterCount = AppPreferences.Defaults.ChatBufferLimit,
-                ),
-            )
+            try {
+                val appUser = authRepository.currentUser.first() as? AppUser.LoggedIn
+                if (appUser == null) {
+                    logError<ChatViewModel> { "Cannot load chat: no logged-in user" }
+                    dispatch(
+                        Action.ReportError(
+                            IllegalStateException("Cannot load chat: no logged-in user"),
+                        ),
+                    )
+                    return@launch
+                }
+
+                if (currentSession?.channelId == userId) return@launch
+
+                currentSession?.cancel()
+
+                val session =
+                    ChatSession(
+                        channelId = userId,
+                        appUser = appUser,
+                    )
+                currentSession = session
+
+                // Reset the state before the session pipelines start observing it, so
+                // they can never see the previous channel's state.
+                dispatch(
+                    Action.LoadChat(
+                        userId = userId,
+                        appUser = appUser,
+                        maxAdapterCount = AppPreferences.Defaults.ChatBufferLimit,
+                    ),
+                )
+
+                // A reply target from the previous channel would be sent to the wrong chat.
+                dispatchInput(InputAction.ReplyToMessage(chatListItem = null))
+
+                session.start()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                logError<ChatViewModel>(e) { "Failed to load chat" }
+                dispatch(Action.ReportError(e))
+            }
         }
     }
 
     public fun onShowUserInfo(userId: String) {
-        defaultScope.launch {
-            actions.emit(Action.ShowUserInfo(userId = userId))
-        }
+        dispatch(Action.ShowUserInfo(userId = userId))
     }
 
     public fun onDismissUserInfo() {
-        defaultScope.launch {
-            actions.emit(Action.ShowUserInfo(userId = null))
-        }
+        dispatch(Action.ShowUserInfo(userId = null))
     }
 
     public fun onShowStreamInfo() {
-        defaultScope.launch {
-            actions.emit(Action.UpdateStreamInfoVisibility(isVisible = true))
-        }
+        dispatch(Action.UpdateStreamInfoVisibility(isVisible = true))
     }
 
     public fun onDismissStreamInfo() {
-        defaultScope.launch {
-            actions.emit(Action.UpdateStreamInfoVisibility(isVisible = false))
-        }
+        dispatch(Action.UpdateStreamInfoVisibility(isVisible = false))
     }
 
     public fun onReplyToMessage(entry: ChatListItem.Message?) {
-        inputScope.launch {
-            inputActions.emit(InputAction.ReplyToMessage(entry))
-        }
+        dispatchInput(InputAction.ReplyToMessage(entry))
     }
 
     public fun onMessageInputChanged(
         message: String,
         selectionRange: IntRange,
     ) {
-        inputScope.launch {
-            inputActions.emit(
-                InputAction.ChangeMessageInput(
-                    message = message,
-                    selectionRange = selectionRange,
-                ),
-            )
-        }
+        dispatchInput(
+            InputAction.ChangeMessageInput(
+                message = message,
+                selectionRange = selectionRange,
+            ),
+        )
     }
 
     public fun onReuseLastMessageClicked() {
-        inputScope.launch {
-            inputActions.emit(InputAction.ReplaceInputWithLastSentMessage)
-        }
+        dispatchInput(InputAction.ReplaceInputWithLastSentMessage)
     }
 
     public fun onTriggerAutoComplete() {
-        inputScope.launch {
-            when (val firstItem = inputState.value.autoCompleteItems.firstOrNull()) {
-                is AutoCompleteItem.Emote -> {
-                    inputActions.emit(
-                        InputAction.AppendEmote(emote = firstItem.emote, autocomplete = true),
-                    )
-                }
-
-                is AutoCompleteItem.User -> {
-                    inputActions.emit(
-                        InputAction.AppendChatter(chatter = firstItem.chatter, autocomplete = true),
-                    )
-                }
-
-                null -> {}
+        when (val firstItem = inputState.value.autoCompleteItems.firstOrNull()) {
+            is AutoCompleteItem.Emote -> {
+                dispatchInput(
+                    InputAction.AppendEmote(emote = firstItem.emote, autocomplete = true),
+                )
             }
+
+            is AutoCompleteItem.User -> {
+                dispatchInput(
+                    InputAction.AppendChatter(chatter = firstItem.chatter, autocomplete = true),
+                )
+            }
+
+            null -> {}
         }
     }
 
@@ -621,18 +423,14 @@ public class ChatViewModel internal constructor(
         emote: Emote,
         autocomplete: Boolean,
     ) {
-        inputScope.launch {
-            inputActions.emit(InputAction.AppendEmote(emote, autocomplete))
-        }
+        dispatchInput(InputAction.AppendEmote(emote, autocomplete))
     }
 
     public fun appendChatter(
         chatter: Chatter,
         autocomplete: Boolean,
     ) {
-        inputScope.launch {
-            inputActions.emit(InputAction.AppendChatter(chatter, autocomplete))
-        }
+        dispatchInput(InputAction.AppendChatter(chatter, autocomplete))
     }
 
     public fun submit(
@@ -644,25 +442,298 @@ public class ChatViewModel internal constructor(
 
         val chatState = state.value as? State.Chatting ?: return
 
-        inputScope.launch {
-            inputActions.emit(InputAction.ClearAfterSubmit(sentMessage = currentInputState.message))
-        }
+        dispatchInput(InputAction.ClearAfterSubmit(sentMessage = currentInputState.message))
 
         defaultScope.launch {
-            val errorAction =
-                submitMessage(
-                    channelUserId = chatState.user.id,
-                    message = currentInputState.message,
-                    inReplyToMessageId = currentInputState.replyingTo?.body?.messageId,
-                    appUser = chatState.appUser,
-                    allEmotesMap = chatState.allEmotesMap,
-                    screenDensity = screenDensity,
-                    isDarkTheme = isDarkTheme,
-                )
+            try {
+                val errorAction =
+                    submitMessage(
+                        channelUserId = chatState.user.id,
+                        message = currentInputState.message,
+                        inReplyToMessageId = currentInputState.replyingTo?.body?.messageId,
+                        appUser = chatState.appUser,
+                        allEmotesMap = chatState.allEmotesMap,
+                        screenDensity = screenDensity,
+                        isDarkTheme = isDarkTheme,
+                    )
 
-            if (errorAction != null) {
-                actions.emit(errorAction)
+                if (errorAction != null) {
+                    dispatch(errorAction)
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                logError<ChatViewModel>(e) { "Failed to submit message" }
             }
         }
     }
+
+    /**
+     * Owns everything scoped to a single channel: the chat connection and the
+     * effect pipelines feeding channel data into the state. Cancelling the session
+     * tears all of it down atomically, and a cancelled session can no longer
+     * dispatch into the state, so a channel switch cannot leak stale data.
+     */
+    private inner class ChatSession(
+        val channelId: String,
+        val appUser: AppUser.LoggedIn,
+    ) {
+        private val scope =
+            CoroutineScope(
+                viewModelScope.coroutineContext +
+                    SupervisorJob(parent = viewModelScope.coroutineContext.job) +
+                    CoroutineName("ChatSession-$channelId"),
+            )
+
+        fun cancel() {
+            scope.cancel()
+        }
+
+        private fun dispatchIfCurrent(action: Action) {
+            if (currentSession === this) {
+                dispatch(action)
+            }
+        }
+
+        private fun dispatchInputIfCurrent(action: InputAction) {
+            if (currentSession === this) {
+                dispatchInput(action)
+            }
+        }
+
+        fun start() {
+            scope.launch {
+                try {
+                    twitchRepository.markChannelAsVisited(
+                        userId = channelId,
+                        visitedAt = clock.now(),
+                    )
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    logError<ChatViewModel>(e) { "Failed to mark channel as visited" }
+                }
+            }
+
+            scope.launch {
+                twitchRepository
+                    .getUserById(channelId)
+                    .onEach { result ->
+                        result
+                            .onSuccess { user ->
+                                createShortcutForChannel(user)
+                                dispatchIfCurrent(Action.UpdateUser(user))
+                            }.onFailure { exception ->
+                                logError<ChatViewModel>(exception) { "Failed to load user" }
+                            }
+                    }.catch { e ->
+                        logError<ChatViewModel>(e) { "User loading pipeline failed" }
+                        dispatchIfCurrent(Action.ReportError(e))
+                    }.collect()
+            }
+
+            scope.launch {
+                twitchRepository
+                    .getStreamByUserId(userId = channelId)
+                    .onEach { result ->
+                        result
+                            .onSuccess { stream ->
+                                dispatchIfCurrent(Action.UpdateStreamDetails(stream))
+                            }.onFailure { exception ->
+                                logError<ChatViewModel>(exception) { "Failed to load stream details for user" }
+                            }
+                    }.catch { e -> logError<ChatViewModel>(e) { "Stream details pipeline failed" } }
+                    .collect()
+            }
+
+            state
+                .filterIsInstance<State.Chatting>()
+                .map { state -> state.user }
+                .filter { user -> user.id == channelId }
+                .distinctUntilChangedBy { user -> user.id }
+                .flatMapLatest { user ->
+                    merge(
+                        chatRepository
+                            .getChatEventFlow(user, appUser)
+                            .flatMapConcat { event ->
+                                chatEventViewMapper.map(event).asFlow()
+                            }.mapNotNull { event ->
+                                when (event) {
+                                    is ChatListItem.Message -> {
+                                        Action.AddMessages(listOf(event))
+                                    }
+
+                                    is ChatListItem.RoomStateDelta -> {
+                                        Action.ChangeRoomState(event)
+                                    }
+
+                                    is ChatListItem.UserState -> {
+                                        Action.ChangeUserState(event)
+                                    }
+
+                                    is ChatListItem.RemoveContent -> {
+                                        Action.RemoveContent(event)
+                                    }
+
+                                    is ChatListItem.PollUpdate -> {
+                                        Action.UpdatePoll(event.poll)
+                                    }
+
+                                    is ChatListItem.PredictionUpdate -> {
+                                        Action.UpdatePrediction(event.prediction)
+                                    }
+
+                                    is ChatListItem.BroadcastSettingsUpdate -> {
+                                        Action.UpdateStreamMetadata(
+                                            streamTitle = event.streamTitle,
+                                            streamCategory = event.streamCategory,
+                                        )
+                                    }
+
+                                    is ChatListItem.ViewerCountUpdate -> {
+                                        Action.UpdateStreamMetadata(
+                                            viewerCount = event.viewerCount,
+                                        )
+                                    }
+
+                                    is ChatListItem.RichEmbed -> {
+                                        Action.AddRichEmbed(event)
+                                    }
+
+                                    is ChatListItem.RaidUpdate -> {
+                                        Action.UpdateRaidAnnouncement(
+                                            raid = event.raid,
+                                        )
+                                    }
+
+                                    is ChatListItem.PinnedMessageUpdate -> {
+                                        Action.UpdatePinnedMessage(
+                                            pinnedMessage = event.pinnedMessage,
+                                        )
+                                    }
+                                }
+                            },
+                        chatRepository
+                            .getConnectionStatusFlow(user, appUser)
+                            .map { status -> Action.ChangeConnectionStatus(status) },
+                    )
+                }.onEach { action -> dispatchIfCurrent(action) }
+                .catch { e ->
+                    logError<ChatViewModel>(e) { "Chat connection pipeline failed" }
+                    dispatchIfCurrent(Action.ReportError(e))
+                }.launchIn(scope)
+
+            state
+                .filterIsInstance<State.Chatting>()
+                .map { state ->
+                    Pair(
+                        state.user.displayName,
+                        state.userState.emoteSets,
+                    )
+                }.distinctUntilChanged()
+                .mapLatest { (channelName, emoteSets) ->
+                    try {
+                        withContext(dispatchersProvider.io) {
+                            loadEmotesAndBadges(
+                                channelId = channelId,
+                                channelName = channelName,
+                                emoteSets = emoteSets,
+                            )
+                        }
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Exception) {
+                        logError<ChatViewModel>(e) { "Failed to load emotes and badges" }
+                        null
+                    }
+                }.filterNotNull()
+                .onEach { action -> dispatchIfCurrent(action) }
+                .catch { e -> logError<ChatViewModel>(e) { "Emotes and badges pipeline failed" } }
+                .launchIn(scope)
+
+            state
+                .filterIsInstance<State.Chatting>()
+                .map { state -> state.pickableEmotes }
+                .distinctUntilChanged()
+                .flatMapLatest { pickableEmotes ->
+                    val allEmotesMap = buildAllEmotesMap(pickableEmotes)
+                    getRecentEmotes()
+                        .map { recentEmotes ->
+                            Pair(
+                                recentEmotes,
+                                allEmotesMap,
+                            )
+                        }
+                }.distinctUntilChanged()
+                .onEach { (recentEmotes, allEmotesMap) ->
+                    val action =
+                        Action.ChangeRecentEmotes(
+                            recentEmotes =
+                            recentEmotes
+                                .filter { recentEmote -> recentEmote.name in allEmotesMap }
+                                .map { recentEmote ->
+                                    Emote(
+                                        name = recentEmote.name,
+                                        urls = EmoteUrls(recentEmote.url),
+                                    )
+                                },
+                        )
+
+                    dispatchIfCurrent(action)
+                }.catch { e -> logError<ChatViewModel>(e) { "Recent emotes pipeline failed" } }
+                .launchIn(scope)
+
+            state
+                .filterIsInstance<State.Chatting>()
+                .map { state -> state.chatters - state.pronouns.keys }
+                .distinctUntilChanged()
+                .debounce(3.seconds)
+                .map { chatters -> pronounsRepository.fillPronounsFor(chatters) }
+                .onEach { pronouns -> dispatchIfCurrent(Action.UpdateChatterPronouns(pronouns)) }
+                .catch { e -> logError<ChatViewModel>(e) { "Pronouns pipeline failed" } }
+                .launchIn(scope)
+
+            state
+                .filterIsInstance<State.Chatting>()
+                .map { state ->
+                    Triple(
+                        state.pickableEmotes,
+                        state.chatters,
+                        state.recentEmotes,
+                    )
+                }.distinctUntilChanged()
+                .flatMapLatest { (pickableEmotes, chatters, recentEmotes) ->
+                    val allEmotesMap = buildAllEmotesMap(pickableEmotes)
+                    inputState
+                        .debounce(300.milliseconds)
+                        .map { inputState ->
+                            inputState.message
+                                .substring(
+                                    startIndex = 0,
+                                    endIndex = inputState.selectionRange.first,
+                                ).takeLastWhile { it != ' ' }
+                        }.mapLatest { word ->
+                            filterAutocompleteItemsUseCase(
+                                filter = word,
+                                allEmotesMap = allEmotesMap,
+                                recentEmotes = recentEmotes,
+                                chatters = chatters,
+                            )
+                        }.flowOn(dispatchersProvider.default)
+                }.onEach { autoCompleteItems ->
+                    dispatchInputIfCurrent(
+                        InputAction.UpdateAutoCompleteItems(autoCompleteItems),
+                    )
+                }.catch { e -> logError<ChatViewModel>(e) { "Autocomplete pipeline failed" } }
+                .launchIn(scope)
+        }
+    }
 }
+
+private fun buildAllEmotesMap(pickableEmotes: List<EmoteSetItem>): ImmutableMap<String, Emote> = pickableEmotes
+    .asSequence()
+    .filterIsInstance<EmoteSetItem.Emote>()
+    .map { item -> item.emote }
+    .distinctBy { emote -> emote.name }
+    .associateBy { emote -> emote.name }
+    .toImmutableMap()

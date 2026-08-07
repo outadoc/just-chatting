@@ -101,7 +101,11 @@ internal class ChatStateReducer {
                 .addAll(
                     index = 0,
                     messages.asReversed(),
-                ).distinct()
+                )
+                // Deduplicate by message id when there is one: the same message can be
+                // received twice with different timestamps (e.g. live + recent-messages
+                // backfill), and message ids are used as unique list keys by the UI.
+                .distinctBy { message -> message.body?.messageId ?: message }
                 .toPersistentList()
 
         val maxCount =

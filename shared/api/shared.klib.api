@@ -574,8 +574,10 @@ final class fr.outadoc.justchatting.feature.chat.domain.model/Chatter { // fr.ou
 }
 
 final class fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus { // fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus|null[0]
-    constructor <init>(kotlin/Boolean = ..., kotlin/Int = ...) // fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus.<init>|<init>(kotlin.Boolean;kotlin.Int){}[0]
+    constructor <init>(kotlin/Boolean = ..., kotlin/Int = ..., kotlin/Int = ...) // fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus.<init>|<init>(kotlin.Boolean;kotlin.Int;kotlin.Int){}[0]
 
+    final val aliveConnections // fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus.aliveConnections|{}aliveConnections[0]
+        final fun <get-aliveConnections>(): kotlin/Int // fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus.aliveConnections.<get-aliveConnections>|<get-aliveConnections>(){}[0]
     final val isAlive // fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus.isAlive|{}isAlive[0]
         final fun <get-isAlive>(): kotlin/Boolean // fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus.isAlive.<get-isAlive>|<get-isAlive>(){}[0]
     final val registeredListeners // fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus.registeredListeners|{}registeredListeners[0]
@@ -583,7 +585,8 @@ final class fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus {
 
     final fun component1(): kotlin/Boolean // fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus.component1|component1(){}[0]
     final fun component2(): kotlin/Int // fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus.component2|component2(){}[0]
-    final fun copy(kotlin/Boolean = ..., kotlin/Int = ...): fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus // fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus.copy|copy(kotlin.Boolean;kotlin.Int){}[0]
+    final fun component3(): kotlin/Int // fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus.component3|component3(){}[0]
+    final fun copy(kotlin/Boolean = ..., kotlin/Int = ..., kotlin/Int = ...): fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus // fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus.copy|copy(kotlin.Boolean;kotlin.Int;kotlin.Int){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // fr.outadoc.justchatting.feature.chat.domain.model/ConnectionStatus.toString|toString(){}[0]

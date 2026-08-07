@@ -27,7 +27,7 @@ internal class StvEmotesServer(
             .body<StvEmoteResponse>()
     }.map { response ->
         response.emotes
-            .map { emote -> emote.map() }
+            .mapNotNull { emote -> emote.map() }
     }
 
     override suspend fun getStvEmotes(channelId: String): Result<List<Emote>> = runCatching {
@@ -41,7 +41,7 @@ internal class StvEmotesServer(
             )
         } else {
             response.emoteSet.emotes
-                .map { emote -> emote.map() }
+                .mapNotNull { emote -> emote.map() }
         }
     }
 }

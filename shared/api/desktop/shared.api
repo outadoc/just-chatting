@@ -326,13 +326,15 @@ public final class fr/outadoc/justchatting/feature/chat/domain/model/Chatter {
 public final class fr/outadoc/justchatting/feature/chat/domain/model/ConnectionStatus {
 	public static final field $stable I
 	public fun <init> ()V
-	public fun <init> (ZI)V
-	public synthetic fun <init> (ZIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZII)V
+	public synthetic fun <init> (ZIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
 	public final fun component2 ()I
-	public final fun copy (ZI)Lfr/outadoc/justchatting/feature/chat/domain/model/ConnectionStatus;
-	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/chat/domain/model/ConnectionStatus;ZIILjava/lang/Object;)Lfr/outadoc/justchatting/feature/chat/domain/model/ConnectionStatus;
+	public final fun component3 ()I
+	public final fun copy (ZII)Lfr/outadoc/justchatting/feature/chat/domain/model/ConnectionStatus;
+	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/chat/domain/model/ConnectionStatus;ZIIILjava/lang/Object;)Lfr/outadoc/justchatting/feature/chat/domain/model/ConnectionStatus;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAliveConnections ()I
 	public final fun getRegisteredListeners ()I
 	public fun hashCode ()I
 	public final fun isAlive ()Z

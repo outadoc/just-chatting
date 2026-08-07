@@ -5,13 +5,24 @@ import fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.message.IrcMessa
 import fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.message.rfc1459.NoticeMessage
 import fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.message.rfc1459.PrivMsgMessage
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logWarning
 import kotlin.time.Clock
 
 internal class TwitchIrcCommandParser(
     private val clock: Clock,
 ) {
-    fun parse(message: String): ChatEvent? {
+    fun parse(message: String): ChatEvent? = try {
+        parseInternal(message)
+    } catch (e: Exception) {
+        // A malformed line must never propagate: an exception thrown here would
+        // close the chat socket, and recent-message backfill would replay the same
+        // line on every reconnection.
+        logError<TwitchIrcCommandParser>(e) { "Failed to parse message: $message" }
+        null
+    }
+
+    private fun parseInternal(message: String): ChatEvent? {
         val ircMessage = IrcMessageParser.parse(message)
         val parsedMessage =
             when (ircMessage?.command) {
@@ -150,7 +161,7 @@ internal class TwitchIrcCommandParser(
 
         return ChatEvent.Message.ChatMessage(
             id = ircMessage.tags.id,
-            userId = ircMessage.tags.userId,
+            userId = ircMessage.tags.userId ?: return null,
             userLogin = ircMessage.tags.login ?: privateMessage.source.nick,
             userName = ircMessage.tags.displayName ?: privateMessage.source.nick,
             message = message,

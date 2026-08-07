@@ -68,6 +68,19 @@ internal abstract class BaseChatWebSocket(
 
     override val connectionStatus = _connectionStatus.asStateFlow()
 
+    // This socket is a singleton, but every collector of the event flow holds its own
+    // websocket connection. isAlive is derived from connection counts: a boolean written
+    // directly from each connection would let one channel's live connection mask another
+    // channel's dead one.
+    private fun updateConnectionStatus(transform: (ConnectionStatus) -> ConnectionStatus) {
+        _connectionStatus.update { current ->
+            val next = transform(current)
+            next.copy(
+                isAlive = next.aliveConnections > 0 && next.aliveConnections >= next.registeredListeners,
+            )
+        }
+    }
+
     /**
      * Callbacks describing one collection of the event flow. [onConnected] is invoked
      * once per established connection, [onCommandReceived] for every parsed command
@@ -97,7 +110,7 @@ internal abstract class BaseChatWebSocket(
 
     protected fun chatEventFlow(createSession: () -> Session): Flow<ChatEvent> = channelFlow {
         val session = createSession()
-        _connectionStatus.update { it.copy(registeredListeners = it.registeredListeners + 1) }
+        updateConnectionStatus { it.copy(registeredListeners = it.registeredListeners + 1) }
         try {
             networkStateObserver.state.collectLatest { netState ->
                 if (netState is NetworkStateObserver.NetworkState.Available) {
@@ -114,18 +127,17 @@ internal abstract class BaseChatWebSocket(
                     }
                 } else {
                     logDebug(logTag) { "Network is out, waiting" }
-                    _connectionStatus.update { it.copy(isAlive = false) }
                 }
             }
         } finally {
-            _connectionStatus.update { it.copy(registeredListeners = it.registeredListeners - 1) }
+            updateConnectionStatus { it.copy(registeredListeners = it.registeredListeners - 1) }
         }
     }.flowOn(dispatchersProvider.io)
 
     private suspend fun ProducerScope<ChatEvent>.connect(session: Session) {
         httpClient.webSocket(endpoint) {
             logDebug(logTag) { "Socket open" }
-            _connectionStatus.update { it.copy(isAlive = true) }
+            updateConnectionStatus { it.copy(aliveConnections = it.aliveConnections + 1) }
             try {
                 val connection = Connection(this, this@connect)
                 session.onConnected(connection)
@@ -153,7 +165,7 @@ internal abstract class BaseChatWebSocket(
                     }
                 }
             } finally {
-                _connectionStatus.update { it.copy(isAlive = false) }
+                updateConnectionStatus { it.copy(aliveConnections = it.aliveConnections - 1) }
             }
         }
     }

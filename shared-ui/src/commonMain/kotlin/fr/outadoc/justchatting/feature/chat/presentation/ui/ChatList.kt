@@ -156,7 +156,12 @@ internal fun ChatList(
 
             itemsIndexed(
                 items = entries,
-                key = { _, item -> item.hashCode() },
+                // Lazy list keys must be unique; a raw hashCode() would crash the whole
+                // screen on the first collision between two distinct messages.
+                key = { _, item ->
+                    item.body?.messageId
+                        ?: "${item.timestamp.toEpochMilliseconds()}-${item.hashCode()}"
+                },
                 contentType = { _, item ->
                     when (item) {
                         is ChatListItem.Message.Highlighted -> 1

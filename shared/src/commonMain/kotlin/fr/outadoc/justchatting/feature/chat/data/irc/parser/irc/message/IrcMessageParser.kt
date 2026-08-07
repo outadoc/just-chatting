@@ -76,20 +76,44 @@ internal object IrcMessageParser : IIrcMessageParser {
                     unparsedTags,
                     CharacterCodes.SEMICOLON,
                     CharacterCodes.EQUALS,
-                ) {
-                    it
-                        .replace("\\:", CharacterCodes.SEMICOLON.toString())
-                        .replace("\\s", CharacterCodes.SPACE.toString())
-                        .replace("\\\\", CharacterCodes.BACKSLASH.toString())
-                        .replace("\\r", CharacterCodes.CR.toString())
-                        .replace("\\n", CharacterCodes.LF.toString())
-                }
+                    ::unescapeTagValue,
+                )
 
             position = ParseHelper.skipSpaces(line, nextSpace + 1)
             return Pair(tags, position)
         }
 
         return Pair(emptyMap(), position)
+    }
+
+    // Unescapes IRCv3 tag values in a single pass; sequential replace() calls
+    // would re-interpret backslashes produced by earlier replacements
+    // (e.g. "\\n" must yield "\n" the two characters, not a line feed).
+    private fun unescapeTagValue(raw: String): String = buildString {
+        var i = 0
+        while (i < raw.length) {
+            val c = raw[i]
+            if (c == CharacterCodes.BACKSLASH && i + 1 < raw.length) {
+                when (raw[i + 1]) {
+                    ':' -> append(CharacterCodes.SEMICOLON)
+
+                    's' -> append(CharacterCodes.SPACE)
+
+                    CharacterCodes.BACKSLASH -> append(CharacterCodes.BACKSLASH)
+
+                    'r' -> append(CharacterCodes.CR)
+
+                    'n' -> append(CharacterCodes.LF)
+
+                    // Unknown escape: the spec says to drop the backslash
+                    else -> append(raw[i + 1])
+                }
+                i += 2
+            } else {
+                append(c)
+                i++
+            }
+        }
     }
 
     private fun parsePrefix(

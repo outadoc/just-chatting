@@ -27,6 +27,7 @@ internal class AggregateChatEventHandler(
                 ConnectionStatus(
                     isAlive = acc.isAlive && status.isAlive,
                     registeredListeners = acc.registeredListeners + status.registeredListeners,
+                    aliveConnections = acc.aliveConnections + status.aliveConnections,
                 )
             }
         }.distinctUntilChanged()

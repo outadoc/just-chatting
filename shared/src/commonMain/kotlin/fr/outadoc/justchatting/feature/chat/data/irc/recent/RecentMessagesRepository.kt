@@ -16,7 +16,7 @@ internal class RecentMessagesRepository(
     ): Result<List<ChatEvent>> = withContext(dispatchersProvider.io) {
         recentMessagesApi
             .getRecentMessages(channelLogin, limit)
-            .map { response ->
+            .mapCatching { response ->
                 response.messages
                     .filterNot { message -> message.isBlank() }
                     .mapNotNull { message -> parser.parse(message) }

@@ -17,13 +17,22 @@ internal fun Map<String, String?>.parseEmotes(message: String): List<Emote>? = t
     ?.flatMap { emote ->
         emote.value
             ?.split(",")
-            ?.map { indexes ->
+            ?.mapNotNull { indexes ->
+                // Indices are server-provided and occasionally out of range or
+                // malformed; skip the emote rather than crash the parser.
                 val index = indexes.split("-")
-                val begin = index[0].toInt()
-                val end = index[1].toInt()
+                val begin = index.getOrNull(0)?.toIntOrNull() ?: return@mapNotNull null
+                val end = index.getOrNull(1)?.toIntOrNull() ?: return@mapNotNull null
 
-                val realBegin = message.offsetByCodePoints(0, begin)
+                val realBegin =
+                    try {
+                        message.offsetByCodePoints(0, begin)
+                    } catch (e: IndexOutOfBoundsException) {
+                        return@mapNotNull null
+                    }
                 val realEnd = if (begin == realBegin) end else end + realBegin - begin
+
+                if (realBegin > realEnd || realEnd >= message.length) return@mapNotNull null
 
                 ChatEmote(
                     id = emote.key,
@@ -156,8 +165,8 @@ internal val Map<String, String?>.targetUserId: String?
 internal val Map<String, String?>.systemMsg: String?
     get() = this["system-msg"]?.takeUnless { it.isEmpty() }
 
-internal val Map<String, String?>.userId: String
-    get() = this["user-id"]!!
+internal val Map<String, String?>.userId: String?
+    get() = this["user-id"]?.takeUnless { it.isEmpty() }
 
 private fun String.splitAndMakeMap(
     split: String,

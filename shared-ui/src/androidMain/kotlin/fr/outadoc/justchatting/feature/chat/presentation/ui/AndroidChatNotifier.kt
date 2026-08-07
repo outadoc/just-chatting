@@ -13,37 +13,32 @@ import androidx.core.content.LocusIdCompat
 import fr.outadoc.justchatting.feature.chat.presentation.ChatConnectionService
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageIcon
-import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.shared.ui.R
 import fr.outadoc.justchatting.utils.core.toPendingActivityIntent
 import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
 import fr.outadoc.justchatting.utils.logging.logError
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 
 internal class AndroidChatNotifier(
     private val context: Context,
-    private val preferenceRepository: PreferenceRepository,
 ) : ChatNotifier {
     companion object {
         private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
         private const val KEY_QUICK_REPLY_TEXT = "quick_reply"
     }
 
+    // System-level state only; the enableNotifications app preference is checked
+    // by callers, which already observe it. Reading it here would require blocking
+    // on DataStore from the main thread.
     override val areNotificationsEnabled: Boolean
         get() {
             val nm = NotificationManagerCompat.from(context)
             val notificationsPermissionCheck: Int =
                 ContextCompat.checkSelfPermission(context, "android.permission.POST_NOTIFICATIONS")
 
-            val currentPrefs: AppPreferences =
-                runBlocking { preferenceRepository.currentPreferences.first() }
-
             return when (notificationsPermissionCheck) {
                 PackageManager.PERMISSION_GRANTED -> {
-                    nm.areNotificationsEnabled() && currentPrefs.enableNotifications
+                    nm.areNotificationsEnabled()
                 }
 
                 else -> {

@@ -168,6 +168,10 @@ public class ChatViewModel internal constructor(
             val pronouns: Map<Chatter, Pronoun?>,
         ) : Action()
 
+        data class UpdateSourceChannels(
+            val users: List<User>,
+        ) : Action()
+
         data class UpdateStreamDetails(
             val stream: Stream,
         ) : Action()
@@ -211,6 +215,8 @@ public class ChatViewModel internal constructor(
             val chatMessages: PersistentList<ChatListItem.Message> = persistentListOf(),
             val chatters: PersistentSet<Chatter> = persistentHashSetOf(),
             val pronouns: PersistentMap<Chatter, Pronoun?> = persistentMapOf(),
+            val sourceRoomIds: PersistentSet<String> = persistentHashSetOf(),
+            val sourceChannels: PersistentMap<String, User> = persistentMapOf(),
             val cheerEmotes: PersistentMap<String, Emote> = persistentMapOf(),
             val globalBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val lastSentMessageInstant: Instant? = null,
@@ -691,6 +697,24 @@ public class ChatViewModel internal constructor(
                 .map { chatters -> pronounsRepository.fillPronounsFor(chatters) }
                 .onEach { pronouns -> dispatchIfCurrent(Action.UpdateChatterPronouns(pronouns)) }
                 .catch { e -> logError<ChatViewModel>(e) { "Pronouns pipeline failed" } }
+                .launchIn(scope)
+
+            state
+                .filterIsInstance<State.Chatting>()
+                .map { state -> state.sourceRoomIds }
+                .filter { roomIds -> roomIds.isNotEmpty() }
+                .distinctUntilChanged()
+                .debounce(1.seconds)
+                .flatMapLatest { roomIds ->
+                    twitchRepository.getUsersById(ids = roomIds.toList())
+                }.onEach { result ->
+                    result
+                        .onSuccess { users ->
+                            dispatchIfCurrent(Action.UpdateSourceChannels(users))
+                        }.onFailure { exception ->
+                            logError<ChatViewModel>(exception) { "Failed to load shared chat source channels" }
+                        }
+                }.catch { e -> logError<ChatViewModel>(e) { "Source channels pipeline failed" } }
                 .launchIn(scope)
 
             state

@@ -173,6 +173,7 @@ internal class TwitchIrcCommandParser(
             timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
             rewardId = ircMessage.tags.customRewardId,
             inReplyTo = ircMessage.tags.parseParentMessage(),
+            sourceRoomId = ircMessage.tags.sourceRoomId,
         )
     }
 

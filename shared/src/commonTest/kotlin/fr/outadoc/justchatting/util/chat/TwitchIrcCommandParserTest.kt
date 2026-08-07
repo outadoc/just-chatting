@@ -93,6 +93,37 @@ internal class TwitchIrcCommandParserTest {
     }
 
     @Test
+    fun `Parse shared chat PRIVMSG`() = test {
+        input {
+            "@badge-info=;badges=bingbonglove/1;client-nonce=32909c26789a444ab498a8590ce20ece;color=#FF0000;display-name=marion_11;emotes=;flags=;id=a5d36b3a-f663-4890-9d82-cbf1f89ce726;mod=0;room-id=612088082;source-badge-info=subscriber/22;source-badges=moderator/1,subscriber/12,bingbonglove/1;source-id=e321c6fb-b768-42a9-a5b6-8abc327b25d4;source-only=0;source-room-id=203096177;subscriber=0;tmi-sent-ts=1786128695353;turbo=0;user-id=280065659;user-type= :marion_11!marion_11@marion_11.tmi.twitch.tv PRIVMSG #vicky_spleen :ok att jen ai un comme vous"
+        }
+        expected {
+            ChatEvent.Message.ChatMessage(
+                id = "a5d36b3a-f663-4890-9d82-cbf1f89ce726",
+                userId = "280065659",
+                userLogin = "marion_11",
+                userName = "marion_11",
+                message = "ok att jen ai un comme vous",
+                color = "#FF0000",
+                isAction = false,
+                embeddedEmotes = emptyList(),
+                badges =
+                listOf(
+                    Badge(
+                        id = "bingbonglove",
+                        version = "1",
+                    ),
+                ),
+                isFirstMessageByUser = false,
+                timestamp = Instant.fromEpochMilliseconds(1786128695353),
+                rewardId = null,
+                inReplyTo = null,
+                sourceRoomId = "203096177",
+            )
+        }
+    }
+
+    @Test
     fun `Parse mass sub gift USERNOTICE`() = test {
         input {
             "@badge-info=subscriber/32;badges=subscriber/2024,premium/1;color=#0000FF;display-name=ke_osiris;emotes=;flags=;id=336cdf6c-d132-41c4-9107-a232f406bebf;login=ke_osiris;mod=0;msg-id=submysterygift;msg-param-mass-gift-count=32;msg-param-origin-id=fe\\sb9\\s35\\s54\\sb5\\s01\\s71\\sd3\\sa8\\sdd\\sfb\\sb1\\s47\\s5f\\s42\\sd1\\s60\\se4\\s97\\sce;msg-param-sender-count=1688;msg-param-sub-plan=1000;room-id=135468063;subscriber=1;system-msg=ke_osiris\\sis\\sgifting\\s32\\sTier\\s1\\sSubs\\sto\\sAntoineDaniel's\\scommunity!\\sThey've\\sgifted\\sa\\stotal\\sof\\s1688\\sin\\sthe\\schannel!;tmi-sent-ts=1680550916919;user-id=563989746;user-type= :tmi.twitch.tv USERNOTICE #antoinedaniel"
@@ -238,6 +269,43 @@ internal class TwitchIrcCommandParserTest {
                     timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
                     rewardId = null,
                     inReplyTo = null,
+                ),
+            )
+        }
+    }
+
+    @Test
+    fun `Parse shared chat announcement USERNOTICE`() = test {
+        input {
+            "@badge-info=subscriber/11;badges=moderator/1,subscriber/3009;color=#8A2BE2;display-name=pepitipepibot;emotes=;flags=;id=54b4d931-8db5-47ad-b6e7-6687cdbbb8ec;login=pepitipepibot;mod=1;msg-id=announcement;room-id=402890635;source-badge-info=;source-badges=moderator/1;source-id=e321c6fb-b768-42a9-a5b6-8abc327b25d4;source-only=0;source-room-id=203096177;subscriber=1;system-msg=;tmi-sent-ts=1657301015335;user-id=651859616;user-type=mod :tmi.twitch.tv USERNOTICE #pelerine :Coucou les copains !"
+        }
+        expected {
+            ChatEvent.Message.Announcement(
+                timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
+                userMessage =
+                ChatEvent.Message.ChatMessage(
+                    id = "54b4d931-8db5-47ad-b6e7-6687cdbbb8ec",
+                    userId = "651859616",
+                    userLogin = "pepitipepibot",
+                    userName = "pepitipepibot",
+                    message = "Coucou les copains !",
+                    color = "#8A2BE2",
+                    embeddedEmotes = emptyList(),
+                    badges =
+                    listOf(
+                        Badge(
+                            id = "moderator",
+                            version = "1",
+                        ),
+                        Badge(
+                            id = "subscriber",
+                            version = "3009",
+                        ),
+                    ),
+                    timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
+                    rewardId = null,
+                    inReplyTo = null,
+                    sourceRoomId = "203096177",
                 ),
             )
         }

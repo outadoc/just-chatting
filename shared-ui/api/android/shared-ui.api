@@ -69,7 +69,7 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/ui/Composab
 public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatListKt {
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatListKt;
 	public fun <init> ()V
-	public final fun getLambda$1634393648$shared_ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1388617230$shared_ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatListPlaceholderKt {

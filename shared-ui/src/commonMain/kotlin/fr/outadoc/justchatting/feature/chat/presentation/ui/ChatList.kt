@@ -38,6 +38,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.RoomState
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
+import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.ui.SwipeActionBox
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.chat_copyToClipboard
@@ -60,6 +61,7 @@ internal fun ChatList(
     badges: ImmutableList<TwitchBadge>,
     removedContent: ImmutableList<ChatListItem.RemoveContent>,
     pronouns: ImmutableMap<Chatter, Pronoun>,
+    sourceChannels: ImmutableMap<String, User>,
     richEmbeds: ImmutableMap<String, ChatListItem.RichEmbed>,
     showTimestamps: Boolean,
     isDisconnected: Boolean,
@@ -109,11 +111,25 @@ internal fun ChatList(
                 }.toPersistentHashMap()
         }
 
+    val inlineSourceChannels: PersistentMap<String, InlineTextContent> =
+        remember(sourceChannels) {
+            sourceChannels
+                .filterValues { user -> user.profileImageUrl.isNotBlank() }
+                .entries
+                .associate { (roomId, user) ->
+                    Pair(
+                        sourceChannelInlineContentId(roomId),
+                        sourceChannelTextContent(user),
+                    )
+                }.toPersistentHashMap()
+        }
+
     val inlineContent: PersistentMap<String, InlineTextContent> =
-        remember(inlinesEmotes, inlineBadges, inlineCheerEmotes) {
+        remember(inlinesEmotes, inlineBadges, inlineCheerEmotes, inlineSourceChannels) {
             inlinesEmotes
                 .putAll(inlineBadges)
                 .putAll(inlineCheerEmotes)
+                .putAll(inlineSourceChannels)
         }
 
     var size by remember { mutableStateOf(IntSize.Zero) }

@@ -152,6 +152,18 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
             }
         }
 
+        sourceRoomId?.let { roomId ->
+            val sourceChannelId = sourceChannelInlineContentId(roomId)
+            if (sourceChannelId in inlineContent) {
+                appendInlineContent(
+                    id = sourceChannelId,
+                    alternateText = " ",
+                )
+
+                append(' ')
+            }
+        }
+
         badges.forEach { badge ->
             appendInlineContent(
                 id = badge.inlineContentId,

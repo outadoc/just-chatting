@@ -68,6 +68,29 @@ private val simpleEntries =
                 timestamp = Instant.fromEpochMilliseconds(1664399217864),
             ),
         )
+
+        yield(
+            ChatListItem.Message.Simple(
+                body =
+                ChatListItem.Message.Body(
+                    chatter =
+                    Chatter(
+                        displayName = "marion_11",
+                        id = "280065659",
+                        login = "marion_11",
+                    ),
+                    message = "ok att jen ai un comme vous",
+                    messageId = "a5d36b3a-f663-4890-9d82-cbf1f89ce726",
+                    isAction = false,
+                    color = "#FF0000",
+                    embeddedEmotes = persistentListOf(),
+                    badges = persistentListOf(),
+                    inReplyTo = null,
+                    sourceRoomId = "203096177",
+                ),
+                timestamp = Instant.fromEpochMilliseconds(1664399218000),
+            ),
+        )
     }
 
 private val highlightedEntries =

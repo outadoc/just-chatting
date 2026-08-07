@@ -23,6 +23,7 @@ internal sealed interface ChatEvent {
             val isFirstMessageByUser: Boolean = false,
             val rewardId: String?,
             val inReplyTo: InReplyTo?,
+            val sourceRoomId: String? = null,
         ) : Message {
             @Immutable
             data class InReplyTo(

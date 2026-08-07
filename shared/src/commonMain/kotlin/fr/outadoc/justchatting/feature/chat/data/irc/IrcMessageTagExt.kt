@@ -162,6 +162,9 @@ internal val Map<String, String?>.targetMessageId: String?
 internal val Map<String, String?>.targetUserId: String?
     get() = this["target-user-id"]?.takeUnless { it.isEmpty() }
 
+internal val Map<String, String?>.sourceRoomId: String?
+    get() = this["source-room-id"]?.takeUnless { it.isEmpty() }
+
 internal val Map<String, String?>.systemMsg: String?
     get() = this["system-msg"]?.takeUnless { it.isEmpty() }
 

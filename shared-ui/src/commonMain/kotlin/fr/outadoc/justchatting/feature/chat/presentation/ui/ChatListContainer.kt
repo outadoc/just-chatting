@@ -69,6 +69,7 @@ internal fun ChatListContainer(
             badges = state.globalBadges.addAll(state.channelBadges),
             removedContent = state.removedContent,
             pronouns = state.pronouns.filterValuesNotNull(),
+            sourceChannels = state.sourceChannels,
             richEmbeds = state.richEmbeds,
             showTimestamps = showTimestamps,
             isDisconnected = !state.connectionStatus.isAlive,

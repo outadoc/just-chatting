@@ -654,6 +654,7 @@ internal class ChatEventViewMapper {
             color = color,
             embeddedEmotes = embeddedEmotes.toImmutableList(),
             badges = badges.orEmpty().toImmutableList(),
+            sourceRoomId = sourceRoomId,
             inReplyTo =
             if (mentions.isNotEmpty()) {
                 ChatListItem.Message.Body.InReplyTo(

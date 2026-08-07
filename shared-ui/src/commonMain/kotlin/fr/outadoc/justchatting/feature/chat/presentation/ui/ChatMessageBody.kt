@@ -146,12 +146,6 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
     val pronoun: String? = pronouns[chatter]?.displayPronoun
 
     return buildAnnotatedString {
-        if (pronoun != null) {
-            withStyle(SpanStyle(fontSize = 0.8.em)) {
-                append("($pronoun) ")
-            }
-        }
-
         sourceRoomId?.let { roomId ->
             val sourceChannelId = sourceChannelInlineContentId(roomId)
             if (sourceChannelId in inlineContent) {
@@ -161,6 +155,12 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
                 )
 
                 append(' ')
+            }
+        }
+
+        if (pronoun != null) {
+            withStyle(SpanStyle(fontSize = 0.8.em)) {
+                append("($pronoun) ")
             }
         }
 

@@ -37,6 +37,7 @@ import fr.outadoc.justchatting.feature.pronouns.domain.model.UserPronounIds
 import fr.outadoc.justchatting.feature.pronouns.domain.model.UserPronouns
 import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
+import fr.outadoc.justchatting.feature.shared.domain.model.MessageNotSentException
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
@@ -48,6 +49,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -55,6 +57,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -125,8 +128,9 @@ internal class ChatViewModelTest {
     private lateinit var twitchRepository: FakeTwitchRepository
     private lateinit var chatRepository: FakeChatRepository
     private lateinit var recentEmotesApi: FakeRecentEmotesApi
-    private lateinit var viewModelStore: ViewModelStore
     private lateinit var viewModel: ChatViewModel
+
+    private val viewModelStores = mutableListOf<ViewModelStore>()
 
     private val dispatchersProvider = TestDispatchersProvider(testDispatcher)
 
@@ -144,84 +148,94 @@ internal class ChatViewModelTest {
         chatRepository = FakeChatRepository()
         recentEmotesApi = FakeRecentEmotesApi()
 
-        val preferenceRepository = FakePreferenceRepository()
-
-        val buildViewModel = {
-            ChatViewModel(
-                clock = testClock,
-                twitchRepository = twitchRepository,
-                getRecentEmotes = GetRecentEmotesUseCase(recentEmotesApi),
-                chatRepository = chatRepository,
-                authRepository =
-                AuthRepository(
-                    preferenceRepository = preferenceRepository,
-                    authApi = FakeAuthApi(),
-                    oAuthAppCredentials =
-                    OAuthAppCredentials(
-                        clientId = "client-id",
-                        redirectUri = "https://example.com/callback",
-                    ),
-                    dispatchersProvider = dispatchersProvider,
-                ),
-                filterAutocompleteItemsUseCase = FilterAutocompleteItemsUseCase(),
-                pronounsRepository =
-                PronounsRepository(
-                    pronounsApi = FakePronounsApi(),
-                    localPronounsApi = FakeLocalPronounsApi(),
-                    preferenceRepository = preferenceRepository,
-                    dispatchersProvider = dispatchersProvider,
-                ),
-                createShortcutForChannel = NoopCreateShortcutForChannelUseCase(),
-                chatEventViewMapper = ChatEventViewMapper(),
-                loadEmotesAndBadges =
-                LoadEmotesAndBadgesUseCase(
-                    twitchRepository = twitchRepository,
-                    emoteListSourcesProvider =
-                    EmoteListSourcesProvider {
-                        listOf(
-                            FakeEmoteListSource(
-                                listOf(EmoteSetItem.Emote(pickableEmote)),
-                            ),
-                        )
-                    },
-                ),
-                submitMessage =
-                SubmitMessageUseCase(
-                    clock = testClock,
-                    twitchRepository = twitchRepository,
-                    insertRecentEmotes = InsertRecentEmotesUseCase(recentEmotesApi),
-                ),
-                dispatchersProvider = dispatchersProvider,
-            )
-        }
-
-        viewModelStore = ViewModelStore()
-        viewModel =
-            ViewModelProvider.create(
-                store = viewModelStore,
-                factory =
-                viewModelFactory {
-                    initializer { buildViewModel() }
-                },
-            )[ChatViewModel::class]
+        viewModel = createViewModel()
     }
 
     @AfterTest
     fun tearDown() {
         // Cancels viewModelScope, and with it every chat session pipeline, so that
         // no coroutine outlives the test and touches a reset dispatcher.
-        viewModelStore.clear()
+        viewModelStores.forEach { store -> store.clear() }
         testDispatcher.scheduler.advanceUntilIdle()
 
         Dispatchers.resetMain()
     }
 
-    private suspend fun awaitChatting(): ChatViewModel.State.Chatting = viewModel.state
-        .first { state -> state is ChatViewModel.State.Chatting } as ChatViewModel.State.Chatting
+    /**
+     * Each call gets its own [ViewModelStore], so a test can build a second view model
+     * with different collaborators instead of getting the cached one back.
+     */
+    private fun createViewModel(preferenceRepository: PreferenceRepository = FakePreferenceRepository()): ChatViewModel {
+        val store = ViewModelStore()
+        viewModelStores += store
 
-    private suspend fun pushChatEvent(event: ChatEvent) {
-        chatRepository.events.subscriptionCount.first { count -> count > 0 }
-        chatRepository.events.emit(event)
+        return ViewModelProvider.create(
+            store = store,
+            factory =
+            viewModelFactory {
+                initializer {
+                    ChatViewModel(
+                        clock = testClock,
+                        twitchRepository = twitchRepository,
+                        getRecentEmotes = GetRecentEmotesUseCase(recentEmotesApi),
+                        chatRepository = chatRepository,
+                        authRepository =
+                        AuthRepository(
+                            preferenceRepository = preferenceRepository,
+                            authApi = FakeAuthApi(),
+                            oAuthAppCredentials =
+                            OAuthAppCredentials(
+                                clientId = "client-id",
+                                redirectUri = "https://example.com/callback",
+                            ),
+                            dispatchersProvider = dispatchersProvider,
+                        ),
+                        filterAutocompleteItemsUseCase = FilterAutocompleteItemsUseCase(),
+                        pronounsRepository =
+                        PronounsRepository(
+                            pronounsApi = FakePronounsApi(),
+                            localPronounsApi = FakeLocalPronounsApi(),
+                            preferenceRepository = preferenceRepository,
+                            dispatchersProvider = dispatchersProvider,
+                        ),
+                        createShortcutForChannel = NoopCreateShortcutForChannelUseCase(),
+                        chatEventViewMapper = ChatEventViewMapper(),
+                        loadEmotesAndBadges =
+                        LoadEmotesAndBadgesUseCase(
+                            twitchRepository = twitchRepository,
+                            emoteListSourcesProvider =
+                            EmoteListSourcesProvider {
+                                listOf(
+                                    FakeEmoteListSource(
+                                        listOf(EmoteSetItem.Emote(pickableEmote)),
+                                    ),
+                                )
+                            },
+                        ),
+                        submitMessage =
+                        SubmitMessageUseCase(
+                            clock = testClock,
+                            twitchRepository = twitchRepository,
+                            insertRecentEmotes = InsertRecentEmotesUseCase(recentEmotesApi),
+                        ),
+                        dispatchersProvider = dispatchersProvider,
+                    )
+                }
+            },
+        )[ChatViewModel::class]
+    }
+
+    private suspend fun awaitChatting(predicate: (ChatViewModel.State.Chatting) -> Boolean = { true }): ChatViewModel.State.Chatting = viewModel.state
+        .filterIsInstance<ChatViewModel.State.Chatting>()
+        .first(predicate)
+
+    private suspend fun pushChatEvent(
+        event: ChatEvent,
+        channelId: String = channelUser.id,
+    ) {
+        val events = chatRepository.eventsFor(channelId)
+        events.subscriptionCount.first { count -> count > 0 }
+        events.emit(event)
     }
 
     private fun chatMessageEvent(
@@ -274,6 +288,30 @@ internal class ChatViewModelTest {
     }
 
     @Test
+    fun `loadChat without a logged-in user fails`() = runTest(testDispatcher) {
+        val loggedOutViewModel = createViewModel(FakePreferenceRepository(apiToken = null))
+
+        loggedOutViewModel.loadChat(channelUser.id)
+        advanceUntilIdle()
+
+        assertIs<ChatViewModel.State.Failed>(loggedOutViewModel.state.value)
+        assertTrue(chatRepository.eventFlowRequests.isEmpty())
+    }
+
+    @Test
+    fun `a channel whose user cannot be loaded stays in the Loading state`() = runTest(testDispatcher) {
+        twitchRepository.userError = IllegalStateException("user not found")
+
+        viewModel.loadChat(channelUser.id)
+        advanceUntilIdle()
+
+        // The user pipeline only logs the failure, so nothing ever promotes the state
+        // to Chatting and no chat connection is opened.
+        assertIs<ChatViewModel.State.Loading>(viewModel.state.value)
+        assertTrue(chatRepository.eventFlowRequests.isEmpty())
+    }
+
+    @Test
     fun `incoming chat messages are added to the state`() = runTest(testDispatcher) {
         viewModel.loadChat(channelUser.id)
         awaitChatting()
@@ -311,7 +349,7 @@ internal class ChatViewModelTest {
         viewModel.loadChat(channelUser.id)
         awaitChatting()
 
-        chatRepository.connectionStatus.value =
+        chatRepository.connectionStatusFor(channelUser.id).value =
             ConnectionStatus(
                 isAlive = true,
                 registeredListeners = 1,
@@ -473,6 +511,59 @@ internal class ChatViewModelTest {
     }
 
     @Test
+    fun `a message that fails to send is reported in the chat`() = runTest(testDispatcher) {
+        twitchRepository.sendMessageError =
+            MessageNotSentException(
+                message = "message not sent",
+                dropReasonCode = "channel_settings",
+                dropReasonMessage = "Followers-only mode is enabled",
+            )
+
+        viewModel.loadChat(channelUser.id)
+        awaitChatting()
+
+        viewModel.onMessageInputChanged(
+            message = "hello chat",
+            selectionRange = 10..10,
+        )
+        viewModel.submit(
+            screenDensity = 2f,
+            isDarkTheme = false,
+        )
+
+        val state = awaitChatting { state -> state.chatMessages.isNotEmpty() }
+        val error = assertIs<ChatListItem.Message.Highlighted>(state.chatMessages.single())
+
+        assertEquals(
+            "Followers-only mode is enabled",
+            error.metadata.subtitle?.localizedString(),
+        )
+    }
+
+    @Test
+    fun `emotes used in a sent message are recorded as recent`() = runTest(testDispatcher) {
+        viewModel.loadChat(channelUser.id)
+
+        // The emote has to be known to the channel before it can be recognised in the input.
+        awaitChatting { state -> state.pickableEmotes.isNotEmpty() }
+
+        viewModel.onMessageInputChanged(
+            message = "hello ${pickableEmote.name}",
+            selectionRange = 11..11,
+        )
+        viewModel.submit(
+            screenDensity = 2f,
+            isDarkTheme = false,
+        )
+        advanceUntilIdle()
+
+        assertEquals(
+            listOf(pickableEmote.name),
+            recentEmotesApi.insertedEmotes.map { emote -> emote.name },
+        )
+    }
+
+    @Test
     fun `submitting a reply passes the replied-to message id`() = runTest(testDispatcher) {
         viewModel.loadChat(channelUser.id)
         awaitChatting()
@@ -579,6 +670,30 @@ internal class ChatViewModelTest {
     }
 
     @Test
+    fun `switching channels unsubscribes from the previous channel`() = runTest(testDispatcher) {
+        viewModel.loadChat(channelUser.id)
+        awaitChatting()
+
+        pushChatEvent(chatMessageEvent(text = "message in the first channel"))
+        awaitChatting { state -> state.chatMessages.isNotEmpty() }
+
+        viewModel.loadChat(otherChannelUser.id)
+        awaitChatting { state -> state.user.id == otherChannelUser.id }
+        advanceUntilIdle()
+
+        assertEquals(
+            0,
+            chatRepository.eventsFor(channelUser.id).subscriptionCount.value,
+            "the abandoned channel should have no remaining subscribers",
+        )
+        assertEquals(
+            1,
+            chatRepository.eventsFor(otherChannelUser.id).subscriptionCount.value,
+            "the new channel should be subscribed to exactly once",
+        )
+    }
+
+    @Test
     fun `loading the same channel again keeps the existing state`() = runTest(testDispatcher) {
         viewModel.loadChat(channelUser.id)
         awaitChatting()
@@ -605,6 +720,15 @@ private class FakeTwitchRepository : TwitchRepository {
     var channelBadges: List<TwitchBadge> = emptyList()
     var cheerEmotes: List<Emote> = emptyList()
 
+    /** When set, [getUserById] emits this failure instead of reading from [users]. */
+    var userError: Throwable? = null
+
+    /** When set, [getStreamByUserId] emits this failure instead of reading from [streams]. */
+    var streamError: Throwable? = null
+
+    /** When set, [sendChatMessage] fails with this error after recording the attempt. */
+    var sendMessageError: Throwable? = null
+
     val visitedChannels = mutableListOf<String>()
     val sentMessages = mutableListOf<SentMessage>()
 
@@ -614,9 +738,13 @@ private class FakeTwitchRepository : TwitchRepository {
         val inReplyToMessageId: String?,
     )
 
-    override suspend fun getUserById(id: String): Flow<Result<User>> = users.mapNotNull { users -> users[id] }.map { user -> Result.success(user) }
+    override suspend fun getUserById(id: String): Flow<Result<User>> = userError
+        ?.let { error -> flowOf(Result.failure(error)) }
+        ?: users.mapNotNull { users -> users[id] }.map { user -> Result.success(user) }
 
-    override suspend fun getStreamByUserId(userId: String): Flow<Result<Stream>> = streams.mapNotNull { streams -> streams[userId] }.map { stream -> Result.success(stream) }
+    override suspend fun getStreamByUserId(userId: String): Flow<Result<Stream>> = streamError
+        ?.let { error -> flowOf(Result.failure(error)) }
+        ?: streams.mapNotNull { streams -> streams[userId] }.map { stream -> Result.success(stream) }
 
     override suspend fun markChannelAsVisited(
         userId: String,
@@ -643,7 +771,9 @@ private class FakeTwitchRepository : TwitchRepository {
                 message = message,
                 inReplyToMessageId = inReplyToMessageId,
             )
-        return Result.success("sent-message-id")
+        return sendMessageError
+            ?.let { error -> Result.failure(error) }
+            ?: Result.success("sent-message-id")
     }
 
     override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> = error("Not used in tests")
@@ -674,27 +804,38 @@ private class FakeTwitchRepository : TwitchRepository {
     override suspend fun syncFollowedChannels(appUser: AppUser) = error("Not used in tests")
 }
 
+/**
+ * Hands out a distinct flow per channel, so that tests can tell "the session for the
+ * previous channel was torn down" apart from "the session is still listening".
+ */
 private class FakeChatRepository : ChatRepository {
-    val events = MutableSharedFlow<ChatEvent>()
-    val connectionStatus = MutableStateFlow(ConnectionStatus())
+    private val eventFlows = mutableMapOf<String, MutableSharedFlow<ChatEvent>>()
+    private val connectionStatusFlows = mutableMapOf<String, MutableStateFlow<ConnectionStatus>>()
+
     val eventFlowRequests = mutableListOf<Pair<User, AppUser.LoggedIn>>()
+
+    fun eventsFor(userId: String): MutableSharedFlow<ChatEvent> = eventFlows.getOrPut(userId) { MutableSharedFlow() }
+
+    fun connectionStatusFor(userId: String): MutableStateFlow<ConnectionStatus> = connectionStatusFlows.getOrPut(userId) { MutableStateFlow(ConnectionStatus()) }
 
     override fun getChatEventFlow(
         user: User,
         appUser: AppUser.LoggedIn,
     ): Flow<ChatEvent> {
         eventFlowRequests += user to appUser
-        return events
+        return eventsFor(user.id)
     }
 
     override fun getConnectionStatusFlow(
         user: User,
         appUser: AppUser.LoggedIn,
-    ): Flow<ConnectionStatus> = connectionStatus
+    ): Flow<ConnectionStatus> = connectionStatusFor(user.id)
 }
 
-private class FakePreferenceRepository : PreferenceRepository {
-    private val preferences = MutableStateFlow(AppPreferences(apiToken = "valid-token"))
+private class FakePreferenceRepository(
+    apiToken: String? = "valid-token",
+) : PreferenceRepository {
+    private val preferences = MutableStateFlow(AppPreferences(apiToken = apiToken))
 
     override val currentPreferences: Flow<AppPreferences> = preferences
 
@@ -709,8 +850,7 @@ private class FakeAuthApi : AuthApi {
             clientId = "client-id",
             login = "appuser",
             userId = "app-user-id",
-            scopes =
-            persistentSetOf(
+            scopes = persistentSetOf(
                 "chat:read",
                 "chat:edit",
                 "user:read:follows",

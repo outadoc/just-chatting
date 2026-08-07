@@ -244,6 +244,7 @@ internal class ChatViewModelTest {
         userId: String = "chatter-id",
         userLogin: String = "chatter",
         userName: String = "Chatter",
+        sourceRoomId: String? = null,
     ): ChatEvent.Message.ChatMessage = ChatEvent.Message.ChatMessage(
         timestamp = testClock.now(),
         id = id,
@@ -258,6 +259,7 @@ internal class ChatViewModelTest {
         isFirstMessageByUser = false,
         rewardId = null,
         inReplyTo = null,
+        sourceRoomId = sourceRoomId,
     )
 
     @Test
@@ -465,6 +467,58 @@ internal class ChatViewModelTest {
             } as ChatViewModel.State.Chatting
 
         assertEquals("they", state.pronouns[channelChatter]?.nominative)
+    }
+
+    @Test
+    fun `source channels are fetched for shared chat messages`() = runTest(testDispatcher) {
+        viewModel.loadChat(channelUser.id)
+        awaitChatting()
+
+        pushChatEvent(
+            chatMessageEvent(
+                id = "shared-message",
+                sourceRoomId = otherChannelUser.id,
+            ),
+        )
+
+        advanceTimeBy(2.seconds)
+
+        val state =
+            viewModel.state.first { state ->
+                state is ChatViewModel.State.Chatting && state.sourceChannels.isNotEmpty()
+            } as ChatViewModel.State.Chatting
+
+        assertEquals(otherChannelUser, state.sourceChannels[otherChannelUser.id])
+    }
+
+    @Test
+    fun `source channel badges are fetched for shared chat messages`() = runTest(testDispatcher) {
+        val moderatorBadge =
+            TwitchBadge(
+                setId = "moderator",
+                version = "1",
+                urls = EmoteUrls("https://example.com/moderator.png"),
+            )
+        twitchRepository.channelBadges = listOf(moderatorBadge)
+
+        viewModel.loadChat(channelUser.id)
+        awaitChatting()
+
+        pushChatEvent(
+            chatMessageEvent(
+                id = "shared-message",
+                sourceRoomId = otherChannelUser.id,
+            ),
+        )
+
+        advanceTimeBy(2.seconds)
+
+        val state =
+            viewModel.state.first { state ->
+                state is ChatViewModel.State.Chatting && state.sourceChannelBadges.isNotEmpty()
+            } as ChatViewModel.State.Chatting
+
+        assertEquals(listOf(moderatorBadge), state.sourceChannelBadges[otherChannelUser.id]?.toList())
     }
 
     @Test
@@ -780,7 +834,7 @@ private class FakeTwitchRepository : TwitchRepository {
 
     override suspend fun getFollowedChannels(): Flow<List<ChannelFollow>> = error("Not used in tests")
 
-    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> = error("Not used in tests")
+    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> = users.map { users -> Result.success(ids.mapNotNull { id -> users[id] }) }
 
     override suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>> = error("Not used in tests")
 

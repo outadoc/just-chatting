@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sync
-import androidx.compose.material.icons.filled.Today
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,9 +25,7 @@ import fr.outadoc.justchatting.feature.timeline.presentation.LiveTimelineViewMod
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.timeline_live
 import fr.outadoc.justchatting.shared.internal.timeline_refresh_action_cd
-import fr.outadoc.justchatting.shared.internal.timeline_today_action_cd
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -44,8 +41,6 @@ internal fun LiveTimelineScreen(
     val state by viewModel.state.collectAsState()
 
     val notifier: ChatNotifier = koinInject()
-
-    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         viewModel.syncLiveStreamsPeriodically()
@@ -73,20 +68,6 @@ internal fun LiveTimelineScreen(
                 TopAppBar(
                     title = { Text(stringResource(Res.string.timeline_live)) },
                     actions = {
-                        AccessibleIconButton(
-                            onClickLabel = stringResource(Res.string.timeline_today_action_cd),
-                            onClick = {
-                                coroutineScope.launch {
-                                    listState.scrollToItem(index = 0)
-                                }
-                            },
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Today,
-                                contentDescription = null,
-                            )
-                        }
-
                         AccessibleIconButton(
                             onClickLabel = stringResource(Res.string.timeline_refresh_action_cd),
                             onClick = { viewModel.syncLiveStreamsNow() },

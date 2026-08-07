@@ -1,14 +1,23 @@
 package fr.outadoc.justchatting.feature.chat.presentation.ui
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Token
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import coil3.compose.AsyncImage
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
+import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 
 private const val emoteSizeFloat = 1.8
@@ -51,6 +60,19 @@ internal fun cheerEmoteTextContent(cheer: Emote): InlineTextContent {
         )
     }
 }
+
+internal fun sourceChannelTextContent(user: User): InlineTextContent = InlineTextContent(badgePlaceholder) {
+    AsyncImage(
+        modifier =
+        Modifier
+            .fillMaxSize()
+            .clip(RoundedCornerShape(4.dp)),
+        model = remoteImageModel(user.profileImageUrl),
+        contentDescription = user.displayName,
+    )
+}
+
+internal fun sourceChannelInlineContentId(roomId: String): String = "source-channel:$roomId"
 
 internal fun previewTextContent(): InlineTextContent = InlineTextContent(badgePlaceholder) {
     Icon(Icons.Default.Token, contentDescription = null)

@@ -7,6 +7,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.PinnedMessage
 import fr.outadoc.justchatting.feature.chat.domain.model.Poll
 import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
+import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
@@ -59,6 +60,7 @@ internal class ChatStateReducerTest {
         chatterLogin: String = "chatter1",
         chatterDisplayName: String = "Chatter1",
         timestamp: Instant = Instant.fromEpochMilliseconds(1000),
+        sourceRoomId: String? = null,
     ): ChatListItem.Message.Simple = ChatListItem.Message.Simple(
         body =
         ChatListItem.Message.Body(
@@ -70,6 +72,7 @@ internal class ChatStateReducerTest {
                 login = chatterLogin,
                 displayName = chatterDisplayName,
             ),
+            sourceRoomId = sourceRoomId,
         ),
         timestamp = timestamp,
     )
@@ -350,6 +353,32 @@ internal class ChatStateReducerTest {
 
         assertIs<ChatViewModel.State.Chatting>(result)
         assertEquals(timestamp, result.lastSentMessageInstant)
+    }
+
+    @Test
+    fun `AddMessages accumulates source room ids`() {
+        val msg =
+            createMessage(
+                messageId = "msg-1",
+                sourceRoomId = "source-room-1",
+            )
+        val action = ChatViewModel.Action.AddMessages(messages = listOf(msg))
+
+        val result = reducer.reduce(action, testChattingState)
+
+        assertIs<ChatViewModel.State.Chatting>(result)
+        assertEquals(true, "source-room-1" in result.sourceRoomIds)
+    }
+
+    @Test
+    fun `AddMessages without source room id leaves the set unchanged`() {
+        val msg = createMessage(messageId = "msg-1")
+        val action = ChatViewModel.Action.AddMessages(messages = listOf(msg))
+
+        val result = reducer.reduce(action, testChattingState)
+
+        assertIs<ChatViewModel.State.Chatting>(result)
+        assertEquals(testChattingState.sourceRoomIds, result.sourceRoomIds)
     }
 
     @Test
@@ -655,6 +684,74 @@ internal class ChatStateReducerTest {
 
         assertIs<ChatViewModel.State.Chatting>(result)
         assertEquals(pronoun, result.pronouns[chatter])
+    }
+
+    // endregion
+
+    // region Action: UpdateSourceChannels
+
+    @Test
+    fun `UpdateSourceChannels merges users into existing map keyed by id`() {
+        val sourceChannel =
+            User(
+                id = "source-room-1",
+                login = "sourcechannel",
+                displayName = "SourceChannel",
+                description = "",
+                profileImageUrl = "https://example.com/source.png",
+                createdAt = Instant.fromEpochMilliseconds(1000000),
+                usedAt = null,
+            )
+        val action =
+            ChatViewModel.Action.UpdateSourceChannels(
+                users = listOf(sourceChannel),
+            )
+
+        val result = reducer.reduce(action, testChattingState)
+
+        assertIs<ChatViewModel.State.Chatting>(result)
+        assertEquals(sourceChannel, result.sourceChannels["source-room-1"])
+    }
+
+    @Test
+    fun `UpdateSourceChannels when not Chatting is a no-op`() {
+        val action = ChatViewModel.Action.UpdateSourceChannels(users = emptyList())
+
+        val result = reducer.reduce(action, ChatViewModel.State.Initial)
+
+        assertIs<ChatViewModel.State.Initial>(result)
+    }
+
+    // endregion
+
+    // region Action: UpdateSourceChannelBadges
+
+    @Test
+    fun `UpdateSourceChannelBadges merges badges into existing map keyed by room id`() {
+        val badge =
+            TwitchBadge(
+                setId = "moderator",
+                version = "1",
+                urls = EmoteUrls("https://example.com/moderator.png"),
+            )
+        val action =
+            ChatViewModel.Action.UpdateSourceChannelBadges(
+                badges = mapOf("source-room-1" to listOf(badge)),
+            )
+
+        val result = reducer.reduce(action, testChattingState)
+
+        assertIs<ChatViewModel.State.Chatting>(result)
+        assertEquals(listOf(badge), result.sourceChannelBadges["source-room-1"]?.toList())
+    }
+
+    @Test
+    fun `UpdateSourceChannelBadges when not Chatting is a no-op`() {
+        val action = ChatViewModel.Action.UpdateSourceChannelBadges(badges = emptyMap())
+
+        val result = reducer.reduce(action, ChatViewModel.State.Initial)
+
+        assertIs<ChatViewModel.State.Initial>(result)
     }
 
     // endregion

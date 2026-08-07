@@ -69,6 +69,8 @@ public sealed interface ChatListItem {
             val embeddedEmotes: ImmutableList<Emote> = persistentListOf(),
             val badges: ImmutableList<Badge> = persistentListOf(),
             val inReplyTo: InReplyTo? = null,
+            val sourceRoomId: String? = null,
+            val sourceBadges: ImmutableList<Badge> = persistentListOf(),
         ) {
             @Immutable
             public data class InReplyTo(

@@ -41,7 +41,11 @@ internal fun Map<String, String?>.parseEmotes(message: String): List<Emote>? = t
             }.orEmpty()
     }
 
-internal fun Map<String, String?>.parseBadges(): List<Badge>? = this["badges"]
+internal fun Map<String, String?>.parseBadges(): List<Badge>? = parseBadgeList("badges")
+
+internal fun Map<String, String?>.parseSourceBadges(): List<Badge>? = parseBadgeList("source-badges")
+
+private fun Map<String, String?>.parseBadgeList(tag: String): List<Badge>? = this[tag]
     ?.splitAndMakeMap(",", "/")
     ?.entries
     ?.mapNotNull { (key, value) ->
@@ -161,6 +165,9 @@ internal val Map<String, String?>.targetMessageId: String?
 
 internal val Map<String, String?>.targetUserId: String?
     get() = this["target-user-id"]?.takeUnless { it.isEmpty() }
+
+internal val Map<String, String?>.sourceRoomId: String?
+    get() = this["source-room-id"]?.takeUnless { it.isEmpty() }
 
 internal val Map<String, String?>.systemMsg: String?
     get() = this["system-msg"]?.takeUnless { it.isEmpty() }

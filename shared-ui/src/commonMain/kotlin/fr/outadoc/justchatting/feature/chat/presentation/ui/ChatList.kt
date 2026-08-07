@@ -38,6 +38,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.RoomState
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
+import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.ui.SwipeActionBox
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.chat_copyToClipboard
@@ -60,6 +61,8 @@ internal fun ChatList(
     badges: ImmutableList<TwitchBadge>,
     removedContent: ImmutableList<ChatListItem.RemoveContent>,
     pronouns: ImmutableMap<Chatter, Pronoun>,
+    sourceChannels: ImmutableMap<String, User>,
+    sourceChannelBadges: ImmutableMap<String, ImmutableList<TwitchBadge>>,
     richEmbeds: ImmutableMap<String, ChatListItem.RichEmbed>,
     showTimestamps: Boolean,
     isDisconnected: Boolean,
@@ -109,11 +112,40 @@ internal fun ChatList(
                 }.toPersistentHashMap()
         }
 
+    val inlineSourceChannels: PersistentMap<String, InlineTextContent> =
+        remember(sourceChannels) {
+            sourceChannels
+                .filterValues { user -> user.profileImageUrl.isNotBlank() }
+                .entries
+                .associate { (roomId, user) ->
+                    Pair(
+                        sourceChannelInlineContentId(roomId),
+                        sourceChannelTextContent(user),
+                    )
+                }.toPersistentHashMap()
+        }
+
+    val inlineSourceBadges: PersistentMap<String, InlineTextContent> =
+        remember(sourceChannelBadges) {
+            sourceChannelBadges.entries
+                .flatMap { (roomId, roomBadges) ->
+                    roomBadges.map { badge ->
+                        Pair(
+                            badge.sourceInlineContentId(roomId),
+                            badgeTextContent(badge),
+                        )
+                    }
+                }.toMap()
+                .toPersistentHashMap()
+        }
+
     val inlineContent: PersistentMap<String, InlineTextContent> =
-        remember(inlinesEmotes, inlineBadges, inlineCheerEmotes) {
+        remember(inlinesEmotes, inlineBadges, inlineCheerEmotes, inlineSourceChannels, inlineSourceBadges) {
             inlinesEmotes
                 .putAll(inlineBadges)
                 .putAll(inlineCheerEmotes)
+                .putAll(inlineSourceChannels)
+                .putAll(inlineSourceBadges)
         }
 
     var size by remember { mutableStateOf(IntSize.Zero) }
@@ -250,3 +282,5 @@ internal fun ChatList(
 
 private val TwitchBadge.inlineContentId: String
     get() = "badge_${setId}_$version"
+
+private fun TwitchBadge.sourceInlineContentId(roomId: String): String = "source_badge:$roomId:${setId}_$version"

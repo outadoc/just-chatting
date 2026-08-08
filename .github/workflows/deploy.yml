@@ -226,34 +226,39 @@ jobs:
         id: version
         run: echo "::set-output name=version::$(git rev-list HEAD --count)"
 
-      - name: Build packages
+      - name: Install Flatpak tooling
         run: |
-          ./gradlew app-desktop:createDistributable \
+          sudo apt-get update
+          sudo apt-get install -y flatpak flatpak-builder
+          flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
+          flatpak install --user -y flathub org.freedesktop.Platform//25.08 org.freedesktop.Sdk//25.08
+
+      - name: Build AppImage
+        run: |
+          ./gradlew app-desktop:packageAppImage \
             "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
             "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" \
             "-PenableLogging=false"
 
-      - name: Build AppImage
-        run: |
-          wget -q "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" -O appimagetool
-          chmod +x appimagetool
-
-          mkdir -p AppDir
-          cp -R "app-desktop/build/compose/binaries/main/app/Just Chatting/bin" AppDir/
-          cp -R "app-desktop/build/compose/binaries/main/app/Just Chatting/lib" AppDir/
-          cp app-desktop/assets/fr.outadoc.justchatting.desktop AppDir/
-          cp app-desktop/assets/icon_linux.svg AppDir/fr.outadoc.justchatting.svg
-          printf '#!/bin/bash\nHERE="$(dirname "$(readlink -f "${0}")")"\nexec "$HERE/bin/Just Chatting" "$@"\n' > AppDir/AppRun
-          chmod +x AppDir/AppRun
-
-          ARCH=x86_64 ./appimagetool --appimage-extract-and-run \
-            AppDir \
+          mv app-desktop/build/compose/binaries/main/AppImage/*.AppImage \
             "JustChatting-linux-amd64-${{ steps.version.outputs.version }}.AppImage"
+
+      - name: Build Flatpak
+        run: |
+          ./gradlew app-desktop:packageFlatpak \
+            "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
+            "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" \
+            "-PenableLogging=false"
+
+          mv app-desktop/build/compose/binaries/main/flatpak/*.flatpak \
+            "JustChatting-linux-amd64-${{ steps.version.outputs.version }}.flatpak"
 
       - name: Upload packages to GitHub
         uses: actions/upload-artifact@v7.0.1
         with:
-          path: "JustChatting-linux-amd64-${{ steps.version.outputs.version }}.AppImage"
+          path: |
+            JustChatting-linux-amd64-${{ steps.version.outputs.version }}.AppImage
+            JustChatting-linux-amd64-${{ steps.version.outputs.version }}.flatpak
           name: build-linux-amd64
 
       - name: Update release
@@ -261,7 +266,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release: ${{ github.event.release.name }}
-          files: "JustChatting-linux-amd64-${{ steps.version.outputs.version }}.AppImage"
+          files: "JustChatting-linux-amd64-${{ steps.version.outputs.version }}.AppImage JustChatting-linux-amd64-${{ steps.version.outputs.version }}.flatpak"
 
   deploy-android:
     name: Deploy Android app

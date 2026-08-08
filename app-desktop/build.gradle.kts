@@ -1,3 +1,4 @@
+import dev.nucleusframework.desktop.application.dsl.AppImageCategory
 import dev.nucleusframework.desktop.application.dsl.TargetFormat
 import java.io.FileOutputStream
 
@@ -35,8 +36,10 @@ nucleus.application {
     nativeDistributions {
         val versionCode = findProperty("externalVersionCode") as String?
 
-        packageName = "Just Chatting"
+        appName = "Just Chatting"
+        packageName = "justchatting"
         packageVersion = versionCode?.let { "1.0.$versionCode" } ?: "1.0.0"
+        description = "An app focused on a great Twitch chat experience"
         homepage = "https://github.com/outadoc/just-chatting"
 
         targetFormats(
@@ -60,6 +63,25 @@ nucleus.application {
         linux {
             appCategory = "Chat"
             iconFile = project.file("assets/icon_linux.svg")
+
+            appImage {
+                category = AppImageCategory.Network
+            }
+
+            flatpak {
+                runtime = "org.freedesktop.Platform"
+                runtimeVersion = "25.08"
+                sdk = "org.freedesktop.Sdk"
+
+                finishArgs =
+                    listOf(
+                        "--share=ipc",
+                        "--socket=x11",
+                        "--socket=wayland",
+                        "--device=dri",
+                        "--share=network",
+                    )
+            }
         }
 
         modules(

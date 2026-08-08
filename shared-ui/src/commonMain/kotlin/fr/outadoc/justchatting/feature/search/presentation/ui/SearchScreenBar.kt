@@ -25,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
-import androidx.window.core.layout.WindowHeightSizeClass
 import app.cash.paging.compose.LazyPagingItems
 import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.shared.internal.Res
@@ -48,36 +47,30 @@ internal fun SearchScreenBar(
     onDismissSearchBar: () -> Unit,
 ) {
     val sizeClass = currentWindowAdaptiveInfo().windowSizeClass
-    when (sizeClass.windowHeightSizeClass) {
-        WindowHeightSizeClass.COMPACT,
-        WindowHeightSizeClass.MEDIUM,
-        -> {
-            FullHeightSearchBar(
-                modifier = modifier,
-                searchResults = searchResults,
-                query = query,
-                isSearchExpanded = isSearchExpanded,
-                onChannelClick = onChannelClick,
-                onQueryChange = onQueryChange,
-                onSearchExpandedChange = onSearchActiveChange,
-                onClearSearchBar = onClearSearchBar,
-                onDismissSearchBar = onDismissSearchBar,
-            )
-        }
-
-        WindowHeightSizeClass.EXPANDED -> {
-            CompactSearchBar(
-                modifier = modifier,
-                searchResults = searchResults,
-                query = query,
-                isSearchExpanded = isSearchExpanded,
-                onChannelClick = onChannelClick,
-                onQueryChange = onQueryChange,
-                onSearchExpandedChange = onSearchActiveChange,
-                onClearSearchBar = onClearSearchBar,
-                onDismissSearchBar = onDismissSearchBar,
-            )
-        }
+    if (sizeClass.isHeightAtLeastBreakpoint(900)) {
+        CompactSearchBar(
+            modifier = modifier,
+            searchResults = searchResults,
+            query = query,
+            isSearchExpanded = isSearchExpanded,
+            onChannelClick = onChannelClick,
+            onQueryChange = onQueryChange,
+            onSearchExpandedChange = onSearchActiveChange,
+            onClearSearchBar = onClearSearchBar,
+            onDismissSearchBar = onDismissSearchBar,
+        )
+    } else {
+        FullHeightSearchBar(
+            modifier = modifier,
+            searchResults = searchResults,
+            query = query,
+            isSearchExpanded = isSearchExpanded,
+            onChannelClick = onChannelClick,
+            onQueryChange = onQueryChange,
+            onSearchExpandedChange = onSearchActiveChange,
+            onClearSearchBar = onClearSearchBar,
+            onDismissSearchBar = onDismissSearchBar,
+        )
     }
 }
 

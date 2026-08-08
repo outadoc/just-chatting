@@ -8,7 +8,6 @@ import androidx.compose.material3.VerticalDragHandle
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.PaneExpansionState
 import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldScope
-import androidx.compose.material3.adaptive.layout.defaultDragHandleSemantics
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -25,14 +24,13 @@ internal fun ThreePaneScaffoldScope.DragHandle(
 
     VerticalDragHandle(
         modifier =
-        modifier
-            .height(64.dp)
-            .fillMaxWidth()
-            .paneExpansionDraggable(
-                state = state,
-                minTouchTargetSize = size,
-                interactionSource = interactionSource,
-                semanticsProperties = state.defaultDragHandleSemantics(),
-            ),
+            modifier
+                .height(64.dp)
+                .fillMaxWidth()
+                .paneExpansionDraggable(
+                    state = state,
+                    minTouchTargetSize = size,
+                    interactionSource = interactionSource,
+                ),
     )
 }

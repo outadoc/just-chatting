@@ -546,19 +546,20 @@ public class ChatViewModel internal constructor(
                     }.collect()
             }
 
-            scope.launch {
-                twitchRepository
-                    .getStreamByUserId(userId = channelId)
-                    .onEach { result ->
-                        result
-                            .onSuccess { stream ->
-                                dispatchIfCurrent(Action.UpdateStreamDetails(stream))
-                            }.onFailure { exception ->
-                                logError<ChatViewModel>(exception) { "Failed to load stream details for user" }
-                            }
-                    }.catch { e -> logError<ChatViewModel>(e) { "Stream details pipeline failed" } }
-                    .collect()
-            }
+            state
+                .filterIsInstance<State.Chatting>()
+                .map { state -> state.user.id }
+                .distinctUntilChanged()
+                .flatMapLatest { userId -> twitchRepository.getStreamByUserId(userId = userId) }
+                .onEach { result ->
+                    result
+                        .onSuccess { stream ->
+                            dispatchIfCurrent(Action.UpdateStreamDetails(stream))
+                        }.onFailure { exception ->
+                            logError<ChatViewModel>(exception) { "Failed to load stream details for user" }
+                        }
+                }.catch { e -> logError<ChatViewModel>(e) { "Stream details pipeline failed" } }
+                .launchIn(scope)
 
             state
                 .filterIsInstance<State.Chatting>()

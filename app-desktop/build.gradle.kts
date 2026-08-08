@@ -42,8 +42,8 @@ nucleus.application {
         targetFormats(
             TargetFormat.Dmg,
             TargetFormat.Msi,
-            TargetFormat.Deb,
-            TargetFormat.Rpm,
+            TargetFormat.AppImage,
+            TargetFormat.Flatpak,
         )
 
         windows {
@@ -60,7 +60,6 @@ nucleus.application {
         linux {
             appCategory = "Chat"
             iconFile = project.file("assets/icon_linux.svg")
-            debMaintainer = "baptiste@candellier.me"
         }
 
         modules(

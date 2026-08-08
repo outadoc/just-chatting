@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
@@ -26,6 +25,7 @@ import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.timeline_live
 import fr.outadoc.justchatting.shared.internal.timeline_refresh_action_cd
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
+import fr.outadoc.justchatting.utils.presentation.rememberHasPointingDevice
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -41,6 +41,8 @@ internal fun LiveTimelineScreen(
     val state by viewModel.state.collectAsState()
 
     val notifier: ChatNotifier = koinInject()
+
+    val hasMouse = rememberHasPointingDevice()
 
     LaunchedEffect(Unit) {
         viewModel.syncLiveStreamsPeriodically()
@@ -68,19 +70,21 @@ internal fun LiveTimelineScreen(
                 TopAppBar(
                     title = { Text(stringResource(Res.string.timeline_live)) },
                     actions = {
-                        AccessibleIconButton(
-                            onClickLabel = stringResource(Res.string.timeline_refresh_action_cd),
-                            onClick = { viewModel.syncLiveStreamsNow() },
-                        ) {
-                            if (state.isLoading) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(20.dp),
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Default.Sync,
-                                    contentDescription = null,
-                                )
+                        if (hasMouse) {
+                            AccessibleIconButton(
+                                onClickLabel = stringResource(Res.string.timeline_refresh_action_cd),
+                                onClick = { viewModel.syncLiveStreamsNow() },
+                            ) {
+                                if (state.isLoading) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(20.dp),
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Default.Sync,
+                                        contentDescription = null,
+                                    )
+                                }
                             }
                         }
                     },
@@ -92,6 +96,9 @@ internal fun LiveTimelineScreen(
                 modifier = modifier,
                 insets = insets,
                 live = state.live,
+                isRefreshing = state.isLoading,
+                onRefresh = { viewModel.syncLiveStreamsNow() },
+                showRefreshIndicator = !hasMouse,
                 listState = listState,
                 onChannelClick = { user ->
                     viewModel.onChannelClick(user.id)

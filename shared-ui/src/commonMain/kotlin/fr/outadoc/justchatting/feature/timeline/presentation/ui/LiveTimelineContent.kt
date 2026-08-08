@@ -9,11 +9,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.presentation.ui.BasicUserInfo
@@ -30,12 +34,79 @@ internal fun LiveTimelineContent(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
     live: ImmutableList<UserStream>,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
+    showRefreshIndicator: Boolean,
     listState: LazyListState,
     onChannelClick: (User) -> Unit,
     onOpenInBubble: (User) -> Unit,
 ) {
     var showUserDetails: User? by remember { mutableStateOf(null) }
 
+    if (showRefreshIndicator) {
+        val pullToRefreshState = rememberPullToRefreshState()
+
+        PullToRefreshBox(
+            modifier = modifier.fillMaxSize(),
+            state = pullToRefreshState,
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
+            indicator = {
+                PullToRefreshDefaults.Indicator(
+                    state = pullToRefreshState,
+                    isRefreshing = isRefreshing,
+                    modifier =
+                    Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = insets.calculateTopPadding()),
+                )
+            },
+        ) {
+            LiveTimelineList(
+                modifier = Modifier.fillMaxSize(),
+                insets = insets,
+                live = live,
+                listState = listState,
+                onChannelClick = onChannelClick,
+                onUserClick = { showUserDetails = it },
+                onOpenInBubble = onOpenInBubble,
+            )
+        }
+    } else {
+        LiveTimelineList(
+            modifier = modifier.fillMaxSize(),
+            insets = insets,
+            live = live,
+            listState = listState,
+            onChannelClick = onChannelClick,
+            onUserClick = { showUserDetails = it },
+            onOpenInBubble = onOpenInBubble,
+        )
+    }
+
+    showUserDetails?.let { user ->
+        ActionBottomSheet(
+            onDismissRequest = { showUserDetails = null },
+            header = {
+                BasicUserInfo(user = user)
+            },
+            content = {
+                ExtraUserInfo(user = user)
+            },
+        )
+    }
+}
+
+@Composable
+private fun LiveTimelineList(
+    modifier: Modifier = Modifier,
+    insets: PaddingValues = PaddingValues(),
+    live: ImmutableList<UserStream>,
+    listState: LazyListState,
+    onChannelClick: (User) -> Unit,
+    onUserClick: (User) -> Unit,
+    onOpenInBubble: (User) -> Unit,
+) {
     if (live.isEmpty()) {
         NoContent(
             modifier =
@@ -73,7 +144,7 @@ internal fun LiveTimelineContent(
                         onChannelClick(userStream.user)
                     },
                     onUserClick = {
-                        showUserDetails = userStream.user
+                        onUserClick(userStream.user)
                     },
                     onOpenInBubble = {
                         onOpenInBubble(userStream.user)
@@ -81,17 +152,5 @@ internal fun LiveTimelineContent(
                 )
             }
         }
-    }
-
-    showUserDetails?.let { user ->
-        ActionBottomSheet(
-            onDismissRequest = { showUserDetails = null },
-            header = {
-                BasicUserInfo(user = user)
-            },
-            content = {
-                ExtraUserInfo(user = user)
-            },
-        )
     }
 }

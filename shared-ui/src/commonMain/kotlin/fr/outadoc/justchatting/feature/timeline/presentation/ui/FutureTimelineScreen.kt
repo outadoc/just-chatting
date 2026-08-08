@@ -27,6 +27,7 @@ import fr.outadoc.justchatting.shared.internal.timeline_future
 import fr.outadoc.justchatting.shared.internal.timeline_refresh_action_cd
 import fr.outadoc.justchatting.shared.internal.timeline_today_action_cd
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
+import fr.outadoc.justchatting.utils.presentation.rememberHasPointingDevice
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -41,6 +42,8 @@ internal fun FutureTimelineScreen(
     val state by viewModel.state.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
+
+    val hasMouse = rememberHasPointingDevice()
 
     LaunchedEffect(Unit) {
         viewModel.syncEverythingNow()
@@ -72,19 +75,21 @@ internal fun FutureTimelineScreen(
                             )
                         }
 
-                        AccessibleIconButton(
-                            onClickLabel = stringResource(Res.string.timeline_refresh_action_cd),
-                            onClick = { viewModel.syncEverythingNow() },
-                        ) {
-                            if (state.isLoading) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(20.dp),
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Default.Sync,
-                                    contentDescription = null,
-                                )
+                        if (hasMouse) {
+                            AccessibleIconButton(
+                                onClickLabel = stringResource(Res.string.timeline_refresh_action_cd),
+                                onClick = { viewModel.syncEverythingNow() },
+                            ) {
+                                if (state.isLoading) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(20.dp),
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Default.Sync,
+                                        contentDescription = null,
+                                    )
+                                }
                             }
                         }
                     },
@@ -96,6 +101,9 @@ internal fun FutureTimelineScreen(
                 modifier = modifier,
                 insets = insets,
                 future = state.future,
+                isRefreshing = state.isLoading,
+                onRefresh = { viewModel.syncEverythingNow() },
+                showRefreshIndicator = !hasMouse,
                 listState = listState,
             )
         },

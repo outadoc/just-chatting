@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,12 +16,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -42,6 +47,7 @@ import fr.outadoc.justchatting.shared.internal.channels
 import fr.outadoc.justchatting.shared.internal.timeline_refresh_action_cd
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.plus
+import fr.outadoc.justchatting.utils.presentation.rememberHasPointingDevice
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -57,6 +63,8 @@ internal fun FollowedChannelsList(
 ) {
     val viewModel: FollowedChannelsViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
+
+    val hasMouse = rememberHasPointingDevice()
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
@@ -92,37 +100,72 @@ internal fun FollowedChannelsList(
                 title = { Text(stringResource(Res.string.channels)) },
                 scrollBehavior = scrollBehavior,
                 actions = {
-                    AccessibleIconButton(
-                        onClick = { viewModel.synchronize() },
-                        onClickLabel = stringResource(Res.string.timeline_refresh_action_cd),
-                    ) {
-                        if (state.isLoading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(20.dp),
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Default.Sync,
-                                contentDescription = null,
-                            )
+                    if (hasMouse) {
+                        AccessibleIconButton(
+                            onClick = { viewModel.synchronize() },
+                            onClickLabel = stringResource(Res.string.timeline_refresh_action_cd),
+                        ) {
+                            if (state.isLoading) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(20.dp),
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.Sync,
+                                    contentDescription = null,
+                                )
+                            }
                         }
                     }
                 },
             )
         },
         content = { insets ->
-            InnerFollowedChannelsList(
-                modifier =
-                Modifier
-                    .haze(hazeState)
-                    .fillMaxSize(),
-                insets = insets,
-                items = state.data,
-                isRefreshing = state.isLoading,
-                onItemClick = { channel ->
-                    viewModel.onChannelClick(channel.user.id)
-                },
-            )
+            if (hasMouse) {
+                InnerFollowedChannelsList(
+                    modifier =
+                    Modifier
+                        .haze(hazeState)
+                        .fillMaxSize(),
+                    insets = insets,
+                    items = state.data,
+                    isRefreshing = state.isLoading,
+                    onItemClick = { channel ->
+                        viewModel.onChannelClick(channel.user.id)
+                    },
+                )
+            } else {
+                val pullToRefreshState = rememberPullToRefreshState()
+                PullToRefreshBox(
+                    modifier =
+                    Modifier
+                        .haze(hazeState)
+                        .fillMaxSize(),
+                    state = pullToRefreshState,
+                    isRefreshing = state.isLoading,
+                    onRefresh = { viewModel.synchronize() },
+                    indicator = {
+                        PullToRefreshDefaults.Indicator(
+                            state = pullToRefreshState,
+                            isRefreshing = state.isLoading,
+                            modifier =
+                            Modifier
+                                .align(Alignment.TopCenter)
+                                .padding(top = insets.calculateTopPadding()),
+                        )
+                    },
+                ) {
+                    InnerFollowedChannelsList(
+                        modifier = Modifier.fillMaxSize(),
+                        insets = insets,
+                        items = state.data,
+                        isRefreshing = state.isLoading,
+                        onItemClick = { channel ->
+                            viewModel.onChannelClick(channel.user.id)
+                        },
+                    )
+                }
+            }
         },
     )
 }

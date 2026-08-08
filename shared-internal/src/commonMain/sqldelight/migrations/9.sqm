@@ -1,0 +1,7 @@
+-- Twitch user ids are numeric. Logins could previously sneak into the cache through
+-- `justchatting://user/<login>` deeplinks, and such a row is a permanent poison pill:
+-- it never resolves against helix/users, so `getAllToUpdate` returns it forever and the
+-- whole batch it belongs to fails with a 400, leaving those users without their info.
+-- Drop any row whose id isn't a plain number.
+DELETE FROM UserInfo WHERE `id` GLOB '*[^0-9]*' OR `id` = '';
+DELETE FROM User WHERE `id` GLOB '*[^0-9]*' OR `id` = '';

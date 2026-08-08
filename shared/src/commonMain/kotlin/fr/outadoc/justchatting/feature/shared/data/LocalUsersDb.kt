@@ -8,6 +8,7 @@ import fr.outadoc.justchatting.feature.shared.domain.LocalUsersApi
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logDebug
+import fr.outadoc.justchatting.utils.logging.logWarning
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
@@ -128,6 +129,14 @@ internal class LocalUsersDb(
         userId: String,
         visitedAt: Instant?,
     ) = withContext(dispatchersProvider.io) {
+        if (!userId.isValidUserId()) {
+            // A login (or anything else that isn't a Twitch user id) would never resolve against
+            // helix/users, so it would sit in the "needs updating" set forever and fail every
+            // batch it is part of, leaving the other users of that batch without their info.
+            logWarning<LocalUsersDb> { "Refusing to save user with invalid id: $userId" }
+            return@withContext
+        }
+
         val now = clock.now()
         userQueries.transaction {
             userQueries.ensureCreated(
@@ -188,6 +197,13 @@ internal class LocalUsersDb(
 
         updatedAt == null || updatedAt < minAcceptableCacheDate.toEpochMilliseconds()
     }
+
+    /**
+     * Twitch user ids are numeric strings. Anything else — most commonly a login, which is what
+     * `justchatting://user/<segment>` deeplinks carry when they're typed by hand — must not make
+     * it into the cache. See the matching cleanup in migration `9.sqm`.
+     */
+    private fun String.isValidUserId(): Boolean = isNotEmpty() && all { char -> char.isDigit() }
 
     private companion object {
         val MaxUserCacheLife = 1.days

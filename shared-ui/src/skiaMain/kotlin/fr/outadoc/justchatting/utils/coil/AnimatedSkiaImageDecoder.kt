@@ -77,8 +77,17 @@ private class AnimatedSkiaImage(
     override val width: Int = codec.width
     override val height: Int = codec.height
 
+    /**
+     * An animation that loops forever holds no state that a second target could disturb: which
+     * frame is visible is a pure function of the clock, and every frame is decoded up front. That
+     * lets Coil keep it in the memory cache, so the same emote repeated down a chat is decoded
+     * once rather than once per occurrence.
+     *
+     * An animation that ends does keep meaningful state — it would be handed to a new target
+     * already finished, and frozen on its last frame — so it stays unshareable.
+     */
     override val shareable: Boolean
-        get() = false
+        get() = repetitionCount < 0
 
     private val imageInfo =
         ImageInfo(
@@ -97,7 +106,11 @@ private class AnimatedSkiaImage(
     private val frameCount: Int = codec.frameCount
     private val repetitionCount: Int = codec.repetitionCount
 
-    private val frameDurations: IntArray
+    /** How far into a play through, in milliseconds, each frame appears. */
+    private val frameStartOffsets: LongArray
+
+    /** How long a single play through lasts, in milliseconds. */
+    private val totalDuration: Long
 
     /**
      * Whether frame `index - 1` may be handed to Skia as the starting point for decoding frame
@@ -107,14 +120,17 @@ private class AnimatedSkiaImage(
     private val canBlendOverPreviousFrame: BooleanArray
 
     init {
-        // Reading this rebuilds the whole array natively, so read it once and keep only the two
+        // Reading this rebuilds the whole array natively, so read it once and keep only the
         // things we actually need from it afterwards.
         val framesInfo: Array<AnimationFrameInfo> = codec.framesInfo
 
-        frameDurations =
-            IntArray(frameCount) { index ->
-                framesInfo.getOrNull(index)?.safeFrameDuration ?: DEFAULT_FRAME_DURATION
-            }
+        frameStartOffsets = LongArray(frameCount)
+        var offset = 0L
+        for (index in 0 until frameCount) {
+            frameStartOffsets[index] = offset
+            offset += framesInfo.getOrNull(index)?.safeFrameDuration ?: DEFAULT_FRAME_DURATION
+        }
+        totalDuration = offset
 
         canBlendOverPreviousFrame =
             BooleanArray(frameCount) { index ->
@@ -143,10 +159,8 @@ private class AnimatedSkiaImage(
 
     private var invalidateTick by mutableIntStateOf(0)
 
-    private var currentRepetitionStartTime: TimeSource.Monotonic.ValueTimeMark? = null
-    private var currentRepetitionCount = 0
-    private var lastDrawnFrameIndex = 0
-    private var isAnimationComplete = false
+    /** When the animation first became visible. Which frame to draw is derived purely from this. */
+    private var animationStartTime: TimeSource.Monotonic.ValueTimeMark? = null
 
     override val size: Long =
         run {
@@ -165,66 +179,39 @@ private class AnimatedSkiaImage(
             return
         }
 
-        if (frameCount == 1) {
+        if (frameCount == 1 || totalDuration <= 0L) {
             // This is a static image, simply draw it.
             canvas.drawFrame(0)
             return
         }
 
-        if (isAnimationComplete) {
+        val startTime =
+            animationStartTime
+                ?: TimeSource.Monotonic.markNow().also { animationStartTime = it }
+        val elapsedTime = startTime.elapsedNow().inWholeMilliseconds
+
+        // A repetition count of -1 means the animation loops forever. Otherwise the count excludes
+        // the first play through, so we play it through repetitionCount + 1 times in total.
+        if (repetitionCount >= 0 && elapsedTime >= totalDuration * (repetitionCount + 1L)) {
             // The animation is complete, freeze on the last frame.
-            canvas.drawFrame(lastDrawnFrameIndex)
+            canvas.drawFrame(frameCount - 1)
             return
         }
 
-        val startTime =
-            currentRepetitionStartTime
-                ?: TimeSource.Monotonic.markNow().also { currentRepetitionStartTime = it }
-        val elapsedTime = startTime.elapsedNow().inWholeMilliseconds
+        canvas.drawFrame(frameIndexAt(positionInPlayThrough = elapsedTime % totalDuration))
 
-        var accumulatedDuration = 0
-        var frameIndexToDraw = frameCount - 1
+        // Increment this value to force the image to be redrawn.
+        invalidateTick++
+    }
 
-        // Find the right frame to draw based on the elapsed time.
-        for (index in frameDurations.indices) {
-            if (accumulatedDuration > elapsedTime) {
-                frameIndexToDraw = (index - 1).coerceAtLeast(0)
-                break
+    /** The frame that should be visible [positionInPlayThrough] milliseconds into a play through. */
+    private fun frameIndexAt(positionInPlayThrough: Long): Int {
+        for (index in 1 until frameCount) {
+            if (frameStartOffsets[index] > positionInPlayThrough) {
+                return index - 1
             }
-
-            accumulatedDuration += frameDurations[index]
         }
-
-        // Remember the last frame we drew; the next time we draw, we'll start from here.
-        lastDrawnFrameIndex = frameIndexToDraw
-
-        // Check if we've reached the last frame of the last repetition. If so, we're done.
-        // A repetition count of -1 means the animation loops forever; 0 means it is played
-        // through exactly once, as the count excludes the first play through.
-        isAnimationComplete = repetitionCount >= 0 &&
-            currentRepetitionCount >= repetitionCount &&
-            frameIndexToDraw == (frameCount - 1)
-
-        canvas.drawFrame(frameIndexToDraw)
-
-        // We still need to wait for the last frame's duration before we start with the next
-        // repetition. We only ever land on the last frame when the loop above ran to completion,
-        // in which case accumulatedDuration already covers every frame, including that one.
-        val drewLastFrame = frameIndexToDraw == frameCount - 1
-        val hasLastFrameDurationElapsed = elapsedTime >= accumulatedDuration
-
-        if (!isAnimationComplete && drewLastFrame && hasLastFrameDurationElapsed) {
-            // We've reached the last frame of the current repetition, but we can still loop.
-            // Reset the state and start over from the first frame.
-            lastDrawnFrameIndex = 0
-            currentRepetitionCount++
-            currentRepetitionStartTime = null
-        }
-
-        if (!isAnimationComplete) {
-            // Increment this value to force the image to be redrawn.
-            invalidateTick++
-        }
+        return frameCount - 1
     }
 
     /**

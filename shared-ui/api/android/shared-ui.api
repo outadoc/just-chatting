@@ -449,7 +449,6 @@ public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/Comp
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$LiveTimelineScreenKt;
 	public fun <init> ()V
 	public final fun getLambda$-2000394489$shared_ui_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$1251243568$shared_ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$LiveTimelineSegmentKt {

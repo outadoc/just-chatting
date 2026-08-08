@@ -7,8 +7,8 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import dev.jordond.connectivity.Connectivity
 import fr.outadoc.justchatting.data.db.AppDatabase
-import fr.outadoc.justchatting.feature.auth.data.AuthCallbackWebServer
-import fr.outadoc.justchatting.feature.auth.data.NoopAuthCallbackWebServer
+import fr.outadoc.justchatting.feature.auth.data.LocalCallbackWebServer
+import fr.outadoc.justchatting.feature.auth.data.NoopLocalCallbackWebServer
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
@@ -61,7 +61,7 @@ internal actual val platformModule: Module
 
             single<LogRepository> { NoopLogRepository() }
             single<AppVersionNameProvider> { AppleAppVersionNameProvider() }
-            single<AuthCallbackWebServer> { NoopAuthCallbackWebServer() }
+            single<LocalCallbackWebServer> { NoopLocalCallbackWebServer() }
             single<Connectivity> {
                 Connectivity {
                     autoStart = true

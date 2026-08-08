@@ -8,8 +8,8 @@ import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import dev.jordond.connectivity.Connectivity
 import fr.outadoc.justchatting.AppInfo
 import fr.outadoc.justchatting.data.db.AppDatabase
-import fr.outadoc.justchatting.feature.auth.data.AuthCallbackWebServer
-import fr.outadoc.justchatting.feature.auth.data.KtorAuthCallbackWebServer
+import fr.outadoc.justchatting.feature.auth.data.KtorLocalCallbackWebServer
+import fr.outadoc.justchatting.feature.auth.data.LocalCallbackWebServer
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
@@ -70,7 +70,7 @@ internal actual val platformModule: Module
             single<BaseHttpClientProvider> { DesktopHttpClientProvider(get(), get()) }
             single<LogRepository> { NoopLogRepository() }
             single<AppVersionNameProvider> { DesktopAppVersionNameProvider() }
-            single<AuthCallbackWebServer> { KtorAuthCallbackWebServer(get()) }
+            single<LocalCallbackWebServer> { KtorLocalCallbackWebServer(get(), get()) }
             single<Connectivity> {
                 Connectivity {
                     autoStart = true

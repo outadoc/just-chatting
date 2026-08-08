@@ -43,7 +43,7 @@ internal fun RaidGoCard(
         modifier = modifier,
         onClick = {
             uriHandler.openUri(
-                createChannelDeeplink(raid.targetLogin).toString(),
+                createChannelDeeplink(raid.targetId).toString(),
             )
         },
         colors =

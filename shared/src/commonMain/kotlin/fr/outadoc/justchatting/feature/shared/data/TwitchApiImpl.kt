@@ -164,7 +164,7 @@ internal class TwitchApiImpl(
             .chunked(MAX_PAGE_SIZE_DEFAULT)
             .flatMap { chunkOfLogins ->
                 twitchClient
-                    .getUsersById(chunkOfLogins)
+                    .getUsersByLogin(chunkOfLogins)
                     .fold(
                         onSuccess = { response ->
                             response.data.map { user ->

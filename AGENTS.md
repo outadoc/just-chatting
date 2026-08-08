@@ -87,3 +87,13 @@ SQLDelight schema lives in `shared-internal/src/commonMain/sqldelight/`. The gen
 ### ABI files
 
 Shared modules expose ABI dump files in their `abi/` directories. Run `./gradlew updateKotlinAbi` after any public API change and commit the updated dumps alongside the code change.
+
+## Live testing on desktop
+
+`./gradlew :app-desktop:run` is the fastest way to see a change working or investigate a bug live — it launches a JVM window on the host without needing an emulator/device, and logs are printed directly to stdout in the terminal running Gradle.
+
+Desktop has no OS-level deeplink handling, so instead of real `justchatting://` deeplinks, `KtorLocalCallbackWebServer` (`shared/src/desktopMain/.../feature/auth/data/KtorLocalCallbackWebServer.kt`) exposes local HTTP routes on port 45563 that mirror the app's deeplinks and feed them through the same `DeeplinkParser`/`MainRouterViewModel` path as a real deeplink would. To open a specific channel while the app is running:
+
+```bash
+curl "http://localhost:45563/user/<login>"
+```

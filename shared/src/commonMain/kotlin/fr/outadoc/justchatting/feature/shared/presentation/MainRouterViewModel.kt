@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.feature.shared.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eygraber.uri.Uri
-import fr.outadoc.justchatting.feature.auth.data.AuthCallbackWebServer
+import fr.outadoc.justchatting.feature.auth.data.LocalCallbackWebServer
 import fr.outadoc.justchatting.feature.deeplink.Deeplink
 import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
@@ -25,7 +25,7 @@ import kotlin.time.Duration.Companion.seconds
 public class MainRouterViewModel internal constructor(
     private val authRepository: AuthRepository,
     private val deeplinkParser: DeeplinkParser,
-    private val authCallbackWebServer: AuthCallbackWebServer,
+    private val localCallbackWebServer: LocalCallbackWebServer,
 ) : ViewModel(),
     DeeplinkReceiver {
     public sealed class State {
@@ -61,14 +61,16 @@ public class MainRouterViewModel internal constructor(
                 }
             }.onEach { state ->
                 when (state) {
-                    is State.LoggedOut -> {
-                        authCallbackWebServer.start()
-                    }
-
-                    is State.Loading,
+                    // Keep the local web server running whenever there's a user-facing screen to
+                    // navigate, so it can also be used to inject deeplinks for local testing.
+                    is State.LoggedOut,
                     is State.LoggedIn,
                     -> {
-                        authCallbackWebServer.stop()
+                        localCallbackWebServer.start()
+                    }
+
+                    is State.Loading -> {
+                        localCallbackWebServer.stop()
                     }
                 }
             }.stateIn(
@@ -82,7 +84,7 @@ public class MainRouterViewModel internal constructor(
 
     public fun onStart() {
         viewModelScope.launch {
-            authCallbackWebServer.receivedUris.collect { uri ->
+            localCallbackWebServer.receivedUris.collect { uri ->
                 onDeeplinkReceived(uri)
             }
         }

@@ -11,6 +11,7 @@ import coil3.decode.Decoder
 import coil3.decode.ImageSource
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
+import coil3.request.transformations
 import okio.BufferedSource
 import okio.ByteString.Companion.encodeUtf8
 import okio.use
@@ -50,6 +51,13 @@ internal class AnimatedSkiaImageDecoder(
             options: Options,
             imageLoader: ImageLoader,
         ): Decoder? {
+            // Coil can only apply transformations to a BitmapImage, and asking it to convert one
+            // of ours fails outright on non-Android platforms. Leave these requests to the default
+            // decoder, which will produce a static image of the first frame.
+            if (options.transformations.isNotEmpty()) {
+                return null
+            }
+
             if (!isGif(result.source.source()) && !isAnimatedWebP(result.source.source())) {
                 return null
             }
@@ -63,9 +71,15 @@ internal class AnimatedSkiaImageDecoder(
 }
 
 private class AnimatedSkiaImage(
-    private val codec: Codec,
+    codec: Codec,
     prerenderFrames: Boolean,
 ) : Image {
+    override val width: Int = codec.width
+    override val height: Int = codec.height
+
+    override val shareable: Boolean
+        get() = false
+
     private val imageInfo =
         ImageInfo(
             colorInfo =
@@ -74,42 +88,58 @@ private class AnimatedSkiaImage(
                 alphaType = ColorAlphaType.UNPREMUL,
                 colorSpace = ColorSpace.sRGB,
             ),
-            width = codec.width,
-            height = codec.height,
+            width = width,
+            height = height,
         )
 
     // Each of these is a native call that reallocates its result on every access, so read them
     // once here rather than from within draw().
     private val frameCount: Int = codec.frameCount
     private val repetitionCount: Int = codec.repetitionCount
-    private val framesInfo: Array<AnimationFrameInfo> = codec.framesInfo
 
-    private val frameDurations: IntArray =
-        IntArray(frameCount) { index ->
-            framesInfo.getOrNull(index)?.safeFrameDuration ?: DEFAULT_FRAME_DURATION
-        }
+    private val frameDurations: IntArray
 
     /**
      * Whether frame `index - 1` may be handed to Skia as the starting point for decoding frame
      * `index`. Skia rejects a prior frame that was disposed with
      * [AnimationDisposalMode.RESTORE_PREVIOUS], as it doesn't contribute to the next frame.
      */
-    private val canBlendOverPreviousFrame: BooleanArray =
-        BooleanArray(frameCount) { index ->
-            val previousFrame = framesInfo.getOrNull(index - 1)
-            previousFrame != null &&
-                previousFrame.disposalMethod != AnimationDisposalMode.RESTORE_PREVIOUS
-        }
+    private val canBlendOverPreviousFrame: BooleanArray
 
-    private val bitmap = Bitmap().apply { allocPixels(codec.imageInfo) }
+    init {
+        // Reading this rebuilds the whole array natively, so read it once and keep only the two
+        // things we actually need from it afterwards.
+        val framesInfo: Array<AnimationFrameInfo> = codec.framesInfo
 
-    /** Index of the frame currently held in [bitmap], or [NO_PRIOR_FRAME] if it holds none. */
-    private var bitmapFrameIndex: Int = NO_PRIOR_FRAME
+        frameDurations =
+            IntArray(frameCount) { index ->
+                framesInfo.getOrNull(index)?.safeFrameDuration ?: DEFAULT_FRAME_DURATION
+            }
+
+        canBlendOverPreviousFrame =
+            BooleanArray(frameCount) { index ->
+                val previousFrame = framesInfo.getOrNull(index - 1)
+                previousFrame != null &&
+                    previousFrame.disposalMethod != AnimationDisposalMode.RESTORE_PREVIOUS
+            }
+    }
+
+    /**
+     * Decodes frames on demand. Released as soon as there is nothing left to decode, as it holds
+     * on to native memory that would otherwise stay alive for as long as the image does.
+     */
+    private var frameDecoder: FrameDecoder? = FrameDecoder(codec, imageInfo)
 
     private val frames: Array<SkiaImage?> =
         Array(frameCount) { index ->
             if (prerenderFrames) decodeFrame(index) else null
         }
+
+    init {
+        if (prerenderFrames) {
+            releaseFrameDecoder()
+        }
+    }
 
     private var invalidateTick by mutableIntStateOf(0)
 
@@ -118,24 +148,16 @@ private class AnimatedSkiaImage(
     private var lastDrawnFrameIndex = 0
     private var isAnimationComplete = false
 
-    override val size: Long
-        get() {
-            var size = codec.imageInfo.computeMinByteSize().toLong()
-            if (size <= 0L) {
+    override val size: Long =
+        run {
+            var bytesPerFrame = imageInfo.computeMinByteSize().toLong()
+            if (bytesPerFrame <= 0L) {
                 // Estimate 4 bytes per pixel.
-                size = 4L * codec.width * codec.height
+                bytesPerFrame = 4L * width * height
             }
-            return size.coerceAtLeast(0)
+            // Every frame is kept once it has been decoded, so they all count towards our size.
+            (bytesPerFrame * frameCount.coerceAtLeast(1)).coerceAtLeast(0)
         }
-
-    override val width: Int
-        get() = codec.width
-
-    override val height: Int
-        get() = codec.height
-
-    override val shareable: Boolean
-        get() = false
 
     override fun draw(canvas: Canvas) {
         if (frameCount == 0) {
@@ -205,11 +227,59 @@ private class AnimatedSkiaImage(
         }
     }
 
-    private fun decodeFrame(frameIndex: Int): SkiaImage {
+    /**
+     * Decodes a single frame, or returns null if it can't be decoded. A frame we failed to decode
+     * is simply not drawn, so one bad frame costs us that frame rather than the whole image.
+     */
+    private fun decodeFrame(frameIndex: Int): SkiaImage? {
+        val frameDecoder = frameDecoder ?: return null
+        return try {
+            frameDecoder.decodeFrame(
+                frameIndex = frameIndex,
+                canBlendOverPreviousFrame = canBlendOverPreviousFrame[frameIndex],
+            )
+        } catch (e: RuntimeException) {
+            // Codec throws these at us for frames it can't make sense of.
+            null
+        }
+    }
+
+    private fun releaseFrameDecoder() {
+        frameDecoder?.close()
+        frameDecoder = null
+    }
+
+    private fun Canvas.drawFrame(frameIndex: Int) {
+        val frame = frames[frameIndex] ?: decodeFrame(frameIndex)?.also { frames[frameIndex] = it }
+        drawImage(
+            image = frame ?: return,
+            left = 0f,
+            top = 0f,
+        )
+    }
+}
+
+/**
+ * Decodes frames out of a [Codec] into rasterised images, reusing a single [Bitmap] as scratch
+ * space. Holds native memory for as long as it is open.
+ */
+private class FrameDecoder(
+    private val codec: Codec,
+    private val imageInfo: ImageInfo,
+) : AutoCloseable {
+    private val bitmap = Bitmap().apply { allocPixels(codec.imageInfo) }
+
+    /** Index of the frame currently held in [bitmap], or [NO_PRIOR_FRAME] if it holds none. */
+    private var bitmapFrameIndex: Int = NO_PRIOR_FRAME
+
+    fun decodeFrame(
+        frameIndex: Int,
+        canBlendOverPreviousFrame: Boolean,
+    ): SkiaImage? {
         // Skia has to decode the whole chain of frames this one depends on, unless we can tell it
         // that the destination bitmap already holds the frame right before this one.
         val priorFrame =
-            if (canBlendOverPreviousFrame[frameIndex] && bitmapFrameIndex == frameIndex - 1) {
+            if (canBlendOverPreviousFrame && bitmapFrameIndex == frameIndex - 1) {
                 bitmapFrameIndex
             } else {
                 NO_PRIOR_FRAME
@@ -229,20 +299,17 @@ private class AnimatedSkiaImage(
 
         bitmapFrameIndex = frameIndex
 
+        val pixels = bitmap.readPixels(imageInfo, imageInfo.minRowBytes) ?: return null
         return SkiaImage.makeRaster(
             imageInfo = imageInfo,
-            bytes = bitmap.readPixels(imageInfo, imageInfo.minRowBytes)!!,
+            bytes = pixels,
             rowBytes = imageInfo.minRowBytes,
         )
     }
 
-    private fun Canvas.drawFrame(frameIndex: Int) {
-        val frame = frames[frameIndex] ?: decodeFrame(frameIndex).also { frames[frameIndex] = it }
-        drawImage(
-            image = frame,
-            left = 0f,
-            top = 0f,
-        )
+    override fun close() {
+        bitmap.close()
+        codec.close()
     }
 }
 

@@ -226,13 +226,6 @@ jobs:
         id: version
         run: echo "::set-output name=version::$(git rev-list HEAD --count)"
 
-      - name: Install Flatpak tooling
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y flatpak flatpak-builder
-          flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
-          flatpak install --user -y flathub org.freedesktop.Platform//25.08 org.freedesktop.Sdk//25.08
-
       - name: Build AppImage
         run: |
           ./gradlew app-desktop:packageAppImage \
@@ -243,22 +236,11 @@ jobs:
           mv app-desktop/build/compose/binaries/main/AppImage/*.AppImage \
             "JustChatting-linux-amd64-${{ steps.version.outputs.version }}.AppImage"
 
-      - name: Build Flatpak
-        run: |
-          ./gradlew app-desktop:packageFlatpak \
-            "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
-            "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" \
-            "-PenableLogging=false"
-
-          mv app-desktop/build/compose/binaries/main/flatpak/*.flatpak \
-            "JustChatting-linux-amd64-${{ steps.version.outputs.version }}.flatpak"
-
       - name: Upload packages to GitHub
         uses: actions/upload-artifact@v7.0.1
         with:
           path: |
             JustChatting-linux-amd64-${{ steps.version.outputs.version }}.AppImage
-            JustChatting-linux-amd64-${{ steps.version.outputs.version }}.flatpak
           name: build-linux-amd64
 
       - name: Update release
@@ -266,7 +248,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release: ${{ github.event.release.name }}
-          files: "JustChatting-linux-amd64-${{ steps.version.outputs.version }}.AppImage JustChatting-linux-amd64-${{ steps.version.outputs.version }}.flatpak"
+          files: "JustChatting-linux-amd64-${{ steps.version.outputs.version }}.AppImage"
 
   deploy-android:
     name: Deploy Android app

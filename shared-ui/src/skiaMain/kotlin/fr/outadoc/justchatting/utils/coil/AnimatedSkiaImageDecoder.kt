@@ -14,6 +14,7 @@ import coil3.request.Options
 import okio.BufferedSource
 import okio.ByteString.Companion.encodeUtf8
 import okio.use
+import org.jetbrains.skia.AnimationDisposalMode
 import org.jetbrains.skia.AnimationFrameInfo
 import org.jetbrains.skia.Bitmap
 import org.jetbrains.skia.Codec
@@ -23,6 +24,7 @@ import org.jetbrains.skia.ColorSpace
 import org.jetbrains.skia.ColorType
 import org.jetbrains.skia.Data
 import org.jetbrains.skia.ImageInfo
+import kotlin.experimental.and
 import kotlin.time.TimeSource
 import org.jetbrains.skia.Image as SkiaImage
 
@@ -48,7 +50,7 @@ internal class AnimatedSkiaImageDecoder(
             options: Options,
             imageLoader: ImageLoader,
         ): Decoder? {
-            if (!isGif(result.source.source()) && !isWebP(result.source.source())) {
+            if (!isGif(result.source.source()) && !isAnimatedWebP(result.source.source())) {
                 return null
             }
 
@@ -76,9 +78,36 @@ private class AnimatedSkiaImage(
             height = codec.height,
         )
 
+    // Each of these is a native call that reallocates its result on every access, so read them
+    // once here rather than from within draw().
+    private val frameCount: Int = codec.frameCount
+    private val repetitionCount: Int = codec.repetitionCount
+    private val framesInfo: Array<AnimationFrameInfo> = codec.framesInfo
+
+    private val frameDurations: IntArray =
+        IntArray(frameCount) { index ->
+            framesInfo.getOrNull(index)?.safeFrameDuration ?: DEFAULT_FRAME_DURATION
+        }
+
+    /**
+     * Whether frame `index - 1` may be handed to Skia as the starting point for decoding frame
+     * `index`. Skia rejects a prior frame that was disposed with
+     * [AnimationDisposalMode.RESTORE_PREVIOUS], as it doesn't contribute to the next frame.
+     */
+    private val canBlendOverPreviousFrame: BooleanArray =
+        BooleanArray(frameCount) { index ->
+            val previousFrame = framesInfo.getOrNull(index - 1)
+            previousFrame != null &&
+                previousFrame.disposalMethod != AnimationDisposalMode.RESTORE_PREVIOUS
+        }
+
     private val bitmap = Bitmap().apply { allocPixels(codec.imageInfo) }
-    private val frames =
-        Array(codec.frameCount) { index ->
+
+    /** Index of the frame currently held in [bitmap], or [NO_PRIOR_FRAME] if it holds none. */
+    private var bitmapFrameIndex: Int = NO_PRIOR_FRAME
+
+    private val frames: Array<SkiaImage?> =
+        Array(frameCount) { index ->
             if (prerenderFrames) decodeFrame(index) else null
         }
 
@@ -109,12 +138,12 @@ private class AnimatedSkiaImage(
         get() = false
 
     override fun draw(canvas: Canvas) {
-        if (codec.frameCount == 0) {
+        if (frameCount == 0) {
             // The image is empty, nothing to draw.
             return
         }
 
-        if (codec.frameCount == 1) {
+        if (frameCount == 1) {
             // This is a static image, simply draw it.
             canvas.drawFrame(0)
             return
@@ -132,31 +161,35 @@ private class AnimatedSkiaImage(
         val elapsedTime = startTime.elapsedNow().inWholeMilliseconds
 
         var accumulatedDuration = 0
-        var frameIndexToDraw = codec.frameCount - 1
+        var frameIndexToDraw = frameCount - 1
 
         // Find the right frame to draw based on the elapsed time.
-        for ((index, frame) in codec.framesInfo.withIndex()) {
+        for (index in frameDurations.indices) {
             if (accumulatedDuration > elapsedTime) {
                 frameIndexToDraw = (index - 1).coerceAtLeast(0)
                 break
             }
 
-            accumulatedDuration += frame.safeFrameDuration
+            accumulatedDuration += frameDurations[index]
         }
 
         // Remember the last frame we drew; the next time we draw, we'll start from here.
         lastDrawnFrameIndex = frameIndexToDraw
 
         // Check if we've reached the last frame of the last repetition. If so, we're done.
-        isAnimationComplete = codec.repetitionCount in 1..currentRepetitionCount &&
-            frameIndexToDraw == (codec.frameCount - 1)
+        // A repetition count of -1 means the animation loops forever; 0 means it is played
+        // through exactly once, as the count excludes the first play through.
+        isAnimationComplete = repetitionCount >= 0 &&
+            currentRepetitionCount >= repetitionCount &&
+            frameIndexToDraw == (frameCount - 1)
 
         canvas.drawFrame(frameIndexToDraw)
 
-        // We still need to wait for the last frame's duration before we start with the next repetition.
-        val drewLastFrame = frameIndexToDraw == codec.frameCount - 1
-        val lastFrameDuration = codec.framesInfo[frameIndexToDraw].safeFrameDuration
-        val hasLastFrameDurationElapsed = elapsedTime >= accumulatedDuration + lastFrameDuration
+        // We still need to wait for the last frame's duration before we start with the next
+        // repetition. We only ever land on the last frame when the loop above ran to completion,
+        // in which case accumulatedDuration already covers every frame, including that one.
+        val drewLastFrame = frameIndexToDraw == frameCount - 1
+        val hasLastFrameDurationElapsed = elapsedTime >= accumulatedDuration
 
         if (!isAnimationComplete && drewLastFrame && hasLastFrameDurationElapsed) {
             // We've reached the last frame of the current repetition, but we can still loop.
@@ -172,20 +205,41 @@ private class AnimatedSkiaImage(
         }
     }
 
-    private fun decodeFrame(frameIndex: Int): ByteArray {
-        codec.readPixels(bitmap, frameIndex)
-        return bitmap.readPixels(imageInfo, imageInfo.minRowBytes)!!
+    private fun decodeFrame(frameIndex: Int): SkiaImage {
+        // Skia has to decode the whole chain of frames this one depends on, unless we can tell it
+        // that the destination bitmap already holds the frame right before this one.
+        val priorFrame =
+            if (canBlendOverPreviousFrame[frameIndex] && bitmapFrameIndex == frameIndex - 1) {
+                bitmapFrameIndex
+            } else {
+                NO_PRIOR_FRAME
+            }
+
+        // Until readPixels returns, we can't say what the bitmap holds.
+        bitmapFrameIndex = NO_PRIOR_FRAME
+
+        try {
+            codec.readPixels(bitmap, frameIndex, priorFrame)
+        } catch (e: IllegalArgumentException) {
+            if (priorFrame == NO_PRIOR_FRAME) throw e
+
+            // Skia refused the frame we offered as a starting point; decode from scratch instead.
+            codec.readPixels(bitmap, frameIndex, NO_PRIOR_FRAME)
+        }
+
+        bitmapFrameIndex = frameIndex
+
+        return SkiaImage.makeRaster(
+            imageInfo = imageInfo,
+            bytes = bitmap.readPixels(imageInfo, imageInfo.minRowBytes)!!,
+            rowBytes = imageInfo.minRowBytes,
+        )
     }
 
     private fun Canvas.drawFrame(frameIndex: Int) {
         val frame = frames[frameIndex] ?: decodeFrame(frameIndex).also { frames[frameIndex] = it }
         drawImage(
-            image =
-            SkiaImage.makeRaster(
-                imageInfo = imageInfo,
-                bytes = frame,
-                rowBytes = imageInfo.minRowBytes,
-            ),
+            image = frame,
             left = 0f,
             top = 0f,
         )
@@ -196,6 +250,9 @@ private val AnimationFrameInfo.safeFrameDuration: Int
     get() = duration.let { if (it <= 0) DEFAULT_FRAME_DURATION else it }
 
 private const val DEFAULT_FRAME_DURATION = 100
+
+/** Tells [Codec.readPixels] that the destination bitmap holds no frame it can build upon. */
+private const val NO_PRIOR_FRAME = -1
 
 // Copied from coil3.gif
 
@@ -219,3 +276,11 @@ private fun isGif(source: BufferedSource): Boolean = source.rangeEquals(0, GIF_H
  */
 private fun isWebP(source: BufferedSource): Boolean = source.rangeEquals(0, WEBP_HEADER_RIFF) &&
     source.rangeEquals(8, WEBP_HEADER_WEBP)
+
+/**
+ * Return 'true' if the [source] contains an animated WebP image. The [source] is not consumed.
+ */
+private fun isAnimatedWebP(source: BufferedSource): Boolean = isWebP(source) &&
+    source.rangeEquals(12, WEBP_HEADER_VPX8) &&
+    source.request(21) &&
+    (source.buffer[20] and 0b00000010) > 0

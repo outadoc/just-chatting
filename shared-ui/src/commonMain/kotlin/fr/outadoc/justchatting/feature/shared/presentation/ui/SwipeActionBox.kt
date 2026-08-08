@@ -13,6 +13,7 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -20,6 +21,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun SwipeActionBox(
@@ -30,21 +32,20 @@ internal fun SwipeActionBox(
     content: @Composable () -> Unit,
 ) {
     val direction: SwipeToDismissBoxValue = SwipeToDismissBoxValue.EndToStart
-    val dismissState: SwipeToDismissBoxState =
-        rememberSwipeToDismissBoxState(
-            confirmValueChange = { value ->
-                if (value == direction) {
-                    onSwiped()
-                }
-                value != direction
-            },
-        )
+    val dismissState: SwipeToDismissBoxState = rememberSwipeToDismissBoxState()
+    val coroutineScope = rememberCoroutineScope()
 
     SwipeToDismissBox(
         modifier = modifier,
         state = dismissState,
         enableDismissFromStartToEnd = false,
         enableDismissFromEndToStart = enabled,
+        onDismiss = { value ->
+            if (value == direction) {
+                onSwiped()
+            }
+            coroutineScope.launch { dismissState.reset() }
+        },
         backgroundContent = {
             val scale by animateFloatAsState(
                 when (dismissState.targetValue) {
@@ -69,9 +70,9 @@ internal fun SwipeActionBox(
             ) {
                 Box(
                     modifier =
-                    Modifier
-                        .scale(scale)
-                        .alpha(scale),
+                        Modifier
+                            .scale(scale)
+                            .alpha(scale),
                 ) {
                     icon()
                 }
@@ -80,10 +81,10 @@ internal fun SwipeActionBox(
         content = {
             val elevation by animateDpAsState(
                 targetValue =
-                when (dismissState.targetValue) {
-                    direction -> 2.dp
-                    else -> 0.dp
-                },
+                    when (dismissState.targetValue) {
+                        direction -> 2.dp
+                        else -> 0.dp
+                    },
                 label = "Action content elevation",
             )
 

@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.keepScreenOn
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.emoji2.text.DefaultEmojiCompatConfig
@@ -45,6 +47,7 @@ public class EmbeddedChatActivity : AppCompatActivity() {
         setContent {
             AppTheme {
                 ChannelChatScreen(
+                    modifier = Modifier.keepScreenOn(),
                     userId = intent.getStringExtra(CHANNEL_USER_ID)!!,
                     isStandalone = true,
                     canNavigateUp = false,

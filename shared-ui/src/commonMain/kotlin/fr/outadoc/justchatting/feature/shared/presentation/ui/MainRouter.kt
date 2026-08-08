@@ -13,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.keepScreenOn
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
@@ -153,6 +154,7 @@ internal fun MainRouter(
                 when (val screen = navigator.currentDestination?.contentKey) {
                     is DetailScreen.Chat -> {
                         ChannelChatScreen(
+                            modifier = Modifier.keepScreenOn(),
                             userId = screen.id,
                             isStandalone = false,
                             canNavigateUp = navigator.canNavigateBack(),

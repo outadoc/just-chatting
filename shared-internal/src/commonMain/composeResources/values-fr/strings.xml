@@ -279,7 +279,7 @@
     <string name="settings_about_update_subtitle_checking">Recherche de mises à jour…</string>
     <string name="settings_about_update_subtitle_error">Impossible de rechercher des mises à jour</string>
     <string name="settings_about_update_subtitle_never">Appuyez pour rechercher la dernière version</string>
-    <string name="settings_about_update_subtitle_upToDate">L\'application est à jour</string>
+    <string name="settings_about_update_subtitle_upToDate">L'application est à jour</string>
     <string name="settings_about_update_title">Rechercher des mises à jour</string>
     <string name="settings_about_version">Version %1$s</string>
     <string name="settings_about_xtra_subtitle">%1$s est basée sur le projet Xtra for Twitch.</string>

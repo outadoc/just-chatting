@@ -79,176 +79,77 @@ jobs:
         env:
           MATCH_PASSWORD: ${{ secrets.FASTLANE_MATCH_PASSWORD }}
 
-  deploy-windows:
-    name: Deploy Windows
-    runs-on: windows-latest
+  deploy-desktop:
+    name: Deploy desktop app (${{ matrix.label }})
+    runs-on: ${{ matrix.os }}
     environment: deploy
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            label: windows-amd64
+            gradle-task: packageMsi
+            dist-dir: app-desktop/build/compose/binaries/main/msi
+            ext: msi
+          - os: macos-26
+            label: macos-aarch64
+            gradle-task: packageDmg
+            dist-dir: app-desktop/build/compose/binaries/main/dmg
+            ext: dmg
+          - os: ubuntu-latest
+            label: linux-amd64
+            gradle-task: packageAppImage
+            dist-dir: app-desktop/build/compose/binaries/main/AppImage
+            ext: AppImage
 
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - name: Set up JDK
-        uses: actions/setup-java@v5
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-
       - name: Validate Gradle wrapper
         uses: gradle/actions/wrapper-validation@v5
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+      - name: Set up Nucleus build environment
+        uses: NucleusFramework/Nucleus/.github/actions/setup-nucleus@main
         with:
-          cache-read-only: false
+          java-version: '21'
 
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y.%m')"
+        shell: bash
 
       - name: Compute unique version code
         id: version
         run: echo "::set-output name=version::$(git rev-list HEAD --count)"
+        shell: bash
 
-      - name: Build packages
+      - name: Build package
         run: |
-          ./gradlew app-desktop:packageMsi "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
+          ./gradlew app-desktop:${{ matrix.gradle-task }} "-PexternalVersionCode=${{ steps.version.outputs.version }}" "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" "-PenableLogging=false"
+        shell: bash
 
-      - name: Compress output
-        uses: thedoctor0/zip-release@0.7.6
-        with:
-          type: 'zip'
-          filename: "JustChatting-windows-amd64-${{ steps.version.outputs.version }}.zip"
-          directory: "app-desktop/build/compose/binaries/main/msi"
+      - name: Rename output
+        shell: bash
+        run: |
+          mv ${{ matrix.dist-dir }}/*.${{ matrix.ext }} \
+            "${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}-${{ steps.version.outputs.version }}.${{ matrix.ext }}"
 
       - name: Upload packages to GitHub
         uses: actions/upload-artifact@v7.0.1
         with:
-          path: "app-desktop/build/compose/binaries/main/msi/JustChatting-windows-amd64-${{ steps.version.outputs.version }}.zip"
-          name: build-windows-amd64
+          path: "${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}-${{ steps.version.outputs.version }}.${{ matrix.ext }}"
+          name: build-${{ matrix.label }}
 
       - name: Update release
         uses: johnwbyrd/update-release@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release: ${{ github.event.release.name }}
-          files: "app-desktop/build/compose/binaries/main/msi/JustChatting-windows-amd64-${{ steps.version.outputs.version }}.zip"
-
-  deploy-desktop-macos:
-    name: Deploy macOS
-    runs-on: macos-26
-    environment: deploy
-
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: Set up JDK
-        uses: actions/setup-java@v5
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-
-      - name: Validate Gradle wrapper
-        uses: gradle/actions/wrapper-validation@v5
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-        with:
-          cache-read-only: false
-
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y.%m')"
-
-      - name: Compute unique version code
-        id: version
-        run: echo "::set-output name=version::$(git rev-list HEAD --count)"
-
-      - name: Build packages
-        run: |
-          ./gradlew app-desktop:packageDmg \
-            "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
-            "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" \
-            "-PenableLogging=false"
-
-      - name: Compress output
-        uses: thedoctor0/zip-release@0.7.6
-        with:
-          type: 'zip'
-          filename: "JustChatting-macos-aarch64-${{ steps.version.outputs.version }}.zip"
-          directory: "app-desktop/build/compose/binaries/main/dmg"
-
-      - name: Upload packages to GitHub
-        uses: actions/upload-artifact@v7.0.1
-        with:
-          path: "app-desktop/build/compose/binaries/main/dmg/JustChatting-macos-aarch64-${{ steps.version.outputs.version }}.zip"
-          name: build-macos-aarch64
-
-      - name: Update release
-        uses: johnwbyrd/update-release@v1.0.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          release: ${{ github.event.release.name }}
-          files: "app-desktop/build/compose/binaries/main/dmg/JustChatting-macos-aarch64-${{ steps.version.outputs.version }}.zip"
-
-  deploy-desktop-linux:
-    name: Deploy Linux app
-    runs-on: ubuntu-latest
-    environment: deploy
-
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: Set up JDK
-        uses: actions/setup-java@v5
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-
-      - name: Validate Gradle wrapper
-        uses: gradle/actions/wrapper-validation@v5
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-        with:
-          cache-read-only: false
-
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y.%m')"
-
-      - name: Compute unique version code
-        id: version
-        run: echo "::set-output name=version::$(git rev-list HEAD --count)"
-
-      - name: Build AppImage
-        run: |
-          ./gradlew app-desktop:packageAppImage \
-            "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
-            "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" \
-            "-PenableLogging=false"
-
-          mv app-desktop/build/compose/binaries/main/AppImage/*.AppImage \
-            "JustChatting-linux-amd64-${{ steps.version.outputs.version }}.AppImage"
-
-      - name: Upload packages to GitHub
-        uses: actions/upload-artifact@v7.0.1
-        with:
-          path: |
-            JustChatting-linux-amd64-${{ steps.version.outputs.version }}.AppImage
-          name: build-linux-amd64
-
-      - name: Update release
-        uses: johnwbyrd/update-release@v1.0.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          release: ${{ github.event.release.name }}
-          files: "JustChatting-linux-amd64-${{ steps.version.outputs.version }}.AppImage"
+          files: "${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}-${{ steps.version.outputs.version }}.${{ matrix.ext }}"
 
   deploy-android:
     name: Deploy Android app

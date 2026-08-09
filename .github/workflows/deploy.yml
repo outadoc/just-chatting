@@ -1,13 +1,11 @@
 name: Deploy apps
 
-on:
-  release:
-    types:
-      - released
+on: create
 
 jobs:
   deploy-ios:
     name: Deploy iOS app
+    if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v')
     environment: deploy
     runs-on: macos-26
 
@@ -81,6 +79,7 @@ jobs:
 
   deploy-desktop:
     name: Deploy desktop app (${{ matrix.label }})
+    if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v')
     runs-on: ${{ matrix.os }}
     environment: deploy
 
@@ -175,13 +174,14 @@ jobs:
         uses: johnwbyrd/update-release@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          release: ${{ github.event.release.name }}
+          release: ${{ github.ref_name }}
           files: |
             ${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}-${{ steps.version.outputs.version }}.${{ matrix.ext }}
             ${{ steps.update-yml.outputs.path }}
 
   deploy-android:
     name: Deploy Android app
+    if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v')
     runs-on: ubuntu-latest
     environment: deploy
 
@@ -241,7 +241,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           files: app-android/build/outputs/bundle/release/app-android-release.aab
-          release: ${{ github.event.release.name }}
+          release: ${{ github.ref_name }}
 
   finalize-release:
     name: Finalize release
@@ -256,6 +256,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release edit "${{ github.event.release.tag_name }}" \
+          gh release edit "${{ github.ref_name }}" \
             --draft=false \
             --repo "${{ github.repository }}"

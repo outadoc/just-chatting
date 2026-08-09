@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.LiveTv
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -33,6 +35,8 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.all_goBack
 import fr.outadoc.justchatting.shared.internal.stream_info
+import fr.outadoc.justchatting.shared.internal.watch_live
+import fr.outadoc.justchatting.utils.core.createChannelExternalLink
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import org.jetbrains.compose.resources.stringResource
 
@@ -48,6 +52,7 @@ internal fun ChatTopAppBar(
     showBackButton: Boolean,
     onNavigateUp: () -> Unit = {},
 ) {
+    val uriHandler = LocalUriHandler.current
     TopAppBar(
         modifier = modifier,
         colors = colors,
@@ -117,6 +122,22 @@ internal fun ChatTopAppBar(
             }
         },
         actions = {
+            user?.let { user ->
+                AccessibleIconButton(
+                    onClick = {
+                        uriHandler.openUri(
+                            createChannelExternalLink(user),
+                        )
+                    },
+                    onClickLabel = stringResource(Res.string.watch_live),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.LiveTv,
+                        contentDescription = null,
+                    )
+                }
+            }
+
             AccessibleIconButton(
                 onClick = { onStreamInfoClicked() },
                 onClickLabel = stringResource(Res.string.stream_info),

@@ -145,6 +145,13 @@ jobs:
           cp "${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}-${{ steps.version.outputs.version }}.${{ matrix.ext }}" \
             "artifacts/release-assets-${{ matrix.label }}/"
 
+      - name: Install modern Bash (macOS)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          brew install bash
+          echo "/opt/homebrew/bin" >> "$GITHUB_PATH"
+
       - name: Generate update metadata
         uses: NucleusFramework/Nucleus/.github/actions/generate-update-yml@main
         with:

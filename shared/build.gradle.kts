@@ -137,6 +137,7 @@ kotlin {
                 implementation(libs.ktor.server.cio)
                 implementation(libs.kotlinx.coroutines.swing)
                 implementation(libs.logback)
+                implementation(libs.nucleus.updater.runtime)
 
                 api(libs.sqldelight.driver.jvm)
             }

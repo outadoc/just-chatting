@@ -138,10 +138,30 @@ jobs:
           mv ${{ matrix.dist-dir }}/*.${{ matrix.ext }} \
             "${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}-${{ steps.version.outputs.version }}.${{ matrix.ext }}"
 
+      - name: Stage artifact for update metadata
+        shell: bash
+        run: |
+          mkdir -p "artifacts/release-assets-${{ matrix.label }}"
+          cp "${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}-${{ steps.version.outputs.version }}.${{ matrix.ext }}" \
+            "artifacts/release-assets-${{ matrix.label }}/"
+
+      - name: Generate update metadata
+        uses: NucleusFramework/Nucleus/.github/actions/generate-update-yml@main
+        with:
+          artifacts-path: artifacts
+          version: "1.0.${{ steps.version.outputs.version }}"
+
+      - name: Locate generated update metadata
+        id: update-yml
+        shell: bash
+        run: echo "path=$(ls artifacts/update-yml/*.yml)" >> "$GITHUB_OUTPUT"
+
       - name: Upload packages to GitHub
         uses: actions/upload-artifact@v7.0.1
         with:
-          path: "${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}-${{ steps.version.outputs.version }}.${{ matrix.ext }}"
+          path: |
+            ${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}-${{ steps.version.outputs.version }}.${{ matrix.ext }}
+            ${{ steps.update-yml.outputs.path }}
           name: build-${{ matrix.label }}
 
       - name: Update release
@@ -149,7 +169,9 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release: ${{ github.event.release.name }}
-          files: "${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}-${{ steps.version.outputs.version }}.${{ matrix.ext }}"
+          files: |
+            ${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}-${{ steps.version.outputs.version }}.${{ matrix.ext }}
+            ${{ steps.update-yml.outputs.path }}
 
   deploy-android:
     name: Deploy Android app

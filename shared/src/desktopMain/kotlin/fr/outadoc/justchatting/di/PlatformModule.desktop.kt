@@ -15,7 +15,9 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.NoopChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.NoopCreateShortcutForChannelUseCase
+import fr.outadoc.justchatting.feature.preferences.presentation.AppUpdateChecker
 import fr.outadoc.justchatting.feature.preferences.presentation.AppVersionNameProvider
+import fr.outadoc.justchatting.feature.preferences.presentation.DesktopAppUpdateChecker
 import fr.outadoc.justchatting.feature.preferences.presentation.DesktopAppVersionNameProvider
 import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.NoopLogRepository
@@ -70,6 +72,7 @@ internal actual val platformModule: Module
             single<BaseHttpClientProvider> { DesktopHttpClientProvider(get(), get()) }
             single<LogRepository> { NoopLogRepository() }
             single<AppVersionNameProvider> { DesktopAppVersionNameProvider() }
+            single<AppUpdateChecker> { DesktopAppUpdateChecker() }
             single<LocalCallbackWebServer> { KtorLocalCallbackWebServer(get(), get()) }
             single<Connectivity> {
                 Connectivity {

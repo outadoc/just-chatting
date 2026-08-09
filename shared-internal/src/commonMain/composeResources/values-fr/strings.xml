@@ -274,6 +274,13 @@
     <string name="settings_about_license_title">Licence</string>
     <string name="settings_about_repo_cd">Voir le code</string>
     <string name="settings_about_repo_title">Contribuer au projet</string>
+    <string name="settings_about_update_cd">Rechercher des mises à jour</string>
+    <string name="settings_about_update_subtitle_available">Mise à jour disponible : version %1$s</string>
+    <string name="settings_about_update_subtitle_checking">Recherche de mises à jour…</string>
+    <string name="settings_about_update_subtitle_error">Impossible de rechercher des mises à jour</string>
+    <string name="settings_about_update_subtitle_never">Appuyez pour rechercher la dernière version</string>
+    <string name="settings_about_update_subtitle_upToDate">L\'application est à jour</string>
+    <string name="settings_about_update_title">Rechercher des mises à jour</string>
     <string name="settings_about_version">Version %1$s</string>
     <string name="settings_about_xtra_subtitle">%1$s est basée sur le projet Xtra for Twitch.</string>
     <string name="settings_about_xtra_title">Basée sur Xtra for Twitch</string>
@@ -314,6 +321,11 @@
     <string name="timeline_openVod_action">Regarder la vidéo</string>
     <string name="timeline_refresh_action_cd">Rafraîchir les données</string>
     <string name="timeline_today_action_cd">Sauter au contenu en direct</string>
+    <string name="update_dialog_cancel">Plus tard</string>
+    <string name="update_dialog_confirm">Installer et redémarrer</string>
+    <string name="update_dialog_downloading">Téléchargement de la mise à jour…</string>
+    <string name="update_dialog_message">La version %1$s est disponible. Installer et redémarrer maintenant ?</string>
+    <string name="update_dialog_title">Mise à jour disponible</string>
     <string name="uptime">En direct depuis %1$s</string>
     <string name="watch_live">Regarder en direct</string>
     <string name="yes">Oui</string>

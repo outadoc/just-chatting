@@ -15,8 +15,10 @@ import fr.outadoc.justchatting.feature.auth.data.NoopLocalCallbackWebServer
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.preferences.presentation.AndroidAppVersionNameProvider
 import fr.outadoc.justchatting.feature.preferences.presentation.AndroidLogRepository
+import fr.outadoc.justchatting.feature.preferences.presentation.AppUpdateChecker
 import fr.outadoc.justchatting.feature.preferences.presentation.AppVersionNameProvider
 import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
+import fr.outadoc.justchatting.feature.preferences.presentation.NoopAppUpdateChecker
 import fr.outadoc.justchatting.utils.http.AndroidHttpClientProvider
 import fr.outadoc.justchatting.utils.http.BaseHttpClientProvider
 import okio.Path.Companion.toPath
@@ -58,6 +60,7 @@ internal actual val platformModule: Module
 
             single<LogRepository> { AndroidLogRepository(get(), get()) }
             single<AppVersionNameProvider> { AndroidAppVersionNameProvider(get()) }
+            single<AppUpdateChecker> { NoopAppUpdateChecker() }
             single<LocalCallbackWebServer> { NoopLocalCallbackWebServer() }
             single<Connectivity> {
                 Connectivity {

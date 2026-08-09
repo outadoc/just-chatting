@@ -118,6 +118,7 @@ ktor-server-websockets = { module = "io.ktor:ktor-server-websockets", version.re
 logback = "ch.qos.logback:logback-classic:1.5.32"
 material-kolor = "com.materialkolor:material-kolor:4.1.1"
 nucleus-core-runtime = { module = "dev.nucleusframework:nucleus.core-runtime", version.ref = "nucleus" }
+nucleus-updater-runtime = { module = "dev.nucleusframework:nucleus.updater-runtime", version.ref = "nucleus" }
 okio = "com.squareup.okio:okio:3.17.0"
 okhttp = "com.squareup.okhttp3:okhttp:5.3.2"
 sqldelight-driver-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }

@@ -274,6 +274,13 @@
     <string name="settings_about_license_title">Licensing</string>
     <string name="settings_about_repo_cd">Browse the code</string>
     <string name="settings_about_repo_title">Contribute to the project</string>
+    <string name="settings_about_update_cd">Check for updates</string>
+    <string name="settings_about_update_subtitle_available">Update available: version %1$s</string>
+    <string name="settings_about_update_subtitle_checking">Checking for updates…</string>
+    <string name="settings_about_update_subtitle_error">Couldn\'t check for updates</string>
+    <string name="settings_about_update_subtitle_never">Tap to check for the latest version</string>
+    <string name="settings_about_update_subtitle_upToDate">You\'re up to date</string>
+    <string name="settings_about_update_title">Check for Updates</string>
     <string name="settings_about_version">Version %1$s</string>
     <string name="settings_about_xtra_subtitle">%1$s is based on the Xtra for Twitch project.</string>
     <string name="settings_about_xtra_title">Based on Xtra for Twitch</string>
@@ -314,6 +321,11 @@
     <string name="timeline_openVod_action">Watch video</string>
     <string name="timeline_refresh_action_cd">Refresh data</string>
     <string name="timeline_today_action_cd">Jump to live content</string>
+    <string name="update_dialog_cancel">Not now</string>
+    <string name="update_dialog_confirm">Install &amp; Restart</string>
+    <string name="update_dialog_downloading">Downloading update…</string>
+    <string name="update_dialog_message">Version %1$s is available. Install and restart now?</string>
+    <string name="update_dialog_title">Update available</string>
     <string name="uptime">Live since %1$s</string>
     <string name="watch_live">Watch live</string>
     <string name="yes">Yes</string>

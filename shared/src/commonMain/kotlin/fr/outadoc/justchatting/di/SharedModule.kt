@@ -111,7 +111,7 @@ internal val sharedModule: Module
             factory<DeeplinkReceiver> { get<MainRouterViewModel>() }
 
             single { MainRouterViewModel(get(), get(), get()) }
-            viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get()) }
+            viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get(), get()) }
             viewModel { ChannelSearchViewModel(get()) }
             viewModel { FollowedChannelsViewModel(get(), get(), get()) }
             viewModel { RecentChannelsViewModel(get()) }

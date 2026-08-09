@@ -32,6 +32,7 @@ public class SettingsViewModel internal constructor(
     private val twitchRepository: TwitchRepository,
     private val authRepository: AuthRepository,
     private val appVersionNameProvider: AppVersionNameProvider,
+    private val appUpdateChecker: AppUpdateChecker,
     private val dispatchersProvider: DispatchersProvider,
 ) : ViewModel() {
     public sealed class Event {
@@ -48,6 +49,8 @@ public class SettingsViewModel internal constructor(
         val appPreferences: AppPreferences = AppPreferences(),
         val appVersionName: String? = null,
         val user: User? = null,
+        val isUpdateCheckSupported: Boolean = false,
+        val updateState: AppUpdateState = AppUpdateState(),
     )
 
     private val _events = MutableSharedFlow<Event>()
@@ -79,11 +82,14 @@ public class SettingsViewModel internal constructor(
                         }
                     }
                 },
-        ) { prefs, user ->
+            appUpdateChecker.state,
+        ) { prefs, user, updateState ->
             State(
                 appPreferences = prefs,
                 user = user,
                 appVersionName = appVersionNameProvider.appVersionName,
+                isUpdateCheckSupported = appUpdateChecker.isSupported,
+                updateState = updateState,
             )
         }.stateIn(
             viewModelScope,
@@ -122,6 +128,20 @@ public class SettingsViewModel internal constructor(
             } catch (e: Exception) {
                 logError<SettingsViewModel>(e) { "Error while reading logs" }
             }
+        }
+    }
+
+    public fun checkForUpdates() {
+        viewModelScope.launch {
+            if (appUpdateChecker.isSupported) {
+                appUpdateChecker.checkForUpdate()
+            }
+        }
+    }
+
+    public fun installUpdate() {
+        viewModelScope.launch {
+            appUpdateChecker.installUpdate()
         }
     }
 }

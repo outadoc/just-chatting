@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -15,9 +16,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import fr.outadoc.justchatting.feature.preferences.presentation.AppUpdateState
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.all_goBack
@@ -32,6 +37,13 @@ import fr.outadoc.justchatting.shared.internal.settings_about_license_subtitle
 import fr.outadoc.justchatting.shared.internal.settings_about_license_title
 import fr.outadoc.justchatting.shared.internal.settings_about_repo_cd
 import fr.outadoc.justchatting.shared.internal.settings_about_repo_title
+import fr.outadoc.justchatting.shared.internal.settings_about_update_cd
+import fr.outadoc.justchatting.shared.internal.settings_about_update_subtitle_available
+import fr.outadoc.justchatting.shared.internal.settings_about_update_subtitle_checking
+import fr.outadoc.justchatting.shared.internal.settings_about_update_subtitle_error
+import fr.outadoc.justchatting.shared.internal.settings_about_update_subtitle_never
+import fr.outadoc.justchatting.shared.internal.settings_about_update_subtitle_upToDate
+import fr.outadoc.justchatting.shared.internal.settings_about_update_title
 import fr.outadoc.justchatting.shared.internal.settings_about_version
 import fr.outadoc.justchatting.shared.internal.settings_about_xtra_subtitle
 import fr.outadoc.justchatting.shared.internal.settings_about_xtra_title
@@ -87,6 +99,7 @@ private fun SettingsSectionAboutContent(
     val viewModel: SettingsViewModel = koinViewModel()
 
     val state by viewModel.state.collectAsState()
+    var showUpdateDialog by remember { mutableStateOf(false) }
 
     LazyColumn(
         modifier = modifier,
@@ -106,6 +119,42 @@ private fun SettingsSectionAboutContent(
                     )
                 },
             )
+        }
+
+        if (state.isUpdateCheckSupported) {
+            item {
+                val updateState = state.updateState
+
+                SettingsText(
+                    modifier = Modifier.padding(itemInsets),
+                    onClick = {
+                        if (updateState.availableVersion != null) {
+                            showUpdateDialog = true
+                        } else {
+                            viewModel.checkForUpdates()
+                        }
+                    },
+                    onClickLabel = stringResource(Res.string.settings_about_update_cd),
+                    title = { Text(text = stringResource(Res.string.settings_about_update_title)) },
+                    subtitle = {
+                        Text(text = updateState.subtitle())
+                    },
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = null,
+                        )
+                    },
+                )
+
+                if (showUpdateDialog) {
+                    UpdateAvailableDialog(
+                        state = updateState,
+                        onConfirm = viewModel::installUpdate,
+                        onDismiss = { showUpdateDialog = false },
+                    )
+                }
+            }
         }
 
         item {
@@ -190,4 +239,19 @@ private fun SettingsSectionAboutContent(
             )
         }
     }
+}
+
+@Composable
+private fun AppUpdateState.subtitle(): String = when {
+    isChecking -> stringResource(Res.string.settings_about_update_subtitle_checking)
+
+    error != null -> stringResource(Res.string.settings_about_update_subtitle_error)
+
+    availableVersion != null -> {
+        stringResource(Res.string.settings_about_update_subtitle_available, availableVersion.orEmpty())
+    }
+
+    hasChecked -> stringResource(Res.string.settings_about_update_subtitle_upToDate)
+
+    else -> stringResource(Res.string.settings_about_update_subtitle_never)
 }

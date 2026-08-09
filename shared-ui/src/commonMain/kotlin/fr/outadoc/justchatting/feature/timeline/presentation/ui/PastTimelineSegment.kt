@@ -70,8 +70,7 @@ internal fun PastTimelineSegment(
         ) {
             Column {
                 Card(
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .combinedClickable(
                             onClick = {
                                 uriHandler.openUri(
@@ -97,8 +96,7 @@ internal fun PastTimelineSegment(
                 }
 
                 Row(
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -112,8 +110,7 @@ internal fun PastTimelineSegment(
 
                     Text(
                         modifier = Modifier.alignByBaseline(),
-                        text =
-                        buildAnnotatedString {
+                        text = buildAnnotatedString {
                             append(segment.startTime.formatHourMinute())
 
                             segment.endTime?.let { endTime ->

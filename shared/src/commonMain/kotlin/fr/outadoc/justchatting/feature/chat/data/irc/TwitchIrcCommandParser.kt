@@ -131,8 +131,7 @@ internal class TwitchIrcCommandParser(
                 ChatEvent.Message.GiftPayForward(
                     timestamp = timestamp,
                     userDisplayName = ircMessage.tags.displayName ?: return null,
-                    priorGifterDisplayName =
-                    ircMessage.tags.priorGifterDisplayName
+                    priorGifterDisplayName = ircMessage.tags.priorGifterDisplayName
                         ?.takeUnless { ircMessage.tags.priorGifterAnonymous },
                 )
             }

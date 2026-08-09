@@ -43,10 +43,9 @@ internal class AppleHttpClientProvider(
 
         install(Logging) {
             level = LogLevel.ALL
-            logger =
-                object : Logger {
-                    override fun log(message: String) = logDebug<HttpClient> { message }
-                }
+            logger = object : Logger {
+                override fun log(message: String) = logDebug<HttpClient> { message }
+            }
         }
 
         install(WebSockets) {

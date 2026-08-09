@@ -78,14 +78,13 @@ nucleus.application {
                 runtimeVersion = "25.08"
                 sdk = "org.freedesktop.Sdk"
 
-                finishArgs =
-                    listOf(
-                        "--share=ipc",
-                        "--socket=x11",
-                        "--socket=wayland",
-                        "--device=dri",
-                        "--share=network",
-                    )
+                finishArgs = listOf(
+                    "--share=ipc",
+                    "--socket=x11",
+                    "--socket=wayland",
+                    "--device=dri",
+                    "--share=network",
+                )
             }
         }
 

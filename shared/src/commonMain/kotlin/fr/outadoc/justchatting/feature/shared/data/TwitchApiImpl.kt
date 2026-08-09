@@ -34,8 +34,7 @@ internal class TwitchApiImpl(
                 Stream(
                     id = stream.id,
                     userId = stream.userId,
-                    category =
-                    if (stream.gameId != null && stream.gameName != null) {
+                    category = if (stream.gameId != null && stream.gameName != null) {
                         StreamCategory(
                             id = stream.gameId,
                             name = stream.gameName,
@@ -58,8 +57,7 @@ internal class TwitchApiImpl(
                 Stream(
                     id = stream.id,
                     userId = stream.userId,
-                    category =
-                    if (stream.gameId != null && stream.gameName != null) {
+                    category = if (stream.gameId != null && stream.gameName != null) {
                         StreamCategory(
                             id = stream.gameId,
                             name = stream.gameName,
@@ -102,8 +100,7 @@ internal class TwitchApiImpl(
                                 Stream(
                                     id = stream.id,
                                     userId = stream.userId,
-                                    category =
-                                    if (stream.gameId != null && stream.gameName != null) {
+                                    category = if (stream.gameId != null && stream.gameName != null) {
                                         StreamCategory(
                                             id = stream.gameId,
                                             name = stream.gameName,
@@ -196,8 +193,7 @@ internal class TwitchApiImpl(
     override suspend fun searchChannels(query: String): Flow<PagingData<List<ChannelSearchResult>>> {
         val pager =
             Pager(
-                config =
-                PagingConfig(
+                config = PagingConfig(
                     pageSize = 15,
                     initialLoadSize = 15,
                     prefetchDistance = 5,
@@ -239,8 +235,7 @@ internal class TwitchApiImpl(
                         addAll(
                             response.data.map { follow ->
                                 ChannelFollow(
-                                    user =
-                                    User(
+                                    user = User(
                                         id = follow.userId,
                                         login = follow.userLogin,
                                         displayName = follow.userDisplayName,
@@ -284,8 +279,7 @@ internal class TwitchApiImpl(
                     TwitchBadge(
                         setId = set.setId,
                         version = version.id,
-                        urls =
-                        EmoteUrls(
+                        urls = EmoteUrls(
                             mapOf(
                                 1f to version.image1x,
                                 2f to version.image2x,
@@ -305,8 +299,7 @@ internal class TwitchApiImpl(
                     TwitchBadge(
                         setId = set.setId,
                         version = version.id,
-                        urls =
-                        EmoteUrls(
+                        urls = EmoteUrls(
                             mapOf(
                                 1f to version.image1x,
                                 2f to version.image2x,
@@ -343,22 +336,21 @@ internal class TwitchApiImpl(
                             "getChannelVideos: loaded ${response.data.size} more items"
                         }
 
-                        val mappedVideos =
-                            response.data.map { video ->
-                                Video(
-                                    id = video.id,
-                                    title = video.title,
-                                    thumbnailUrl = video.thumbnailUrl,
-                                    publishedAt = Instant.parse(video.publishedAtIso),
-                                    duration = video.duration.parseTwitchDuration(),
-                                    streamId = video.streamId,
-                                    viewCount = video.viewCount,
-                                    videoUrl = video.videoUrl,
-                                    userId = video.userId,
-                                    createdAt = Instant.parse(video.createdAtIso),
-                                    description = video.description,
-                                )
-                            }
+                        val mappedVideos = response.data.map { video ->
+                            Video(
+                                id = video.id,
+                                title = video.title,
+                                thumbnailUrl = video.thumbnailUrl,
+                                publishedAt = Instant.parse(video.publishedAtIso),
+                                duration = video.duration.parseTwitchDuration(),
+                                streamId = video.streamId,
+                                viewCount = video.viewCount,
+                                videoUrl = video.videoUrl,
+                                userId = video.userId,
+                                createdAt = Instant.parse(video.createdAtIso),
+                                description = video.description,
+                            )
+                        }
 
                         cursor = response.pagination.cursor
                         currentMinInstant = mappedVideos.minOfOrNull { it.createdAt }
@@ -401,32 +393,29 @@ internal class TwitchApiImpl(
                             "getChannelSchedule: loaded ${segments.size} more items"
                         }
 
-                        val mappedSegments =
-                            segments.map { segment ->
-                                ChannelScheduleSegment(
-                                    id = segment.id,
-                                    user =
-                                    User(
-                                        id = userId,
-                                        login = "",
-                                        displayName = "",
-                                        description = "",
-                                        profileImageUrl = "",
-                                        createdAt = Instant.DISTANT_PAST,
-                                        usedAt = Instant.DISTANT_PAST,
-                                    ),
-                                    title = segment.title,
-                                    startTime = Instant.parse(segment.startTimeIso),
-                                    endTime = segment.endTimeIso?.let { Instant.parse(it) },
-                                    category =
-                                    segment.category?.let { category ->
-                                        StreamCategory(
-                                            id = category.id,
-                                            name = category.name,
-                                        )
-                                    },
-                                )
-                            }
+                        val mappedSegments = segments.map { segment ->
+                            ChannelScheduleSegment(
+                                id = segment.id,
+                                user = User(
+                                    id = userId,
+                                    login = "",
+                                    displayName = "",
+                                    description = "",
+                                    profileImageUrl = "",
+                                    createdAt = Instant.DISTANT_PAST,
+                                    usedAt = Instant.DISTANT_PAST,
+                                ),
+                                title = segment.title,
+                                startTime = Instant.parse(segment.startTimeIso),
+                                endTime = segment.endTimeIso?.let { Instant.parse(it) },
+                                category = segment.category?.let { category ->
+                                    StreamCategory(
+                                        id = category.id,
+                                        name = category.name,
+                                    )
+                                },
+                            )
+                        }
 
                         addAll(mappedSegments)
 

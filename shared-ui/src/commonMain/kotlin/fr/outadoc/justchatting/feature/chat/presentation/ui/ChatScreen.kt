@@ -42,8 +42,7 @@ internal fun ChatScreen(
         when (targetMode) {
             ChatScreenMode.Error -> {
                 Column(
-                    modifier =
-                    modifier
+                    modifier = modifier
                         .padding(insets)
                         .fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -55,8 +54,7 @@ internal fun ChatScreen(
 
             ChatScreenMode.Placeholder -> {
                 ChatListPlaceholder(
-                    modifier =
-                    modifier
+                    modifier = modifier
                         .padding(insets)
                         .fillMaxSize(),
                 )

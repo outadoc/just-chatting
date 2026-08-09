@@ -48,8 +48,7 @@ internal fun TimelineSegmentDetails(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .size(24.dp)
                     .padding(end = 8.dp),
                 imageVector = Icons.Default.CalendarToday,
@@ -61,8 +60,7 @@ internal fun TimelineSegmentDetails(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .size(24.dp)
                     .padding(end = 8.dp),
                 imageVector = Icons.Default.AccessTime,
@@ -84,8 +82,7 @@ internal fun TimelineSegmentDetails(
         segment.category?.let { category ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .size(24.dp)
                         .padding(end = 8.dp),
                     imageVector = Icons.Default.Gamepad,
@@ -110,8 +107,7 @@ private fun TimelineSegmentDetailsPreview() {
             segment =
             ChannelScheduleSegment(
                 id = "1",
-                user =
-                User(
+                user = User(
                     id = "1",
                     login = "user",
                     displayName = lorem,
@@ -123,8 +119,7 @@ private fun TimelineSegmentDetailsPreview() {
                 title = lorem,
                 startTime = Instant.parse("2022-01-01T12:00:00Z"),
                 endTime = Instant.parse("2022-01-01T13:00:00Z"),
-                category =
-                StreamCategory(
+                category = StreamCategory(
                     id = "1",
                     name = lorem,
                 ),

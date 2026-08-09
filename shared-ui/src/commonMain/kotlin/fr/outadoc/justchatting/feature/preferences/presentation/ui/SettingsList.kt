@@ -75,22 +75,20 @@ internal fun SettingsList(
             Card(
                 modifier = Modifier.padding(itemInsets),
             ) {
-                val placeholderUser =
-                    remember {
-                        User(
-                            id = "",
-                            login = "",
-                            displayName = "",
-                            description = "",
-                            profileImageUrl = "",
-                            createdAt = Instant.fromEpochMilliseconds(0),
-                            usedAt = Instant.fromEpochMilliseconds(0),
-                        )
-                    }
+                val placeholderUser = remember {
+                    User(
+                        id = "",
+                        login = "",
+                        displayName = "",
+                        description = "",
+                        profileImageUrl = "",
+                        createdAt = Instant.fromEpochMilliseconds(0),
+                        usedAt = Instant.fromEpochMilliseconds(0),
+                    )
+                }
 
                 Column(
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .padding(itemInsets)
                         .padding(top = 16.dp)
                         .placeholder(
@@ -129,8 +127,7 @@ internal fun SettingsList(
                     title = { Text(text = stringResource(Res.string.logout_title)) },
                     text = {
                         Text(
-                            text =
-                            stringResource(
+                            text = stringResource(
                                 Res.string.logout_msg,
                                 loggedInUser?.displayName ?: "",
                             ),

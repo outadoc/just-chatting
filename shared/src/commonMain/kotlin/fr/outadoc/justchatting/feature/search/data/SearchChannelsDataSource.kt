@@ -84,8 +84,7 @@ internal class SearchChannelsDataSource(
                     LoadResult.Page(
                         data = listOf(newResults),
                         prevKey = null,
-                        nextKey =
-                        response.pagination.cursor?.let { cursor ->
+                        nextKey = response.pagination.cursor?.let { cursor ->
                             Pagination.Next(
                                 cursor,
                             )

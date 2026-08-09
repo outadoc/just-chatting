@@ -457,8 +457,7 @@ internal class ChatStateReducerTest {
     fun `ChangeRoomState partial update preserves existing values`() {
         val state =
             testChattingState.copy(
-                roomState =
-                RoomState(
+                roomState = RoomState(
                     slowModeDuration = 30.seconds,
                     isEmoteOnly = true,
                 ),
@@ -779,8 +778,7 @@ internal class ChatStateReducerTest {
             PinnedMessage(
                 pinId = "pin-1",
                 pinnedBy = PinnedMessage.User(userId = "mod-1", displayName = "Mod"),
-                message =
-                PinnedMessage.Message(
+                message = PinnedMessage.Message(
                     messageId = "pinned-msg-1",
                     sender = PinnedMessage.User(userId = "chatter-1", displayName = "Chatter1"),
                     content = PinnedMessage.Message.Content(text = "hello"),
@@ -806,8 +804,7 @@ internal class ChatStateReducerTest {
             PinnedMessage(
                 pinId = "pin-1",
                 pinnedBy = PinnedMessage.User(userId = "mod-1", displayName = "Mod"),
-                message =
-                PinnedMessage.Message(
+                message = PinnedMessage.Message(
                     messageId = "nonexistent-msg",
                     sender = PinnedMessage.User(userId = "chatter-1", displayName = "Chatter1"),
                     content = PinnedMessage.Message.Content(text = "hello"),
@@ -849,10 +846,8 @@ internal class ChatStateReducerTest {
     fun `UpdateRaidAnnouncement with null clears the outgoing raid`() {
         val state =
             testChattingState.copy(
-                ongoingEvents =
-                OngoingEvents(
-                    outgoingRaid =
-                    Raid.Preparing(
+                ongoingEvents = OngoingEvents(
+                    outgoingRaid = Raid.Preparing(
                         targetId = "t",
                         targetLogin = "t",
                         targetDisplayName = "T",

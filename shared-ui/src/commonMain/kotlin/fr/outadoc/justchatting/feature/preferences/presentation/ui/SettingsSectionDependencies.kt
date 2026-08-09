@@ -94,8 +94,7 @@ private fun SettingsSectionDependenciesContent(
                         uriHandler.openUri(url)
                     }
                 },
-                onClickLabel =
-                stringResource(Res.string.settings_dependencies_cd)
+                onClickLabel = stringResource(Res.string.settings_dependencies_cd)
                     .takeIf { dependency.moduleUrl != null },
                 title = { Text(text = dependency.moduleName) },
                 subtitle = {

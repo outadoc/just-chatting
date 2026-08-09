@@ -52,8 +52,7 @@ internal fun RaidGoCard(
         ),
     ) {
         Row(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,

@@ -41,8 +41,7 @@ internal fun StreamInfo(
             ?.let { gameName ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        modifier =
-                        Modifier
+                        modifier = Modifier
                             .size(24.dp)
                             .padding(end = 8.dp),
                         imageVector = Icons.Default.Gamepad,
@@ -55,8 +54,7 @@ internal fun StreamInfo(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .size(24.dp)
                     .padding(end = 8.dp),
                 imageVector = Icons.Default.Visibility,
@@ -64,8 +62,7 @@ internal fun StreamInfo(
             )
 
             Text(
-                text =
-                pluralStringResource(
+                text = pluralStringResource(
                     Res.plurals.viewers,
                     stream.viewerCount.toInt(),
                     stream.viewerCount.toInt().formatNumber(),
@@ -77,8 +74,7 @@ internal fun StreamInfo(
         if (startedAt != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .size(24.dp)
                         .padding(end = 8.dp),
                     imageVector = Icons.Default.Start,

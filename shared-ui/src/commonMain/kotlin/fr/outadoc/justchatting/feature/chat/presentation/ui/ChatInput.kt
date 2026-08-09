@@ -86,8 +86,7 @@ internal fun ChatInput(
     val haptic = LocalHapticFeedback.current
 
     Column(
-        modifier =
-        modifier.padding(
+        modifier = modifier.padding(
             bottom = contentPadding,
         ),
     ) {
@@ -98,8 +97,7 @@ internal fun ChatInput(
                     color = MaterialTheme.colorScheme.secondaryContainer,
                 ) {
                     Row(
-                        modifier =
-                        Modifier
+                        modifier = Modifier
                             .padding(
                                 start = contentPadding,
                                 end = contentPadding,
@@ -131,23 +129,20 @@ internal fun ChatInput(
         Column {
             AnimatedVisibility(visible = autoCompleteItems.isNotEmpty()) {
                 ChatAutoCompleteRow(
-                    modifier =
-                    Modifier.padding(
+                    modifier = Modifier.padding(
                         top = 8.dp,
                     ),
                     onChatterClick = onChatterClick,
                     onEmoteClick = onEmoteClick,
                     items = autoCompleteItems,
-                    contentPadding =
-                    PaddingValues(
+                    contentPadding = PaddingValues(
                         horizontal = contentPadding,
                     ),
                 )
             }
 
             Row(
-                modifier =
-                Modifier.padding(
+                modifier = Modifier.padding(
                     top = 8.dp,
                     start = contentPadding,
                     end = contentPadding,
@@ -205,8 +200,7 @@ internal fun ChatTextField(
     val haptic = LocalHapticFeedback.current
 
     TextField(
-        modifier =
-        modifier
+        modifier = modifier
             .onPreviewKeyEvent { event ->
                 if (event.type == KeyEventType.KeyDown) {
                     when (event.key) {
@@ -338,12 +332,10 @@ internal fun ChatInputPreviewReplying() {
         ChatInput(
             replyingTo =
             ChatListItem.Message.Simple(
-                body =
-                ChatListItem.Message.Body(
+                body = ChatListItem.Message.Body(
                     message = "Lorem ipsum dolor sit amet?",
                     messageId = "",
-                    chatter =
-                    Chatter(
+                    chatter = Chatter(
                         id = "",
                         displayName = "AntoineDaniel",
                         login = "",

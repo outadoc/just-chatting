@@ -43,8 +43,7 @@ internal fun InReplyToMessage(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .size(16.dp)
                     .alignByBaseline()
                     .padding(end = 4.dp, top = 1.dp),
@@ -53,12 +52,10 @@ internal fun InReplyToMessage(
             )
 
             Text(
-                text =
-                buildAnnotatedString {
+                text = buildAnnotatedString {
                     withStyle(
                         getMentionStyle(
-                            mentioned =
-                            mentions.any { mention ->
+                            mentioned = mentions.any { mention ->
                                 mention.equals(appUser?.userLogin, ignoreCase = true)
                             },
                             mentionBackground = mentionBackground,

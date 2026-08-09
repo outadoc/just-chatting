@@ -46,15 +46,14 @@ internal class KtorLocalCallbackWebServer(
                 get("/auth/callback") {
                     call.respond(HttpStatusCode.NoContent)
 
-                    val asFragmentEncoded: Uri =
-                        oAuthAppCredentials.redirectUri
-                            .toUri()
-                            .buildUpon()
-                            .encodedFragment(
-                                call.request.uri
-                                    .toUri()
-                                    .encodedQuery,
-                            ).build()
+                    val asFragmentEncoded: Uri = oAuthAppCredentials.redirectUri
+                        .toUri()
+                        .buildUpon()
+                        .encodedFragment(
+                            call.request.uri
+                                .toUri()
+                                .encodedQuery,
+                        ).build()
 
                     logDebug<KtorLocalCallbackWebServer> { "received auth callback: $asFragmentEncoded" }
 
@@ -79,11 +78,10 @@ internal class KtorLocalCallbackWebServer(
 
                     call.respond(HttpStatusCode.NoContent)
 
-                    val uri =
-                        DeeplinkDefinitions.ViewChannel
-                            .buildUpon()
-                            .appendPath(userId)
-                            .build()
+                    val uri = DeeplinkDefinitions.ViewChannel
+                        .buildUpon()
+                        .appendPath(userId)
+                        .build()
 
                     logDebug<KtorLocalCallbackWebServer> { "received deeplink: $uri" }
 

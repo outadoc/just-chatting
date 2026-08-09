@@ -54,13 +54,11 @@ internal fun EmotePicker(
                         modifier = Modifier.fillMaxSize(),
                         emotes = emotes.toImmutableList(),
                         onEmoteClick = onEmoteClick,
-                        contentPadding =
-                        PaddingValues(
+                        contentPadding = PaddingValues(
                             start = 16.dp,
                             end = 16.dp,
                             top = 16.dp,
-                            bottom =
-                            16.dp +
+                            bottom = 16.dp +
                                 WindowInsets.navigationBars
                                     .asPaddingValues()
                                     .calculateBottomPadding(),

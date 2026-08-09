@@ -144,13 +144,12 @@ internal abstract class BaseChatWebSocket(
 
                 // Receive messages
                 while (isActive) {
-                    val received =
-                        try {
-                            withTimeout(messageTimeout) { incoming.receive() }
-                        } catch (e: TimeoutCancellationException) {
-                            logError(logTag, e) { "No message received in $messageTimeout, closing socket" }
-                            break
-                        }
+                    val received = try {
+                        withTimeout(messageTimeout) { incoming.receive() }
+                    } catch (e: TimeoutCancellationException) {
+                        logError(logTag, e) { "No message received in $messageTimeout, closing socket" }
+                        break
+                    }
 
                     when (received) {
                         is Frame.Text -> {

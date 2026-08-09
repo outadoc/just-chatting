@@ -45,8 +45,7 @@ internal class DelegateTwitchEmotesSource(
         val emoteOwners: Map<String, User> =
             twitchRepository
                 .getUsersById(
-                    ids =
-                    emotes
+                    ids = emotes
                         .mapNotNull { emote -> emote.ownerId }
                         .toSet()
                         .mapNotNull { ownerId ->
@@ -66,12 +65,10 @@ internal class DelegateTwitchEmotesSource(
 
         Result.success(
             CachedResult(
-                channelEmotes =
-                emotes
+                channelEmotes = emotes
                     .filter { emote -> emote.ownerId == params.channelId }
                     .groupBy { emoteOwners[params.channelId] },
-                globalEmotes =
-                emotes
+                globalEmotes = emotes
                     .filter { emote -> emote.ownerId != params.channelId }
                     .groupBy { emote -> emoteOwners[emote.ownerId] },
             ),

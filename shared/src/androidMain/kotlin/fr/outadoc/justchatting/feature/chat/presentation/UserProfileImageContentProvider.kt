@@ -62,9 +62,8 @@ public class UserProfileImageContentProvider : ContentProvider() {
         val segments = uri.pathSegments.toList()
         return when (segments.getOrNull(0)) {
             PATH_ID -> {
-                val userId: String =
-                    segments.getOrNull(1)
-                        ?: throw FileNotFoundException("User id was null.")
+                val userId: String = segments.getOrNull(1)
+                    ?: throw FileNotFoundException("User id was null.")
 
                 val file = getFile(context, userId)
 

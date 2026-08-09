@@ -37,8 +37,7 @@ internal fun OnboardingScreen(
 ) {
     Scaffold(modifier = modifier) { insets ->
         Column(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .padding(insets)
                 .padding(16.dp)
                 .fillMaxSize()
@@ -64,8 +63,7 @@ internal fun OnboardingScreen(
                         )
 
                         Text(
-                            text =
-                            buildAnnotatedString {
+                            text = buildAnnotatedString {
                                 appendLine(stringResource(Res.string.onboarding_title))
                                 withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                                     appendLine(stringResource(Res.string.app_name))

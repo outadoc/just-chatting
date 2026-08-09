@@ -24,12 +24,11 @@ internal fun Map<String, String?>.parseEmotes(message: String): List<Emote>? = t
                 val begin = index.getOrNull(0)?.toIntOrNull() ?: return@mapNotNull null
                 val end = index.getOrNull(1)?.toIntOrNull() ?: return@mapNotNull null
 
-                val realBegin =
-                    try {
-                        message.offsetByCodePoints(0, begin)
-                    } catch (e: IndexOutOfBoundsException) {
-                        return@mapNotNull null
-                    }
+                val realBegin = try {
+                    message.offsetByCodePoints(0, begin)
+                } catch (e: IndexOutOfBoundsException) {
+                    return@mapNotNull null
+                }
                 val realEnd = if (begin == realBegin) end else end + realBegin - begin
 
                 if (realBegin > realEnd || realEnd >= message.length) return@mapNotNull null

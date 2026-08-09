@@ -68,8 +68,7 @@ internal fun SearchScreen(
         topBar = {
             Surface {
                 SearchBar(
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .hazeEffect(
                             state = hazeState,
                             style = HazeMaterials.regular(),
@@ -120,8 +119,7 @@ private fun RecentUsersList(
     ) {
         items(users) { user ->
             UserItemCard(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .animateItem()
                     .fillMaxWidth(),
                 onClick = { onChannelClick(user) },

@@ -233,8 +233,7 @@ internal class ChatEventViewMapper {
                     if (command.duration == null) {
                         ChatListItem.Message.Highlighted(
                             timestamp = command.timestamp,
-                            metadata =
-                            ChatListItem.Message.Highlighted.Metadata(
+                            metadata = ChatListItem.Message.Highlighted.Metadata(
                                 title = command.targetUserLogin.desc(),
                                 titleIcon = Icon.Gavel,
                                 subtitle = Res.string.chat_ban.desc(),
@@ -244,8 +243,7 @@ internal class ChatEventViewMapper {
                     } else {
                         ChatListItem.Message.Highlighted(
                             timestamp = command.timestamp,
-                            metadata =
-                            ChatListItem.Message.Highlighted.Metadata(
+                            metadata = ChatListItem.Message.Highlighted.Metadata(
                                 title = command.targetUserLogin.desc(),
                                 titleIcon = Icon.Gavel,
                                 subtitle = Res.string.chat_timeout.desc(command.duration),
@@ -281,8 +279,7 @@ internal class ChatEventViewMapper {
             is ChatEvent.Message.Notice -> {
                 ChatListItem.Message.Notice(
                     timestamp = timestamp,
-                    text =
-                    getLabelForNotice(messageId = messageId, message = message)
+                    text = getLabelForNotice(messageId = messageId, message = message)
                         ?: message.desc(),
                 )
             }
@@ -290,12 +287,10 @@ internal class ChatEventViewMapper {
             is ChatEvent.Message.IncomingRaid -> {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata =
-                    ChatListItem.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.CallReceived,
-                        subtitle =
-                        Res.string.chat_raid_header
+                        subtitle = Res.string.chat_raid_header
                             .desc(
                                 Res.plurals.viewers.desc(
                                     number = raidersCount,
@@ -310,8 +305,7 @@ internal class ChatEventViewMapper {
             is ChatEvent.Message.CancelledRaid -> {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata =
-                    ChatListItem.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.Cancel,
                         subtitle = Res.string.chat_unraid_subtitle.desc(),
@@ -323,8 +317,7 @@ internal class ChatEventViewMapper {
             is ChatEvent.Message.HighlightedMessage -> {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata =
-                    ChatListItem.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = Res.string.irc_msgid_highlighted_message.desc(),
                         titleIcon = Icon.Highlight,
                         subtitle = null,
@@ -336,8 +329,7 @@ internal class ChatEventViewMapper {
             is ChatEvent.Message.Announcement -> {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata =
-                    ChatListItem.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = Res.string.irc_msgid_announcement.desc(),
                         titleIcon = Icon.Campaign,
                         subtitle = null,
@@ -349,16 +341,13 @@ internal class ChatEventViewMapper {
             is ChatEvent.Message.Subscription -> {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata =
-                    ChatListItem.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
-                        titleIcon =
-                        when (subscriptionPlan) {
+                        titleIcon = when (subscriptionPlan) {
                             SUB_PRIME -> Icon.Star
                             else -> Icon.Star
                         },
-                        subtitle =
-                        when (streakMonths) {
+                        subtitle = when (streakMonths) {
                             0 -> {
                                 Res.string.chat_sub_header_withDuration
                                     .desc(
@@ -392,12 +381,10 @@ internal class ChatEventViewMapper {
             is ChatEvent.Message.SubscriptionConversion -> {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata =
-                    ChatListItem.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.Star,
-                        subtitle =
-                        Res.string.chat_subConversion_header
+                        subtitle = Res.string.chat_subConversion_header
                             .desc(parseSubscriptionTierWithArticle(subscriptionPlan)),
                     ),
                     body = userMessage?.map(),
@@ -407,12 +394,10 @@ internal class ChatEventViewMapper {
             is ChatEvent.Message.MassSubscriptionGift -> {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata =
-                    ChatListItem.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.VolunteerActivism,
-                        subtitle =
-                        Res.string.chat_massSubGift_header
+                        subtitle = Res.string.chat_massSubGift_header
                             .desc(
                                 giftCount.formatNumber(),
                                 parseSubscriptionTierWithArticle(subscriptionPlan),
@@ -427,12 +412,10 @@ internal class ChatEventViewMapper {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
                     body = null,
-                    metadata =
-                    ChatListItem.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.Redeem,
-                        subtitle =
-                        Res.string.chat_subGift_header
+                        subtitle = Res.string.chat_subGift_header
                             .desc(
                                 parseSubscriptionTier(subscriptionPlan),
                                 recipientDisplayName,
@@ -448,12 +431,10 @@ internal class ChatEventViewMapper {
             is ChatEvent.Message.GiftPayForward -> {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata =
-                    ChatListItem.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.FastForward,
-                        subtitle =
-                        when (priorGifterDisplayName) {
+                        subtitle = when (priorGifterDisplayName) {
                             null -> {
                                 Res.string.chat_subGift_payForwardAnonymous.desc()
                             }
@@ -473,8 +454,7 @@ internal class ChatEventViewMapper {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
                     body = userMessage?.map(),
-                    metadata =
-                    ChatListItem.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = systemMsg.desc(),
                         titleIcon = null,
                         subtitle = null,
@@ -485,8 +465,7 @@ internal class ChatEventViewMapper {
             is ChatEvent.Message.Join -> {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata =
-                    ChatListItem.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = Res.string.chat_join.desc(channelLogin),
                         subtitle = null,
                     ),
@@ -497,8 +476,7 @@ internal class ChatEventViewMapper {
             is ChatEvent.Message.SendError -> {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata =
-                    ChatListItem.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = Res.string.chat_send_msg_error.desc(),
                         subtitle = null,
                     ),
@@ -547,8 +525,7 @@ internal class ChatEventViewMapper {
             is ChatEvent.Message.BroadcastSettingsUpdate -> {
                 ChatListItem.BroadcastSettingsUpdate(
                     streamTitle = streamTitle,
-                    streamCategory =
-                    StreamCategory(
+                    streamCategory = StreamCategory(
                         id = categoryId,
                         name = categoryName,
                     ),
@@ -582,10 +559,8 @@ internal class ChatEventViewMapper {
             is ChatEvent.Message.RedemptionUpdate -> {
                 ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata =
-                    ChatListItem.Message.Highlighted.Metadata(
-                        title =
-                        Res.plurals.user_redeemed
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
+                        title = Res.plurals.user_redeemed
                             .desc(
                                 number = redemption.reward.cost,
                                 redemption.userDisplayName,
@@ -660,8 +635,7 @@ internal class ChatEventViewMapper {
             if (mentions.isNotEmpty()) {
                 ChatListItem.Message.Body.InReplyTo(
                     message = inReplyTo?.message,
-                    mentions =
-                    mentions
+                    mentions = mentions
                         .map { mention ->
                             mention.drop(1)
                         }.toImmutableList(),

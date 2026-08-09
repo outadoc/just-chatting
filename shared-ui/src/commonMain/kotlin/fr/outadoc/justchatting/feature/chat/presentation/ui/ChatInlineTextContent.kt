@@ -63,8 +63,7 @@ internal fun cheerEmoteTextContent(cheer: Emote): InlineTextContent {
 
 internal fun sourceChannelTextContent(user: User): InlineTextContent = InlineTextContent(badgePlaceholder) {
     AsyncImage(
-        modifier =
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
             .clip(RoundedCornerShape(4.dp)),
         model = remoteImageModel(user.profileImageUrl),

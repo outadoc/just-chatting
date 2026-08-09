@@ -39,8 +39,7 @@ internal fun ChatListPlaceholder(
             count = placeholderItemCount,
         ) { index ->
             Box(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .background(
                         if (index.isOdd) {
@@ -51,15 +50,13 @@ internal fun ChatListPlaceholder(
                     ),
             ) {
                 Box(
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .padding(
                             horizontal = 8.dp,
                             vertical = 10.dp,
                         ).height(16.dp)
                         .fillMaxSize(
-                            fraction =
-                            random
+                            fraction = random
                                 .nextDouble(
                                     from = 0.45,
                                     until = 0.9,

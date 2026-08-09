@@ -44,8 +44,7 @@ internal fun ChatRichEmbed(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .background(MaterialTheme.colorScheme.surface)
                     .fillMaxHeight()
                     .aspectRatio(16 / 9f),
@@ -54,8 +53,7 @@ internal fun ChatRichEmbed(
             )
 
             Column(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp),
                 verticalArrangement = Arrangement.Center,
@@ -68,8 +66,7 @@ internal fun ChatRichEmbed(
                 )
 
                 Text(
-                    text =
-                    stringResource(
+                    text = stringResource(
                         Res.string.richEmbed_author_title,
                         authorName,
                     ),

@@ -111,8 +111,7 @@ private fun SettingsSectionAboutContent(
                 title = { Text(text = stringResource(Res.string.app_name)) },
                 subtitle = {
                     Text(
-                        text =
-                        stringResource(
+                        text = stringResource(
                             Res.string.settings_about_version,
                             state.appVersionName.orEmpty(),
                         ),
@@ -166,8 +165,7 @@ private fun SettingsSectionAboutContent(
                 title = { Text(text = stringResource(Res.string.settings_about_license_title)) },
                 subtitle = {
                     Text(
-                        text =
-                        stringResource(
+                        text = stringResource(
                             Res.string.settings_about_license_subtitle,
                             stringResource(Res.string.app_name),
                             stringResource(Res.string.app_license_name),
@@ -191,8 +189,7 @@ private fun SettingsSectionAboutContent(
                 title = { Text(text = stringResource(Res.string.settings_about_xtra_title)) },
                 subtitle = {
                     Text(
-                        text =
-                        stringResource(
+                        text = stringResource(
                             Res.string.settings_about_xtra_subtitle,
                             stringResource(Res.string.app_name),
                         ),

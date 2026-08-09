@@ -70,15 +70,13 @@ public fun startApp() {
                 val availableVersion = updateState.availableVersion
                 if (availableVersion != null) {
                     SlimSnackbar(
-                        modifier =
-                        Modifier
+                        modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .padding(16.dp)
                             .clickable { showUpdateDialog = true },
                     ) {
                         Text(
-                            text =
-                            stringResource(
+                            text = stringResource(
                                 Res.string.settings_about_update_subtitle_available,
                                 availableVersion,
                             ),

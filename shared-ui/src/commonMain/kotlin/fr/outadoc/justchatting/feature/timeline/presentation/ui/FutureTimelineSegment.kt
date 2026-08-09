@@ -63,8 +63,7 @@ internal fun FutureTimelineSegment(
         ) {
             Column {
                 Card(
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .combinedClickable(
                             onClick = { showDetailsDialog = true },
                             onLongClick = {
@@ -84,8 +83,7 @@ internal fun FutureTimelineSegment(
                 }
 
                 Row(
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -99,8 +97,7 @@ internal fun FutureTimelineSegment(
 
                     Text(
                         modifier = Modifier.alignByBaseline(),
-                        text =
-                        buildAnnotatedString {
+                        text = buildAnnotatedString {
                             append(segment.startTime.formatHourMinute())
 
                             segment.endTime?.let { endTime ->

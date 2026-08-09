@@ -22,7 +22,6 @@ import fr.outadoc.justchatting.utils.logging.logInfo
 import fr.outadoc.justchatting.utils.logging.logWarning
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow

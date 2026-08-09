@@ -39,8 +39,7 @@ internal class LocalUsersDb(
                     profileImageUrl = userInfo.profile_image_url,
                     description = userInfo.description,
                     createdAt = Instant.fromEpochMilliseconds(userInfo.created_at),
-                    usedAt =
-                    if (userInfo.used_at > 0) {
+                    usedAt = if (userInfo.used_at > 0) {
                         Instant.fromEpochMilliseconds(userInfo.used_at)
                     } else {
                         null
@@ -61,16 +60,14 @@ internal class LocalUsersDb(
         .map { users ->
             users.map { userInfo ->
                 ChannelFollow(
-                    user =
-                    User(
+                    user = User(
                         id = userInfo.id,
                         login = userInfo.login,
                         displayName = userInfo.display_name,
                         profileImageUrl = userInfo.profile_image_url,
                         description = userInfo.description,
                         createdAt = Instant.fromEpochMilliseconds(userInfo.created_at),
-                        usedAt =
-                        if (userInfo.used_at > 0) {
+                        usedAt = if (userInfo.used_at > 0) {
                             Instant.fromEpochMilliseconds(userInfo.used_at)
                         } else {
                             null

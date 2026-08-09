@@ -79,8 +79,7 @@ internal class LiveWidget : GlanceAppWidget() {
                         items(state.live) { userStream ->
                             Column {
                                 GlanceCard(
-                                    modifier =
-                                    GlanceModifier
+                                    modifier = GlanceModifier
                                         .clickable(
                                             MainActivity.createGlanceAction(
                                                 userId = userStream.user.id,
@@ -116,8 +115,7 @@ internal class LiveWidget : GlanceAppWidget() {
         ) {
             Text(
                 text = stream.title,
-                style =
-                TextDefaults.defaultTextStyle.copy(
+                style = TextDefaults.defaultTextStyle.copy(
                     color = GlanceTheme.colors.onSurfaceVariant,
                 ),
                 maxLines = 2,
@@ -132,8 +130,7 @@ internal class LiveWidget : GlanceAppWidget() {
             ) {
                 Image(
                     modifier = GlanceModifier.size(20.dp),
-                    provider =
-                    ImageProvider(
+                    provider = ImageProvider(
                         user.getProfileImageUri(LocalContext.current),
                     ),
                     contentDescription = null,
@@ -145,8 +142,7 @@ internal class LiveWidget : GlanceAppWidget() {
 
                 Text(
                     text = user.displayName,
-                    style =
-                    TextDefaults.defaultTextStyle.copy(
+                    style = TextDefaults.defaultTextStyle.copy(
                         color = GlanceTheme.colors.onSurfaceVariant,
                         fontWeight = FontWeight.Bold,
                     ),
@@ -156,16 +152,14 @@ internal class LiveWidget : GlanceAppWidget() {
                 stream.category?.let { category ->
                     Text(
                         text = " • ",
-                        style =
-                        TextDefaults.defaultTextStyle.copy(
+                        style = TextDefaults.defaultTextStyle.copy(
                             color = GlanceTheme.colors.onSurfaceVariant,
                         ),
                     )
 
                     Text(
                         text = category.name,
-                        style =
-                        TextDefaults.defaultTextStyle.copy(
+                        style = TextDefaults.defaultTextStyle.copy(
                             color = GlanceTheme.colors.onSurfaceVariant,
                         ),
                         maxLines = 1,

@@ -75,8 +75,7 @@ internal fun PredictionCard(
                     -> Res.string.prediction_status_ended
                 }
 
-            val totalPointsSpent: Int =
-                prediction.outcomes.sumOf { outcome -> outcome.totalPoints }
+            val totalPointsSpent: Int = prediction.outcomes.sumOf { outcome -> outcome.totalPoints }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -129,15 +128,13 @@ internal fun PredictionCard(
                 ) {
                     prediction.outcomes.forEach { outcome ->
                         PredictionOutcome(
-                            modifier =
-                            Modifier
+                            modifier = Modifier
                                 .padding(vertical = 8.dp)
                                 .fillMaxWidth(),
                             title = outcome.title,
                             votes = outcome.totalPoints,
                             totalVotes = totalPointsSpent,
-                            color =
-                            outcome.color
+                            color = outcome.color
                                 .parseHexColor()
                                 ?.let { color ->
                                     ensureColorIsAccessible(
@@ -179,8 +176,7 @@ private val mockPrediction =
                 title = "Étoiles",
                 totalPoints = 12345,
                 totalUsers = 1000,
-                badge =
-                Badge(
+                badge = Badge(
                     id = "123",
                     version = "5",
                 ),
@@ -191,8 +187,7 @@ private val mockPrediction =
                 title = "AntoineDaniel",
                 totalPoints = 102345,
                 totalUsers = 1000,
-                badge =
-                Badge(
+                badge = Badge(
                     id = "123",
                     version = "5",
                 ),
@@ -203,8 +198,7 @@ private val mockPrediction =
                 title = "HortyUnderscore",
                 totalPoints = 52450,
                 totalUsers = 1000,
-                badge =
-                Badge(
+                badge = Badge(
                     id = "123",
                     version = "5",
                 ),

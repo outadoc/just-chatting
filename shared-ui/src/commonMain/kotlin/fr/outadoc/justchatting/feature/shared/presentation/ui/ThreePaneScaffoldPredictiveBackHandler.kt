@@ -53,8 +53,7 @@ internal fun <T> ThreePaneScaffoldPredictiveBackHandler(
                 progress.collect { backEvent ->
                     navigator.seekBack(
                         backBehavior,
-                        fraction =
-                        backProgressToStateProgress(
+                        fraction = backProgressToStateProgress(
                             progress = backEvent.progress,
                             scaffoldValue = navigator.scaffoldValue,
                         ),

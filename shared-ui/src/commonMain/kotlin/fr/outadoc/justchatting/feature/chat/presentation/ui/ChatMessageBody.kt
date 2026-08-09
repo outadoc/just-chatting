@@ -168,12 +168,11 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
         val effectiveSourceRoomId = sourceRoomId
 
         effectiveBadges.forEach { badge ->
-            val badgeId =
-                if (sourceBadges.isNotEmpty() && effectiveSourceRoomId != null) {
-                    badge.sourceInlineContentId(effectiveSourceRoomId)
-                } else {
-                    badge.inlineContentId
-                }
+            val badgeId = if (sourceBadges.isNotEmpty() && effectiveSourceRoomId != null) {
+                badge.sourceInlineContentId(effectiveSourceRoomId)
+            } else {
+                badge.inlineContentId
+            }
 
             appendInlineContent(
                 id = badgeId,
@@ -189,8 +188,7 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
 
         withStyle(
             SpanStyle(
-                color =
-                MaterialTheme.colorScheme.harmonizeWithPrimary(
+                color = MaterialTheme.colorScheme.harmonizeWithPrimary(
                     accessibleChatterColor ?: fallbackColor,
                 ),
             ),
@@ -198,8 +196,7 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
             withLink(
                 LinkAnnotation.Clickable(
                     tag = CHATTER_ID_ANNOTATION_TAG,
-                    styles =
-                    TextLinkStyles(
+                    styles = TextLinkStyles(
                         style = SpanStyle(fontWeight = FontWeight.Bold),
                     ),
                     linkInteractionListener = {
@@ -272,8 +269,7 @@ private fun AnnotatedString.Builder.appendUrl(
         LinkAnnotation.Url(
             validUrl,
             TextLinkStyles(
-                style =
-                SpanStyle(
+                style = SpanStyle(
                     color = urlColor,
                     textDecoration = TextDecoration.Underline,
                 ),

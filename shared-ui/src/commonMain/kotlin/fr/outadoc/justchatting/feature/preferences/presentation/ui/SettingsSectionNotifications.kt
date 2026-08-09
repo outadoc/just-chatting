@@ -88,8 +88,7 @@ private fun SettingsSectionNotificationsContent(
         contentPadding = insets,
     ) {
         item {
-            val notificationPermissionState: PermissionState =
-                rememberPermissionState("android.permission.POST_NOTIFICATIONS")
+            val notificationPermissionState: PermissionState = rememberPermissionState("android.permission.POST_NOTIFICATIONS")
 
             SettingsSwitch(
                 modifier = Modifier.padding(itemInsets),

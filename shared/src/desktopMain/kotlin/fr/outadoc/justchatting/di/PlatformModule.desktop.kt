@@ -31,15 +31,14 @@ import org.koin.dsl.module
 internal actual val platformModule: Module
     get() =
         module {
-            val appDir =
-                AppDirsFactory
-                    .getInstance()
-                    .getUserConfigDir(
-                        AppInfo.APP_ID,
-                        AppInfo.APP_VERSION,
-                        AppInfo.APP_AUTHOR,
-                        true,
-                    ).toPath()
+            val appDir = AppDirsFactory
+                .getInstance()
+                .getUserConfigDir(
+                    AppInfo.APP_ID,
+                    AppInfo.APP_VERSION,
+                    AppInfo.APP_AUTHOR,
+                    true,
+                ).toPath()
 
             single {
                 OAuthAppCredentials(

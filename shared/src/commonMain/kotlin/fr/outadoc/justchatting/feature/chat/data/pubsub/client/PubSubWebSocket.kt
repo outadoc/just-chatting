@@ -100,10 +100,8 @@ internal class PubSubWebSocket(
             // Tell the server what we want to receive
             sendSerialized<PubSubClientMessage>(
                 PubSubClientMessage.Listen(
-                    data =
-                    PubSubClientMessage.Listen.Data(
-                        topics =
-                        pubSubPluginsProvider
+                    data = PubSubClientMessage.Listen.Data(
+                        topics = pubSubPluginsProvider
                             .get()
                             .map { plugin -> plugin.getTopic(channelId) },
                         authToken = appUser.token,
@@ -140,10 +138,9 @@ internal class PubSubWebSocket(
 
         when (received) {
             is PubSubServerMessage.Message -> {
-                val plugin: PubSubPlugin<*>? =
-                    plugins.firstOrNull { plugin ->
-                        plugin.getTopic(channelId) == received.data.topic
-                    }
+                val plugin: PubSubPlugin<*>? = plugins.firstOrNull { plugin ->
+                    plugin.getTopic(channelId) == received.data.topic
+                }
 
                 plugin?.apply {
                     for (event in parseMessage(received.data.message)) {

@@ -35,8 +35,7 @@ internal fun SettingsText(
     trailingIcon: @Composable () -> Unit = {},
 ) {
     Box(
-        modifier =
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .clickable(onClickLabel = onClickLabel) { onClick() }
             .padding(vertical = 16.dp),

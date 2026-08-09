@@ -15,8 +15,7 @@ import fr.outadoc.justchatting.utils.presentation.customColors
 @Composable
 internal fun LiveIndicator(modifier: Modifier = Modifier) {
     Box(
-        modifier =
-        Modifier
+        modifier = Modifier
             .padding(end = 4.dp)
             .size(6.dp)
             .clip(CircleShape)

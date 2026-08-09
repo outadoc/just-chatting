@@ -43,8 +43,7 @@ internal fun PollChoice(
     Box(modifier = modifier.height(32.dp)) {
         LinearProgressIndicator(
             progress = { ratio },
-            modifier =
-            Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .clip(MaterialTheme.shapes.medium),
             color =
@@ -57,8 +56,7 @@ internal fun PollChoice(
         )
 
         Row(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically,

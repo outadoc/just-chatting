@@ -36,8 +36,7 @@ internal fun TimelineSegmentContent(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .padding(end = 8.dp)
                     .size(56.dp)
                     .clip(MaterialTheme.shapes.medium)
@@ -63,8 +62,7 @@ internal fun TimelineSegmentContent(
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
-                            modifier =
-                            Modifier
+                            modifier = Modifier
                                 .weight(1f, fill = true)
                                 .alignByBaseline(),
                             text = userName,
@@ -80,8 +78,7 @@ internal fun TimelineSegmentContent(
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
-                            modifier =
-                            Modifier
+                            modifier = Modifier
                                 .weight(1f, fill = true)
                                 .alignByBaseline(),
                             text = category.name,

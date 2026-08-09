@@ -150,11 +150,9 @@ internal class ChatStateReducer {
             RoomState(
                 isEmoteOnly = delta.isEmoteOnly ?: state.roomState.isEmoteOnly,
                 isSubOnly = delta.isSubOnly ?: state.roomState.isSubOnly,
-                minFollowDuration =
-                delta.minFollowDuration
+                minFollowDuration = delta.minFollowDuration
                     ?: state.roomState.minFollowDuration,
-                uniqueMessagesOnly =
-                delta.uniqueMessagesOnly
+                uniqueMessagesOnly = delta.uniqueMessagesOnly
                     ?: state.roomState.uniqueMessagesOnly,
                 slowModeDuration = delta.slowModeDuration ?: state.roomState.slowModeDuration,
             ),
@@ -245,8 +243,7 @@ internal class ChatStateReducer {
 
         if (pinnedMessage == null) {
             return state.copy(
-                ongoingEvents =
-                state.ongoingEvents.copy(
+                ongoingEvents = state.ongoingEvents.copy(
                     pinnedMessage = null,
                 ),
             )
@@ -256,8 +253,7 @@ internal class ChatStateReducer {
             state.chatMessages.findLast { message ->
                 message.body?.messageId == pinnedMessage.message.messageId
             } ?: return state.copy(
-                ongoingEvents =
-                state.ongoingEvents.copy(
+                ongoingEvents = state.ongoingEvents.copy(
                     pinnedMessage = null,
                 ),
             )
@@ -265,8 +261,7 @@ internal class ChatStateReducer {
         return state.copy(
             ongoingEvents =
             state.ongoingEvents.copy(
-                pinnedMessage =
-                OngoingEvents.PinnedMessage(
+                pinnedMessage = OngoingEvents.PinnedMessage(
                     message = matchingMessage,
                     endsAt = pinnedMessage.message.endsAt,
                 ),
@@ -310,8 +305,7 @@ internal class ChatStateReducer {
                 user = user,
                 appUser = state.appUser,
                 maxAdapterCount = state.maxAdapterCount,
-                chatters =
-                persistentSetOf(
+                chatters = persistentSetOf(
                     Chatter(
                         id = user.id,
                         login = user.login,
@@ -324,8 +318,7 @@ internal class ChatStateReducer {
         is ChatViewModel.State.Chatting -> {
             state.copy(
                 user = user,
-                chatters =
-                state.chatters.add(
+                chatters = state.chatters.add(
                     Chatter(
                         id = user.id,
                         login = user.login,

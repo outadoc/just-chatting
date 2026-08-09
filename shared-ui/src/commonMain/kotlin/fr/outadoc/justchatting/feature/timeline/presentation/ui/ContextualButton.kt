@@ -23,8 +23,7 @@ internal fun ContextualButton(
         modifier = modifier.clickable(onClick = onClick),
     ) {
         Row(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .padding(contentPadding)
                 .padding(vertical = 12.dp),
         ) {
@@ -34,8 +33,7 @@ internal fun ContextualButton(
                 text = text,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier =
-                Modifier
+                modifier = Modifier
                     .padding(start = 16.dp)
                     .weight(1f),
             )

@@ -53,8 +53,7 @@ internal fun PredictionOutcome(
             icon()
 
             Column(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .weight(1f, fill = true),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
@@ -67,8 +66,7 @@ internal fun PredictionOutcome(
 
                 LinearProgressIndicator(
                     progress = { ratio },
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .fillMaxWidth()
                         .clip(MaterialTheme.shapes.medium)
                         .height(8.dp),

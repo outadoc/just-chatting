@@ -38,8 +38,7 @@ internal fun UpdateAvailableDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    text =
-                    stringResource(
+                    text = stringResource(
                         Res.string.update_dialog_message,
                         state.availableVersion.orEmpty(),
                     ),
@@ -79,8 +78,7 @@ internal fun UpdateAvailableDialog(
                 enabled = !state.isDownloading,
             ) {
                 Text(
-                    text =
-                    if (state.isDownloading) {
+                    text = if (state.isDownloading) {
                         stringResource(Res.string.update_dialog_downloading)
                     } else {
                         stringResource(Res.string.update_dialog_confirm)

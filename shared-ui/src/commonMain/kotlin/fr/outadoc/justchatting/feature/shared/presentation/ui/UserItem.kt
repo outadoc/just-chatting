@@ -68,8 +68,7 @@ internal fun UserItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         AsyncImage(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .padding(end = 8.dp)
                 .size(56.dp)
                 .clip(MaterialTheme.shapes.medium)
@@ -121,8 +120,7 @@ internal fun UserItem(
 internal fun UserItemPreview() {
     AppTheme {
         UserItemCard(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .padding(8.dp)
                 .width(300.dp),
             displayName = "Maghla",

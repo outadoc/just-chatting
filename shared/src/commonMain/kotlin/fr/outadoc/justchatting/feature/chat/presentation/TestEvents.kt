@@ -16,16 +16,14 @@ internal object TestEvents {
     val events: Flow<ChatViewModel.Action> =
         flowOf(
             ChatViewModel.Action.UpdatePrediction(
-                prediction =
-                Prediction(
+                prediction = Prediction(
                     id = "0c64f437-7481-46a3-9d80-2834cc415dfc",
                     title = "ANTOINE GAGNE ?",
                     status = Prediction.Status.Active,
                     createdAt = Instant.parse("2023-02-08T20:34:35.839478452Z"),
                     endedAt = null,
                     lockedAt = null,
-                    outcomes =
-                    listOf(
+                    outcomes = listOf(
                         Prediction.Outcome(
                             id = "1df7ac61-7912-4c82-89d3-d7781c0c182b",
                             title = "OUI",
@@ -48,20 +46,17 @@ internal object TestEvents {
                 ),
             ),
             ChatViewModel.Action.UpdatePoll(
-                poll =
-                Poll(
+                poll = Poll(
                     pollId = "0c64f437-7481-46a3-9d80-2834cc415dfc",
                     title = "ANTOINE GAGNE ?",
                     status = Poll.Status.Active,
                     startedAt = Instant.parse("2023-02-08T20:34:35.839478452Z"),
                     endedAt = null,
-                    choices =
-                    listOf(
+                    choices = listOf(
                         Poll.Choice(
                             choiceId = "1",
                             title = "Étoiles",
-                            votes =
-                            Poll.Votes(
+                            votes = Poll.Votes(
                                 total = 12345,
                                 bits = 123,
                                 channelPoints = 50,
@@ -72,8 +67,7 @@ internal object TestEvents {
                         Poll.Choice(
                             choiceId = "1",
                             title = "AntoineDaniel",
-                            votes =
-                            Poll.Votes(
+                            votes = Poll.Votes(
                                 total = 102345,
                                 bits = 123,
                                 channelPoints = 50,
@@ -84,8 +78,7 @@ internal object TestEvents {
                         Poll.Choice(
                             choiceId = "1",
                             title = "HortyUnderscore",
-                            votes =
-                            Poll.Votes(
+                            votes = Poll.Votes(
                                 total = 52450,
                                 bits = 123,
                                 channelPoints = 50,
@@ -97,8 +90,7 @@ internal object TestEvents {
                     duration = 3.minutes,
                     remainingDuration = 53.seconds,
                     totalVoters = 133143,
-                    votes =
-                    Poll.Votes(
+                    votes = Poll.Votes(
                         total = 134356,
                         bits = 1311,
                         channelPoints = 2345,
@@ -107,16 +99,13 @@ internal object TestEvents {
                 ),
             ),
             ChatViewModel.Action.AddMessages(
-                messages =
-                listOf(
+                messages = listOf(
                     ChatListItem.Message.Simple(
                         timestamp = Instant.parse("2023-02-08T20:35:35.839478452Z"),
-                        body =
-                        ChatListItem.Message.Body(
+                        body = ChatListItem.Message.Body(
                             messageId = "14124",
                             message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
-                            chatter =
-                            Chatter(
+                            chatter = Chatter(
                                 id = "1462345",
                                 login = "autobot",
                                 displayName = "Autobot",
@@ -126,24 +115,19 @@ internal object TestEvents {
                 ),
             ),
             ChatViewModel.Action.UpdatePinnedMessage(
-                pinnedMessage =
-                PinnedMessage(
+                pinnedMessage = PinnedMessage(
                     pinId = "1342345235",
-                    pinnedBy =
-                    PinnedMessage.User(
+                    pinnedBy = PinnedMessage.User(
                         userId = "1462345",
                         displayName = "Autobot",
                     ),
-                    message =
-                    PinnedMessage.Message(
+                    message = PinnedMessage.Message(
                         messageId = "14124",
-                        sender =
-                        PinnedMessage.User(
+                        sender = PinnedMessage.User(
                             userId = "1462345",
                             displayName = "Autobot",
                         ),
-                        content =
-                        PinnedMessage.Message.Content(
+                        content = PinnedMessage.Message.Content(
                             text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
                         ),
                         startsAt = Instant.DISTANT_PAST,

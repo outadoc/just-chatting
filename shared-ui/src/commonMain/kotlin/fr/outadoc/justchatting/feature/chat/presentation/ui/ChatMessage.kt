@@ -79,8 +79,7 @@ internal fun ChatMessage(
         }
 
     Row(
-        modifier =
-        modifier
+        modifier = modifier
             .redactable(redact = shouldRedactContents)
             .background(MaterialTheme.colorScheme.surface)
             .background(background)
@@ -135,8 +134,7 @@ internal fun ChatMessage(
             is ChatListItem.Message.Simple -> {
                 SimpleMessage {
                     ChatMessageBody(
-                        modifier =
-                        Modifier
+                        modifier = Modifier
                             .fillMaxWidth()
                             .padding(
                                 horizontal = 4.dp,

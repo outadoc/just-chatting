@@ -63,21 +63,19 @@ internal object IrcMessageParser : IIrcMessageParser {
         if (line[position] == CharacterCodes.AT) {
             position++
 
-            val nextSpace =
-                ParseHelper.findNext(line, position, CharacterCodes.SPACE) ?: return null
+            val nextSpace = ParseHelper.findNext(line, position, CharacterCodes.SPACE) ?: return null
             if (nextSpace <= 0) {
                 // @ but no tags
                 return null
             }
 
             val unparsedTags = line.substring(position, nextSpace)
-            val tags =
-                ParseHelper.parseToKeysAndOptionalValues(
-                    unparsedTags,
-                    CharacterCodes.SEMICOLON,
-                    CharacterCodes.EQUALS,
-                    ::unescapeTagValue,
-                )
+            val tags = ParseHelper.parseToKeysAndOptionalValues(
+                unparsedTags,
+                CharacterCodes.SEMICOLON,
+                CharacterCodes.EQUALS,
+                ::unescapeTagValue,
+            )
 
             position = ParseHelper.skipSpaces(line, nextSpace + 1)
             return Pair(tags, position)
@@ -129,8 +127,7 @@ internal object IrcMessageParser : IIrcMessageParser {
         if (line[position] == CharacterCodes.COLON) {
             position++
 
-            val nextSpace =
-                ParseHelper.findNext(line, position, CharacterCodes.SPACE) ?: return null
+            val nextSpace = ParseHelper.findNext(line, position, CharacterCodes.SPACE) ?: return null
             if (nextSpace < position + 1) {
                 // : but nothing else
                 return null
@@ -201,18 +198,17 @@ internal object IrcMessageParser : IIrcMessageParser {
             }
 
             val nextSpace = ParseHelper.findNext(line, position, CharacterCodes.SPACE)
-            position =
-                if (nextSpace != null) {
-                    val parameter = line.substring(position, nextSpace)
-                    parameters.add(parameter)
+            position = if (nextSpace != null) {
+                val parameter = line.substring(position, nextSpace)
+                parameters.add(parameter)
 
-                    ParseHelper.skipSpaces(line, nextSpace + 1)
-                } else {
-                    val parameter = line.substring(position)
-                    parameters.add(parameter)
+                ParseHelper.skipSpaces(line, nextSpace + 1)
+            } else {
+                val parameter = line.substring(position)
+                parameters.add(parameter)
 
-                    line.length
-                }
+                line.length
+            }
         }
 
         return Pair(parameters, position)

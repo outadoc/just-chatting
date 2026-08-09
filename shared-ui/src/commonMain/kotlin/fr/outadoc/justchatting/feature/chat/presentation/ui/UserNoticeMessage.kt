@@ -72,8 +72,7 @@ internal fun UserNoticeMessage(
             ) {
                 if (titleIcon != null) {
                     Icon(
-                        modifier =
-                        Modifier
+                        modifier = Modifier
                             .size(iconSize)
                             .padding(end = 4.dp),
                         imageVector = titleIcon,
@@ -95,8 +94,7 @@ internal fun UserNoticeMessage(
                 ) {
                     if (titleIcon != null) {
                         Spacer(
-                            modifier =
-                            Modifier
+                            modifier = Modifier
                                 .size(iconSize)
                                 .padding(end = 4.dp),
                         )

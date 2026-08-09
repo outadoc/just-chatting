@@ -28,8 +28,7 @@ internal fun RoomStateBanner(
 
             if (!minFollowDuration.isNegative()) {
                 Text(
-                    text =
-                    when (minFollowDuration) {
+                    text = when (minFollowDuration) {
                         Duration.ZERO -> {
                             stringResource(Res.string.room_followers)
                         }
@@ -50,8 +49,7 @@ internal fun RoomStateBanner(
 
             if (slowModeDuration.isPositive()) {
                 Text(
-                    text =
-                    stringResource(
+                    text = stringResource(
                         Res.string.room_slow,
                         slowModeDuration.format(),
                     ),

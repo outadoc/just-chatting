@@ -101,8 +101,7 @@ internal fun ChatListContainer(
             exit = shrinkVertically(shrinkTowards = Alignment.Bottom) + fadeOut(),
         ) {
             FloatingActionButton(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .padding(16.dp)
                     .padding(insets),
                 onClick = {

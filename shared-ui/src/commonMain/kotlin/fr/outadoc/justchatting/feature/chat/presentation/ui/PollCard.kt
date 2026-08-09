@@ -54,18 +54,16 @@ internal fun PollCard(
         ),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            val winningChoice: Poll.Choice? =
-                if (poll.status == Poll.Status.Completed) {
-                    poll.choices.maxBy { choice -> choice.votes.total }
-                } else {
-                    null
-                }
+            val winningChoice: Poll.Choice? = if (poll.status == Poll.Status.Completed) {
+                poll.choices.maxBy { choice -> choice.votes.total }
+            } else {
+                null
+            }
 
-            val status =
-                when (poll.status) {
-                    Poll.Status.Active -> Res.string.poll_status_progress
-                    Poll.Status.Completed, Poll.Status.Archived -> Res.string.poll_status_ended
-                }
+            val status = when (poll.status) {
+                Poll.Status.Active -> Res.string.poll_status_progress
+                Poll.Status.Completed, Poll.Status.Archived -> Res.string.poll_status_ended
+            }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -76,8 +74,7 @@ internal fun PollCard(
                 ) {
                     Text(
                         modifier = Modifier.padding(bottom = 4.dp),
-                        text =
-                        buildString {
+                        text = buildString {
                             append(stringResource(status))
                             append(" · ")
                             append(
@@ -115,8 +112,7 @@ internal fun PollCard(
                 ) {
                     poll.choices.forEach { choice ->
                         PollChoice(
-                            modifier =
-                            Modifier
+                            modifier = Modifier
                                 .padding(vertical = 4.dp)
                                 .fillMaxWidth(),
                             title = choice.title,
@@ -142,8 +138,7 @@ private val mockPoll =
             Poll.Choice(
                 choiceId = "1",
                 title = "Étoiles",
-                votes =
-                Poll.Votes(
+                votes = Poll.Votes(
                     total = 12345,
                     bits = 123,
                     channelPoints = 50,
@@ -154,8 +149,7 @@ private val mockPoll =
             Poll.Choice(
                 choiceId = "1",
                 title = "AntoineDaniel",
-                votes =
-                Poll.Votes(
+                votes = Poll.Votes(
                     total = 102345,
                     bits = 123,
                     channelPoints = 50,
@@ -166,8 +160,7 @@ private val mockPoll =
             Poll.Choice(
                 choiceId = "1",
                 title = "HortyUnderscore",
-                votes =
-                Poll.Votes(
+                votes = Poll.Votes(
                     total = 52450,
                     bits = 123,
                     channelPoints = 50,

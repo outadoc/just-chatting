@@ -91,8 +91,7 @@ internal fun FollowedChannelsList(
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
-                modifier =
-                Modifier
+                modifier = Modifier
                     .hazeEffect(
                         state = hazeState,
                         style = HazeMaterials.regular(),
@@ -123,8 +122,7 @@ internal fun FollowedChannelsList(
         content = { insets ->
             if (hasMouse) {
                 InnerFollowedChannelsList(
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .haze(hazeState)
                         .fillMaxSize(),
                     insets = insets,
@@ -137,8 +135,7 @@ internal fun FollowedChannelsList(
             } else {
                 val pullToRefreshState = rememberPullToRefreshState()
                 PullToRefreshBox(
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .haze(hazeState)
                         .fillMaxSize(),
                     state = pullToRefreshState,
@@ -148,8 +145,7 @@ internal fun FollowedChannelsList(
                         PullToRefreshDefaults.Indicator(
                             state = pullToRefreshState,
                             isRefreshing = state.isLoading,
-                            modifier =
-                            Modifier
+                            modifier = Modifier
                                 .align(Alignment.TopCenter)
                                 .padding(top = insets.calculateTopPadding()),
                         )
@@ -207,8 +203,7 @@ private fun InnerFollowedChannelsList(
                 key = { item -> item.user.id },
             ) { item ->
                 UserItemCard(
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .animateItem()
                         .fillMaxWidth(),
                     displayName = item.user.displayName,

@@ -25,8 +25,7 @@ internal fun SuggestionChip(
 ) {
     val haptic = LocalHapticFeedback.current
     Surface(
-        modifier =
-        modifier
+        modifier = modifier
             .height(32.dp)
             .clickable(
                 role = Role.Button,

@@ -55,8 +55,7 @@ internal fun LiveTimelineContent(
                 PullToRefreshDefaults.Indicator(
                     state = pullToRefreshState,
                     isRefreshing = isRefreshing,
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .align(Alignment.TopCenter)
                         .padding(top = insets.calculateTopPadding()),
                 )
@@ -109,15 +108,13 @@ private fun LiveTimelineList(
 ) {
     if (live.isEmpty()) {
         NoContent(
-            modifier =
-            modifier
+            modifier = modifier
                 .padding(insets)
                 .fillMaxSize(),
         )
     } else {
         LazyColumn(
-            modifier =
-            modifier
+            modifier = modifier
                 .padding(insets)
                 .fillMaxWidth(),
             state = listState,
@@ -135,8 +132,7 @@ private fun LiveTimelineList(
                 contentType = { "stream" },
             ) { userStream ->
                 LiveTimelineSegment(
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .animateItem()
                         .fillMaxWidth(),
                     userStream = userStream,

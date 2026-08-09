@@ -156,8 +156,7 @@ internal fun ChatList(
 
     Box {
         LazyColumn(
-            modifier =
-            modifier
+            modifier = modifier
                 .onGloballyPositioned { coordinates ->
                     val newSize = coordinates.size
                     if (size != newSize) {
@@ -230,8 +229,7 @@ internal fun ChatList(
                     enabled = canBeRepliedTo,
                 ) {
                     ChatMessage(
-                        modifier =
-                        Modifier
+                        modifier = Modifier
                             .fillMaxWidth()
                             .combinedClickable(
                                 onClick = {},
@@ -242,13 +240,12 @@ internal fun ChatList(
                                 onLongClickLabel = stringResource(Res.string.chat_copyToClipboard),
                             ).semantics {
                                 if (canBeRepliedTo) {
-                                    customActions =
-                                        listOf(
-                                            CustomAccessibilityAction(replyToActionCd) {
-                                                onReplyToMessage(item)
-                                                true
-                                            },
-                                        )
+                                    customActions = listOf(
+                                        CustomAccessibilityAction(replyToActionCd) {
+                                            onReplyToMessage(item)
+                                            true
+                                        },
+                                    )
                                 }
                             },
                         message = item,

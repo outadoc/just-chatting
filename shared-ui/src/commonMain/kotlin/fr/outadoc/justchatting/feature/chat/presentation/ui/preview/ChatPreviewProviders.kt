@@ -19,10 +19,8 @@ private val simpleEntries =
     sequence {
         yield(
             ChatListItem.Message.Simple(
-                body =
-                ChatListItem.Message.Body(
-                    chatter =
-                    Chatter(
+                body = ChatListItem.Message.Body(
+                    chatter = Chatter(
                         displayName = "Hiccoz",
                         id = "68552712",
                         login = "hiccoz",
@@ -32,8 +30,7 @@ private val simpleEntries =
                     isAction = false,
                     color = "#FF69B4",
                     embeddedEmotes = persistentListOf(),
-                    badges =
-                    persistentListOf(
+                    badges = persistentListOf(
                         Badge("subscriber", "48"),
                         Badge("sub-gifter", "100"),
                     ),
@@ -45,10 +42,8 @@ private val simpleEntries =
 
         yield(
             ChatListItem.Message.Simple(
-                body =
-                ChatListItem.Message.Body(
-                    chatter =
-                    Chatter(
+                body = ChatListItem.Message.Body(
+                    chatter = Chatter(
                         displayName = "컬러히에",
                         id = "232421548",
                         login = "kolorye",
@@ -59,8 +54,7 @@ private val simpleEntries =
                     color = "#5F9EA0",
                     embeddedEmotes = persistentListOf(),
                     badges = persistentListOf(),
-                    inReplyTo =
-                    ChatListItem.Message.Body.InReplyTo(
+                    inReplyTo = ChatListItem.Message.Body.InReplyTo(
                         mentions = persistentListOf("djessy728"),
                         message = "Salut Antoine, est tu encore en contact avec Mathieu? Et penses tu streamer un peu avec lui?",
                     ),
@@ -71,10 +65,8 @@ private val simpleEntries =
 
         yield(
             ChatListItem.Message.Simple(
-                body =
-                ChatListItem.Message.Body(
-                    chatter =
-                    Chatter(
+                body = ChatListItem.Message.Body(
+                    chatter = Chatter(
                         displayName = "marion_11",
                         id = "280065659",
                         login = "marion_11",
@@ -87,8 +79,7 @@ private val simpleEntries =
                     badges = persistentListOf(),
                     inReplyTo = null,
                     sourceRoomId = "203096177",
-                    sourceBadges =
-                    persistentListOf(
+                    sourceBadges = persistentListOf(
                         Badge("moderator", "1"),
                         Badge("subscriber", "12"),
                     ),
@@ -103,16 +94,13 @@ private val highlightedEntries =
         yield(
             ChatListItem.Message.Highlighted(
                 timestamp = Instant.fromEpochMilliseconds(1664398268452),
-                metadata =
-                ChatListItem.Message.Highlighted.Metadata(
+                metadata = ChatListItem.Message.Highlighted.Metadata(
                     title = "clo_chette_".desc(),
                     titleIcon = Icon.Star,
                     subtitle = "subscribed at Tier 1. They've subscribed for 18 months!".desc(),
                 ),
-                body =
-                ChatListItem.Message.Body(
-                    chatter =
-                    Chatter(
+                body = ChatListItem.Message.Body(
+                    chatter = Chatter(
                         id = "672551946",
                         displayName = "clo_chette_",
                         login = "clo_chette_",
@@ -131,16 +119,13 @@ private val highlightedEntries =
         yield(
             ChatListItem.Message.Highlighted(
                 timestamp = Instant.fromEpochMilliseconds(1664400523912),
-                metadata =
-                ChatListItem.Message.Highlighted.Metadata(
+                metadata = ChatListItem.Message.Highlighted.Metadata(
                     title = "First message".desc(),
                     titleIcon = Icon.WavingHand,
                     subtitle = null,
                 ),
-                body =
-                ChatListItem.Message.Body(
-                    chatter =
-                    Chatter(
+                body = ChatListItem.Message.Body(
+                    chatter = Chatter(
                         id = "0",
                         displayName = "Ravencheese",
                         login = "ravencheese",

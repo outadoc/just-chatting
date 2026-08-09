@@ -60,15 +60,13 @@ internal fun PinnedMessageCard(
         ),
     ) {
         Row(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             ChatMessage(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .weight(1f, fill = true),
                 message = message,
                 inlineContent = inlineContent,

@@ -62,8 +62,7 @@ internal fun LiveStreamCard(
     ) {
         Column {
             Card(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .combinedClickable(
                         onClick = onClick,
                         onClickLabel = stringResource(Res.string.chat_open_action),
@@ -88,8 +87,7 @@ internal fun LiveStreamCard(
 
             if (tags.isNotEmpty()) {
                 TagList(
-                    modifier =
-                    Modifier.padding(
+                    modifier = Modifier.padding(
                         start = 8.dp,
                         end = 8.dp,
                         top = 4.dp,
@@ -120,8 +118,7 @@ private fun LiveStream(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .padding(end = 8.dp)
                     .size(56.dp)
                     .clip(MaterialTheme.shapes.medium)
@@ -148,8 +145,7 @@ private fun LiveStream(
                 ) {
                     userName?.let { userName ->
                         Text(
-                            modifier =
-                            Modifier
+                            modifier = Modifier
                                 .weight(1f, fill = true)
                                 .alignByBaseline(),
                             text = userName,
@@ -177,8 +173,7 @@ private fun LiveStream(
                 ) {
                     category?.let { category ->
                         Text(
-                            modifier =
-                            Modifier
+                            modifier = Modifier
                                 .weight(1f, fill = true)
                                 .alignByBaseline(),
                             text = category.name,
@@ -192,8 +187,7 @@ private fun LiveStream(
                         ?.formatTimeSince(showSeconds = false)
                         ?.let { streamDuration ->
                             Icon(
-                                modifier =
-                                Modifier
+                                modifier = Modifier
                                     .size(12.dp)
                                     .align(Alignment.CenterVertically),
                                 imageVector = Icons.Default.Timelapse,
@@ -246,8 +240,7 @@ internal fun LiveStreamPreview() {
 internal fun LiveStreamLongPreview() {
     AppTheme {
         LiveStreamCard(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .width(250.dp)
                 .padding(8.dp),
             userName = "Maghla",

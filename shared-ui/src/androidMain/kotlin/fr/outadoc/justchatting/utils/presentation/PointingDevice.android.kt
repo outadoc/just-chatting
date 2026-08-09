@@ -51,21 +51,20 @@ internal actual fun rememberHasPointingDevice(): Boolean {
     return hasPointingDevice
 }
 
-private fun InputManager.hasPointingDevice(): Boolean =
-    inputDeviceIds.any { id ->
-        val device = getInputDevice(id)
-        device != null &&
-            !device.isVirtual &&
-            // Built-in components (e.g. Samsung's "sec_touchpad" node backing S Pen air actions)
-            // report MOUSE/TOUCHPAD sources too, so only external devices count as an actual
-            // pointing device the user attached.
-            device.isKnownExternal() &&
-            (
-                device.supportsSource(InputDevice.SOURCE_MOUSE) ||
-                    device.supportsSource(InputDevice.SOURCE_STYLUS) ||
-                    device.supportsSource(InputDevice.SOURCE_TOUCHPAD)
+private fun InputManager.hasPointingDevice(): Boolean = inputDeviceIds.any { id ->
+    val device = getInputDevice(id)
+    device != null &&
+        !device.isVirtual &&
+        // Built-in components (e.g. Samsung's "sec_touchpad" node backing S Pen air actions)
+        // report MOUSE/TOUCHPAD sources too, so only external devices count as an actual
+        // pointing device the user attached.
+        device.isKnownExternal() &&
+        (
+            device.supportsSource(InputDevice.SOURCE_MOUSE) ||
+                device.supportsSource(InputDevice.SOURCE_STYLUS) ||
+                device.supportsSource(InputDevice.SOURCE_TOUCHPAD)
             )
-    }
+}
 
 // InputDevice.isExternal() requires API 29; treat it as unknown (and therefore excluded)
 // on older versions, since we can't reliably tell built-in pointer-capable nodes apart

@@ -33,8 +33,7 @@ internal fun SearchBar(
             .fillMaxWidth(),
     ) {
         SearchScreenBar(
-            modifier =
-            modifier
+            modifier = modifier
                 .statusBarsPadding()
                 .fillMaxWidth(),
             searchResults = searchResults,

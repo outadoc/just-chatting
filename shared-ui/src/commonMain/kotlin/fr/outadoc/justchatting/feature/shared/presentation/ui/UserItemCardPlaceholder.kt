@@ -11,8 +11,7 @@ import fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.materi
 @Composable
 internal fun UserItemCardPlaceholder(modifier: Modifier = Modifier) {
     UserItemCard(
-        modifier =
-        modifier.placeholder(
+        modifier = modifier.placeholder(
             visible = true,
             shape = CardDefaults.shape,
             color = MaterialTheme.colorScheme.surfaceVariant,

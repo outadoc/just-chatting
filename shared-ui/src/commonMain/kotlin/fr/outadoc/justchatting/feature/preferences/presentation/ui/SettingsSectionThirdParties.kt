@@ -97,8 +97,7 @@ private fun SettingsSectionThirdPartiesContent(
     ) {
         item {
             SettingsHeader(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .padding(top = 8.dp)
                     .padding(itemInsets),
             ) {
@@ -128,8 +127,7 @@ private fun SettingsSectionThirdPartiesContent(
 
         item {
             SettingsHeader(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .padding(top = 8.dp)
                     .padding(itemInsets),
             ) {
@@ -175,8 +173,7 @@ private fun SettingsSectionThirdPartiesContent(
 
         item {
             SettingsHeader(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .padding(top = 8.dp)
                     .padding(itemInsets),
             ) {

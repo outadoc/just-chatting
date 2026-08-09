@@ -80,8 +80,7 @@ internal fun ChannelChatScreen(
             onMessageChange = { textFieldValue ->
                 viewModel.onMessageInputChanged(
                     message = textFieldValue.text,
-                    selectionRange =
-                    IntRange(
+                    selectionRange = IntRange(
                         start = textFieldValue.selection.start,
                         endInclusive = textFieldValue.selection.end,
                     ),

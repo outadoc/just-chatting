@@ -23,14 +23,13 @@ internal fun ThreePaneScaffoldScope.DragHandle(
     val size = LocalMinimumInteractiveComponentSize.current
 
     VerticalDragHandle(
-        modifier =
-            modifier
-                .height(64.dp)
-                .fillMaxWidth()
-                .paneExpansionDraggable(
-                    state = state,
-                    minTouchTargetSize = size,
-                    interactionSource = interactionSource,
-                ),
+        modifier = modifier
+            .height(64.dp)
+            .fillMaxWidth()
+            .paneExpansionDraggable(
+                state = state,
+                minTouchTargetSize = size,
+                interactionSource = interactionSource,
+            ),
     )
 }

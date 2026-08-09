@@ -17,8 +17,7 @@ internal fun GlanceCard(
         modifier = modifier,
     ) {
         Column(
-            modifier =
-            modifier
+            modifier = modifier
                 .padding(
                     horizontal = 12.dp,
                     vertical = 8.dp,

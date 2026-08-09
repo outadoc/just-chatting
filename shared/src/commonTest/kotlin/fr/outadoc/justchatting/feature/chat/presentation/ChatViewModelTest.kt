@@ -179,20 +179,17 @@ internal class ChatViewModelTest {
                         twitchRepository = twitchRepository,
                         getRecentEmotes = GetRecentEmotesUseCase(recentEmotesApi),
                         chatRepository = chatRepository,
-                        authRepository =
-                        AuthRepository(
+                        authRepository = AuthRepository(
                             preferenceRepository = preferenceRepository,
                             authApi = FakeAuthApi(),
-                            oAuthAppCredentials =
-                            OAuthAppCredentials(
+                            oAuthAppCredentials = OAuthAppCredentials(
                                 clientId = "client-id",
                                 redirectUri = "https://example.com/callback",
                             ),
                             dispatchersProvider = dispatchersProvider,
                         ),
                         filterAutocompleteItemsUseCase = FilterAutocompleteItemsUseCase(),
-                        pronounsRepository =
-                        PronounsRepository(
+                        pronounsRepository = PronounsRepository(
                             pronounsApi = FakePronounsApi(),
                             localPronounsApi = FakeLocalPronounsApi(),
                             preferenceRepository = preferenceRepository,
@@ -200,11 +197,9 @@ internal class ChatViewModelTest {
                         ),
                         createShortcutForChannel = NoopCreateShortcutForChannelUseCase(),
                         chatEventViewMapper = ChatEventViewMapper(),
-                        loadEmotesAndBadges =
-                        LoadEmotesAndBadgesUseCase(
+                        loadEmotesAndBadges = LoadEmotesAndBadgesUseCase(
                             twitchRepository = twitchRepository,
-                            emoteListSourcesProvider =
-                            EmoteListSourcesProvider {
+                            emoteListSourcesProvider = EmoteListSourcesProvider {
                                 listOf(
                                     FakeEmoteListSource(
                                         listOf(EmoteSetItem.Emote(pickableEmote)),
@@ -212,8 +207,7 @@ internal class ChatViewModelTest {
                                 )
                             },
                         ),
-                        submitMessage =
-                        SubmitMessageUseCase(
+                        submitMessage = SubmitMessageUseCase(
                             clock = testClock,
                             twitchRepository = twitchRepository,
                             insertRecentEmotes = InsertRecentEmotesUseCase(recentEmotesApi),
@@ -624,12 +618,10 @@ internal class ChatViewModelTest {
 
         val originalMessage =
             ChatListItem.Message.Simple(
-                body =
-                ChatListItem.Message.Body(
+                body = ChatListItem.Message.Body(
                     messageId = "original-message-id",
                     message = "original message",
-                    chatter =
-                    Chatter(
+                    chatter = Chatter(
                         id = "chatter-1",
                         login = "chatter1",
                         displayName = "Chatter1",

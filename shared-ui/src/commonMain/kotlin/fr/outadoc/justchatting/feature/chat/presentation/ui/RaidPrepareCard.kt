@@ -44,16 +44,14 @@ internal fun RaidPrepareCard(
         ),
     ) {
         Row(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AsyncImage(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .size(56.dp)
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.surface),
@@ -72,8 +70,7 @@ internal fun RaidPrepareCard(
                 )
 
                 Text(
-                    text =
-                    stringResource(
+                    text = stringResource(
                         Res.string.raid_prepare_message,
                         raid.targetDisplayName,
                         Res.plurals.viewers

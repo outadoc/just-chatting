@@ -53,8 +53,7 @@ internal fun ChatEvents(
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Spacer(
-            modifier =
-            Modifier.padding(
+            modifier = Modifier.padding(
                 top = insets.calculateTopPadding(),
             ),
         )

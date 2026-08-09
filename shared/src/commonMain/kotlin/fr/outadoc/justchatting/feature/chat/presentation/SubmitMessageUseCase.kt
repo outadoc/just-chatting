@@ -65,8 +65,7 @@ internal class SubmitMessageUseCase(
                     allEmotesMap[word]?.let { emote ->
                         RecentEmote(
                             name = word,
-                            url =
-                            emote.urls.getBestUrl(
+                            url = emote.urls.getBestUrl(
                                 screenDensity = screenDensity,
                                 isDarkTheme = isDarkTheme,
                             ),

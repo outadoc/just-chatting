@@ -61,8 +61,7 @@ internal fun FutureTimelineContent(
                 PullToRefreshDefaults.Indicator(
                     state = pullToRefreshState,
                     isRefreshing = isRefreshing,
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .align(Alignment.TopCenter)
                         .padding(top = insets.calculateTopPadding()),
                 )
@@ -109,15 +108,13 @@ private fun FutureTimelineList(
 ) {
     if (future.isEmpty()) {
         NoContent(
-            modifier =
-            modifier
+            modifier = modifier
                 .padding(insets)
                 .fillMaxSize(),
         )
     } else {
         LazyColumn(
-            modifier =
-            modifier
+            modifier = modifier
                 .padding(insets)
                 .fillMaxWidth(),
             state = listState,
@@ -145,8 +142,7 @@ private fun FutureTimelineList(
                     contentType = { "segment" },
                 ) { segment ->
                     FutureTimelineSegment(
-                        modifier =
-                        Modifier
+                        modifier = Modifier
                             .animateItem()
                             .fillMaxWidth(),
                         segment = segment,
@@ -166,8 +162,7 @@ private fun SectionHeader(
     title: @Composable () -> Unit = {},
 ) {
     Column(
-        modifier =
-        modifier
+        modifier = modifier
             .background(
                 Brush.verticalGradient(
                     0f to MaterialTheme.colorScheme.surface,

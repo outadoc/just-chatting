@@ -123,6 +123,7 @@ kotlin {
             dependsOn(skiaMain)
             dependencies {
                 implementation(libs.appdirs)
+                implementation(libs.nucleus.darkmode.detector)
             }
         }
     }

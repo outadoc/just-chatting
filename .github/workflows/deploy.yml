@@ -242,3 +242,20 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           files: app-android/build/outputs/bundle/release/app-android-release.aab
           release: ${{ github.event.release.name }}
+
+  finalize-release:
+    name: Finalize release
+    needs: [deploy-ios, deploy-desktop, deploy-android]
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Ensure release is published (not draft)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release edit "${{ github.event.release.tag_name }}" \
+            --draft=false \
+            --repo "${{ github.repository }}"

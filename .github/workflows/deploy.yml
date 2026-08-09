@@ -6,29 +6,8 @@ on:
       - "v*"
 
 jobs:
-  create-release:
-    name: Create draft release
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-
-    steps:
-      - name: Create draft release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if ! gh release view "${{ github.ref_name }}" --repo "${{ github.repository }}" &>/dev/null; then
-            gh release create "${{ github.ref_name }}" \
-              --draft \
-              --generate-notes \
-              --title "${{ github.ref_name }}" \
-              --repo "${{ github.repository }}"
-          fi
-
   deploy-ios:
     name: Deploy iOS app
-    needs: create-release
     environment: deploy
     runs-on: macos-26
 
@@ -102,7 +81,6 @@ jobs:
 
   deploy-desktop:
     name: Deploy desktop app (${{ matrix.label }})
-    needs: create-release
     runs-on: ${{ matrix.os }}
     environment: deploy
 
@@ -195,7 +173,6 @@ jobs:
 
   deploy-android:
     name: Deploy Android app
-    needs: create-release
     runs-on: ubuntu-latest
     environment: deploy
 
@@ -264,20 +241,15 @@ jobs:
         with:
           path: artifacts
 
-      - name: Attach artifacts to release
+      - name: Create release with artifacts
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
         run: |
           find artifacts -type f -print0 \
-            | xargs -0 gh release upload "${{ github.ref_name }}" \
-              --clobber \
-              --repo "${{ github.repository }}"
-
-      - name: Publish release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release edit "${{ github.ref_name }}" \
-            --draft=false \
-            --latest \
-            --repo "${{ github.repository }}"
+            | xargs -0 gh release create "$TAG" \
+              --generate-notes \
+              --title "$TAG" \
+              --latest \
+              --repo "$REPO"

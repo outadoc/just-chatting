@@ -1191,6 +1191,37 @@ public final class fr/outadoc/justchatting/feature/preferences/domain/model/AppU
 	public fun toString ()Ljava/lang/String;
 }
 
+public abstract interface class fr/outadoc/justchatting/feature/preferences/presentation/AppUpdateChecker {
+	public abstract fun checkForUpdate (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getState ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun installUpdate (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun isSupported ()Z
+}
+
+public final class fr/outadoc/justchatting/feature/preferences/presentation/AppUpdateState {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (ZZLjava/lang/String;ZLjava/lang/Float;Ljava/lang/String;)V
+	public synthetic fun <init> (ZZLjava/lang/String;ZLjava/lang/Float;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Z
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Z
+	public final fun component5 ()Ljava/lang/Float;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun copy (ZZLjava/lang/String;ZLjava/lang/Float;Ljava/lang/String;)Lfr/outadoc/justchatting/feature/preferences/presentation/AppUpdateState;
+	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/preferences/presentation/AppUpdateState;ZZLjava/lang/String;ZLjava/lang/Float;Ljava/lang/String;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/preferences/presentation/AppUpdateState;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAvailableVersion ()Ljava/lang/String;
+	public final fun getDownloadProgress ()Ljava/lang/Float;
+	public final fun getError ()Ljava/lang/String;
+	public final fun getHasChecked ()Z
+	public fun hashCode ()I
+	public final fun isChecking ()Z
+	public final fun isDownloading ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class fr/outadoc/justchatting/feature/preferences/presentation/Dependency {
 	public static final field $stable I
 	public static final field Companion Lfr/outadoc/justchatting/feature/preferences/presentation/Dependency$Companion;
@@ -1235,8 +1266,10 @@ public abstract interface class fr/outadoc/justchatting/feature/preferences/pres
 
 public final class fr/outadoc/justchatting/feature/preferences/presentation/SettingsViewModel : androidx/lifecycle/ViewModel {
 	public static final field $stable I
+	public final fun checkForUpdates ()V
 	public final fun getEvents ()Lkotlinx/coroutines/flow/SharedFlow;
 	public final fun getState ()Lkotlinx/coroutines/flow/StateFlow;
+	public final fun installUpdate ()V
 	public final fun logout ()V
 	public final fun onNavigateToDetail (Lfr/outadoc/justchatting/feature/shared/presentation/DetailScreen;)V
 	public final fun onShareLogsClick ()V
@@ -1274,18 +1307,22 @@ public final class fr/outadoc/justchatting/feature/preferences/presentation/Sett
 public final class fr/outadoc/justchatting/feature/preferences/presentation/SettingsViewModel$State {
 	public static final field $stable I
 	public fun <init> ()V
-	public fun <init> (Lfr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences;Ljava/lang/String;Lfr/outadoc/justchatting/feature/shared/domain/model/User;)V
-	public synthetic fun <init> (Lfr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences;Ljava/lang/String;Lfr/outadoc/justchatting/feature/shared/domain/model/User;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lfr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences;Ljava/lang/String;Lfr/outadoc/justchatting/feature/shared/domain/model/User;ZLfr/outadoc/justchatting/feature/preferences/presentation/AppUpdateState;)V
+	public synthetic fun <init> (Lfr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences;Ljava/lang/String;Lfr/outadoc/justchatting/feature/shared/domain/model/User;ZLfr/outadoc/justchatting/feature/preferences/presentation/AppUpdateState;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lfr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Lfr/outadoc/justchatting/feature/shared/domain/model/User;
-	public final fun copy (Lfr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences;Ljava/lang/String;Lfr/outadoc/justchatting/feature/shared/domain/model/User;)Lfr/outadoc/justchatting/feature/preferences/presentation/SettingsViewModel$State;
-	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/preferences/presentation/SettingsViewModel$State;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences;Ljava/lang/String;Lfr/outadoc/justchatting/feature/shared/domain/model/User;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/preferences/presentation/SettingsViewModel$State;
+	public final fun component4 ()Z
+	public final fun component5 ()Lfr/outadoc/justchatting/feature/preferences/presentation/AppUpdateState;
+	public final fun copy (Lfr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences;Ljava/lang/String;Lfr/outadoc/justchatting/feature/shared/domain/model/User;ZLfr/outadoc/justchatting/feature/preferences/presentation/AppUpdateState;)Lfr/outadoc/justchatting/feature/preferences/presentation/SettingsViewModel$State;
+	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/preferences/presentation/SettingsViewModel$State;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences;Ljava/lang/String;Lfr/outadoc/justchatting/feature/shared/domain/model/User;ZLfr/outadoc/justchatting/feature/preferences/presentation/AppUpdateState;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/preferences/presentation/SettingsViewModel$State;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAppPreferences ()Lfr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences;
 	public final fun getAppVersionName ()Ljava/lang/String;
+	public final fun getUpdateState ()Lfr/outadoc/justchatting/feature/preferences/presentation/AppUpdateState;
 	public final fun getUser ()Lfr/outadoc/justchatting/feature/shared/domain/model/User;
 	public fun hashCode ()I
+	public final fun isUpdateCheckSupported ()Z
 	public fun toString ()Ljava/lang/String;
 }
 

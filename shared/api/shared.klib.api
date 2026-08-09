@@ -46,6 +46,16 @@ abstract interface fr.outadoc.justchatting.feature.preferences.domain/Preference
     abstract suspend fun updatePreferences(kotlin/Function1<fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences, fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences>) // fr.outadoc.justchatting.feature.preferences.domain/PreferenceRepository.updatePreferences|updatePreferences(kotlin.Function1<fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences,fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences>){}[0]
 }
 
+abstract interface fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateChecker { // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateChecker|null[0]
+    abstract val isSupported // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateChecker.isSupported|{}isSupported[0]
+        abstract fun <get-isSupported>(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateChecker.isSupported.<get-isSupported>|<get-isSupported>(){}[0]
+    abstract val state // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateChecker.state|{}state[0]
+        abstract fun <get-state>(): kotlinx.coroutines.flow/StateFlow<fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState> // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateChecker.state.<get-state>|<get-state>(){}[0]
+
+    abstract suspend fun checkForUpdate() // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateChecker.checkForUpdate|checkForUpdate(){}[0]
+    abstract suspend fun installUpdate() // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateChecker.installUpdate|installUpdate(){}[0]
+}
+
 abstract interface fr.outadoc.justchatting.feature.preferences.presentation/ReadExternalDependenciesList { // fr.outadoc.justchatting.feature.preferences.presentation/ReadExternalDependenciesList|null[0]
     abstract suspend fun invoke(): kotlin.collections/List<fr.outadoc.justchatting.feature.preferences.presentation/Dependency> // fr.outadoc.justchatting.feature.preferences.presentation/ReadExternalDependenciesList.invoke|invoke(){}[0]
 }
@@ -1323,6 +1333,34 @@ final class fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferen
     }
 }
 
+final class fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState { // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState|null[0]
+    constructor <init>(kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/String? = ..., kotlin/Boolean = ..., kotlin/Float? = ..., kotlin/String? = ...) // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.<init>|<init>(kotlin.Boolean;kotlin.Boolean;kotlin.String?;kotlin.Boolean;kotlin.Float?;kotlin.String?){}[0]
+
+    final val availableVersion // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.availableVersion|{}availableVersion[0]
+        final fun <get-availableVersion>(): kotlin/String? // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.availableVersion.<get-availableVersion>|<get-availableVersion>(){}[0]
+    final val downloadProgress // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.downloadProgress|{}downloadProgress[0]
+        final fun <get-downloadProgress>(): kotlin/Float? // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.downloadProgress.<get-downloadProgress>|<get-downloadProgress>(){}[0]
+    final val error // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.error|{}error[0]
+        final fun <get-error>(): kotlin/String? // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.error.<get-error>|<get-error>(){}[0]
+    final val hasChecked // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.hasChecked|{}hasChecked[0]
+        final fun <get-hasChecked>(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.hasChecked.<get-hasChecked>|<get-hasChecked>(){}[0]
+    final val isChecking // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.isChecking|{}isChecking[0]
+        final fun <get-isChecking>(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.isChecking.<get-isChecking>|<get-isChecking>(){}[0]
+    final val isDownloading // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.isDownloading|{}isDownloading[0]
+        final fun <get-isDownloading>(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.isDownloading.<get-isDownloading>|<get-isDownloading>(){}[0]
+
+    final fun component1(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.component1|component1(){}[0]
+    final fun component2(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.component2|component2(){}[0]
+    final fun component3(): kotlin/String? // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.component3|component3(){}[0]
+    final fun component4(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.component4|component4(){}[0]
+    final fun component5(): kotlin/Float? // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.component5|component5(){}[0]
+    final fun component6(): kotlin/String? // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.component6|component6(){}[0]
+    final fun copy(kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/String? = ..., kotlin/Boolean = ..., kotlin/Float? = ..., kotlin/String? = ...): fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.copy|copy(kotlin.Boolean;kotlin.Boolean;kotlin.String?;kotlin.Boolean;kotlin.Float?;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState.toString|toString(){}[0]
+}
+
 final class fr.outadoc.justchatting.feature.preferences.presentation/Dependency { // fr.outadoc.justchatting.feature.preferences.presentation/Dependency|null[0]
     constructor <init>(kotlin/String, kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...) // fr.outadoc.justchatting.feature.preferences.presentation/Dependency.<init>|<init>(kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
 
@@ -1367,25 +1405,33 @@ final class fr.outadoc.justchatting.feature.preferences.presentation/SettingsVie
     final val state // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.state|{}state[0]
         final fun <get-state>(): kotlinx.coroutines.flow/StateFlow<fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State> // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.state.<get-state>|<get-state>(){}[0]
 
+    final fun checkForUpdates() // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.checkForUpdates|checkForUpdates(){}[0]
+    final fun installUpdate() // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.installUpdate|installUpdate(){}[0]
     final fun logout() // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.logout|logout(){}[0]
     final fun onNavigateToDetail(fr.outadoc.justchatting.feature.shared.presentation/DetailScreen) // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.onNavigateToDetail|onNavigateToDetail(fr.outadoc.justchatting.feature.shared.presentation.DetailScreen){}[0]
     final fun onShareLogsClick() // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.onShareLogsClick|onShareLogsClick(){}[0]
     final fun updatePreferences(fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences) // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.updatePreferences|updatePreferences(fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences){}[0]
 
     final class State { // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State|null[0]
-        constructor <init>(fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences = ..., kotlin/String? = ..., fr.outadoc.justchatting.feature.shared.domain.model/User? = ...) // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.<init>|<init>(fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences;kotlin.String?;fr.outadoc.justchatting.feature.shared.domain.model.User?){}[0]
+        constructor <init>(fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences = ..., kotlin/String? = ..., fr.outadoc.justchatting.feature.shared.domain.model/User? = ..., kotlin/Boolean = ..., fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState = ...) // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.<init>|<init>(fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences;kotlin.String?;fr.outadoc.justchatting.feature.shared.domain.model.User?;kotlin.Boolean;fr.outadoc.justchatting.feature.preferences.presentation.AppUpdateState){}[0]
 
         final val appPreferences // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.appPreferences|{}appPreferences[0]
             final fun <get-appPreferences>(): fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.appPreferences.<get-appPreferences>|<get-appPreferences>(){}[0]
         final val appVersionName // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.appVersionName|{}appVersionName[0]
             final fun <get-appVersionName>(): kotlin/String? // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.appVersionName.<get-appVersionName>|<get-appVersionName>(){}[0]
+        final val isUpdateCheckSupported // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.isUpdateCheckSupported|{}isUpdateCheckSupported[0]
+            final fun <get-isUpdateCheckSupported>(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.isUpdateCheckSupported.<get-isUpdateCheckSupported>|<get-isUpdateCheckSupported>(){}[0]
+        final val updateState // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.updateState|{}updateState[0]
+            final fun <get-updateState>(): fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.updateState.<get-updateState>|<get-updateState>(){}[0]
         final val user // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.user|{}user[0]
             final fun <get-user>(): fr.outadoc.justchatting.feature.shared.domain.model/User? // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.user.<get-user>|<get-user>(){}[0]
 
         final fun component1(): fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.component1|component1(){}[0]
         final fun component2(): kotlin/String? // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.component2|component2(){}[0]
         final fun component3(): fr.outadoc.justchatting.feature.shared.domain.model/User? // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.component3|component3(){}[0]
-        final fun copy(fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences = ..., kotlin/String? = ..., fr.outadoc.justchatting.feature.shared.domain.model/User? = ...): fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.copy|copy(fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences;kotlin.String?;fr.outadoc.justchatting.feature.shared.domain.model.User?){}[0]
+        final fun component4(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.component4|component4(){}[0]
+        final fun component5(): fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.component5|component5(){}[0]
+        final fun copy(fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences = ..., kotlin/String? = ..., fr.outadoc.justchatting.feature.shared.domain.model/User? = ..., kotlin/Boolean = ..., fr.outadoc.justchatting.feature.preferences.presentation/AppUpdateState = ...): fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.copy|copy(fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences;kotlin.String?;fr.outadoc.justchatting.feature.shared.domain.model.User?;kotlin.Boolean;fr.outadoc.justchatting.feature.preferences.presentation.AppUpdateState){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel.State.toString|toString(){}[0]
@@ -2375,6 +2421,7 @@ final val fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_ju
 final val fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser$stableprop // fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser$stableprop|#static{}fr_outadoc_justchatting_feature_preferences_domain_model_AppUser$stableprop[0]
 final val fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_LoggedIn$stableprop // fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_LoggedIn$stableprop|#static{}fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_LoggedIn$stableprop[0]
 final val fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_NotLoggedIn$stableprop // fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_NotLoggedIn$stableprop|#static{}fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_NotLoggedIn$stableprop[0]
+final val fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_AppUpdateState$stableprop // fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_AppUpdateState$stableprop|#static{}fr_outadoc_justchatting_feature_preferences_presentation_AppUpdateState$stableprop[0]
 final val fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_Dependency$stableprop // fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_Dependency$stableprop|#static{}fr_outadoc_justchatting_feature_preferences_presentation_Dependency$stableprop[0]
 final val fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_DependencyList_$serializer$stableprop // fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_DependencyList_$serializer$stableprop|#static{}fr_outadoc_justchatting_feature_preferences_presentation_DependencyList_$serializer$stableprop[0]
 final val fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_Dependency_$serializer$stableprop // fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_Dependency_$serializer$stableprop|#static{}fr_outadoc_justchatting_feature_preferences_presentation_Dependency_$serializer$stableprop[0]
@@ -2743,6 +2790,7 @@ final fun fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_ju
 final fun fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser$stableprop_getter(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser$stableprop_getter|fr_outadoc_justchatting_feature_preferences_domain_model_AppUser$stableprop_getter(){}[0]
 final fun fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_LoggedIn$stableprop_getter(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_LoggedIn$stableprop_getter|fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_LoggedIn$stableprop_getter(){}[0]
 final fun fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_NotLoggedIn$stableprop_getter(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.domain.model/fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_NotLoggedIn$stableprop_getter|fr_outadoc_justchatting_feature_preferences_domain_model_AppUser_NotLoggedIn$stableprop_getter(){}[0]
+final fun fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_AppUpdateState$stableprop_getter(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_AppUpdateState$stableprop_getter|fr_outadoc_justchatting_feature_preferences_presentation_AppUpdateState$stableprop_getter(){}[0]
 final fun fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_Dependency$stableprop_getter(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_Dependency$stableprop_getter|fr_outadoc_justchatting_feature_preferences_presentation_Dependency$stableprop_getter(){}[0]
 final fun fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_DependencyList_$serializer$stableprop_getter(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_DependencyList_$serializer$stableprop_getter|fr_outadoc_justchatting_feature_preferences_presentation_DependencyList_$serializer$stableprop_getter(){}[0]
 final fun fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_Dependency_$serializer$stableprop_getter(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.presentation/fr_outadoc_justchatting_feature_preferences_presentation_Dependency_$serializer$stableprop_getter|fr_outadoc_justchatting_feature_preferences_presentation_Dependency_$serializer$stableprop_getter(){}[0]

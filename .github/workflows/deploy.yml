@@ -156,7 +156,7 @@ jobs:
         uses: NucleusFramework/Nucleus/.github/actions/generate-update-yml@main
         with:
           artifacts-path: artifacts
-          version: "1.0.${{ steps.version.outputs.version }}"
+          version: "${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}"
 
       - name: Locate generated update metadata
         id: update-yml

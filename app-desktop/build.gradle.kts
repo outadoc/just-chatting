@@ -35,10 +35,11 @@ nucleus.application {
 
     nativeDistributions {
         val versionCode = findProperty("externalVersionCode") as String?
+        val versionName = findProperty("externalVersionName") as String?
 
         appName = "Just Chatting"
         packageName = "justchatting"
-        packageVersion = versionCode?.let { "1.0.$versionCode" } ?: "1.0.0"
+        packageVersion = versionName ?: "1.0.0"
         description = "An app focused on a great Twitch chat experience"
         homepage = "https://github.com/outadoc/just-chatting"
 
@@ -53,6 +54,10 @@ nucleus.application {
             menu = true
             upgradeUuid = "4C55AF4A-F39A-4E6F-B753-DE647A8F8BE2"
             iconFile = project.file("assets/icon_windows.ico")
+
+            // MSI requires MAJOR.MINOR.BUILD with MAJOR/MINOR <= 255 and BUILD <= 65535,
+            // which the date-based packageVersion above can't satisfy.
+            msiPackageVersion = versionCode?.let { "1.0.$it" } ?: "1.0.0"
         }
 
         macOS {

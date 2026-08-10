@@ -1,34 +1,13 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.application)
     alias(libs.plugins.spotless)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
 }
 
-kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
-
-    sourceSets {
-        commonMain.dependencies {
-            implementation(project(":shared-ui"))
-        }
-
-        androidMain.dependencies {
-            implementation(libs.firebase.crashlytics)
-        }
-    }
-}
-
 android {
     namespace = "fr.outadoc.justchatting"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "fr.outadoc.justchatting"
@@ -118,4 +97,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(platform(libs.kotlin.bom))
     coreLibraryDesugaring(libs.desugar)
+
+    implementation(project(":shared-ui"))
+    implementation(libs.firebase.crashlytics)
 }

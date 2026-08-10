@@ -1,0 +1,126 @@
+name: Build apps
+
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-android:
+    name: Build Android app
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v5
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y.%m')"
+
+      - name: Compute unique version code
+        id: version
+        run: echo "::set-output name=version::$(git rev-list HEAD --count)"
+
+      - name: Build app bundle
+        run: |
+          ./gradlew bundleQa \
+          "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}"
+
+      - name: Run linter
+        run: ./gradlew lint
+
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest
+
+      - name: Upload app bundle to GitHub
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: apk
+          path: app-android/build/outputs/bundle/qa/app-android-qa.aab
+
+  build-ios:
+    name: Build iOS app
+    runs-on: macos-26
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Select Xcode version
+        run: sudo xcode-select -s '/Applications/Xcode_26.3.app/Contents/Developer'
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v5
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Set up Mise
+        uses: jdx/mise-action@v3
+        with:
+          install: false
+
+      - name: Install Mise dependencies
+        run: mise install
+        working-directory: app-ios
+
+      - name: Build iOS app
+        run: tuist build
+        working-directory: app-ios
+
+  build-desktop:
+    name: Build desktop app
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v5
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y.%m')"
+
+      - name: Compute unique version code
+        id: version
+        run: echo "::set-output name=version::$(git rev-list HEAD --count)"
+
+      - name: Build packages
+        run: |
+          ./gradlew app-desktop:package \
+          "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
+          "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}"
+
+      - name: Upload packages to GitHub
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          path: app-desktop/build/compose/binaries/main

@@ -10,6 +10,7 @@ import com.kmpalette.rememberDominantColorState
 import com.materialkolor.DynamicMaterialTheme
 import com.materialkolor.PaletteStyle
 import fr.outadoc.justchatting.utils.http.toKtorUrl
+import fr.outadoc.justchatting.utils.presentation.isAppInDarkTheme
 import io.ktor.http.Url
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -34,6 +35,7 @@ internal fun DynamicImageColorTheme(
         style = PaletteStyle.Expressive,
         animate = enableColorTransitions,
         content = content,
+        isDark = isAppInDarkTheme(),
     )
 }
 

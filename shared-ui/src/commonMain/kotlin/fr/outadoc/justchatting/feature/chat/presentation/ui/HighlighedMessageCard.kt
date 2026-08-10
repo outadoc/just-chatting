@@ -24,6 +24,7 @@ import com.materialkolor.PaletteStyle
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem.Message.Highlighted.Level
 import fr.outadoc.justchatting.feature.chat.presentation.ui.preview.HighlightLevelPreviewProvider
 import fr.outadoc.justchatting.utils.presentation.AppTheme
+import fr.outadoc.justchatting.utils.presentation.isAppInDarkTheme
 
 @Composable
 internal fun HighlightedMessageCard(
@@ -49,6 +50,7 @@ internal fun HighlightedMessageCard(
     DynamicMaterialTheme(
         seedColor = color,
         style = PaletteStyle.Vibrant,
+        isDark = isAppInDarkTheme(),
     ) {
         Row(modifier = Modifier.height(IntrinsicSize.Min)) {
             Box(

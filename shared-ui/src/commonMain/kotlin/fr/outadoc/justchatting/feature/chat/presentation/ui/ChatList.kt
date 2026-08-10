@@ -24,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
@@ -154,6 +156,10 @@ internal fun ChatList(
         listState.scrollToItem(index = 0)
     }
 
+    val density = LocalDensity.current
+    var chatEventsHeightPx by remember { mutableStateOf(0) }
+    val chatEventsHeight = with(density) { chatEventsHeightPx.toDp() }
+
     Box {
         LazyColumn(
             modifier = modifier
@@ -167,6 +173,7 @@ internal fun ChatList(
             reverseLayout = true,
             contentPadding =
             PaddingValues(
+                top = chatEventsHeight,
                 bottom = insets.calculateBottomPadding(),
             ),
         ) {
@@ -263,7 +270,9 @@ internal fun ChatList(
         }
 
         ChatEvents(
-            modifier = Modifier.padding(horizontal = 6.dp),
+            modifier = Modifier
+                .padding(horizontal = 6.dp)
+                .onSizeChanged { newSize -> chatEventsHeightPx = newSize.height },
             insets = insets,
             roomState = roomState,
             isDisconnected = isDisconnected,

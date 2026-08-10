@@ -294,8 +294,9 @@
     <string name="settings_appearance_timestamps_title">Show message timestamps</string>
     <string name="settings_dependencies_cd">Show website</string>
     <string name="settings_dependencies_header">Open-source</string>
-    <string name="settings_logs_subtitle">Dump recent logs and share them for debugging purposes.</string>
-    <string name="settings_logs_title">Share logs</string>
+    <string name="settings_logs_copiedToClipboard">Logs copied to clipboard</string>
+    <string name="settings_logs_subtitle">Export recent logs for debugging purposes.</string>
+    <string name="settings_logs_title">Export logs</string>
     <string name="settings_notifications_enable_subtitle">When enabled, chat sessions will keep running in the background, and be available through bubbles on supported devices.</string>
     <string name="settings_notifications_enable_title">Persistent notifications (Experimental)</string>
     <string name="settings_notifications_header">Notifications</string>

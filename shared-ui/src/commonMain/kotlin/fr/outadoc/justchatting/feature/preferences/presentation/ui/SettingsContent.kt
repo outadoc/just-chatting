@@ -11,7 +11,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import fr.outadoc.justchatting.feature.shared.presentation.DetailScreen
 import fr.outadoc.justchatting.feature.shared.presentation.Screen
@@ -27,7 +26,6 @@ internal fun SettingsContent(
     modifier: Modifier = Modifier,
     onNavigate: (Screen) -> Unit,
     onNavigateDetails: (DetailScreen) -> Unit,
-    onShareLogs: (Uri) -> Unit,
 ) {
     val viewModel: SettingsViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
@@ -37,13 +35,13 @@ internal fun SettingsContent(
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
-                is SettingsViewModel.Event.ShareLogs -> {
-                    onShareLogs(event.uri)
-                }
-
                 is SettingsViewModel.Event.NavigateToDetail -> {
                     onNavigateDetails(event.screen)
                 }
+
+                is SettingsViewModel.Event.ShareLogs,
+                is SettingsViewModel.Event.CopyLogsToClipboard,
+                -> Unit // Handled in SettingsSectionAbout, next to the triggering button.
             }
         }
     }

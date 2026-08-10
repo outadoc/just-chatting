@@ -126,7 +126,6 @@ internal fun MainRouter(
                                 )
                             }
                         },
-                        onShareLogs = onShareLogs,
                     )
                 }
             },
@@ -174,6 +173,7 @@ internal fun MainRouter(
                                     navigator.navigateBack()
                                 }
                             },
+                            onShareLogs = onShareLogs,
                         )
                     }
 

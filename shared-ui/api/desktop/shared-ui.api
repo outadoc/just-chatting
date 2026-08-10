@@ -168,7 +168,7 @@ public final class fr/outadoc/justchatting/feature/onboarding/presentation/ui/Co
 public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsContentKt {
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsContentKt;
 	public fun <init> ()V
-	public final fun getLambda$1559634820$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1280771825$shared_ui ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsHeaderKt {
@@ -207,23 +207,23 @@ public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/C
 public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSectionAboutKt {
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSectionAboutKt;
 	public fun <init> ()V
-	public final fun getLambda$-1234125789$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-1425467489$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-1679663100$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-1791441860$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-1871004800$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-2125200411$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-788588478$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-841493119$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$1250755122$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$1416892738$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$1532887874$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$1654640193$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$1862430049$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$1978425185$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$525818116$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$722935966$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$971355427$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1031679901$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1534088697$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-17827071$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1922948027$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-2082628919$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-209415382$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-414899449$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-440241522$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-49734490$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-963439671$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1458314088$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1823479047$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$2006854310$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$339124840$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$498805732$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$693336966$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$84948479$shared_ui ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsSectionAppearanceKt {

@@ -40,6 +40,10 @@ public class SettingsViewModel internal constructor(
             val uri: Uri,
         ) : Event()
 
+        public data class CopyLogsToClipboard(
+            val text: String,
+        ) : Event()
+
         public data class NavigateToDetail(
             val screen: DetailScreen,
         ) : Event()
@@ -115,15 +119,15 @@ public class SettingsViewModel internal constructor(
         }
     }
 
-    public fun onShareLogsClick() {
+    public fun onExportLogsClick() {
         viewModelScope.launch {
             try {
                 if (logRepository.isSupported) {
-                    _events.emit(
-                        Event.ShareLogs(
-                            uri = logRepository.dumpLogs(),
-                        ),
-                    )
+                    val event = when (val result = logRepository.exportLogs()) {
+                        is LogExportResult.Share -> Event.ShareLogs(uri = result.uri)
+                        is LogExportResult.CopyToClipboard -> Event.CopyLogsToClipboard(text = result.text)
+                    }
+                    _events.emit(event)
                 }
             } catch (e: Exception) {
                 logError<SettingsViewModel>(e) { "Error while reading logs" }

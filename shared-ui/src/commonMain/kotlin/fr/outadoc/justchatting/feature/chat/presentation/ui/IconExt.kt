@@ -9,7 +9,9 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.FastForward
 import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material.icons.filled.Highlight
+import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Redeem
+import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Toll
 import androidx.compose.material.icons.filled.VolunteerActivism
 import androidx.compose.material.icons.filled.WavingHand
@@ -24,9 +26,11 @@ internal fun Icon.toMaterialIcon(): ImageVector = when (this) {
     Icon.FastForward -> Icons.Default.FastForward
     Icon.Gavel -> Icons.Default.Gavel
     Icon.Highlight -> Icons.Default.Highlight
+    Icon.LocalFireDepartment -> Icons.Default.LocalFireDepartment
     Icon.Redeem -> Icons.Default.Redeem
     Icon.Reply -> Icons.AutoMirrored.Filled.Reply
     Icon.Send -> Icons.AutoMirrored.Filled.Send
+    Icon.Shield -> Icons.Default.Shield
     Icon.Star -> Icons.Outlined.Star
     Icon.Toll -> Icons.Default.Toll
     Icon.VolunteerActivism -> Icons.Default.VolunteerActivism

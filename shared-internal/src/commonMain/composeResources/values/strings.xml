@@ -28,6 +28,7 @@
     <string name="chat_massSubGift_header">is gifting %1$s %2$s subs to the community! They've gifted a total of %3$s subs in the channel.</string>
     <string name="chat_message_actionSeparator">&#160;</string>
     <string name="chat_message_standardSeparator">:&#160;</string>
+    <string name="chat_modAnniversary_header">has been a moderator for %1$s!</string>
     <string name="chat_open_action">Open chat</string>
     <string name="chat_openBubble_action">Open chat in bubble</string>
     <string name="chat_raid_header">raided with %1$s!</string>
@@ -54,6 +55,7 @@
     <string name="chat_sub_tier3">at Tier 3</string>
     <string name="chat_timeout">has been timed out for %1$s</string>
     <string name="chat_unraid_subtitle">has cancelled the raid</string>
+    <string name="chat_watchStreak_header">watched %1$s in a row, sparking a watch streak!</string>
     <string name="connectionLost_error">Reconnecting to chat…</string>
     <string name="created_at">Created on %1$s</string>
     <string name="date_today_earlier">Earlier today</string>

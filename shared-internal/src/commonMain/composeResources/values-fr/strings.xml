@@ -28,6 +28,7 @@
     <string name="chat_massSubGift_header">offre %1$s abonnements %2$s à la communauté ! Iel a offert un total de %3$s abonnements sur cette chaîne.</string>
     <string name="chat_message_actionSeparator">&#160;</string>
     <string name="chat_message_standardSeparator">&#160;:&#160;</string>
+    <string name="chat_modAnniversary_header">est modérateur·rice depuis %1$s !</string>
     <string name="chat_open_action">Ouvrir le tchat</string>
     <string name="chat_openBubble_action">Ouvrir le tchat dans une bulle</string>
     <string name="chat_raid_header">a raid la chaîne avec %1$s !</string>
@@ -54,6 +55,7 @@
     <string name="chat_sub_tier3">de niveau 3</string>
     <string name="chat_timeout">a été mis·e au silence pendant %1$s</string>
     <string name="chat_unraid_subtitle">a annulé le raid</string>
+    <string name="chat_watchStreak_header">a regardé %1$s d'affilée et a lancé une série de visionnage !</string>
     <string name="connectionLost_error">Reconnexion au tchat…</string>
     <string name="created_at">Créé le %1$s</string>
     <string name="date_today_earlier">Plus tôt aujourd'hui</string>

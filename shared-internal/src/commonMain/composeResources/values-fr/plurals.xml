@@ -12,6 +12,12 @@
         <item quantity="many">%1$s de mois</item>
     </plurals>
 
+    <plurals name="streams">
+        <item quantity="one">%1$s stream</item>
+        <item quantity="other">%1$s streams</item>
+        <item quantity="many">%1$s de streams</item>
+    </plurals>
+
     <plurals name="user_redeemed">
         <item quantity="one">%1$s a obtenu %2$s pour %3$,d point</item>
         <item quantity="other">%1$s a obtenu %2$s pour %3$,d points</item>

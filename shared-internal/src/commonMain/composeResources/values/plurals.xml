@@ -10,6 +10,11 @@
         <item quantity="other">%1$s months</item>
     </plurals>
 
+    <plurals name="streams">
+        <item quantity="one">%1$s stream</item>
+        <item quantity="other">%1$s streams</item>
+    </plurals>
+
     <plurals name="user_redeemed">
         <item quantity="one">%1$s redeemed %2$s for %3$,d point</item>
         <item quantity="other">%1$s redeemed %2$s for %3$,d points</item>

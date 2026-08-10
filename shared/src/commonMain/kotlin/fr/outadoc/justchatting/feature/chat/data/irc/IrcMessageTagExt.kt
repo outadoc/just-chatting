@@ -114,6 +114,15 @@ internal val Map<String, String?>.massGiftCount: Int?
 internal val Map<String, String?>.totalChannelGiftCount: Int?
     get() = this["msg-param-sender-count"]?.toIntOrNull()
 
+internal val Map<String, String?>.moderatorMonths: Int?
+    get() = this["msg-param-months"]?.toIntOrNull()
+
+internal val Map<String, String?>.milestoneCategory: String?
+    get() = this["msg-param-category"]?.takeUnless { it.isEmpty() }
+
+internal val Map<String, String?>.milestoneValue: Int?
+    get() = this["msg-param-value"]?.toIntOrNull()
+
 internal val Map<String, String?>.emoteSets: List<String>?
     get() = this["emote-sets"]?.split(",")?.dropLastWhile { it.isEmpty() }
 

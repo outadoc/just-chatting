@@ -335,6 +335,49 @@ internal class TwitchIrcCommandParserTest {
     }
 
     @Test
+    fun `Parse moderator anniversary USERNOTICE`() = test {
+        input {
+            "@badge-info=;badges=moderator/1,mod-founder/1;color=#8A2BE2;display-name=remembeurre;emotes=;flags=;id=997b3e54-306f-4ca4-b81b-b6563e4e576c;login=remembeurre;mod=1;msg-id=modiversary;msg-param-months=84;room-id=135468063;subscriber=0;system-msg=has\\sbeen\\sa\\smoderator\\sfor\\s84\\smonths!;tmi-sent-ts=1786384784025;user-id=126024982;user-type=mod;vip=0 :tmi.twitch.tv USERNOTICE #antoinedaniel :Et de 7"
+        }
+        expected {
+            ChatEvent.Message.ModeratorAnniversary(
+                timestamp = Instant.parse("2026-08-10T17:59:44.025Z"),
+                userDisplayName = "remembeurre",
+                months = 84,
+            )
+        }
+    }
+
+    @Test
+    fun `Parse watch streak USERNOTICE`() = test {
+        input {
+            "@badge-info=;badges=speedons-6/1;color=#5F9EA0;display-name=xeanddra;emotes=emotesv2_dcd06b30a5c24f6eb871e8f5edbd44f7:0-8,10-18;flags=;id=7ff875bc-901e-48ca-b24e-5bbd8e5cc1b4;login=xeanddra;mod=0;msg-id=viewermilestone;msg-param-category=watch-streak;msg-param-copoReward=450;msg-param-id=278abcbb-878f-4d81-8d55-d0466a453a04;msg-param-value=130;room-id=135468063;subscriber=0;system-msg=xeanddra\\swatched\\s130\\sconsecutive\\sstreams\\sand\\ssparked\\sa\\swatch\\sstreak!;tmi-sent-ts=1786384731167;user-id=657603581;user-type=;vip=0 :tmi.twitch.tv USERNOTICE #antoinedaniel :DinoDance DinoDance"
+        }
+        expected {
+            ChatEvent.Message.WatchStreak(
+                timestamp = Instant.parse("2026-08-10T17:58:51.167Z"),
+                userDisplayName = "xeanddra",
+                streakLength = 130,
+            )
+        }
+    }
+
+    @Test
+    fun `Parse viewermilestone USERNOTICE with unknown category`() = test {
+        input {
+            "@badge-info=;badges=;color=;display-name=someviewer;emotes=;flags=;id=aaaaaaaa-1111-2222-3333-444444444444;login=someviewer;mod=0;msg-id=viewermilestone;msg-param-category=some-future-category;msg-param-id=bbbbbbbb-1111-2222-3333-444444444444;msg-param-value=5;room-id=135468063;subscriber=0;system-msg=someviewer\\sdid\\ssomething\\sfive\\stimes!;tmi-sent-ts=1786384731167;user-id=657603581;user-type=;vip=0 :tmi.twitch.tv USERNOTICE #antoinedaniel"
+        }
+        expected {
+            ChatEvent.Message.UserNotice(
+                timestamp = Instant.parse("2026-08-10T17:58:51.167Z"),
+                msgId = "viewermilestone",
+                systemMsg = "someviewer did something five times!",
+                userMessage = null,
+            )
+        }
+    }
+
+    @Test
     fun `Parse PING`() = test {
         input { "PING :tmi.twitch.tv" }
         expected { ChatEvent.Command.Ping }

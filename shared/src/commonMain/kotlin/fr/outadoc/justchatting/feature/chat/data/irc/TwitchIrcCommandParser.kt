@@ -136,6 +136,35 @@ internal class TwitchIrcCommandParser(
                 )
             }
 
+            "modiversary" -> {
+                ChatEvent.Message.ModeratorAnniversary(
+                    timestamp = timestamp,
+                    userDisplayName = ircMessage.tags.displayName ?: return null,
+                    months = ircMessage.tags.moderatorMonths ?: return null,
+                )
+            }
+
+            "viewermilestone" -> {
+                when (ircMessage.tags.milestoneCategory) {
+                    "watch-streak" -> {
+                        ChatEvent.Message.WatchStreak(
+                            timestamp = timestamp,
+                            userDisplayName = ircMessage.tags.displayName ?: return null,
+                            streakLength = ircMessage.tags.milestoneValue ?: return null,
+                        )
+                    }
+
+                    else -> {
+                        ChatEvent.Message.UserNotice(
+                            timestamp = timestamp,
+                            msgId = ircMessage.tags.messageId,
+                            systemMsg = ircMessage.tags.systemMsg ?: return null,
+                            userMessage = parseMessage(ircMessage),
+                        )
+                    }
+                }
+            }
+
             else -> {
                 ChatEvent.Message.UserNotice(
                     timestamp = timestamp,

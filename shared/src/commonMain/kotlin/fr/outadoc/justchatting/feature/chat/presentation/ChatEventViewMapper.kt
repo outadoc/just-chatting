@@ -11,6 +11,7 @@ import fr.outadoc.justchatting.shared.internal.chat_clear
 import fr.outadoc.justchatting.shared.internal.chat_first
 import fr.outadoc.justchatting.shared.internal.chat_join
 import fr.outadoc.justchatting.shared.internal.chat_massSubGift_header
+import fr.outadoc.justchatting.shared.internal.chat_modAnniversary_header
 import fr.outadoc.justchatting.shared.internal.chat_raid_header
 import fr.outadoc.justchatting.shared.internal.chat_reward
 import fr.outadoc.justchatting.shared.internal.chat_send_msg_error
@@ -29,6 +30,7 @@ import fr.outadoc.justchatting.shared.internal.chat_sub_tier2
 import fr.outadoc.justchatting.shared.internal.chat_sub_tier3
 import fr.outadoc.justchatting.shared.internal.chat_timeout
 import fr.outadoc.justchatting.shared.internal.chat_unraid_subtitle
+import fr.outadoc.justchatting.shared.internal.chat_watchStreak_header
 import fr.outadoc.justchatting.shared.internal.irc_msgid_announcement
 import fr.outadoc.justchatting.shared.internal.irc_msgid_highlighted_message
 import fr.outadoc.justchatting.shared.internal.irc_notice_already_banned
@@ -190,6 +192,7 @@ import fr.outadoc.justchatting.shared.internal.irc_notice_whisper_limit_per_sec
 import fr.outadoc.justchatting.shared.internal.irc_notice_whisper_restricted
 import fr.outadoc.justchatting.shared.internal.irc_notice_whisper_restricted_recipient
 import fr.outadoc.justchatting.shared.internal.months
+import fr.outadoc.justchatting.shared.internal.streams
 import fr.outadoc.justchatting.shared.internal.user_redeemed
 import fr.outadoc.justchatting.shared.internal.viewers
 import fr.outadoc.justchatting.utils.presentation.formatNumber
@@ -425,6 +428,42 @@ internal class ChatEventViewMapper {
                                 ),
                             ),
                     ),
+                )
+            }
+
+            is ChatEvent.Message.ModeratorAnniversary -> {
+                ChatListItem.Message.Highlighted(
+                    timestamp = timestamp,
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
+                        title = userDisplayName.desc(),
+                        titleIcon = Icon.Shield,
+                        subtitle = Res.string.chat_modAnniversary_header
+                            .desc(
+                                Res.plurals.months.desc(
+                                    number = months,
+                                    months.formatNumber(),
+                                ),
+                            ),
+                    ),
+                    body = null,
+                )
+            }
+
+            is ChatEvent.Message.WatchStreak -> {
+                ChatListItem.Message.Highlighted(
+                    timestamp = timestamp,
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
+                        title = userDisplayName.desc(),
+                        titleIcon = Icon.LocalFireDepartment,
+                        subtitle = Res.string.chat_watchStreak_header
+                            .desc(
+                                Res.plurals.streams.desc(
+                                    number = streakLength,
+                                    streakLength.formatNumber(),
+                                ),
+                            ),
+                    ),
+                    body = null,
                 )
             }
 

@@ -99,6 +99,18 @@ internal sealed interface ChatEvent {
             val subscriptionPlan: String,
         ) : Message
 
+        data class ModeratorAnniversary(
+            override val timestamp: Instant,
+            val userDisplayName: String,
+            val months: Int,
+        ) : Message
+
+        data class WatchStreak(
+            override val timestamp: Instant,
+            val userDisplayName: String,
+            val streakLength: Int,
+        ) : Message
+
         data class HighlightedMessage(
             override val timestamp: Instant,
             val userMessage: ChatMessage,

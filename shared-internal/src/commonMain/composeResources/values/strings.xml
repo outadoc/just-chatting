@@ -328,6 +328,7 @@
     <string name="update_dialog_downloading">Downloading update…</string>
     <string name="update_dialog_message">Version %1$s is available. Install and restart now?</string>
     <string name="update_dialog_title">Update available</string>
+    <string name="update_snackbar_action">Details</string>
     <string name="uptime">Live since %1$s</string>
     <string name="watch_live">Watch live</string>
     <string name="yes">Yes</string>

@@ -1,9 +1,11 @@
 package fr.outadoc.justchatting
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -18,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import fr.outadoc.justchatting.di.startSharedKoin
-import fr.outadoc.justchatting.feature.chat.presentation.ui.SlimSnackbar
 import fr.outadoc.justchatting.feature.preferences.presentation.AppUpdateChecker
 import fr.outadoc.justchatting.feature.preferences.presentation.ui.UpdateAvailableDialog
 import fr.outadoc.justchatting.feature.shared.presentation.ui.App
@@ -26,6 +27,7 @@ import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.app_name
 import fr.outadoc.justchatting.shared.internal.icon_masked
 import fr.outadoc.justchatting.shared.internal.settings_about_update_subtitle_available
+import fr.outadoc.justchatting.shared.internal.update_snackbar_action
 import fr.outadoc.justchatting.utils.logging.JvmLogStrategy
 import fr.outadoc.justchatting.utils.logging.Logger
 import kotlinx.coroutines.launch
@@ -55,6 +57,26 @@ public fun startApp() {
 
             val updateState by appUpdateChecker.state.collectAsState()
             var showUpdateDialog by remember { mutableStateOf(false) }
+            val snackbarHostState = remember { SnackbarHostState() }
+
+            val availableVersion = updateState.availableVersion
+            val updateAvailableMessage = availableVersion?.let {
+                stringResource(Res.string.settings_about_update_subtitle_available, it)
+            }
+            val updateSnackbarAction = stringResource(Res.string.update_snackbar_action)
+
+            LaunchedEffect(updateAvailableMessage) {
+                if (updateAvailableMessage != null) {
+                    val result = snackbarHostState.showSnackbar(
+                        message = updateAvailableMessage,
+                        actionLabel = updateSnackbarAction,
+                        duration = SnackbarDuration.Indefinite,
+                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+                        showUpdateDialog = true
+                    }
+                }
+            }
 
             Box {
                 App(
@@ -67,22 +89,12 @@ public fun startApp() {
                     },
                 )
 
-                val availableVersion = updateState.availableVersion
-                if (availableVersion != null) {
-                    SlimSnackbar(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(16.dp)
-                            .clickable { showUpdateDialog = true },
-                    ) {
-                        Text(
-                            text = stringResource(
-                                Res.string.settings_about_update_subtitle_available,
-                                availableVersion,
-                            ),
-                        )
-                    }
-                }
+                SnackbarHost(
+                    hostState = snackbarHostState,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(16.dp),
+                )
             }
 
             if (showUpdateDialog) {

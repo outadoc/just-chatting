@@ -328,6 +328,7 @@
     <string name="update_dialog_downloading">Téléchargement de la mise à jour…</string>
     <string name="update_dialog_message">La version %1$s est disponible. Installer et redémarrer maintenant ?</string>
     <string name="update_dialog_title">Mise à jour disponible</string>
+    <string name="update_snackbar_action">Détails</string>
     <string name="uptime">En direct depuis %1$s</string>
     <string name="watch_live">Regarder en direct</string>
     <string name="yes">Oui</string>

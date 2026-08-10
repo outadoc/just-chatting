@@ -1,6 +1,6 @@
 [versions]
 accompanist = "0.37.3"
-android = "8.13.2"
+android = "9.3.1"
 coil = "3.4.0"
 connectivity = "2.4.1"
 compose-multiplatform = "1.11.1"
@@ -26,6 +26,7 @@ stately = "2.1.0"
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
 android-library = { id = "com.android.library", version.ref = "android" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "android" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.6" }

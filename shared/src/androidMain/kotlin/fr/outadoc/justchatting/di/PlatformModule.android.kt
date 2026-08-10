@@ -21,8 +21,14 @@ import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.NoopAppUpdateChecker
 import fr.outadoc.justchatting.utils.http.AndroidHttpClientProvider
 import fr.outadoc.justchatting.utils.http.BaseHttpClientProvider
+import fr.outadoc.justchatting.utils.logging.FileLogStrategy
+import fr.outadoc.justchatting.utils.logging.LogStrategy
+import okio.FileSystem
+import okio.Path
+import okio.Path.Companion.toOkioPath
 import okio.Path.Companion.toPath
 import org.koin.core.module.Module
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 internal actual val platformModule: Module
@@ -34,6 +40,9 @@ internal actual val platformModule: Module
                     redirectUri = "https://just-chatting.app/auth/callback.html",
                 )
             }
+
+            single<Path>(named("logsDirectory")) { get<Context>().cacheDir.toOkioPath() / "logs" }
+            single<Path>(named("logFilePath")) { get<Path>(named("logsDirectory")) / "app.log" }
 
             single<SqlDriver> {
                 AndroidSqliteDriver(
@@ -58,7 +67,22 @@ internal actual val platformModule: Module
             single<ConnectivityManager> { get<Context>().getSystemService()!! }
             single<BaseHttpClientProvider> { AndroidHttpClientProvider(get(), get()) }
 
-            single<LogRepository> { AndroidLogRepository(get(), get()) }
+            single<LogStrategy> {
+                FileLogStrategy(
+                    logFilePath = get(named("logFilePath")),
+                    fileSystem = FileSystem.SYSTEM,
+                )
+            }
+            single<LogRepository> {
+                AndroidLogRepository(
+                    applicationContext = get(),
+                    logFilePath = get(named("logFilePath")),
+                    dumpDirectory = get(named("logsDirectory")),
+                    fileSystem = FileSystem.SYSTEM,
+                    dispatchersProvider = get(),
+                    clock = get(),
+                )
+            }
             single<AppVersionNameProvider> { AndroidAppVersionNameProvider(get()) }
             single<AppUpdateChecker> { NoopAppUpdateChecker() }
             single<LocalCallbackWebServer> { NoopLocalCallbackWebServer() }

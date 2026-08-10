@@ -17,12 +17,15 @@ import fr.outadoc.justchatting.feature.chat.presentation.NoopCreateShortcutForCh
 import fr.outadoc.justchatting.feature.preferences.presentation.AppUpdateChecker
 import fr.outadoc.justchatting.feature.preferences.presentation.AppVersionNameProvider
 import fr.outadoc.justchatting.feature.preferences.presentation.AppleAppVersionNameProvider
+import fr.outadoc.justchatting.feature.preferences.presentation.FileLogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.NoopAppUpdateChecker
-import fr.outadoc.justchatting.feature.preferences.presentation.NoopLogRepository
 import fr.outadoc.justchatting.utils.http.AppleHttpClientProvider
 import fr.outadoc.justchatting.utils.http.BaseHttpClientProvider
+import fr.outadoc.justchatting.utils.logging.FileLogStrategy
+import fr.outadoc.justchatting.utils.logging.LogStrategy
 import kotlinx.cinterop.ExperimentalForeignApi
+import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toPath
 import org.koin.core.module.Module
@@ -40,6 +43,9 @@ internal actual val platformModule: Module
                     redirectUri = "https://just-chatting.app/auth/callback.html",
                 )
             }
+
+            val logsDirectory = getDocumentsDirectory().resolve("logs")
+            val logFilePath = logsDirectory.resolve("app.log")
 
             single<ChatNotifier> { NoopChatNotifier() }
             single<CreateShortcutForChannelUseCase> { NoopCreateShortcutForChannelUseCase() }
@@ -61,7 +67,18 @@ internal actual val platformModule: Module
 
             single<BaseHttpClientProvider> { AppleHttpClientProvider(get(), get()) }
 
-            single<LogRepository> { NoopLogRepository() }
+            single<LogStrategy> {
+                FileLogStrategy(logFilePath = logFilePath, fileSystem = FileSystem.SYSTEM)
+            }
+            single<LogRepository> {
+                FileLogRepository(
+                    logFilePath = logFilePath,
+                    dumpDirectory = logsDirectory,
+                    fileSystem = FileSystem.SYSTEM,
+                    dispatchersProvider = get(),
+                    clock = get(),
+                )
+            }
             single<AppVersionNameProvider> { AppleAppVersionNameProvider() }
             single<AppUpdateChecker> { NoopAppUpdateChecker() }
             single<LocalCallbackWebServer> { NoopLocalCallbackWebServer() }

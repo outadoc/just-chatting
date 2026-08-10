@@ -91,9 +91,9 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/ui/Composab
 public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatTopAppBarKt {
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatTopAppBarKt;
 	public fun <init> ()V
-	public final fun getLambda$-576339745$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-668710579$shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$64144353$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-15201461$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$167187324$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$793938761$shared_ui ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$HighlighedMessageCardKt {

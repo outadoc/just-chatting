@@ -28,7 +28,7 @@ import fr.outadoc.justchatting.shared.internal.app_name
 import fr.outadoc.justchatting.shared.internal.icon_masked
 import fr.outadoc.justchatting.shared.internal.settings_about_update_subtitle_available
 import fr.outadoc.justchatting.shared.internal.update_snackbar_action
-import fr.outadoc.justchatting.utils.logging.JvmLogStrategy
+import fr.outadoc.justchatting.utils.logging.LogStrategy
 import fr.outadoc.justchatting.utils.logging.Logger
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -36,8 +36,8 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 public fun startApp() {
-    Logger.logStrategy = JvmLogStrategy
-    startSharedKoin()
+    val koinApp = startSharedKoin()
+    Logger.logStrategy = koinApp.koin.get<LogStrategy>()
 
     application {
         Window(

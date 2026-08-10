@@ -19,11 +19,16 @@ import fr.outadoc.justchatting.feature.preferences.presentation.AppUpdateChecker
 import fr.outadoc.justchatting.feature.preferences.presentation.AppVersionNameProvider
 import fr.outadoc.justchatting.feature.preferences.presentation.DesktopAppUpdateChecker
 import fr.outadoc.justchatting.feature.preferences.presentation.DesktopAppVersionNameProvider
+import fr.outadoc.justchatting.feature.preferences.presentation.FileLogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
-import fr.outadoc.justchatting.feature.preferences.presentation.NoopLogRepository
 import fr.outadoc.justchatting.utils.http.BaseHttpClientProvider
 import fr.outadoc.justchatting.utils.http.DesktopHttpClientProvider
+import fr.outadoc.justchatting.utils.logging.CompositeLogStrategy
+import fr.outadoc.justchatting.utils.logging.FileLogStrategy
+import fr.outadoc.justchatting.utils.logging.JvmLogStrategy
+import fr.outadoc.justchatting.utils.logging.LogStrategy
 import net.harawata.appdirs.AppDirsFactory
+import okio.FileSystem
 import okio.Path.Companion.toPath
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -39,6 +44,9 @@ internal actual val platformModule: Module
                     AppInfo.APP_AUTHOR,
                     true,
                 ).toPath()
+
+            val logsDirectory = appDir.resolve("logs")
+            val logFilePath = logsDirectory.resolve("app.log")
 
             single {
                 OAuthAppCredentials(
@@ -69,7 +77,23 @@ internal actual val platformModule: Module
             }
 
             single<BaseHttpClientProvider> { DesktopHttpClientProvider(get(), get()) }
-            single<LogRepository> { NoopLogRepository() }
+            single<LogStrategy> {
+                CompositeLogStrategy(
+                    listOf(
+                        JvmLogStrategy,
+                        FileLogStrategy(logFilePath = logFilePath, fileSystem = FileSystem.SYSTEM),
+                    ),
+                )
+            }
+            single<LogRepository> {
+                FileLogRepository(
+                    logFilePath = logFilePath,
+                    dumpDirectory = logsDirectory,
+                    fileSystem = FileSystem.SYSTEM,
+                    dispatchersProvider = get(),
+                    clock = get(),
+                )
+            }
             single<AppVersionNameProvider> { DesktopAppVersionNameProvider() }
             single<AppUpdateChecker> { DesktopAppUpdateChecker() }
             single<LocalCallbackWebServer> { KtorLocalCallbackWebServer(get(), get()) }

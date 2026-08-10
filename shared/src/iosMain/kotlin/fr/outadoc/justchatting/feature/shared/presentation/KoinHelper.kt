@@ -6,6 +6,7 @@ import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewMode
 import fr.outadoc.justchatting.feature.search.presentation.ChannelSearchViewModel
 import fr.outadoc.justchatting.feature.timeline.presentation.FutureTimelineViewModel
 import fr.outadoc.justchatting.feature.timeline.presentation.LiveTimelineViewModel
+import fr.outadoc.justchatting.utils.logging.LogStrategy
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
@@ -18,4 +19,5 @@ public class KoinHelper : KoinComponent {
     public fun getChannelSearchViewModel(): ChannelSearchViewModel = get()
     public fun getSettingsViewModel(): SettingsViewModel = get()
     public fun getDeeplinkReceiver(): DeeplinkReceiver = get()
+    public fun getLogStrategy(): LogStrategy = get()
 }

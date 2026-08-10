@@ -352,9 +352,11 @@ public final class fr/outadoc/justchatting/feature/chat/domain/model/Icon : java
 	public static final field FastForward Lfr/outadoc/justchatting/feature/chat/domain/model/Icon;
 	public static final field Gavel Lfr/outadoc/justchatting/feature/chat/domain/model/Icon;
 	public static final field Highlight Lfr/outadoc/justchatting/feature/chat/domain/model/Icon;
+	public static final field LocalFireDepartment Lfr/outadoc/justchatting/feature/chat/domain/model/Icon;
 	public static final field Redeem Lfr/outadoc/justchatting/feature/chat/domain/model/Icon;
 	public static final field Reply Lfr/outadoc/justchatting/feature/chat/domain/model/Icon;
 	public static final field Send Lfr/outadoc/justchatting/feature/chat/domain/model/Icon;
+	public static final field Shield Lfr/outadoc/justchatting/feature/chat/domain/model/Icon;
 	public static final field Star Lfr/outadoc/justchatting/feature/chat/domain/model/Icon;
 	public static final field Toll Lfr/outadoc/justchatting/feature/chat/domain/model/Icon;
 	public static final field VolunteerActivism Lfr/outadoc/justchatting/feature/chat/domain/model/Icon;
@@ -1868,6 +1870,12 @@ public final class fr/outadoc/justchatting/utils/datetime/JCLocalDate {
 public final class fr/outadoc/justchatting/utils/http/UriExtKt {
 	public static final fun toKtorUrl (Lcom/eygraber/uri/Uri;)Lio/ktor/http/Url;
 	public static final fun toUri (Ljava/lang/String;)Lcom/eygraber/uri/Uri;
+}
+
+public final class fr/outadoc/justchatting/utils/logging/CompositeLogStrategy : fr/outadoc/justchatting/utils/logging/LogStrategy {
+	public static final field $stable I
+	public fun <init> (Ljava/util/List;)V
+	public fun println (Lfr/outadoc/justchatting/utils/logging/Logger$Level;Ljava/lang/String;Ljava/lang/String;)V
 }
 
 public final class fr/outadoc/justchatting/utils/logging/JvmLogStrategy : fr/outadoc/justchatting/utils/logging/LogStrategy {

@@ -3,48 +3,18 @@ package fr.outadoc.justchatting.feature.preferences.presentation
 import android.content.Context
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
-import kotlinx.coroutines.withContext
-import okio.BufferedSource
+import okio.FileSystem
 import okio.Path
-import okio.Path.Companion.toOkioPath
-import okio.Sink
-import okio.buffer
-import okio.gzip
-import okio.sink
-import okio.source
-import java.util.UUID
+import kotlin.time.Clock
 
 internal class AndroidLogRepository(
     private val applicationContext: Context,
-    private val dispatchersProvider: DispatchersProvider,
-) : LogRepository {
-    override val isSupported: Boolean = true
-
-    private val logsPath: Path
-        get() =
-            (applicationContext.cacheDir.toOkioPath() / "logs")
-                .also { dir -> dir.toFile().mkdir() }
-
-    private fun getRandomFilePath(): Path {
-        val uuid: String = UUID.randomUUID().toString()
-        return logsPath / "$uuid.log.gz"
-    }
-
-    override suspend fun dumpLogs(): Uri = withContext(dispatchersProvider.io) {
-        val process: Process =
-            Runtime.getRuntime().exec("logcat -d")
-
-        val outPath: Path = getRandomFilePath()
-
-        val source: BufferedSource = process.inputStream.source().buffer()
-        val sink: Sink = outPath.toFile().sink().gzip()
-
-        source.use {
-            sink.use {
-                source.readAll(sink)
-            }
-        }
-
-        LogFileProvider.getUri(applicationContext, outPath)
-    }
+    logFilePath: Path,
+    dumpDirectory: Path,
+    fileSystem: FileSystem,
+    dispatchersProvider: DispatchersProvider,
+    clock: Clock,
+) : FileLogRepository(logFilePath, dumpDirectory, fileSystem, dispatchersProvider, clock) {
+    // Android requires a content:// URI to share a file with another app.
+    override fun toShareableUri(path: Path): Uri = LogFileProvider.getUri(applicationContext, path)
 }

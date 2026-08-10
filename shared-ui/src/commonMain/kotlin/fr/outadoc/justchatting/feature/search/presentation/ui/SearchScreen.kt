@@ -18,8 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.collectAsLazyPagingItems
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import fr.outadoc.justchatting.feature.search.presentation.ChannelSearchViewModel
@@ -86,7 +86,7 @@ internal fun SearchScreen(
         },
         content = { insets ->
             RecentUsersList(
-                modifier = modifier.haze(hazeState),
+                modifier = modifier.hazeSource(hazeState),
                 insets = insets,
                 users = state.recentChannels,
                 onChannelClick = { user ->

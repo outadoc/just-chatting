@@ -31,8 +31,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
@@ -123,7 +123,7 @@ internal fun FollowedChannelsList(
             if (hasMouse) {
                 InnerFollowedChannelsList(
                     modifier = Modifier
-                        .haze(hazeState)
+                        .hazeSource(hazeState)
                         .fillMaxSize(),
                     insets = insets,
                     items = state.data,
@@ -136,7 +136,7 @@ internal fun FollowedChannelsList(
                 val pullToRefreshState = rememberPullToRefreshState()
                 PullToRefreshBox(
                     modifier = Modifier
-                        .haze(hazeState)
+                        .hazeSource(hazeState)
                         .fillMaxSize(),
                     state = pullToRefreshState,
                     isRefreshing = state.isLoading,

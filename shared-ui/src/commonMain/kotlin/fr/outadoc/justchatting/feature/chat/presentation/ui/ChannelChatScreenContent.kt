@@ -44,8 +44,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
@@ -135,7 +135,7 @@ internal fun ChannelChatScreenContent(
             ChatScreen(
                 modifier = Modifier
                     .fillMaxSize()
-                    .haze(hazeState),
+                    .hazeSource(hazeState),
                 state = state,
                 showTimestamps = showTimestamps,
                 onMessageLongClick = { item ->

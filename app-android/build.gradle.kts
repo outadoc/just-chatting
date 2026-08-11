@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.spotless)
-    alias(libs.plugins.google.services)
-    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -94,10 +92,8 @@ android {
 }
 
 dependencies {
-    implementation(platform(libs.firebase.bom))
     implementation(platform(libs.kotlin.bom))
     coreLibraryDesugaring(libs.desugar)
 
     implementation(project(":shared-ui"))
-    implementation(libs.firebase.crashlytics)
 }

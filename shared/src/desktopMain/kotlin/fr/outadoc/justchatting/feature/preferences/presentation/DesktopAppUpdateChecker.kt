@@ -4,17 +4,29 @@ import dev.nucleusframework.updater.NucleusUpdater
 import dev.nucleusframework.updater.UpdateInfo
 import dev.nucleusframework.updater.UpdateResult
 import dev.nucleusframework.updater.provider.GitHubProvider
+import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.io.File
+import java.net.http.HttpClient
 
 internal class DesktopAppUpdateChecker : AppUpdateChecker {
     private val updater =
         NucleusUpdater {
             provider = GitHubProvider(owner = "outadoc", repo = "just-chatting")
             differentialDownload = false
+
+            // GitHub's HTTP/2 edge occasionally tears down freshly-negotiated connections with
+            // RST_STREAM("Stream not processed"), which the JDK client surfaces as a hard failure
+            // instead of transparently retrying. HTTP/1.1 sidesteps that race entirely.
+            httpClient =
+                HttpClient
+                    .newBuilder()
+                    .version(HttpClient.Version.HTTP_1_1)
+                    .followRedirects(HttpClient.Redirect.NORMAL)
+                    .build()
         }
 
     override val isSupported: Boolean
@@ -40,6 +52,7 @@ internal class DesktopAppUpdateChecker : AppUpdateChecker {
             }
 
             is UpdateResult.Error -> {
+                logError<DesktopAppUpdateChecker>(result.exception) { "Failed to check for updates" }
                 _state.update { AppUpdateState(hasChecked = true, error = result.exception.message) }
             }
         }
@@ -59,6 +72,7 @@ internal class DesktopAppUpdateChecker : AppUpdateChecker {
 
             installer?.let(updater::installAndRestart)
         } catch (e: Exception) {
+            logError<DesktopAppUpdateChecker>(e) { "Failed to install update" }
             _state.update { it.copy(isDownloading = false, error = e.message) }
         }
     }

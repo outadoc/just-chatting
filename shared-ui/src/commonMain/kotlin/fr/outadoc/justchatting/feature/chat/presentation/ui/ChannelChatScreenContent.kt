@@ -79,8 +79,6 @@ internal fun ChannelChatScreenContent(
     onTriggerAutoComplete: () -> Unit = {},
     onSubmit: () -> Unit = {},
     onReplyToMessage: (ChatListItem.Message) -> Unit = {},
-    onShowInfoForUserId: (String) -> Unit = {},
-    onDismissUserInfo: () -> Unit = {},
     onShowMessageActions: (ChatListItem.Message) -> Unit = {},
     onDismissMessageActions: () -> Unit = {},
     onShowStreamInfo: () -> Unit = {},
@@ -141,9 +139,6 @@ internal fun ChannelChatScreenContent(
                 user = user,
                 stream = stream,
                 colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
-                onUserClicked = {
-                    user?.id?.let(onShowInfoForUserId)
-                },
                 onStreamInfoClicked = onShowStreamInfo,
                 showBackButton = showBackButton,
                 onNavigateUp = onNavigateUp,
@@ -269,21 +264,6 @@ internal fun ChannelChatScreenContent(
 
     when (state) {
         is ChatViewModel.State.Chatting -> {
-            state.showInfoForUserId?.let { userId ->
-                UserInfoDialog(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                start = 24.dp,
-                                end = 24.dp,
-                                bottom = 24.dp,
-                            ),
-                    userId = userId,
-                    onDismissRequest = onDismissUserInfo,
-                )
-            }
-
             if (state.isStreamInfoVisible) {
                 LiveDetailsDialog(
                     user = state.user,

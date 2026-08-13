@@ -873,31 +873,6 @@ internal class ChatStateReducerTest {
 
     // endregion
 
-    // region Action: ShowUserInfo
-
-    @Test
-    fun `ShowUserInfo sets the user id to show info for`() {
-        val action = ChatViewModel.Action.ShowUserInfo(userId = "some-user")
-
-        val result = reducer.reduce(action, testChattingState)
-
-        assertIs<ChatViewModel.State.Chatting>(result)
-        assertEquals("some-user", result.showInfoForUserId)
-    }
-
-    @Test
-    fun `ShowUserInfo with null clears the shown user info`() {
-        val state = testChattingState.copy(showInfoForUserId = "some-user")
-        val action = ChatViewModel.Action.ShowUserInfo(userId = null)
-
-        val result = reducer.reduce(action, state)
-
-        assertIs<ChatViewModel.State.Chatting>(result)
-        assertNull(result.showInfoForUserId)
-    }
-
-    // endregion
-
     // region Action: UpdateStreamInfoVisibility
 
     @Test

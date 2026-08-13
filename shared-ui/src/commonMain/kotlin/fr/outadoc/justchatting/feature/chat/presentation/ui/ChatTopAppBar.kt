@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -49,7 +48,6 @@ internal fun ChatTopAppBar(
     user: User?,
     stream: Stream?,
     colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
-    onUserClicked: () -> Unit,
     onStreamInfoClicked: () -> Unit,
     showBackButton: Boolean,
     onNavigateUp: () -> Unit = {},
@@ -119,7 +117,6 @@ internal fun ChatTopAppBar(
                                     modifier =
                                         Modifier
                                             .clip(MaterialTheme.shapes.medium)
-                                            .clickable(onClick = onUserClicked)
                                             .background(MaterialTheme.colorScheme.surfaceVariant),
                                     model = imageUrl,
                                     contentDescription = null,

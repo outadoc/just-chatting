@@ -183,10 +183,6 @@ public class ChatViewModel internal constructor(
             val stream: Stream,
         ) : Action()
 
-        data class ShowUserInfo(
-            val userId: String?,
-        ) : Action()
-
         data class ShowMessageActions(
             val message: ChatListItem.Message?,
         ) : Action()
@@ -241,7 +237,6 @@ public class ChatViewModel internal constructor(
             val removedContent: PersistentList<ChatListItem.RemoveContent> = persistentListOf(),
             val connectionStatus: ConnectionStatus = ConnectionStatus(),
             val maxAdapterCount: Int,
-            val showInfoForUserId: String? = null,
             val isStreamInfoVisible: Boolean = false,
             val selectedMessageForActions: ChatListItem.Message? = null,
         ) : State() {
@@ -382,14 +377,6 @@ public class ChatViewModel internal constructor(
                 dispatch(Action.ReportError(e))
             }
         }
-    }
-
-    public fun onShowUserInfo(userId: String) {
-        dispatch(Action.ShowUserInfo(userId = userId))
-    }
-
-    public fun onDismissUserInfo() {
-        dispatch(Action.ShowUserInfo(userId = null))
     }
 
     public fun onShowMessageActions(message: ChatListItem.Message) {

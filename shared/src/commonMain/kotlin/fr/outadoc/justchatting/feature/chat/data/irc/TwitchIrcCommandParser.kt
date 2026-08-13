@@ -151,6 +151,7 @@ internal class TwitchIrcCommandParser(
                             timestamp = timestamp,
                             userDisplayName = ircMessage.tags.displayName ?: return null,
                             streakLength = ircMessage.tags.milestoneValue ?: return null,
+                            userMessage = parseMessage(ircMessage),
                         )
                     }
 

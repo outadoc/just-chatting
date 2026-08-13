@@ -109,6 +109,7 @@ internal sealed interface ChatEvent {
             override val timestamp: Instant,
             val userDisplayName: String,
             val streakLength: Int,
+            val userMessage: ChatMessage?,
         ) : Message
 
         data class HighlightedMessage(

@@ -463,7 +463,7 @@ internal class ChatEventViewMapper {
                                 ),
                             ),
                     ),
-                    body = null,
+                    body = userMessage?.map(),
                 )
             }
 

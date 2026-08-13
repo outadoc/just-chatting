@@ -358,6 +358,71 @@ internal class TwitchIrcCommandParserTest {
                 timestamp = Instant.parse("2026-08-10T17:58:51.167Z"),
                 userDisplayName = "xeanddra",
                 streakLength = 130,
+                userMessage = ChatEvent.Message.ChatMessage(
+                    id = "7ff875bc-901e-48ca-b24e-5bbd8e5cc1b4",
+                    userId = "657603581",
+                    userLogin = "xeanddra",
+                    userName = "xeanddra",
+                    message = "DinoDance DinoDance",
+                    color = "#5F9EA0",
+                    isAction = false,
+                    embeddedEmotes = listOf(
+                        ChatEmote(
+                            id = "emotesv2_dcd06b30a5c24f6eb871e8f5edbd44f7",
+                            name = "DinoDance",
+                        ).map(),
+                        ChatEmote(
+                            id = "emotesv2_dcd06b30a5c24f6eb871e8f5edbd44f7",
+                            name = "DinoDance",
+                        ).map(),
+                    ),
+                    badges = listOf(
+                        Badge(
+                            id = "speedons-6",
+                            version = "1",
+                        ),
+                    ),
+                    timestamp = Instant.parse("2026-08-10T17:58:51.167Z"),
+                    rewardId = null,
+                    inReplyTo = null,
+                ),
+            )
+        }
+    }
+
+    @Test
+    fun `Parse watch streak USERNOTICE with unprefixed trailing message`() = test {
+        input {
+            "@msg-id=viewermilestone;vip=0;msg-param-copoReward=450;color=#F85E10;badge-info=subscriber/22;mod=0;login=outadoc;user-id=9013179;subscriber=1;display-name=outadoc;tmi-sent-ts=1786645618159;flags;user-type;id=eea3f37d-4e0c-4379-bfe2-f4e20f2b4a3b;rm-received-ts=1786645618245;room-id=177146919;msg-param-id=f9326033-c0c4-420f-a063-dc2bdbff3d81;msg-param-value=30;msg-param-category=watch-streak;system-msg=outadoc\\swatched\\s30\\sconsecutive\\sstreams\\sand\\ssparked\\sa\\swatch\\sstreak!;historical=1;emotes;badges=subscriber/18,final-fantasy-xiv-fan-festival-2026-eu---content-unlock-quest-chat/1 :tmi.twitch.tv USERNOTICE #angledroit COMBIEN"
+        }
+        expected {
+            ChatEvent.Message.WatchStreak(
+                timestamp = Instant.parse("2026-08-13T18:26:58.159Z"),
+                userDisplayName = "outadoc",
+                streakLength = 30,
+                userMessage = ChatEvent.Message.ChatMessage(
+                    id = "eea3f37d-4e0c-4379-bfe2-f4e20f2b4a3b",
+                    userId = "9013179",
+                    userLogin = "outadoc",
+                    userName = "outadoc",
+                    message = "COMBIEN",
+                    color = "#F85E10",
+                    isAction = false,
+                    embeddedEmotes = emptyList(),
+                    badges = listOf(
+                        Badge(
+                            id = "subscriber",
+                            version = "18",
+                        ),
+                        Badge(
+                            id = "final-fantasy-xiv-fan-festival-2026-eu---content-unlock-quest-chat",
+                            version = "1",
+                        ),
+                    ),
+                    timestamp = Instant.parse("2026-08-13T18:26:58.159Z"),
+                    rewardId = null,
+                    inReplyTo = null,
+                ),
             )
         }
     }

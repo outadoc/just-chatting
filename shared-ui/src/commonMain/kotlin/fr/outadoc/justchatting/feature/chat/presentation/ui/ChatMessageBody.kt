@@ -58,7 +58,6 @@ internal fun ChatMessageBody(
     backgroundHint: Color,
     richEmbed: ChatListItem.RichEmbed?,
     maxLines: Int = Int.MAX_VALUE,
-    onShowInfoForUserId: (String) -> Unit = {},
 ) {
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
 
@@ -83,7 +82,6 @@ internal fun ChatMessageBody(
             inlineContent = fullInlineContent,
             pronouns = pronouns,
             backgroundHint = backgroundHint,
-            onShowInfoForUserId = onShowInfoForUserId,
         )
 
     Column(modifier = modifier) {
@@ -130,7 +128,6 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
     mentionBackground: Color = MaterialTheme.colorScheme.onBackground,
     mentionColor: Color = MaterialTheme.colorScheme.background,
-    onShowInfoForUserId: (String) -> Unit,
 ): AnnotatedString {
     val accessibleChatterColor: Color? =
         color?.parseHexColor()?.let { rawColor ->
@@ -195,18 +192,7 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
                     ),
             ),
         ) {
-            withLink(
-                LinkAnnotation.Clickable(
-                    tag = CHATTER_ID_ANNOTATION_TAG,
-                    styles =
-                        TextLinkStyles(
-                            style = SpanStyle(fontWeight = FontWeight.Bold),
-                        ),
-                    linkInteractionListener = {
-                        onShowInfoForUserId(chatter.id)
-                    },
-                ),
-            ) {
+            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                 append(chatter.displayName)
             }
 
@@ -306,5 +292,3 @@ private val Badge.inlineContentId: String
     get() = "badge_${id}_$version"
 
 private fun Badge.sourceInlineContentId(roomId: String): String = "source_badge:$roomId:${id}_$version"
-
-private const val CHATTER_ID_ANNOTATION_TAG = "USER_ID"

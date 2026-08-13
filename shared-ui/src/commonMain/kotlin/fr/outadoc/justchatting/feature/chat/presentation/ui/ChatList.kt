@@ -72,7 +72,6 @@ internal fun ChatList(
     onMessageClick: (ChatListItem.Message) -> Unit,
     onMessageLongClick: (ChatListItem.Message) -> Unit,
     onReplyToMessage: (ChatListItem.Message) -> Unit,
-    onShowInfoForUserId: (String) -> Unit,
     roomState: RoomState,
     ongoingEvents: OngoingEvents,
     appUser: AppUser.LoggedIn,
@@ -274,7 +273,6 @@ internal fun ChatList(
                         showTimestamps = showTimestamps,
                         background = background,
                         appUser = appUser,
-                        onShowInfoForUserId = onShowInfoForUserId,
                     )
                 }
             }

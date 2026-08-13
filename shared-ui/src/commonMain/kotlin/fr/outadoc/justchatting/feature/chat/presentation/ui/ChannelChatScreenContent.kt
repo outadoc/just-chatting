@@ -160,7 +160,6 @@ internal fun ChannelChatScreenContent(
                 onMessageClick = onShowMessageActions,
                 onMessageLongClick = copyMessageToClipboard,
                 onReplyToMessage = onReplyToMessage,
-                onShowInfoForUserId = onShowInfoForUserId,
                 insets = insets,
             )
         },
@@ -306,7 +305,6 @@ internal fun ChannelChatScreenContent(
                     onDismissRequest = onDismissMessageActions,
                     onReplyToMessage = onReplyToMessage,
                     onCopyToClipboard = copyMessageToClipboard,
-                    onShowInfoForUserId = onShowInfoForUserId,
                 )
             }
         }

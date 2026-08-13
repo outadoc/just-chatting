@@ -26,7 +26,6 @@ internal fun ChatScreen(
     onMessageClick: (ChatListItem.Message) -> Unit,
     onMessageLongClick: (ChatListItem.Message) -> Unit,
     onReplyToMessage: (ChatListItem.Message) -> Unit,
-    onShowInfoForUserId: (String) -> Unit,
     insets: PaddingValues,
 ) {
     val mode: ChatScreenMode =
@@ -72,7 +71,6 @@ internal fun ChatScreen(
                         onMessageClick = onMessageClick,
                         onMessageLongClick = onMessageLongClick,
                         onReplyToMessage = onReplyToMessage,
-                        onShowInfoForUserId = onShowInfoForUserId,
                         insets = insets,
                     )
                 }

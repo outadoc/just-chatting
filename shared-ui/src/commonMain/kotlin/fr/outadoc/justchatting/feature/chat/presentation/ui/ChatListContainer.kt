@@ -45,7 +45,6 @@ internal fun ChatListContainer(
     onMessageClick: (ChatListItem.Message) -> Unit,
     onMessageLongClick: (ChatListItem.Message) -> Unit,
     onReplyToMessage: (ChatListItem.Message) -> Unit,
-    onShowInfoForUserId: (String) -> Unit,
     insets: PaddingValues,
 ) {
     val scope = rememberCoroutineScope()
@@ -90,7 +89,6 @@ internal fun ChatListContainer(
             onMessageClick = onMessageClick,
             onMessageLongClick = onMessageLongClick,
             onReplyToMessage = onReplyToMessage,
-            onShowInfoForUserId = onShowInfoForUserId,
             roomState = state.roomState,
             ongoingEvents = state.ongoingEvents,
             appUser = state.appUser,

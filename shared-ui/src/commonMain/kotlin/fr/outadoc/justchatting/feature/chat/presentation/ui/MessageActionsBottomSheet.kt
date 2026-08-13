@@ -55,7 +55,6 @@ internal fun MessageActionsBottomSheet(
     onDismissRequest: () -> Unit = {},
     onReplyToMessage: (ChatListItem.Message) -> Unit = {},
     onCopyToClipboard: (ChatListItem.Message) -> Unit = {},
-    onShowInfoForUserId: (String) -> Unit = {},
 ) {
     val body = message.body ?: return
     val canBeRepliedTo = body.messageId != null
@@ -110,7 +109,6 @@ internal fun MessageActionsBottomSheet(
                         background = MaterialTheme.colorScheme.surfaceVariant,
                         appUser = appUser,
                         maxLines = 10,
-                        onShowInfoForUserId = onShowInfoForUserId,
                     )
 
                     message.timestamp.formatFullDateTime()?.let { timestamp ->

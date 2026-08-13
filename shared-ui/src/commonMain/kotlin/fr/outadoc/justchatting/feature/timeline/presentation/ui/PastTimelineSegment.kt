@@ -156,9 +156,8 @@ internal fun PastTimelineSegment(
             content = {
                 TimelineSegmentDetails(segment = segment)
             },
-            actions = { padding ->
+            actions = {
                 ContextualButton(
-                    contentPadding = padding,
                     onClick = {
                         uriHandler.openUri(
                             createVideoExternalLink(segment.id),

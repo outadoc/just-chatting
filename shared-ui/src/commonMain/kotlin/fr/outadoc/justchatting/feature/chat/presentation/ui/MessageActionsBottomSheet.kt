@@ -157,10 +157,9 @@ internal fun MessageActionsBottomSheet(
                 }
             }
         },
-        actions = { padding ->
+        actions = {
             if (canBeRepliedTo) {
                 ContextualButton(
-                    contentPadding = padding,
                     onClick = {
                         onReplyToMessage(message)
                         onDismissRequest()
@@ -176,7 +175,6 @@ internal fun MessageActionsBottomSheet(
             }
 
             ContextualButton(
-                contentPadding = padding,
                 onClick = {
                     onCopyToClipboard(message)
                     onDismissRequest()

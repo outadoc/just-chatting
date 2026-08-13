@@ -71,10 +71,9 @@ internal fun LiveDetailsDialog(
                 }
             }
         },
-        actions = { padding ->
+        actions = {
             if (onOpenChat != null) {
                 ContextualButton(
-                    contentPadding = padding,
                     onClick = {
                         onOpenChat()
                         onDismissRequest()
@@ -91,7 +90,6 @@ internal fun LiveDetailsDialog(
 
             if (canOpenInBubble) {
                 ContextualButton(
-                    contentPadding = padding,
                     onClick = {
                         onOpenInBubble()
                         onDismissRequest()
@@ -107,7 +105,6 @@ internal fun LiveDetailsDialog(
             }
 
             ContextualButton(
-                contentPadding = padding,
                 onClick = {
                     uriHandler.openUri(
                         createChannelExternalLink(user),

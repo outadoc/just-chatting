@@ -8,12 +8,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -28,7 +29,7 @@ internal fun ActionBottomSheet(
     onDismissRequest: () -> Unit = {},
     header: @Composable () -> Unit = {},
     content: (@Composable () -> Unit)? = null,
-    actions: (@Composable (PaddingValues) -> Unit)? = null,
+    actions: (@Composable () -> Unit)? = null,
 ) {
     ModalBottomSheet(
         modifier = modifier,
@@ -49,11 +50,11 @@ private fun DetailsDialogContent(
     modifier: Modifier = Modifier,
     header: @Composable () -> Unit = {},
     content: (@Composable () -> Unit)? = null,
-    actions: (@Composable (PaddingValues) -> Unit)? = null,
+    actions: (@Composable () -> Unit)? = null,
     contentPadding: PaddingValues = PaddingValues(horizontal = 32.dp),
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
         Box(
@@ -72,9 +73,10 @@ private fun DetailsDialogContent(
 
         if (actions != null) {
             Column(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
+                modifier = Modifier.fillMaxWidth().padding(contentPadding),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                actions(contentPadding)
+                actions()
             }
         }
 

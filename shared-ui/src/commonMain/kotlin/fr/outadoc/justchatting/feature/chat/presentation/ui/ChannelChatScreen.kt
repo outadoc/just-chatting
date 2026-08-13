@@ -116,6 +116,8 @@ internal fun ChannelChatScreen(
             onReplyToMessage = viewModel::onReplyToMessage,
             onShowInfoForUserId = viewModel::onShowUserInfo,
             onDismissUserInfo = viewModel::onDismissUserInfo,
+            onShowMessageActions = viewModel::onShowMessageActions,
+            onDismissMessageActions = viewModel::onDismissMessageActions,
             onShowStreamInfo = viewModel::onShowStreamInfo,
             onDismissStreamInfo = viewModel::onDismissStreamInfo,
             onReuseLastMessageClicked = viewModel::onReuseLastMessageClicked,

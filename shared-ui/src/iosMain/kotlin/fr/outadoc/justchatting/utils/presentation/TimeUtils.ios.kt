@@ -8,6 +8,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toNSDate
 import platform.Foundation.NSDateFormatter
+import platform.Foundation.NSDateFormatterLongStyle
+import platform.Foundation.NSDateFormatterShortStyle
 import platform.Foundation.NSLocale
 import platform.Foundation.currentLocale
 import kotlin.time.Instant
@@ -19,6 +21,23 @@ internal actual fun Instant.formatHourMinute(): String? {
         remember {
             NSDateFormatter().apply {
                 dateFormat = "HH:mm"
+                locale = NSLocale.currentLocale
+            }
+        }
+
+    return remember(this) {
+        formatter.stringFromDate(this.toNSDate())
+    }
+}
+
+@Stable
+@Composable
+internal actual fun Instant.formatFullDateTime(): String? {
+    val formatter =
+        remember {
+            NSDateFormatter().apply {
+                dateStyle = NSDateFormatterLongStyle
+                timeStyle = NSDateFormatterShortStyle
                 locale = NSLocale.currentLocale
             }
         }

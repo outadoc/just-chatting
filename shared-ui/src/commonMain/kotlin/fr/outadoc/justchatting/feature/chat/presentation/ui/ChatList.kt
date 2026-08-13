@@ -69,6 +69,7 @@ internal fun ChatList(
     showTimestamps: Boolean,
     isDisconnected: Boolean,
     listState: LazyListState,
+    onMessageClick: (ChatListItem.Message) -> Unit,
     onMessageLongClick: (ChatListItem.Message) -> Unit,
     onReplyToMessage: (ChatListItem.Message) -> Unit,
     onShowInfoForUserId: (String) -> Unit,
@@ -247,7 +248,8 @@ internal fun ChatList(
                             Modifier
                                 .fillMaxWidth()
                                 .combinedClickable(
-                                    onClick = {},
+                                    enabled = item.body != null,
+                                    onClick = { onMessageClick(item) },
                                     onLongClick = {
                                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                         onMessageLongClick(item)
@@ -295,8 +297,5 @@ internal fun ChatList(
         )
     }
 }
-
-private val TwitchBadge.inlineContentId: String
-    get() = "badge_${setId}_$version"
 
 private fun TwitchBadge.sourceInlineContentId(roomId: String): String = "source_badge:$roomId:${setId}_$version"

@@ -16,6 +16,8 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import kotlinx.coroutines.flow.MutableSharedFlow
+import java.io.IOException
+import java.net.ServerSocket
 
 /**
  * Local-only HTTP server used on desktop to receive the OAuth redirect from the system browser.
@@ -37,7 +39,7 @@ internal class KtorLocalCallbackWebServer(
     private var isStarted = false
 
     private val server =
-        embeddedServer(CIO, 45563) {
+        embeddedServer(CIO, PORT) {
             install(CORS) {
                 allowHost("just-chatting.app")
             }
@@ -94,6 +96,19 @@ internal class KtorLocalCallbackWebServer(
 
     override fun start() {
         if (isStarted) return
+
+        // The CIO engine binds the port asynchronously, so a failure here wouldn't otherwise
+        // surface until after start() returns, as an uncaught exception on a background thread.
+        // Check the port ourselves first so we can fail gracefully instead - this is expected
+        // when another instance of the app is already running and holding the port.
+        if (!isPortAvailable(PORT)) {
+            logDebug<KtorLocalCallbackWebServer> {
+                "Port $PORT is already in use, not starting local callback server " +
+                    "(another instance of the app is likely already running)"
+            }
+            return
+        }
+
         isStarted = true
         server.start(wait = false)
     }
@@ -102,5 +117,17 @@ internal class KtorLocalCallbackWebServer(
         if (!isStarted) return
         isStarted = false
         server.stop()
+    }
+
+    private fun isPortAvailable(port: Int): Boolean =
+        try {
+            ServerSocket(port).close()
+            true
+        } catch (e: IOException) {
+            false
+        }
+
+    private companion object {
+        const val PORT = 45563
     }
 }

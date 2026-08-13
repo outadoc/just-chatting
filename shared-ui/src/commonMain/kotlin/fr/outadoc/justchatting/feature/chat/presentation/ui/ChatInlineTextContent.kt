@@ -47,6 +47,9 @@ internal fun badgeTextContent(badge: TwitchBadge): InlineTextContent =
         BadgeItem(badge = badge)
     }
 
+internal val TwitchBadge.inlineContentId: String
+    get() = "badge_${setId}_$version"
+
 internal fun cheerEmoteTextContent(cheer: Emote): InlineTextContent {
     val textWidthEm: Float = cheer.bitsValue?.let { it.formatNumber().length / 1.8f } ?: 0f
     return InlineTextContent(

@@ -29,6 +29,23 @@ internal actual fun Instant.formatHourMinute(): String? {
     }
 }
 
+@Composable
+@Stable
+internal actual fun Instant.formatFullDateTime(): String? {
+    val formatter =
+        DateTimeFormatter
+            .ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)
+            .withZone(ZoneId.systemDefault())
+
+    return remember(this) {
+        try {
+            formatter.format(toJavaInstant())
+        } catch (e: Exception) {
+            null
+        }
+    }
+}
+
 @Stable
 internal actual fun LocalDate.formatWithoutYear(): String =
     toJavaLocalDate()

@@ -187,6 +187,10 @@ public class ChatViewModel internal constructor(
             val userId: String?,
         ) : Action()
 
+        data class ShowMessageActions(
+            val message: ChatListItem.Message?,
+        ) : Action()
+
         data class UpdateStreamInfoVisibility(
             val isVisible: Boolean,
         ) : Action()
@@ -239,6 +243,7 @@ public class ChatViewModel internal constructor(
             val maxAdapterCount: Int,
             val showInfoForUserId: String? = null,
             val isStreamInfoVisible: Boolean = false,
+            val selectedMessageForActions: ChatListItem.Message? = null,
         ) : State() {
             val allEmotesMap: ImmutableMap<String, Emote>
                 get() = buildAllEmotesMap(pickableEmotes)
@@ -385,6 +390,14 @@ public class ChatViewModel internal constructor(
 
     public fun onDismissUserInfo() {
         dispatch(Action.ShowUserInfo(userId = null))
+    }
+
+    public fun onShowMessageActions(message: ChatListItem.Message) {
+        dispatch(Action.ShowMessageActions(message = message))
+    }
+
+    public fun onDismissMessageActions() {
+        dispatch(Action.ShowMessageActions(message = null))
     }
 
     public fun onShowStreamInfo() {

@@ -56,6 +56,7 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.timeline.presentation.ui.LiveDetailsDialog
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.chat_copiedToClipboard
+import fr.outadoc.justchatting.utils.core.filterValuesNotNull
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -80,6 +81,8 @@ internal fun ChannelChatScreenContent(
     onReplyToMessage: (ChatListItem.Message) -> Unit = {},
     onShowInfoForUserId: (String) -> Unit = {},
     onDismissUserInfo: () -> Unit = {},
+    onShowMessageActions: (ChatListItem.Message) -> Unit = {},
+    onDismissMessageActions: () -> Unit = {},
     onShowStreamInfo: () -> Unit = {},
     onDismissStreamInfo: () -> Unit = {},
     onReuseLastMessageClicked: () -> Unit = {},
@@ -94,6 +97,23 @@ internal fun ChannelChatScreenContent(
     val snackbarHostState = remember { SnackbarHostState() }
 
     val hazeState = remember { HazeState() }
+
+    val clipboard = LocalClipboardManager.current
+    val scope = rememberCoroutineScope()
+    val snackbarCopiedMessage = stringResource(Res.string.chat_copiedToClipboard)
+
+    val copyMessageToClipboard: (ChatListItem.Message) -> Unit = { item ->
+        item.body?.message?.let { rawMessage ->
+            clipboard.setText(AnnotatedString(rawMessage))
+
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    message = snackbarCopiedMessage,
+                    duration = SnackbarDuration.Short,
+                )
+            }
+        }
+    }
 
     LaunchedEffect(isEmotePickerOpen) {
         if (isEmotePickerOpen) {
@@ -130,10 +150,6 @@ internal fun ChannelChatScreenContent(
             )
         },
         content = { insets ->
-            val clipboard = LocalClipboardManager.current
-            val scope = rememberCoroutineScope()
-            val snackbarCopiedMessage = stringResource(Res.string.chat_copiedToClipboard)
-
             ChatScreen(
                 modifier =
                     Modifier
@@ -141,20 +157,8 @@ internal fun ChannelChatScreenContent(
                         .hazeSource(hazeState),
                 state = state,
                 showTimestamps = showTimestamps,
-                onMessageLongClick = { item ->
-                    item.body?.message?.let { rawMessage ->
-                        // Copy to clipboard
-                        clipboard.setText(AnnotatedString(rawMessage))
-
-                        // Show "copied to clipboard" confirmation
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = snackbarCopiedMessage,
-                                duration = SnackbarDuration.Short,
-                            )
-                        }
-                    }
-                },
+                onMessageClick = onShowMessageActions,
+                onMessageLongClick = copyMessageToClipboard,
                 onReplyToMessage = onReplyToMessage,
                 onShowInfoForUserId = onShowInfoForUserId,
                 insets = insets,
@@ -288,6 +292,21 @@ internal fun ChannelChatScreenContent(
                     onDismissRequest = onDismissStreamInfo,
                     onOpenChat = null,
                     onOpenInBubble = onOpenBubbleClicked,
+                )
+            }
+
+            state.selectedMessageForActions?.let { message ->
+                MessageActionsBottomSheet(
+                    message = message,
+                    appUser = state.appUser,
+                    pronouns = state.pronouns.filterValuesNotNull(),
+                    badges = state.globalBadges.addAll(state.channelBadges),
+                    cheerEmotes = state.cheerEmotes,
+                    richEmbeds = state.richEmbeds,
+                    onDismissRequest = onDismissMessageActions,
+                    onReplyToMessage = onReplyToMessage,
+                    onCopyToClipboard = copyMessageToClipboard,
+                    onShowInfoForUserId = onShowInfoForUserId,
                 )
             }
         }

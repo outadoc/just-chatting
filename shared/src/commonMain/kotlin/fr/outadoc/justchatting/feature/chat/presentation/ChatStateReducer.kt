@@ -38,6 +38,7 @@ internal class ChatStateReducer {
             is ChatViewModel.Action.UpdateRaidAnnouncement -> action.reduce(state)
             is ChatViewModel.Action.UpdatePinnedMessage -> action.reduce(state)
             is ChatViewModel.Action.ShowUserInfo -> action.reduce(state)
+            is ChatViewModel.Action.ShowMessageActions -> action.reduce(state)
             is ChatViewModel.Action.UpdateStreamInfoVisibility -> action.reduce(state)
             is ChatViewModel.Action.UpdateUser -> action.reduce(state)
             is ChatViewModel.Action.ReportError -> action.reduce(state)
@@ -289,6 +290,13 @@ internal class ChatStateReducer {
         if (state !is ChatViewModel.State.Chatting) return state
         return state.copy(
             showInfoForUserId = userId,
+        )
+    }
+
+    private fun ChatViewModel.Action.ShowMessageActions.reduce(state: ChatViewModel.State): ChatViewModel.State {
+        if (state !is ChatViewModel.State.Chatting) return state
+        return state.copy(
+            selectedMessageForActions = message,
         )
     }
 

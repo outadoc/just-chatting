@@ -10,6 +10,10 @@ import kotlin.time.Instant
 internal expect fun Instant.formatHourMinute(): String?
 
 @Stable
+@Composable
+internal expect fun Instant.formatFullDateTime(): String?
+
+@Stable
 internal expect fun LocalDate.formatWithoutYear(): String
 
 @Stable

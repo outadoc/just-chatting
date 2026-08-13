@@ -33,7 +33,7 @@ internal fun BasicUserInfo(
                     Modifier
                         .clip(MaterialTheme.shapes.medium)
                         .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .size(48.dp),
+                        .size(40.dp),
                 model = user.profileImageUrl,
                 contentDescription = null,
             )

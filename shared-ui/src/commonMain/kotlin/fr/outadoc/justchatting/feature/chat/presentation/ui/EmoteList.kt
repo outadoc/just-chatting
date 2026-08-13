@@ -1,8 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.presentation.ui
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -14,17 +13,14 @@ internal fun EmoteList(
     modifier: Modifier = Modifier,
     emotes: ImmutableList<Emote>,
 ) {
-    FlowRow(
+    Column(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         emotes
             .distinctBy { emote -> emote.name }
             .forEach { emote ->
-                EmoteWithName(
-                    modifier = Modifier.padding(vertical = 2.dp),
-                    emote = emote,
-                )
+                EmoteWithName(emote = emote)
             }
     }
 }

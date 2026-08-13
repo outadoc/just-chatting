@@ -1,7 +1,10 @@
 package fr.outadoc.justchatting.feature.chat.presentation.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,9 +19,14 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 internal fun EmoteWithName(
     modifier: Modifier = Modifier,
     emote: Emote,
+    onClick: () -> Unit = {},
 ) {
     Row(
-        modifier = modifier,
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(vertical = 8.dp, horizontal = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {

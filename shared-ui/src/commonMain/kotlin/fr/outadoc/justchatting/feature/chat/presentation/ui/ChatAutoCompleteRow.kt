@@ -64,7 +64,10 @@ internal fun ChatAutoCompleteRow(
     }
 
     LazyRow(
-        modifier = modifier.fillMaxWidth(),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .horizontalMouseWheelScroll(state = listState),
         state = listState,
         horizontalArrangement =
             Arrangement.spacedBy(

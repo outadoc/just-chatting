@@ -39,6 +39,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentHashMap
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -51,6 +52,7 @@ internal fun MessageActionsBottomSheet(
     appUser: AppUser.LoggedIn,
     pronouns: ImmutableMap<Chatter, Pronoun> = persistentMapOf(),
     badges: ImmutableList<TwitchBadge> = persistentListOf(),
+    emotes: ImmutableMap<String, Emote> = persistentMapOf(),
     cheerEmotes: ImmutableMap<String, Emote> = persistentMapOf(),
     richEmbeds: ImmutableMap<String, ChatListItem.RichEmbed> = persistentMapOf(),
     onDismissRequest: () -> Unit = {},
@@ -68,13 +70,29 @@ internal fun MessageActionsBottomSheet(
     }
 
     val inlineContent: ImmutableMap<String, InlineTextContent> =
-        remember(badges, cheerEmotes) {
+        remember(badges, emotes, cheerEmotes) {
             badges
                 .associate { badge -> badge.inlineContentId to badgeTextContent(badge) }
                 .toPersistentHashMap()
                 .putAll(
+                    emotes.mapValues { (_, emote) -> emoteTextContent(emote = emote) },
+                ).putAll(
                     cheerEmotes.mapValues { (_, cheer) -> cheerEmoteTextContent(cheer) },
                 )
+        }
+
+    // `body.embeddedEmotes` only covers first-party Twitch emotes, resolved from the IRC
+    // `emotes` tag. Third-party emotes (BTTV/FFZ/7TV) are just plain words that happen to
+    // match a name in the channel's emote set, so they need to be matched the same way.
+    val usedEmotes: ImmutableList<Emote> =
+        remember(body.message, body.embeddedEmotes, emotes) {
+            (
+                body.embeddedEmotes +
+                    body.message
+                        ?.split(' ')
+                        ?.mapNotNull { word -> emotes[word] }
+                        .orEmpty()
+            ).toImmutableList()
         }
 
     ActionBottomSheet(
@@ -122,7 +140,7 @@ internal fun MessageActionsBottomSheet(
                     }
                 }
 
-                if (body.embeddedEmotes.isNotEmpty()) {
+                if (usedEmotes.isNotEmpty()) {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
@@ -131,7 +149,7 @@ internal fun MessageActionsBottomSheet(
                             style = MaterialTheme.typography.labelLarge,
                         )
 
-                        EmoteList(emotes = body.embeddedEmotes)
+                        EmoteList(emotes = usedEmotes)
                     }
                 }
             }

@@ -280,6 +280,7 @@ internal fun ChannelChatScreenContent(
                     appUser = state.appUser,
                     pronouns = state.pronouns.filterValuesNotNull(),
                     badges = state.globalBadges.addAll(state.channelBadges),
+                    emotes = state.allEmotesMap,
                     cheerEmotes = state.cheerEmotes,
                     richEmbeds = state.richEmbeds,
                     onDismissRequest = onDismissMessageActions,

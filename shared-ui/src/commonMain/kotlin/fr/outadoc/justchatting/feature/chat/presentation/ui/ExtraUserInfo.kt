@@ -35,9 +35,10 @@ internal fun ExtraUserInfo(
         val createdAt = user.createdAt.formatDate()
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                modifier = Modifier
-                    .size(24.dp)
-                    .padding(end = 8.dp),
+                modifier =
+                    Modifier
+                        .size(24.dp)
+                        .padding(end = 8.dp),
                 imageVector = Icons.Default.Cake,
                 contentDescription = null,
             )

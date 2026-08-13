@@ -14,7 +14,6 @@ import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class ConnectivityNetworkStateObserverTest {
-
     /**
      * A stand-in for the platform [Connectivity] implementation, which on Android backs
      * [statusUpdates] with `ConnectivityManager.registerDefaultNetworkCallback`. That callback
@@ -29,47 +28,51 @@ internal class ConnectivityNetworkStateObserverTest {
         override val monitoring: StateFlow<Boolean> = MutableStateFlow(true)
 
         override suspend fun status(): Connectivity.Status = Connectivity.Status.Disconnected
+
         override fun start() = Unit
+
         override fun stop() = Unit
     }
 
     @Test
-    fun `repeated Connected updates for the same network collapse into a single Available emission`() = runTest(UnconfinedTestDispatcher()) {
-        val connectivity = FakeConnectivity()
-        val observer = ConnectivityNetworkStateObserver(connectivity)
+    fun `repeated Connected updates for the same network collapse into a single Available emission`() =
+        runTest(UnconfinedTestDispatcher()) {
+            val connectivity = FakeConnectivity()
+            val observer = ConnectivityNetworkStateObserver(connectivity)
 
-        val collected = mutableListOf<NetworkStateObserver.NetworkState>()
-        backgroundScope.launch { observer.state.collect { collected.add(it) } }
+            val collected = mutableListOf<NetworkStateObserver.NetworkState>()
+            backgroundScope.launch { observer.state.collect { collected.add(it) } }
 
-        connectivity.statusFlow.emit(Connectivity.Status.Connected(metered = false))
-        connectivity.statusFlow.emit(Connectivity.Status.Connected(metered = true))
-        connectivity.statusFlow.emit(Connectivity.Status.Connected(metered = false))
+            connectivity.statusFlow.emit(Connectivity.Status.Connected(metered = false))
+            connectivity.statusFlow.emit(Connectivity.Status.Connected(metered = true))
+            connectivity.statusFlow.emit(Connectivity.Status.Connected(metered = false))
 
-        assertEquals(
-            listOf<NetworkStateObserver.NetworkState>(NetworkStateObserver.NetworkState.Available),
-            collected,
-        )
-    }
+            assertEquals(
+                listOf<NetworkStateObserver.NetworkState>(NetworkStateObserver.NetworkState.Available),
+                collected,
+            )
+        }
 
     @Test
-    fun `real transitions between connected and disconnected are still reported`() = runTest(UnconfinedTestDispatcher()) {
-        val connectivity = FakeConnectivity()
-        val observer = ConnectivityNetworkStateObserver(connectivity)
+    fun `real transitions between connected and disconnected are still reported`() =
+        runTest(UnconfinedTestDispatcher()) {
+            val connectivity = FakeConnectivity()
+            val observer = ConnectivityNetworkStateObserver(connectivity)
 
-        val collected = mutableListOf<NetworkStateObserver.NetworkState>()
-        backgroundScope.launch { observer.state.collect { collected.add(it) } }
+            val collected = mutableListOf<NetworkStateObserver.NetworkState>()
+            backgroundScope.launch { observer.state.collect { collected.add(it) } }
 
-        connectivity.statusFlow.emit(Connectivity.Status.Connected(metered = false))
-        connectivity.statusFlow.emit(Connectivity.Status.Disconnected)
-        connectivity.statusFlow.emit(Connectivity.Status.Connected(metered = false))
+            connectivity.statusFlow.emit(Connectivity.Status.Connected(metered = false))
+            connectivity.statusFlow.emit(Connectivity.Status.Disconnected)
+            connectivity.statusFlow.emit(Connectivity.Status.Connected(metered = false))
 
-        assertEquals(
-            listOf<NetworkStateObserver.NetworkState>(
-                NetworkStateObserver.NetworkState.Available,
-                NetworkStateObserver.NetworkState.Unavailable,
-                NetworkStateObserver.NetworkState.Available,
-            ),
-            collected,
-        )
-    }
+            assertEquals(
+                listOf<NetworkStateObserver.NetworkState>(
+                    NetworkStateObserver.NetworkState.Available,
+                    NetworkStateObserver.NetworkState.Unavailable,
+                    NetworkStateObserver.NetworkState.Available,
+                ),
+                collected,
+            )
+        }
 }

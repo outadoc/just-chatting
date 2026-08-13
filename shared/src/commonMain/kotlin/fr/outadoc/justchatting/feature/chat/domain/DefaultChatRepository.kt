@@ -12,11 +12,12 @@ internal class DefaultChatRepository(
     override fun getChatEventFlow(
         user: User,
         appUser: AppUser.LoggedIn,
-    ): Flow<ChatEvent> = handler.getEventFlow(
-        channelId = user.id,
-        channelLogin = user.login,
-        appUser = appUser,
-    )
+    ): Flow<ChatEvent> =
+        handler.getEventFlow(
+            channelId = user.id,
+            channelLogin = user.login,
+            appUser = appUser,
+        )
 
     override fun getConnectionStatusFlow(
         user: User,

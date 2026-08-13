@@ -142,7 +142,13 @@ internal fun ChatList(
         }
 
     val inlineContent: PersistentMap<String, InlineTextContent> =
-        remember(inlinesEmotes, inlineBadges, inlineCheerEmotes, inlineSourceChannels, inlineSourceBadges) {
+        remember(
+            inlinesEmotes,
+            inlineBadges,
+            inlineCheerEmotes,
+            inlineSourceChannels,
+            inlineSourceBadges,
+        ) {
             inlinesEmotes
                 .putAll(inlineBadges)
                 .putAll(inlineCheerEmotes)
@@ -162,20 +168,21 @@ internal fun ChatList(
 
     Box {
         LazyColumn(
-            modifier = modifier
-                .onGloballyPositioned { coordinates ->
-                    val newSize = coordinates.size
-                    if (size != newSize) {
-                        size = newSize
-                    }
-                },
+            modifier =
+                modifier
+                    .onGloballyPositioned { coordinates ->
+                        val newSize = coordinates.size
+                        if (size != newSize) {
+                            size = newSize
+                        }
+                    },
             state = listState,
             reverseLayout = true,
             contentPadding =
-            PaddingValues(
-                top = chatEventsHeight,
-                bottom = insets.calculateBottomPadding(),
-            ),
+                PaddingValues(
+                    top = chatEventsHeight,
+                    bottom = insets.calculateBottomPadding(),
+                ),
         ) {
             item(key = "visibility_trigger") {
                 // This item will become visible when the list is scrolled to the bottom;
@@ -236,25 +243,27 @@ internal fun ChatList(
                     enabled = canBeRepliedTo,
                 ) {
                     ChatMessage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .combinedClickable(
-                                onClick = {},
-                                onLongClick = {
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    onMessageLongClick(item)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .combinedClickable(
+                                    onClick = {},
+                                    onLongClick = {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        onMessageLongClick(item)
+                                    },
+                                    onLongClickLabel = stringResource(Res.string.chat_copyToClipboard),
+                                ).semantics {
+                                    if (canBeRepliedTo) {
+                                        customActions =
+                                            listOf(
+                                                CustomAccessibilityAction(replyToActionCd) {
+                                                    onReplyToMessage(item)
+                                                    true
+                                                },
+                                            )
+                                    }
                                 },
-                                onLongClickLabel = stringResource(Res.string.chat_copyToClipboard),
-                            ).semantics {
-                                if (canBeRepliedTo) {
-                                    customActions = listOf(
-                                        CustomAccessibilityAction(replyToActionCd) {
-                                            onReplyToMessage(item)
-                                            true
-                                        },
-                                    )
-                                }
-                            },
                         message = item,
                         inlineContent = inlineContent,
                         removedContent = removedContent,
@@ -270,9 +279,10 @@ internal fun ChatList(
         }
 
         ChatEvents(
-            modifier = Modifier
-                .padding(horizontal = 6.dp)
-                .onSizeChanged { newSize -> chatEventsHeightPx = newSize.height },
+            modifier =
+                Modifier
+                    .padding(horizontal = 6.dp)
+                    .onSizeChanged { newSize -> chatEventsHeightPx = newSize.height },
             insets = insets,
             roomState = roomState,
             isDisconnected = isDisconnected,

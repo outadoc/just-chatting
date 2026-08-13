@@ -31,30 +31,31 @@ internal class DataStorePreferenceRepository(
         }
     }
 
-    private fun Preferences.read(): AppPreferences = AppPreferences(
-        showTimestamps =
-        this[CHAT_ACCESSIBILITY_TIMESTAMPS]
-            ?: defaultPreferences.showTimestamps,
-        enableRecentMessages =
-        this[THIRDPARTY_ENABLE_RECENT]
-            ?: defaultPreferences.enableRecentMessages,
-        enableBttvEmotes =
-        this[THIRDPARTY_ENABLE_BTTV]
-            ?: defaultPreferences.enableBttvEmotes,
-        enableFfzEmotes =
-        this[THIRDPARTY_ENABLE_FFZ]
-            ?: defaultPreferences.enableFfzEmotes,
-        enableStvEmotes =
-        this[THIRDPARTY_ENABLE_STV]
-            ?: defaultPreferences.enableStvEmotes,
-        enablePronouns =
-        this[THIRDPARTY_ENABLE_PRONOUNS]
-            ?: defaultPreferences.enablePronouns,
-        enableNotifications =
-        this[ENABLE_NOTIFICATIONS]
-            ?: defaultPreferences.enableNotifications,
-        apiToken = this[USER_TOKEN]?.takeUnless { it.isBlank() },
-    )
+    private fun Preferences.read(): AppPreferences =
+        AppPreferences(
+            showTimestamps =
+                this[CHAT_ACCESSIBILITY_TIMESTAMPS]
+                    ?: defaultPreferences.showTimestamps,
+            enableRecentMessages =
+                this[THIRDPARTY_ENABLE_RECENT]
+                    ?: defaultPreferences.enableRecentMessages,
+            enableBttvEmotes =
+                this[THIRDPARTY_ENABLE_BTTV]
+                    ?: defaultPreferences.enableBttvEmotes,
+            enableFfzEmotes =
+                this[THIRDPARTY_ENABLE_FFZ]
+                    ?: defaultPreferences.enableFfzEmotes,
+            enableStvEmotes =
+                this[THIRDPARTY_ENABLE_STV]
+                    ?: defaultPreferences.enableStvEmotes,
+            enablePronouns =
+                this[THIRDPARTY_ENABLE_PRONOUNS]
+                    ?: defaultPreferences.enablePronouns,
+            enableNotifications =
+                this[ENABLE_NOTIFICATIONS]
+                    ?: defaultPreferences.enableNotifications,
+            apiToken = this[USER_TOKEN]?.takeUnless { it.isBlank() },
+        )
 
     private fun AppPreferences.writeTo(prefs: MutablePreferences) {
         prefs[USER_TOKEN] = apiToken.orEmpty()

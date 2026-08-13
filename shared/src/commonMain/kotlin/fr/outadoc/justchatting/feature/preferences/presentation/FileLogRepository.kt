@@ -23,9 +23,10 @@ internal open class FileLogRepository(
 ) : LogRepository {
     override val isSupported: Boolean = true
 
-    override suspend fun exportLogs(): LogExportResult = withContext(dispatchersProvider.io) {
-        LogExportResult.CopyToClipboard(readTailOfLogFile())
-    }
+    override suspend fun exportLogs(): LogExportResult =
+        withContext(dispatchersProvider.io) {
+            LogExportResult.CopyToClipboard(readTailOfLogFile())
+        }
 
     protected fun gzipLogFile(): Path {
         fileSystem.createDirectories(dumpDirectory, mustCreate = false)

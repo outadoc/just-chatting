@@ -1,7 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
-  "gradle-wrapper": {"enabled": false},
+  "extends": [
+    "config:recommended"
+  ],
+  "gradle-wrapper": {
+    "enabled": false
+  },
   "packageRules": [
     {
       "matchPackageNames": [
@@ -11,7 +15,9 @@
       "groupName": "kotlin-monorepo"
     },
     {
-      "matchPackageNames": ["/^io.insert-koin/"],
+      "matchPackageNames": [
+        "/^io.insert-koin/"
+      ],
       "groupName": "koin"
     },
     {

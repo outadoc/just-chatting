@@ -32,16 +32,18 @@ internal fun ChatSlowModeProgress(
             val remainingSlowModeDuration = slowModeDuration - durationSinceLastMessage
 
             progress.snapTo(
-                targetValue = remainingSlowModeDuration.inWholeMilliseconds.toFloat() /
-                    slowModeDuration.inWholeMilliseconds.toFloat(),
+                targetValue =
+                    remainingSlowModeDuration.inWholeMilliseconds.toFloat() /
+                        slowModeDuration.inWholeMilliseconds.toFloat(),
             )
 
             progress.animateTo(
                 targetValue = 0f,
-                animationSpec = tween(
-                    durationMillis = remainingSlowModeDuration.inWholeMilliseconds.toInt(),
-                    easing = LinearEasing,
-                ),
+                animationSpec =
+                    tween(
+                        durationMillis = remainingSlowModeDuration.inWholeMilliseconds.toInt(),
+                        easing = LinearEasing,
+                    ),
             )
         }
     }

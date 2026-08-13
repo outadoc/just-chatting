@@ -7,20 +7,24 @@
       "platform": "ios"
     },
     {
-      "appearances": [{
-        "appearance": "luminosity",
-        "value": "dark"
-      }],
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
       "filename": "dark.png",
       "size": "1024x1024",
       "idiom": "universal",
       "platform": "ios"
     },
     {
-      "appearances": [{
-        "appearance": "luminosity",
-        "value": "tinted"
-      }],
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "tinted"
+        }
+      ],
       "filename": "icon_monochrome.png",
       "size": "1024x1024",
       "idiom": "universal",

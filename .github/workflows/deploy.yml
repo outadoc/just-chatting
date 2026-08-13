@@ -229,7 +229,7 @@ jobs:
 
   publish-release:
     name: Publish release
-    needs: [deploy-ios, deploy-desktop, deploy-android]
+    needs: [ deploy-ios, deploy-desktop, deploy-android ]
     runs-on: ubuntu-latest
 
     permissions:

@@ -73,13 +73,15 @@ internal fun ChatListContainer(
             pronouns = state.pronouns.filterValuesNotNull(),
             sourceChannels = state.sourceChannels,
             sourceChannelBadges =
-            state.sourceRoomIds.associateWith { roomId ->
-                if (roomId == state.user.id) {
-                    state.channelBadges
-                } else {
-                    state.sourceChannelBadges[roomId] ?: persistentListOf()
-                }
-            }.mapValues { (_, roomBadges) -> state.globalBadges.addAll(roomBadges) }.toImmutableMap(),
+                state.sourceRoomIds
+                    .associateWith { roomId ->
+                        if (roomId == state.user.id) {
+                            state.channelBadges
+                        } else {
+                            state.sourceChannelBadges[roomId] ?: persistentListOf()
+                        }
+                    }.mapValues { (_, roomBadges) -> state.globalBadges.addAll(roomBadges) }
+                    .toImmutableMap(),
             richEmbeds = state.richEmbeds,
             showTimestamps = showTimestamps,
             isDisconnected = !state.connectionStatus.isAlive,
@@ -101,9 +103,10 @@ internal fun ChatListContainer(
             exit = shrinkVertically(shrinkTowards = Alignment.Bottom) + fadeOut(),
         ) {
             FloatingActionButton(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .padding(insets),
+                modifier =
+                    Modifier
+                        .padding(16.dp)
+                        .padding(insets),
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     scope.launch {

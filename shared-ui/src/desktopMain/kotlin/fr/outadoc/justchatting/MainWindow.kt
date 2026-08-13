@@ -60,18 +60,20 @@ public fun startApp() {
             val snackbarHostState = remember { SnackbarHostState() }
 
             val availableVersion = updateState.availableVersion
-            val updateAvailableMessage = availableVersion?.let {
-                stringResource(Res.string.settings_about_update_subtitle_available, it)
-            }
+            val updateAvailableMessage =
+                availableVersion?.let {
+                    stringResource(Res.string.settings_about_update_subtitle_available, it)
+                }
             val updateSnackbarAction = stringResource(Res.string.update_snackbar_action)
 
             LaunchedEffect(updateAvailableMessage) {
                 if (updateAvailableMessage != null) {
-                    val result = snackbarHostState.showSnackbar(
-                        message = updateAvailableMessage,
-                        actionLabel = updateSnackbarAction,
-                        duration = SnackbarDuration.Indefinite,
-                    )
+                    val result =
+                        snackbarHostState.showSnackbar(
+                            message = updateAvailableMessage,
+                            actionLabel = updateSnackbarAction,
+                            duration = SnackbarDuration.Indefinite,
+                        )
                     if (result == SnackbarResult.ActionPerformed) {
                         showUpdateDialog = true
                     }
@@ -91,9 +93,10 @@ public fun startApp() {
 
                 SnackbarHost(
                     hostState = snackbarHostState,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(16.dp),
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(16.dp),
                 )
             }
 

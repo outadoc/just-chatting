@@ -11,45 +11,48 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
-internal fun Map<String, String?>.parseEmotes(message: String): List<Emote>? = this["emotes"]
-    ?.splitAndMakeMap(split = "/", map = ":")
-    ?.entries
-    ?.flatMap { emote ->
-        emote.value
-            ?.split(",")
-            ?.mapNotNull { indexes ->
-                // Indices are server-provided and occasionally out of range or
-                // malformed; skip the emote rather than crash the parser.
-                val index = indexes.split("-")
-                val begin = index.getOrNull(0)?.toIntOrNull() ?: return@mapNotNull null
-                val end = index.getOrNull(1)?.toIntOrNull() ?: return@mapNotNull null
+internal fun Map<String, String?>.parseEmotes(message: String): List<Emote>? =
+    this["emotes"]
+        ?.splitAndMakeMap(split = "/", map = ":")
+        ?.entries
+        ?.flatMap { emote ->
+            emote.value
+                ?.split(",")
+                ?.mapNotNull { indexes ->
+                    // Indices are server-provided and occasionally out of range or
+                    // malformed; skip the emote rather than crash the parser.
+                    val index = indexes.split("-")
+                    val begin = index.getOrNull(0)?.toIntOrNull() ?: return@mapNotNull null
+                    val end = index.getOrNull(1)?.toIntOrNull() ?: return@mapNotNull null
 
-                val realBegin = try {
-                    message.offsetByCodePoints(0, begin)
-                } catch (e: IndexOutOfBoundsException) {
-                    return@mapNotNull null
-                }
-                val realEnd = if (begin == realBegin) end else end + realBegin - begin
+                    val realBegin =
+                        try {
+                            message.offsetByCodePoints(0, begin)
+                        } catch (e: IndexOutOfBoundsException) {
+                            return@mapNotNull null
+                        }
+                    val realEnd = if (begin == realBegin) end else end + realBegin - begin
 
-                if (realBegin > realEnd || realEnd >= message.length) return@mapNotNull null
+                    if (realBegin > realEnd || realEnd >= message.length) return@mapNotNull null
 
-                ChatEmote(
-                    id = emote.key,
-                    name = message.slice(realBegin..realEnd),
-                ).map()
-            }.orEmpty()
-    }
+                    ChatEmote(
+                        id = emote.key,
+                        name = message.slice(realBegin..realEnd),
+                    ).map()
+                }.orEmpty()
+        }
 
 internal fun Map<String, String?>.parseBadges(): List<Badge>? = parseBadgeList("badges")
 
 internal fun Map<String, String?>.parseSourceBadges(): List<Badge>? = parseBadgeList("source-badges")
 
-private fun Map<String, String?>.parseBadgeList(tag: String): List<Badge>? = this[tag]
-    ?.splitAndMakeMap(",", "/")
-    ?.entries
-    ?.mapNotNull { (key, value) ->
-        value?.let { Badge(key, value) }
-    }
+private fun Map<String, String?>.parseBadgeList(tag: String): List<Badge>? =
+    this[tag]
+        ?.splitAndMakeMap(",", "/")
+        ?.entries
+        ?.mapNotNull { (key, value) ->
+            value?.let { Badge(key, value) }
+        }
 
 internal fun Map<String, String?>.parseTimestamp(): Instant? {
     val prop = this["tmi-sent-ts"] ?: this["rm-received-ts"]
@@ -186,11 +189,12 @@ internal val Map<String, String?>.userId: String?
 private fun String.splitAndMakeMap(
     split: String,
     map: String,
-): Map<String, String?> = buildMap {
-    this@splitAndMakeMap
-        .split(split)
-        .dropLastWhile { it.isEmpty() }
-        .asSequence()
-        .map { pair -> pair.split(map).dropLastWhile { it.isEmpty() } }
-        .forEach { this[it[0]] = if (it.size == 2) it[1] else null }
-}
+): Map<String, String?> =
+    buildMap {
+        this@splitAndMakeMap
+            .split(split)
+            .dropLastWhile { it.isEmpty() }
+            .asSequence()
+            .map { pair -> pair.split(map).dropLastWhile { it.isEmpty() } }
+            .forEach { this[it[0]] = if (it.size == 2) it[1] else null }
+    }

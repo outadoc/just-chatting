@@ -2,10 +2,7 @@ package fr.outadoc.justchatting.feature.timeline.domain.model
 
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.persistentMapOf
-import kotlinx.datetime.LocalDate
 
 @Immutable
 public data class FullSchedule(

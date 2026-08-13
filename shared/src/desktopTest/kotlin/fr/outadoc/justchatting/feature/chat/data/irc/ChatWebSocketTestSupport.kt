@@ -38,7 +38,8 @@ internal const val SAMPLE_PRIVMSG =
 internal fun privMsg(
     text: String,
     timestamp: Long,
-): String = "@badge-info=;badges=;color=#0D4200;display-name=ronni;emotes=;id=msg-$timestamp;mod=0;room-id=1337;subscriber=0;tmi-sent-ts=$timestamp;turbo=0;user-id=1337;user-type= :ronni!ronni@ronni.tmi.twitch.tv PRIVMSG #$TEST_CHANNEL_LOGIN :$text"
+): String =
+    "@badge-info=;badges=;color=#0D4200;display-name=ronni;emotes=;id=msg-$timestamp;mod=0;room-id=1337;subscriber=0;tmi-sent-ts=$timestamp;turbo=0;user-id=1337;user-type= :ronni!ronni@ronni.tmi.twitch.tv PRIVMSG #$TEST_CHANNEL_LOGIN :$text"
 
 internal const val SAMPLE_NOTICE =
     "@msg-id=msg_ratelimit :tmi.twitch.tv NOTICE #channelname :Your message was not sent because you are sending messages too quickly."

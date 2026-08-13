@@ -14,10 +14,11 @@ class MainApplication : Application() {
         // regardless of whether logcat output is enabled for this build.
         val fileLogStrategy = AndroidLogStrategyProvider.getLogStrategy()
 
-        Logger.logStrategy = if (BuildConfig.ENABLE_LOGGING) {
-            CompositeLogStrategy(listOf(AndroidLogStrategy, fileLogStrategy))
-        } else {
-            fileLogStrategy
-        }
+        Logger.logStrategy =
+            if (BuildConfig.ENABLE_LOGGING) {
+                CompositeLogStrategy(listOf(AndroidLogStrategy, fileLogStrategy))
+            } else {
+                fileLogStrategy
+            }
     }
 }

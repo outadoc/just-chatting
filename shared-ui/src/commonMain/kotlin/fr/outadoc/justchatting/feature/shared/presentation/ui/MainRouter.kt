@@ -87,48 +87,48 @@ internal fun MainRouter(
             backStack = backStack,
             entryDecorators = listOf(saveableDecorator),
             entryProvider =
-            entryProvider {
-                entry<Screen.Followed> {
-                    FollowedChannelsList(
-                        onNavigate = onNavigate,
-                        onItemClick = onChannelClick,
-                    )
-                }
+                entryProvider {
+                    entry<Screen.Followed> {
+                        FollowedChannelsList(
+                            onNavigate = onNavigate,
+                            onItemClick = onChannelClick,
+                        )
+                    }
 
-                entry<Screen.Live> {
-                    LiveTimelineScreen(
-                        onNavigate = onNavigate,
-                        onChannelClick = onChannelClick,
-                    )
-                }
+                    entry<Screen.Live> {
+                        LiveTimelineScreen(
+                            onNavigate = onNavigate,
+                            onChannelClick = onChannelClick,
+                        )
+                    }
 
-                entry<Screen.Future> {
-                    FutureTimelineScreen(
-                        onNavigate = onNavigate,
-                    )
-                }
+                    entry<Screen.Future> {
+                        FutureTimelineScreen(
+                            onNavigate = onNavigate,
+                        )
+                    }
 
-                entry<Screen.Search> {
-                    SearchScreen(
-                        onNavigate = onNavigate,
-                        onChannelClick = onChannelClick,
-                    )
-                }
+                    entry<Screen.Search> {
+                        SearchScreen(
+                            onNavigate = onNavigate,
+                            onChannelClick = onChannelClick,
+                        )
+                    }
 
-                entry<Screen.Settings> {
-                    SettingsContent(
-                        onNavigate = onNavigate,
-                        onNavigateDetails = { screen ->
-                            scope.launch {
-                                navigator.navigateTo(
-                                    pane = ListDetailPaneScaffoldRole.Detail,
-                                    contentKey = screen,
-                                )
-                            }
-                        },
-                    )
-                }
-            },
+                    entry<Screen.Settings> {
+                        SettingsContent(
+                            onNavigate = onNavigate,
+                            onNavigateDetails = { screen ->
+                                scope.launch {
+                                    navigator.navigateTo(
+                                        pane = ListDetailPaneScaffoldRole.Detail,
+                                        contentKey = screen,
+                                    )
+                                }
+                            },
+                        )
+                    }
+                },
         )
 
     ListDetailPaneScaffold(

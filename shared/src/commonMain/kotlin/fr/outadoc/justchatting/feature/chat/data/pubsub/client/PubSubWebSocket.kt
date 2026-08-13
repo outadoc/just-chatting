@@ -62,33 +62,34 @@ internal class PubSubWebSocket(
         channelId: String,
         channelLogin: String,
         appUser: AppUser.LoggedIn,
-    ): Flow<ChatEvent> = channelFlow {
-        _connectionStatus.update { it.copy(registeredListeners = it.registeredListeners + 1) }
-        try {
-            networkStateObserver.state.collectLatest { netState ->
-                if (netState is NetworkStateObserver.NetworkState.Available) {
-                    logDebug<PubSubWebSocket> { "Network is available, listening" }
-                    while (currentCoroutineContext().isActive) {
-                        _connectionStatus.update { it.copy(isAlive = true) }
-                        try {
-                            listen(channelId, appUser)
-                        } catch (e: CancellationException) {
-                            throw e
-                        } catch (e: Exception) {
-                            logError<PubSubWebSocket>(e) { "Socket was closed" }
+    ): Flow<ChatEvent> =
+        channelFlow {
+            _connectionStatus.update { it.copy(registeredListeners = it.registeredListeners + 1) }
+            try {
+                networkStateObserver.state.collectLatest { netState ->
+                    if (netState is NetworkStateObserver.NetworkState.Available) {
+                        logDebug<PubSubWebSocket> { "Network is available, listening" }
+                        while (currentCoroutineContext().isActive) {
+                            _connectionStatus.update { it.copy(isAlive = true) }
+                            try {
+                                listen(channelId, appUser)
+                            } catch (e: CancellationException) {
+                                throw e
+                            } catch (e: Exception) {
+                                logError<PubSubWebSocket>(e) { "Socket was closed" }
+                            }
+                            _connectionStatus.update { it.copy(isAlive = false) }
+                            delayWithJitter(1.seconds, maxJitter = 3.seconds)
                         }
+                    } else {
+                        logDebug<PubSubWebSocket> { "Network is out, waiting" }
                         _connectionStatus.update { it.copy(isAlive = false) }
-                        delayWithJitter(1.seconds, maxJitter = 3.seconds)
                     }
-                } else {
-                    logDebug<PubSubWebSocket> { "Network is out, waiting" }
-                    _connectionStatus.update { it.copy(isAlive = false) }
                 }
+            } finally {
+                _connectionStatus.update { it.copy(registeredListeners = it.registeredListeners - 1) }
             }
-        } finally {
-            _connectionStatus.update { it.copy(registeredListeners = it.registeredListeners - 1) }
-        }
-    }.flowOn(dispatchersProvider.io)
+        }.flowOn(dispatchersProvider.io)
 
     private suspend fun ProducerScope<ChatEvent>.listen(
         channelId: String,
@@ -100,12 +101,14 @@ internal class PubSubWebSocket(
             // Tell the server what we want to receive
             sendSerialized<PubSubClientMessage>(
                 PubSubClientMessage.Listen(
-                    data = PubSubClientMessage.Listen.Data(
-                        topics = pubSubPluginsProvider
-                            .get()
-                            .map { plugin -> plugin.getTopic(channelId) },
-                        authToken = appUser.token,
-                    ),
+                    data =
+                        PubSubClientMessage.Listen.Data(
+                            topics =
+                                pubSubPluginsProvider
+                                    .get()
+                                    .map { plugin -> plugin.getTopic(channelId) },
+                            authToken = appUser.token,
+                        ),
                 ),
             )
 
@@ -138,9 +141,10 @@ internal class PubSubWebSocket(
 
         when (received) {
             is PubSubServerMessage.Message -> {
-                val plugin: PubSubPlugin<*>? = plugins.firstOrNull { plugin ->
-                    plugin.getTopic(channelId) == received.data.topic
-                }
+                val plugin: PubSubPlugin<*>? =
+                    plugins.firstOrNull { plugin ->
+                        plugin.getTopic(channelId) == received.data.topic
+                    }
 
                 plugin?.apply {
                     for (event in parseMessage(received.data.message)) {

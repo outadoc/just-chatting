@@ -49,21 +49,23 @@ internal fun PollCard(
         modifier = modifier,
         onClick = { isExpanded = !isExpanded },
         colors =
-        CardDefaults.cardColors(
-            containerColor = color,
-        ),
+            CardDefaults.cardColors(
+                containerColor = color,
+            ),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            val winningChoice: Poll.Choice? = if (poll.status == Poll.Status.Completed) {
-                poll.choices.maxBy { choice -> choice.votes.total }
-            } else {
-                null
-            }
+            val winningChoice: Poll.Choice? =
+                if (poll.status == Poll.Status.Completed) {
+                    poll.choices.maxBy { choice -> choice.votes.total }
+                } else {
+                    null
+                }
 
-            val status = when (poll.status) {
-                Poll.Status.Active -> Res.string.poll_status_progress
-                Poll.Status.Completed, Poll.Status.Archived -> Res.string.poll_status_ended
-            }
+            val status =
+                when (poll.status) {
+                    Poll.Status.Active -> Res.string.poll_status_progress
+                    Poll.Status.Completed, Poll.Status.Archived -> Res.string.poll_status_ended
+                }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -74,16 +76,17 @@ internal fun PollCard(
                 ) {
                     Text(
                         modifier = Modifier.padding(bottom = 4.dp),
-                        text = buildString {
-                            append(stringResource(status))
-                            append(" · ")
-                            append(
-                                stringResource(
-                                    Res.string.poll_status_voterCount,
-                                    poll.totalVoters.formatNumber(),
-                                ),
-                            )
-                        },
+                        text =
+                            buildString {
+                                append(stringResource(status))
+                                append(" · ")
+                                append(
+                                    stringResource(
+                                        Res.string.poll_status_voterCount,
+                                        poll.totalVoters.formatNumber(),
+                                    ),
+                                )
+                            },
                         style = MaterialTheme.typography.titleSmall,
                     )
 
@@ -112,9 +115,10 @@ internal fun PollCard(
                 ) {
                     poll.choices.forEach { choice ->
                         PollChoice(
-                            modifier = Modifier
-                                .padding(vertical = 4.dp)
-                                .fillMaxWidth(),
+                            modifier =
+                                Modifier
+                                    .padding(vertical = 4.dp)
+                                    .fillMaxWidth(),
                             title = choice.title,
                             votes = choice.votes.total,
                             totalVotes = poll.votes.total,
@@ -134,51 +138,54 @@ private val mockPoll =
         title = "Who wants to be a millionnaire?",
         startedAt = Instant.parse("2023-02-05T18:11:52.832Z"),
         choices =
-        listOf(
-            Poll.Choice(
-                choiceId = "1",
-                title = "Étoiles",
-                votes = Poll.Votes(
-                    total = 12345,
-                    bits = 123,
-                    channelPoints = 50,
-                    base = 1412,
+            listOf(
+                Poll.Choice(
+                    choiceId = "1",
+                    title = "Étoiles",
+                    votes =
+                        Poll.Votes(
+                            total = 12345,
+                            bits = 123,
+                            channelPoints = 50,
+                            base = 1412,
+                        ),
+                    totalVoters = 1000,
                 ),
-                totalVoters = 1000,
-            ),
-            Poll.Choice(
-                choiceId = "1",
-                title = "AntoineDaniel",
-                votes = Poll.Votes(
-                    total = 102345,
-                    bits = 123,
-                    channelPoints = 50,
-                    base = 1412,
+                Poll.Choice(
+                    choiceId = "1",
+                    title = "AntoineDaniel",
+                    votes =
+                        Poll.Votes(
+                            total = 102345,
+                            bits = 123,
+                            channelPoints = 50,
+                            base = 1412,
+                        ),
+                    totalVoters = 1000,
                 ),
-                totalVoters = 1000,
-            ),
-            Poll.Choice(
-                choiceId = "1",
-                title = "HortyUnderscore",
-                votes = Poll.Votes(
-                    total = 52450,
-                    bits = 123,
-                    channelPoints = 50,
-                    base = 1412,
+                Poll.Choice(
+                    choiceId = "1",
+                    title = "HortyUnderscore",
+                    votes =
+                        Poll.Votes(
+                            total = 52450,
+                            bits = 123,
+                            channelPoints = 50,
+                            base = 1412,
+                        ),
+                    totalVoters = 1000,
                 ),
-                totalVoters = 1000,
             ),
-        ),
         duration = 3.minutes,
         remainingDuration = 53.seconds,
         totalVoters = 133143,
         votes =
-        Poll.Votes(
-            total = 134356,
-            bits = 1311,
-            channelPoints = 2345,
-            base = 757,
-        ),
+            Poll.Votes(
+                total = 134356,
+                bits = 1311,
+                channelPoints = 2345,
+                base = 757,
+            ),
     )
 
 @Preview

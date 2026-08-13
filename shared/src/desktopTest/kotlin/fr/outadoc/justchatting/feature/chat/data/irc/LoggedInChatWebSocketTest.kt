@@ -72,90 +72,96 @@ internal class LoggedInChatWebSocketTest {
     }
 
     @Test
-    fun `authenticates with the user token on connect`() = webSocketTest {
-        startCollecting()
+    fun `authenticates with the user token on connect`() =
+        webSocketTest {
+            startCollecting()
 
-        val connection = server.awaitConnection()
+            val connection = server.awaitConnection()
 
-        assertEquals("PASS oauth:${testAppUser.token}", connection.awaitLine())
-        assertEquals("NICK ${testAppUser.userLogin}", connection.awaitLine())
-        assertEquals("CAP REQ :twitch.tv/tags twitch.tv/commands", connection.awaitLine())
-        assertEquals("JOIN #$TEST_CHANNEL_LOGIN", connection.awaitLine())
-    }
-
-    @Test
-    fun `only emits notice and userstate events`() = webSocketTest {
-        startCollecting()
-
-        val connection = server.awaitConnection()
-
-        connection.send(SAMPLE_PRIVMSG)
-        connection.send(SAMPLE_NOTICE)
-        connection.send(SAMPLE_USERSTATE)
-
-        // The chat message should have been skipped
-        assertIs<ChatEvent.Message.Notice>(awaitEvent())
-
-        val userState = assertIs<ChatEvent.Command.UserState>(awaitEvent())
-        assertEquals(listOf("0", "33", "50"), userState.emoteSets)
-    }
-
-    @Test
-    fun `replies to server pings`() = webSocketTest {
-        startCollecting()
-
-        val connection = server.awaitConnection()
-        repeat(4) { connection.awaitLine() } // Handshake
-
-        connection.send("PING :tmi.twitch.tv")
-
-        assertEquals("PONG :tmi.twitch.tv", connection.awaitLine())
-    }
-
-    @Test
-    fun `reconnects after the connection is lost`() = webSocketTest {
-        startCollecting()
-
-        val firstConnection = server.awaitConnection()
-        assertTrue(firstConnection.awaitLine().startsWith("PASS "))
-        firstConnection.close()
-
-        val secondConnection = server.awaitConnection()
-        assertTrue(secondConnection.awaitLine().startsWith("PASS "))
-    }
-
-    @Test
-    fun `reconnects when the server goes silent`() = webSocketTest(
-        messageTimeout = 2.seconds,
-    ) {
-        startCollecting()
-
-        server.awaitConnection()
-
-        // Say nothing: the watchdog should drop the connection and reconnect
-        val secondConnection = server.awaitConnection()
-        assertTrue(secondConnection.awaitLine().startsWith("PASS "))
-    }
-
-    @Test
-    fun `tracks listeners and liveness in connection status`() = webSocketTest {
-        assertEquals(0, socket.connectionStatus.value.registeredListeners)
-
-        startCollecting()
-        server.awaitConnection()
-
-        withTimeout(10.seconds) {
-            socket.connectionStatus.first { status ->
-                status.isAlive && status.registeredListeners == 1
-            }
+            assertEquals("PASS oauth:${testAppUser.token}", connection.awaitLine())
+            assertEquals("NICK ${testAppUser.userLogin}", connection.awaitLine())
+            assertEquals("CAP REQ :twitch.tv/tags twitch.tv/commands", connection.awaitLine())
+            assertEquals("JOIN #$TEST_CHANNEL_LOGIN", connection.awaitLine())
         }
 
-        collectJob?.cancelAndJoin()
+    @Test
+    fun `only emits notice and userstate events`() =
+        webSocketTest {
+            startCollecting()
 
-        withTimeout(10.seconds) {
-            socket.connectionStatus.first { status ->
-                !status.isAlive && status.registeredListeners == 0
+            val connection = server.awaitConnection()
+
+            connection.send(SAMPLE_PRIVMSG)
+            connection.send(SAMPLE_NOTICE)
+            connection.send(SAMPLE_USERSTATE)
+
+            // The chat message should have been skipped
+            assertIs<ChatEvent.Message.Notice>(awaitEvent())
+
+            val userState = assertIs<ChatEvent.Command.UserState>(awaitEvent())
+            assertEquals(listOf("0", "33", "50"), userState.emoteSets)
+        }
+
+    @Test
+    fun `replies to server pings`() =
+        webSocketTest {
+            startCollecting()
+
+            val connection = server.awaitConnection()
+            repeat(4) { connection.awaitLine() } // Handshake
+
+            connection.send("PING :tmi.twitch.tv")
+
+            assertEquals("PONG :tmi.twitch.tv", connection.awaitLine())
+        }
+
+    @Test
+    fun `reconnects after the connection is lost`() =
+        webSocketTest {
+            startCollecting()
+
+            val firstConnection = server.awaitConnection()
+            assertTrue(firstConnection.awaitLine().startsWith("PASS "))
+            firstConnection.close()
+
+            val secondConnection = server.awaitConnection()
+            assertTrue(secondConnection.awaitLine().startsWith("PASS "))
+        }
+
+    @Test
+    fun `reconnects when the server goes silent`() =
+        webSocketTest(
+            messageTimeout = 2.seconds,
+        ) {
+            startCollecting()
+
+            server.awaitConnection()
+
+            // Say nothing: the watchdog should drop the connection and reconnect
+            val secondConnection = server.awaitConnection()
+            assertTrue(secondConnection.awaitLine().startsWith("PASS "))
+        }
+
+    @Test
+    fun `tracks listeners and liveness in connection status`() =
+        webSocketTest {
+            assertEquals(0, socket.connectionStatus.value.registeredListeners)
+
+            startCollecting()
+            server.awaitConnection()
+
+            withTimeout(10.seconds) {
+                socket.connectionStatus.first { status ->
+                    status.isAlive && status.registeredListeners == 1
+                }
+            }
+
+            collectJob?.cancelAndJoin()
+
+            withTimeout(10.seconds) {
+                socket.connectionStatus.first { status ->
+                    !status.isAlive && status.registeredListeners == 0
+                }
             }
         }
-    }
 }

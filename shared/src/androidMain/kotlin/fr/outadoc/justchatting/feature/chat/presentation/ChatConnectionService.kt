@@ -21,9 +21,10 @@ public class ChatConnectionService : LifecycleService() {
         public fun createReplyIntent(
             context: Context,
             channelId: String,
-        ): Intent = Intent(context, ChatConnectionService::class.java).apply {
-            data = "ccs://reply/?userId=$channelId".toUri()
-        }
+        ): Intent =
+            Intent(context, ChatConnectionService::class.java).apply {
+                data = "ccs://reply/?userId=$channelId".toUri()
+            }
     }
 
     override fun onStartCommand(
@@ -44,10 +45,11 @@ public class ChatConnectionService : LifecycleService() {
         when (action) {
             ACTION_REPLY -> {
                 lifecycleScope.launch {
-                    val quickReplyResult: String? = RemoteInput
-                        .getResultsFromIntent(intent)
-                        ?.getCharSequence(KEY_QUICK_REPLY_TEXT)
-                        ?.toString()
+                    val quickReplyResult: String? =
+                        RemoteInput
+                            .getResultsFromIntent(intent)
+                            ?.getCharSequence(KEY_QUICK_REPLY_TEXT)
+                            ?.toString()
 
                     logInfo<ChatConnectionService> { "Replying to $userId's chat with reply: $quickReplyResult" }
 

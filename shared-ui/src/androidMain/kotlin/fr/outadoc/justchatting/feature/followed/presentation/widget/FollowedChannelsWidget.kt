@@ -84,17 +84,19 @@ internal class FollowedChannelsWidget : GlanceAppWidget() {
                         items(state.data) { follow ->
                             Column {
                                 Box(
-                                    modifier = GlanceModifier
-                                        .clickable(
-                                            MainActivity.createGlanceAction(
-                                                userId = follow.user.id,
+                                    modifier =
+                                        GlanceModifier
+                                            .clickable(
+                                                MainActivity.createGlanceAction(
+                                                    userId = follow.user.id,
+                                                ),
                                             ),
-                                        ),
                                 ) {
                                     GlanceUserItem(
-                                        modifier = GlanceModifier
-                                            .fillMaxWidth()
-                                            .padding(8.dp),
+                                        modifier =
+                                            GlanceModifier
+                                                .fillMaxWidth()
+                                                .padding(8.dp),
                                         user = follow.user,
                                     )
                                 }

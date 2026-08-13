@@ -8,11 +8,11 @@ internal class EmoteUrlsExtTest {
     private val urls =
         EmoteUrls(
             anyTheme =
-            mapOf(
-                1f to "1x",
-                2f to "2x",
-                4f to "4x",
-            ),
+                mapOf(
+                    1f to "1x",
+                    2f to "2x",
+                    4f to "4x",
+                ),
         )
 
     @Test

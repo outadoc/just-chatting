@@ -21,16 +21,18 @@ internal fun EmoteHeader(
     header: EmoteSetItem.Header,
 ) {
     Row(
-        modifier = modifier
-            .padding(horizontal = 4.dp, vertical = 8.dp),
+        modifier =
+            modifier
+                .padding(horizontal = 4.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         header.iconUrl?.let { url ->
             AsyncImage(
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .size(24.dp)
-                    .clip(MaterialTheme.shapes.medium),
+                modifier =
+                    Modifier
+                        .padding(end = 8.dp)
+                        .size(24.dp)
+                        .clip(MaterialTheme.shapes.medium),
                 contentScale = ContentScale.Fit,
                 model = remoteImageModel(url),
                 contentDescription = null,

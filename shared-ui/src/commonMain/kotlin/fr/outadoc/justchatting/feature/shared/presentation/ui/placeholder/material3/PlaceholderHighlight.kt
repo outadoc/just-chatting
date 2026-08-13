@@ -35,12 +35,13 @@ import fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.core.s
 @Composable
 internal fun PlaceholderHighlight.Companion.fade(
     animationSpec: InfiniteRepeatableSpec<Float> = fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.core.PlaceholderDefaults.fadeAnimationSpec,
-): PlaceholderHighlight = PlaceholderHighlight.fade(
-    highlightColor =
-    fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.core.PlaceholderDefaults
-        .fadeHighlightColor(),
-    animationSpec = animationSpec,
-)
+): PlaceholderHighlight =
+    PlaceholderHighlight.fade(
+        highlightColor =
+            fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.core.PlaceholderDefaults
+                .fadeHighlightColor(),
+        animationSpec = animationSpec,
+    )
 
 /**
  * Creates a [PlaceholderHighlight] which 'shimmers', using a default color.
@@ -59,10 +60,11 @@ internal fun PlaceholderHighlight.Companion.fade(
 internal fun PlaceholderHighlight.Companion.shimmer(
     animationSpec: InfiniteRepeatableSpec<Float> = fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.core.PlaceholderDefaults.shimmerAnimationSpec,
     @FloatRange(from = 0.0, to = 1.0) progressForMaxAlpha: Float = 0.6f,
-): PlaceholderHighlight = PlaceholderHighlight.shimmer(
-    highlightColor =
-    fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.core.PlaceholderDefaults
-        .shimmerHighlightColor(),
-    animationSpec = animationSpec,
-    progressForMaxAlpha = progressForMaxAlpha,
-)
+): PlaceholderHighlight =
+    PlaceholderHighlight.shimmer(
+        highlightColor =
+            fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.core.PlaceholderDefaults
+                .shimmerHighlightColor(),
+        animationSpec = animationSpec,
+        progressForMaxAlpha = progressForMaxAlpha,
+    )

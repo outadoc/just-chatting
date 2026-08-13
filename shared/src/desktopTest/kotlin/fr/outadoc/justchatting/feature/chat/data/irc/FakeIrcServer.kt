@@ -69,7 +69,11 @@ internal class FakeIrcServer {
 
         this.server = server
 
-        val port = server.engine.resolvedConnectors().first().port
+        val port =
+            server.engine
+                .resolvedConnectors()
+                .first()
+                .port
         return "ws://127.0.0.1:$port"
     }
 

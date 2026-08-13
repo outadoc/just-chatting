@@ -10,8 +10,9 @@ fun <K, V> Map<K, V>.filterKeysNotNull(): Map<K & Any, V> = filterKeys { key -> 
 fun <K, V> Map<K, V>.filterValuesNotNull(): Map<K, V & Any> = filterValues { value -> value != null } as Map<K, V & Any>
 
 @Suppress("UNCHECKED_CAST")
-fun <K, V> ImmutableMap<K, V>.filterValuesNotNull(): ImmutableMap<K, V & Any> = (
-    filterValues { value ->
-        value != null
-    } as Map<K, V & Any>
+fun <K, V> ImmutableMap<K, V>.filterValuesNotNull(): ImmutableMap<K, V & Any> =
+    (
+        filterValues { value ->
+            value != null
+        } as Map<K, V & Any>
     ).toPersistentMap()

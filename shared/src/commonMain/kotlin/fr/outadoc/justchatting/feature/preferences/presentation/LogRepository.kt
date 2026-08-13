@@ -9,6 +9,11 @@ internal interface LogRepository {
 }
 
 internal sealed interface LogExportResult {
-    data class Share(val uri: Uri) : LogExportResult
-    data class CopyToClipboard(val text: String) : LogExportResult
+    data class Share(
+        val uri: Uri,
+    ) : LogExportResult
+
+    data class CopyToClipboard(
+        val text: String,
+    ) : LogExportResult
 }

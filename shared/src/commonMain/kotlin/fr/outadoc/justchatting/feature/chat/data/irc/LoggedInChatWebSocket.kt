@@ -24,38 +24,39 @@ internal class LoggedInChatWebSocket(
     endpoint: String = DEFAULT_ENDPOINT,
     messageTimeout: Duration = DEFAULT_MESSAGE_TIMEOUT,
 ) : BaseChatWebSocket(
-    networkStateObserver = networkStateObserver,
-    parser = parser,
-    httpClient = httpClient,
-    dispatchersProvider = dispatchersProvider,
-    endpoint = endpoint,
-    messageTimeout = messageTimeout,
-) {
+        networkStateObserver = networkStateObserver,
+        parser = parser,
+        httpClient = httpClient,
+        dispatchersProvider = dispatchersProvider,
+        endpoint = endpoint,
+        messageTimeout = messageTimeout,
+    ) {
     override val logTag: String = "LoggedInChatWebSocket"
 
     override fun getEventFlow(
         channelId: String,
         channelLogin: String,
         appUser: AppUser.LoggedIn,
-    ): Flow<ChatEvent> = chatEventFlow {
-        Session(
-            onConnected = {
-                sendCommand("PASS oauth:${appUser.token}")
-                sendCommand("NICK ${appUser.userLogin}")
-                sendCommand("CAP REQ :twitch.tv/tags twitch.tv/commands")
-                sendCommand("JOIN #$channelLogin")
-            },
-            onCommandReceived = { command ->
-                when (command) {
-                    is ChatEvent.Message.Notice,
-                    is ChatEvent.Command.UserState,
-                    -> {
-                        emit(command)
-                    }
+    ): Flow<ChatEvent> =
+        chatEventFlow {
+            Session(
+                onConnected = {
+                    sendCommand("PASS oauth:${appUser.token}")
+                    sendCommand("NICK ${appUser.userLogin}")
+                    sendCommand("CAP REQ :twitch.tv/tags twitch.tv/commands")
+                    sendCommand("JOIN #$channelLogin")
+                },
+                onCommandReceived = { command ->
+                    when (command) {
+                        is ChatEvent.Message.Notice,
+                        is ChatEvent.Command.UserState,
+                        -> {
+                            emit(command)
+                        }
 
-                    else -> {}
-                }
-            },
-        )
-    }
+                        else -> {}
+                    }
+                },
+            )
+        }
 }

@@ -21,22 +21,23 @@ internal class GlobalFfzEmotesSource(
         next: Params,
     ): Boolean = true
 
-    override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> = withContext(dispatchersProvider.io) {
-        val prefs = preferencesRepository.currentPreferences.first()
-        if (!prefs.enableFfzEmotes) {
-            return@withContext Result.success(emptyList())
-        }
-
-        bttvEmotesApi
-            .getBttvGlobalFfzEmotes()
-            .map { emotes ->
-                flatListOf(
-                    EmoteSetItem.Header(
-                        title = null,
-                        source = Res.string.chat_source_ffz.desc(),
-                    ),
-                    emotes.map { emote -> EmoteSetItem.Emote(emote) },
-                )
+    override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> =
+        withContext(dispatchersProvider.io) {
+            val prefs = preferencesRepository.currentPreferences.first()
+            if (!prefs.enableFfzEmotes) {
+                return@withContext Result.success(emptyList())
             }
-    }
+
+            bttvEmotesApi
+                .getBttvGlobalFfzEmotes()
+                .map { emotes ->
+                    flatListOf(
+                        EmoteSetItem.Header(
+                            title = null,
+                            source = Res.string.chat_source_ffz.desc(),
+                        ),
+                        emotes.map { emote -> EmoteSetItem.Emote(emote) },
+                    )
+                }
+        }
 }

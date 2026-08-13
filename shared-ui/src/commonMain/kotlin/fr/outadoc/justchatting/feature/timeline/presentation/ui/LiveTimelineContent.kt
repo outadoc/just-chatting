@@ -55,9 +55,10 @@ internal fun LiveTimelineContent(
                 PullToRefreshDefaults.Indicator(
                     state = pullToRefreshState,
                     isRefreshing = isRefreshing,
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = insets.calculateTopPadding()),
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(top = insets.calculateTopPadding()),
                 )
             },
         ) {
@@ -108,22 +109,24 @@ private fun LiveTimelineList(
 ) {
     if (live.isEmpty()) {
         NoContent(
-            modifier = modifier
-                .padding(insets)
-                .fillMaxSize(),
+            modifier =
+                modifier
+                    .padding(insets)
+                    .fillMaxSize(),
         )
     } else {
         LazyColumn(
-            modifier = modifier
-                .padding(insets)
-                .fillMaxWidth(),
+            modifier =
+                modifier
+                    .padding(insets)
+                    .fillMaxWidth(),
             state = listState,
             contentPadding =
-            PaddingValues(
-                start = 16.dp,
-                end = 16.dp,
-                bottom = 16.dp,
-            ),
+                PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp,
+                ),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(
@@ -132,9 +135,10 @@ private fun LiveTimelineList(
                 contentType = { "stream" },
             ) { userStream ->
                 LiveTimelineSegment(
-                    modifier = Modifier
-                        .animateItem()
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .animateItem()
+                            .fillMaxWidth(),
                     userStream = userStream,
                     onOpenChat = {
                         onChannelClick(userStream.user)

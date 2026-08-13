@@ -33,13 +33,13 @@ internal class LiveChatWebSocket(
     endpoint: String = DEFAULT_ENDPOINT,
     messageTimeout: Duration = DEFAULT_MESSAGE_TIMEOUT,
 ) : BaseChatWebSocket(
-    networkStateObserver = networkStateObserver,
-    parser = parser,
-    httpClient = httpClient,
-    dispatchersProvider = dispatchersProvider,
-    endpoint = endpoint,
-    messageTimeout = messageTimeout,
-) {
+        networkStateObserver = networkStateObserver,
+        parser = parser,
+        httpClient = httpClient,
+        dispatchersProvider = dispatchersProvider,
+        endpoint = endpoint,
+        messageTimeout = messageTimeout,
+    ) {
     companion object {
         private const val SEEN_MESSAGE_IDS_LIMIT = AppPreferences.Defaults.RecentChatLimit * 2
     }
@@ -71,29 +71,30 @@ internal class LiveChatWebSocket(
         channelId: String,
         channelLogin: String,
         appUser: AppUser.LoggedIn,
-    ): Flow<ChatEvent> = chatEventFlow {
-        val state = SessionState()
-        Session(
-            onConnected = {
-                // random number between 1000 and 9999
-                sendCommand("NICK justinfan${Random.nextInt(1000, 10_000)}")
-                sendCommand("CAP REQ :twitch.tv/tags twitch.tv/commands")
-                sendCommand("JOIN #$channelLogin")
+    ): Flow<ChatEvent> =
+        chatEventFlow {
+            val state = SessionState()
+            Session(
+                onConnected = {
+                    // random number between 1000 and 9999
+                    sendCommand("NICK justinfan${Random.nextInt(1000, 10_000)}")
+                    sendCommand("CAP REQ :twitch.tv/tags twitch.tv/commands")
+                    sendCommand("JOIN #$channelLogin")
 
-                emit(
-                    ChatEvent.Message.Join(
-                        timestamp = clock.now(),
-                        channelLogin = channelLogin,
-                    ),
-                )
+                    emit(
+                        ChatEvent.Message.Join(
+                            timestamp = clock.now(),
+                            channelLogin = channelLogin,
+                        ),
+                    )
 
-                // Join before backfilling: messages that arrive while recent messages
-                // are being fetched wait in the socket's buffer instead of being missed.
-                loadRecentMessages(channelLogin, state)
-            },
-            onCommandReceived = { command -> handleCommand(command, state) },
-        )
-    }
+                    // Join before backfilling: messages that arrive while recent messages
+                    // are being fetched wait in the socket's buffer instead of being missed.
+                    loadRecentMessages(channelLogin, state)
+                },
+                onCommandReceived = { command -> handleCommand(command, state) },
+            )
+        }
 
     private suspend fun Connection.handleCommand(
         command: ChatEvent,

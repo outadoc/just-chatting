@@ -108,31 +108,32 @@ internal abstract class BaseChatWebSocket(
         }
     }
 
-    protected fun chatEventFlow(createSession: () -> Session): Flow<ChatEvent> = channelFlow {
-        val session = createSession()
-        updateConnectionStatus { it.copy(registeredListeners = it.registeredListeners + 1) }
-        try {
-            networkStateObserver.state.collectLatest { netState ->
-                if (netState is NetworkStateObserver.NetworkState.Available) {
-                    logDebug(logTag) { "Network is available, listening" }
-                    while (currentCoroutineContext().isActive) {
-                        try {
-                            connect(session)
-                        } catch (e: CancellationException) {
-                            throw e
-                        } catch (e: Exception) {
-                            logError(logTag, e) { "Socket was closed" }
+    protected fun chatEventFlow(createSession: () -> Session): Flow<ChatEvent> =
+        channelFlow {
+            val session = createSession()
+            updateConnectionStatus { it.copy(registeredListeners = it.registeredListeners + 1) }
+            try {
+                networkStateObserver.state.collectLatest { netState ->
+                    if (netState is NetworkStateObserver.NetworkState.Available) {
+                        logDebug(logTag) { "Network is available, listening" }
+                        while (currentCoroutineContext().isActive) {
+                            try {
+                                connect(session)
+                            } catch (e: CancellationException) {
+                                throw e
+                            } catch (e: Exception) {
+                                logError(logTag, e) { "Socket was closed" }
+                            }
+                            delayWithJitter(1.seconds, maxJitter = 3.seconds)
                         }
-                        delayWithJitter(1.seconds, maxJitter = 3.seconds)
+                    } else {
+                        logDebug(logTag) { "Network is out, waiting" }
                     }
-                } else {
-                    logDebug(logTag) { "Network is out, waiting" }
                 }
+            } finally {
+                updateConnectionStatus { it.copy(registeredListeners = it.registeredListeners - 1) }
             }
-        } finally {
-            updateConnectionStatus { it.copy(registeredListeners = it.registeredListeners - 1) }
-        }
-    }.flowOn(dispatchersProvider.io)
+        }.flowOn(dispatchersProvider.io)
 
     private suspend fun ProducerScope<ChatEvent>.connect(session: Session) {
         httpClient.webSocket(endpoint) {
@@ -144,12 +145,16 @@ internal abstract class BaseChatWebSocket(
 
                 // Receive messages
                 while (isActive) {
-                    val received = try {
-                        withTimeout(messageTimeout) { incoming.receive() }
-                    } catch (e: TimeoutCancellationException) {
-                        logError(logTag, e) { "No message received in $messageTimeout, closing socket" }
-                        break
-                    }
+                    val received =
+                        try {
+                            withTimeout(messageTimeout) { incoming.receive() }
+                        } catch (e: TimeoutCancellationException) {
+                            logError(
+                                logTag,
+                                e,
+                            ) { "No message received in $messageTimeout, closing socket" }
+                            break
+                        }
 
                     when (received) {
                         is Frame.Text -> {
@@ -177,9 +182,15 @@ internal abstract class BaseChatWebSocket(
         logInfo(logTag) { "received: $line" }
 
         when (val command = parser.parse(line)) {
-            is ChatEvent.Command.Ping -> connection.sendCommand("PONG :tmi.twitch.tv")
+            is ChatEvent.Command.Ping -> {
+                connection.sendCommand("PONG :tmi.twitch.tv")
+            }
+
             null -> {}
-            else -> session.onCommandReceived(connection, command)
+
+            else -> {
+                session.onCommandReceived(connection, command)
+            }
         }
     }
 }

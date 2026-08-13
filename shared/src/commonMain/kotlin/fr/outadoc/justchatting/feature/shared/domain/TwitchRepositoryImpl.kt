@@ -53,28 +53,29 @@ internal class TwitchRepositoryImpl(
     private val userSyncLock = Mutex()
     private val streamSyncLock = Mutex()
 
-    override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> = withContext(dispatchersProvider.io) {
-        twitchApi
-            .searchChannels(query)
-            .map { pagingData ->
-                pagingData.flatMap { results ->
-                    results.forEach { result ->
-                        localUsersApi.saveUser(userId = result.user.id)
-                    }
+    override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> =
+        withContext(dispatchersProvider.io) {
+            twitchApi
+                .searchChannels(query)
+                .map { pagingData ->
+                    pagingData.flatMap { results ->
+                        results.forEach { result ->
+                            localUsersApi.saveUser(userId = result.user.id)
+                        }
 
-                    val fullUsersById: Map<String, User> =
-                        getUsersById(ids = results.map { result -> result.user.id })
-                            .first()
-                            .getOrNull()
-                            .orEmpty()
-                            .associateBy { user -> user.id }
+                        val fullUsersById: Map<String, User> =
+                            getUsersById(ids = results.map { result -> result.user.id })
+                                .first()
+                                .getOrNull()
+                                .orEmpty()
+                                .associateBy { user -> user.id }
 
-                    results.map { result ->
-                        result.copy(user = fullUsersById[result.user.id] ?: result.user)
+                        results.map { result ->
+                            result.copy(user = fullUsersById[result.user.id] ?: result.user)
+                        }
                     }
                 }
-            }
-    }
+        }
 
     override suspend fun syncFollowedChannels(appUser: AppUser) {
         withContext(dispatchersProvider.io) {
@@ -90,52 +91,58 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun getFollowedChannels(): Flow<List<ChannelFollow>> = localUsersApi.getFollowedChannels()
 
-    override suspend fun getStreamByUserId(userId: String): Flow<Result<Stream>> = flow {
-        emit(
-            twitchApi
-                .getStreamsByUserId(ids = listOf(userId))
-                .mapCatching { response ->
-                    response.firstOrNull()
-                        ?: error("Stream for userId $userId not found")
-                },
-        )
-    }.flowOn(dispatchersProvider.io)
+    override suspend fun getStreamByUserId(userId: String): Flow<Result<Stream>> =
+        flow {
+            emit(
+                twitchApi
+                    .getStreamsByUserId(ids = listOf(userId))
+                    .mapCatching { response ->
+                        response.firstOrNull()
+                            ?: error("Stream for userId $userId not found")
+                    },
+            )
+        }.flowOn(dispatchersProvider.io)
 
-    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> = withContext(dispatchersProvider.io) {
-        launch {
-            ids.forEach { id ->
-                localUsersApi.saveUser(userId = id)
+    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
+        withContext(dispatchersProvider.io) {
+            launch {
+                ids.forEach { id ->
+                    localUsersApi.saveUser(userId = id)
+                }
+
+                syncLocalUserInfo()
             }
 
-            syncLocalUserInfo()
+            localUsersApi
+                .getUsersById(ids)
+                .map { users -> Result.success(users) }
         }
 
-        localUsersApi
-            .getUsersById(ids)
-            .map { users -> Result.success(users) }
-    }
-
-    override suspend fun getUserById(id: String): Flow<Result<User>> = withContext(dispatchersProvider.io) {
-        getUsersById(ids = listOf(id))
-            .map { result ->
-                result.mapCatching { users ->
-                    users.firstOrNull()
-                        ?: error("No user found for id: $id")
+    override suspend fun getUserById(id: String): Flow<Result<User>> =
+        withContext(dispatchersProvider.io) {
+            getUsersById(ids = listOf(id))
+                .map { result ->
+                    result.mapCatching { users ->
+                        users.firstOrNull()
+                            ?: error("No user found for id: $id")
+                    }
                 }
-            }
-    }
+        }
 
-    override suspend fun getCheerEmotes(userId: String): Result<List<Emote>> = withContext(dispatchersProvider.io) {
-        twitchApi.getCheerEmotes(userId = userId)
-    }
+    override suspend fun getCheerEmotes(userId: String): Result<List<Emote>> =
+        withContext(dispatchersProvider.io) {
+            twitchApi.getCheerEmotes(userId = userId)
+        }
 
-    override suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>> = withContext(dispatchersProvider.io) {
-        twitchApi.getEmotesFromSet(setIds = setIds)
-    }
+    override suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>> =
+        withContext(dispatchersProvider.io) {
+            twitchApi.getEmotesFromSet(setIds = setIds)
+        }
 
-    override suspend fun getRecentChannels(): Flow<List<User>> = withContext(dispatchersProvider.io) {
-        localUsersApi.getRecentChannels()
-    }
+    override suspend fun getRecentChannels(): Flow<List<User>> =
+        withContext(dispatchersProvider.io) {
+            localUsersApi.getRecentChannels()
+        }
 
     override suspend fun forgetRecentChannel(userId: String) {
         withContext(dispatchersProvider.io) {
@@ -203,96 +210,100 @@ internal class TwitchRepositoryImpl(
     override suspend fun getFollowedChannelsSchedule(
         today: LocalDate,
         timeZone: TimeZone,
-    ): Flow<FullSchedule> = withContext(dispatchersProvider.io) {
-        val notBefore = (today - TimelineConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
-        val notAfter = (today + TimelineConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
+    ): Flow<FullSchedule> =
+        withContext(dispatchersProvider.io) {
+            val notBefore = (today - TimelineConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
+            val notAfter = (today + TimelineConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
 
-        combine(
-            localUsersApi.getFollowedChannels(),
-            localStreamsApi
-                .getPastStreams(
-                    notBefore = notBefore,
-                    notAfter = notAfter,
-                ).onStart {
-                    emit(emptyList())
-                },
-            localStreamsApi
-                .getLiveStreams()
-                .onStart {
-                    emit(emptyList())
-                },
-            localStreamsApi
-                .getFutureStreams(
-                    notBefore = notBefore,
-                    notAfter = notAfter,
-                ).onStart {
-                    emit(emptyList())
-                },
-        ) { followed, past, live, future ->
-            logDebug<TwitchRepositoryImpl> {
-                "Followed: ${followed.size}, Past: ${past.size}, Live: ${live.size}, Future: ${future.size}"
-            }
-
-            val groupedPast =
-                past
-                    .groupBy { segment ->
-                        segment.startTime.toLocalDateTime(timeZone).date
-                    }.map { (date, schedule) ->
-                        DaySchedule(
-                            date = JCLocalDate(date),
-                            schedule = schedule,
-                        )
-                    }.toImmutableList()
-
-            val groupedFuture =
-                future
-                    .groupBy { segment ->
-                        segment.startTime.toLocalDateTime(timeZone).date
-                    }.map { (date, schedule) ->
-                        DaySchedule(
-                            date = JCLocalDate(date),
-                            schedule = schedule,
-                        )
-                    }.toImmutableList()
-
-            FullSchedule(
-                past = groupedPast,
-                live =
-                live
-                    .mapNotNull { stream ->
-                        followed
-                            .firstOrNull { follow -> follow.user.id == stream.userId }
-                            ?.let { follow ->
-                                UserStream(
-                                    stream = stream,
-                                    user = follow.user,
-                                )
-                            }
-                    }.toPersistentList(),
-                future = groupedFuture,
-            )
-        }
-    }
-
-    override suspend fun getGlobalBadges(): Result<List<TwitchBadge>> = withContext(dispatchersProvider.io) {
-        twitchApi.getGlobalBadges()
-    }
-
-    override suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>> = withContext(dispatchersProvider.io) {
-        twitchApi.getChannelBadges(channelId)
-    }
-
-    private suspend fun syncLocalFollows(appUserId: String): Result<Unit> = userSyncLock.withLock {
-        twitchApi
-            .getFollowedChannels(userId = appUserId)
-            .onFailure { exception ->
-                logError<TwitchRepositoryImpl>(exception) {
-                    "Error while fetching followed channels"
+            combine(
+                localUsersApi.getFollowedChannels(),
+                localStreamsApi
+                    .getPastStreams(
+                        notBefore = notBefore,
+                        notAfter = notAfter,
+                    ).onStart {
+                        emit(emptyList())
+                    },
+                localStreamsApi
+                    .getLiveStreams()
+                    .onStart {
+                        emit(emptyList())
+                    },
+                localStreamsApi
+                    .getFutureStreams(
+                        notBefore = notBefore,
+                        notAfter = notAfter,
+                    ).onStart {
+                        emit(emptyList())
+                    },
+            ) { followed, past, live, future ->
+                logDebug<TwitchRepositoryImpl> {
+                    "Followed: ${followed.size}, Past: ${past.size}, Live: ${live.size}, Future: ${future.size}"
                 }
-            }.map { follows ->
-                localUsersApi.saveAndReplaceFollowedChannels(follows = follows)
+
+                val groupedPast =
+                    past
+                        .groupBy { segment ->
+                            segment.startTime.toLocalDateTime(timeZone).date
+                        }.map { (date, schedule) ->
+                            DaySchedule(
+                                date = JCLocalDate(date),
+                                schedule = schedule,
+                            )
+                        }.toImmutableList()
+
+                val groupedFuture =
+                    future
+                        .groupBy { segment ->
+                            segment.startTime.toLocalDateTime(timeZone).date
+                        }.map { (date, schedule) ->
+                            DaySchedule(
+                                date = JCLocalDate(date),
+                                schedule = schedule,
+                            )
+                        }.toImmutableList()
+
+                FullSchedule(
+                    past = groupedPast,
+                    live =
+                        live
+                            .mapNotNull { stream ->
+                                followed
+                                    .firstOrNull { follow -> follow.user.id == stream.userId }
+                                    ?.let { follow ->
+                                        UserStream(
+                                            stream = stream,
+                                            user = follow.user,
+                                        )
+                                    }
+                            }.toPersistentList(),
+                    future = groupedFuture,
+                )
             }
-    }
+        }
+
+    override suspend fun getGlobalBadges(): Result<List<TwitchBadge>> =
+        withContext(dispatchersProvider.io) {
+            twitchApi.getGlobalBadges()
+        }
+
+    override suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>> =
+        withContext(dispatchersProvider.io) {
+            twitchApi.getChannelBadges(channelId)
+        }
+
+    private suspend fun syncLocalFollows(appUserId: String): Result<Unit> =
+        userSyncLock.withLock {
+            twitchApi
+                .getFollowedChannels(userId = appUserId)
+                .onFailure { exception ->
+                    logError<TwitchRepositoryImpl>(exception) {
+                        "Error while fetching followed channels"
+                    }
+                }.map { follows ->
+                    localUsersApi.saveAndReplaceFollowedChannels(follows = follows)
+                }
+        }
 
     private suspend fun syncLocalUserInfo() {
         userSyncLock.withLock {
@@ -401,23 +412,24 @@ internal class TwitchRepositoryImpl(
             }.awaitAll()
     }
 
-    private suspend fun syncLiveStreams(appUserId: String) = withContext(dispatchersProvider.io) {
-        logDebug<TwitchRepositoryImpl> { "Loading followed live streams" }
+    private suspend fun syncLiveStreams(appUserId: String) =
+        withContext(dispatchersProvider.io) {
+            logDebug<TwitchRepositoryImpl> { "Loading followed live streams" }
 
-        twitchApi
-            .getFollowedStreams(userId = appUserId)
-            .onSuccess { streams ->
-                logDebug<TwitchRepositoryImpl> {
-                    "Loaded ${streams.size} live streams"
-                }
+            twitchApi
+                .getFollowedStreams(userId = appUserId)
+                .onSuccess { streams ->
+                    logDebug<TwitchRepositoryImpl> {
+                        "Loaded ${streams.size} live streams"
+                    }
 
-                localStreamsApi.saveAndReplaceLiveStreams(streams)
-            }.onFailure { exception ->
-                logError<TwitchRepositoryImpl>(exception) {
-                    "Error while fetching followed live streams"
+                    localStreamsApi.saveAndReplaceLiveStreams(streams)
+                }.onFailure { exception ->
+                    logError<TwitchRepositoryImpl>(exception) {
+                        "Error while fetching followed live streams"
+                    }
                 }
-            }
-    }
+        }
 
     private suspend fun syncFutureStreams(
         followedUsers: List<User>,
@@ -461,29 +473,30 @@ internal class TwitchRepositoryImpl(
         message: String,
         inReplyToMessageId: String?,
         appUser: AppUser,
-    ): Result<String> = withContext(dispatchersProvider.io) {
-        logInfo<TwitchRepositoryImpl> { "Sending message (to $channelUserId, in reply to $inReplyToMessageId): $message" }
+    ): Result<String> =
+        withContext(dispatchersProvider.io) {
+            logInfo<TwitchRepositoryImpl> { "Sending message (to $channelUserId, in reply to $inReplyToMessageId): $message" }
 
-        when (appUser) {
-            is AppUser.LoggedIn -> {
-                twitchApi
-                    .sendChatMessage(
-                        channelUserId = channelUserId,
-                        senderUserId = appUser.userId,
-                        message = message,
-                        inReplyToMessageId = inReplyToMessageId,
-                    ).onSuccess { messageId ->
-                        logInfo<TwitchRepositoryImpl> { "Message sent: $messageId" }
-                    }.onFailure { exception ->
-                        logError<TwitchRepositoryImpl>(exception) { "Error while sending message" }
-                    }
-            }
+            when (appUser) {
+                is AppUser.LoggedIn -> {
+                    twitchApi
+                        .sendChatMessage(
+                            channelUserId = channelUserId,
+                            senderUserId = appUser.userId,
+                            message = message,
+                            inReplyToMessageId = inReplyToMessageId,
+                        ).onSuccess { messageId ->
+                            logInfo<TwitchRepositoryImpl> { "Message sent: $messageId" }
+                        }.onFailure { exception ->
+                            logError<TwitchRepositoryImpl>(exception) { "Error while sending message" }
+                        }
+                }
 
-            else -> {
-                Result.failure(
-                    MessageNotSentException("User is not logged in"),
-                )
+                else -> {
+                    Result.failure(
+                        MessageNotSentException("User is not logged in"),
+                    )
+                }
             }
         }
-    }
 }

@@ -1,7 +1,11 @@
-{"dependencies": [{
-  "moduleLicense": "ISC License",
-  "moduleVersion": "5.0.0",
-  "moduleName": "chat.willow.kale:kale",
-  "moduleLicenseUrl": "https://opensource.org/licenses/ISC",
-  "moduleUrl": "https://github.com/WillowChat/Kale"
-}]}
+{
+  "dependencies": [
+    {
+      "moduleLicense": "ISC License",
+      "moduleVersion": "5.0.0",
+      "moduleName": "chat.willow.kale:kale",
+      "moduleLicenseUrl": "https://opensource.org/licenses/ISC",
+      "moduleUrl": "https://github.com/WillowChat/Kale"
+    }
+  ]
+}

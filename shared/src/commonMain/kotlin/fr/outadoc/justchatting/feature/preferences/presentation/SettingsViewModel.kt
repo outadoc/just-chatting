@@ -123,10 +123,11 @@ public class SettingsViewModel internal constructor(
         viewModelScope.launch {
             try {
                 if (logRepository.isSupported) {
-                    val event = when (val result = logRepository.exportLogs()) {
-                        is LogExportResult.Share -> Event.ShareLogs(uri = result.uri)
-                        is LogExportResult.CopyToClipboard -> Event.CopyLogsToClipboard(text = result.text)
-                    }
+                    val event =
+                        when (val result = logRepository.exportLogs()) {
+                            is LogExportResult.Share -> Event.ShareLogs(uri = result.uri)
+                            is LogExportResult.CopyToClipboard -> Event.CopyLogsToClipboard(text = result.text)
+                        }
                     _events.emit(event)
                 }
             } catch (e: Exception) {

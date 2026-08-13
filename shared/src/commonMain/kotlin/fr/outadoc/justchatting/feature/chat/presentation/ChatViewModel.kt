@@ -244,28 +244,30 @@ public class ChatViewModel internal constructor(
                 get() = buildAllEmotesMap(pickableEmotes)
 
             val pickableEmotesWithRecent: ImmutableList<EmoteSetItem>
-                get() = flatListOf(
-                    EmoteSetItem.Header(
-                        title = Res.string.chat_header_recent.desc(),
-                        source = null,
-                    ),
-                    recentEmotes
-                        .filter { recentEmote -> recentEmote.name in allEmotesMap }
-                        .map { recentEmote -> EmoteSetItem.Emote(recentEmote) },
-                ).plus(pickableEmotes)
-                    .toImmutableList()
+                get() =
+                    flatListOf(
+                        EmoteSetItem.Header(
+                            title = Res.string.chat_header_recent.desc(),
+                            source = null,
+                        ),
+                        recentEmotes
+                            .filter { recentEmote -> recentEmote.name in allEmotesMap }
+                            .map { recentEmote -> EmoteSetItem.Emote(recentEmote) },
+                    ).plus(pickableEmotes)
+                        .toImmutableList()
 
             val messagePostConstraint: MessagePostConstraint?
-                get() = lastSentMessageInstant?.let {
-                    if (!roomState.slowModeDuration.isPositive()) {
-                        null
-                    } else {
-                        MessagePostConstraint(
-                            lastMessageSentAt = it,
-                            slowModeDuration = roomState.slowModeDuration,
-                        )
+                get() =
+                    lastSentMessageInstant?.let {
+                        if (!roomState.slowModeDuration.isPositive()) {
+                            null
+                        } else {
+                            MessagePostConstraint(
+                                lastMessageSentAt = it,
+                                slowModeDuration = roomState.slowModeDuration,
+                            )
+                        }
                     }
-                }
         }
     }
 
@@ -347,10 +349,11 @@ public class ChatViewModel internal constructor(
 
                 currentSession?.cancel()
 
-                val session = ChatSession(
-                    channelId = userId,
-                    appUser = appUser,
-                )
+                val session =
+                    ChatSession(
+                        channelId = userId,
+                        appUser = appUser,
+                    )
                 currentSession = session
 
                 // Reset the state before the session pipelines start observing it, so
@@ -457,15 +460,16 @@ public class ChatViewModel internal constructor(
 
         defaultScope.launch {
             try {
-                val errorAction = submitMessage(
-                    channelUserId = chatState.user.id,
-                    message = currentInputState.message,
-                    inReplyToMessageId = currentInputState.replyingTo?.body?.messageId,
-                    appUser = chatState.appUser,
-                    allEmotesMap = chatState.allEmotesMap,
-                    screenDensity = screenDensity,
-                    isDarkTheme = isDarkTheme,
-                )
+                val errorAction =
+                    submitMessage(
+                        channelUserId = chatState.user.id,
+                        message = currentInputState.message,
+                        inReplyToMessageId = currentInputState.replyingTo?.body?.messageId,
+                        appUser = chatState.appUser,
+                        allEmotesMap = chatState.allEmotesMap,
+                        screenDensity = screenDensity,
+                        isDarkTheme = isDarkTheme,
+                    )
 
                 if (errorAction != null) {
                     dispatch(errorAction)
@@ -677,16 +681,18 @@ public class ChatViewModel internal constructor(
                         }
                 }.distinctUntilChanged()
                 .onEach { (recentEmotes, allEmotesMap) ->
-                    val action = Action.ChangeRecentEmotes(
-                        recentEmotes = recentEmotes
-                            .filter { recentEmote -> recentEmote.name in allEmotesMap }
-                            .map { recentEmote ->
-                                Emote(
-                                    name = recentEmote.name,
-                                    urls = EmoteUrls(recentEmote.url),
-                                )
-                            },
-                    )
+                    val action =
+                        Action.ChangeRecentEmotes(
+                            recentEmotes =
+                                recentEmotes
+                                    .filter { recentEmote -> recentEmote.name in allEmotesMap }
+                                    .map { recentEmote ->
+                                        Emote(
+                                            name = recentEmote.name,
+                                            urls = EmoteUrls(recentEmote.url),
+                                        )
+                                    },
+                        )
 
                     dispatchIfCurrent(action)
                 }.catch { e -> logError<ChatViewModel>(e) { "Recent emotes pipeline failed" } }
@@ -731,8 +737,9 @@ public class ChatViewModel internal constructor(
                         newIds
                             .map { id -> async { id to twitchRepository.getChannelBadges(id) } }
                             .awaitAll()
-                            .mapNotNull { (id, result) -> result.getOrNull()?.let { badges -> id to badges } }
-                            .toMap()
+                            .mapNotNull { (id, result) ->
+                                result.getOrNull()?.let { badges -> id to badges }
+                            }.toMap()
                     }
                 }.onEach { newBadges -> dispatchIfCurrent(Action.UpdateSourceChannelBadges(newBadges)) }
                 .catch { e -> logError<ChatViewModel>(e) { "Source channel badges pipeline failed" } }
@@ -775,10 +782,11 @@ public class ChatViewModel internal constructor(
     }
 }
 
-private fun buildAllEmotesMap(pickableEmotes: List<EmoteSetItem>): ImmutableMap<String, Emote> = pickableEmotes
-    .asSequence()
-    .filterIsInstance<EmoteSetItem.Emote>()
-    .map { item -> item.emote }
-    .distinctBy { emote -> emote.name }
-    .associateBy { emote -> emote.name }
-    .toImmutableMap()
+private fun buildAllEmotesMap(pickableEmotes: List<EmoteSetItem>): ImmutableMap<String, Emote> =
+    pickableEmotes
+        .asSequence()
+        .filterIsInstance<EmoteSetItem.Emote>()
+        .map { item -> item.emote }
+        .distinctBy { emote -> emote.name }
+        .associateBy { emote -> emote.name }
+        .toImmutableMap()

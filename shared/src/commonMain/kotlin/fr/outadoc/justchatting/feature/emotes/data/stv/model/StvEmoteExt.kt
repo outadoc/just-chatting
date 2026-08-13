@@ -18,18 +18,18 @@ internal fun StvEmote.map(): Emote? {
         isZeroWidth = flags.hasFlag(FLAG_IS_ZERO_WIDTH),
         ratio = file.width.toFloat() / file.height.toFloat(),
         urls =
-        EmoteUrls(
-            anyTheme =
-            mapOf(
-                0f to
-                    Uri
-                        .parse("https:${data.host.baseUrl}")
-                        .buildUpon()
-                        .appendPath(file.name)
-                        .build()
-                        .toString(),
+            EmoteUrls(
+                anyTheme =
+                    mapOf(
+                        0f to
+                            Uri
+                                .parse("https:${data.host.baseUrl}")
+                                .buildUpon()
+                                .appendPath(file.name)
+                                .build()
+                                .toString(),
+                    ),
             ),
-        ),
     )
 }
 

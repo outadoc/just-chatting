@@ -38,6 +38,7 @@ https://github.com/user-attachments/assets/0f107cee-6294-4fbf-aa15-5466b57a548f
 3. Move to the `app-ios` directory, and run `tuist generate` to generate and open the Xcode project.
 
 ## Build the project locally
+
 ```bash
 # Android
 ./gradlew :app-android:assembleDebug       # Build debug APK
@@ -83,7 +84,7 @@ Always run `spotlessApply` before committing. CI enforces formatting on PRs.
 
 ## Architecture
 
-This project is a Kotlin Multiplatform app targeting Android, iOS, and JVM desktop. 
+This project is a Kotlin Multiplatform app targeting Android, iOS, and JVM desktop.
 The common business logic is included in the `shared` module, and common UI code in `shared-ui`.
 
 Then, by platform:
@@ -97,7 +98,8 @@ Platform-specific code is kept to an absolute minimum.
 
 ### Layers (Clean Architecture, enforced by Konsist)
 
-Code is organized by feature under `fr.outadoc.justchatting.feature.*`, with each feature split into:
+Code is organized by feature under `fr.outadoc.justchatting.feature.*`, with each feature split
+into:
 
 - **domain** — Business logic, interfaces, use cases. No dependencies on other layers.
 - **presentation** — ViewModels, UI state. Depends only on domain.

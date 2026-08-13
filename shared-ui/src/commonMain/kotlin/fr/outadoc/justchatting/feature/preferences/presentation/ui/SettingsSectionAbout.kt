@@ -140,7 +140,9 @@ private fun SettingsSectionAboutContent(
                     }
                 }
 
-                is SettingsViewModel.Event.NavigateToDetail -> Unit
+                is SettingsViewModel.Event.NavigateToDetail -> {
+                    Unit
+                }
             }
         }
     }
@@ -155,10 +157,11 @@ private fun SettingsSectionAboutContent(
                 title = { Text(text = stringResource(Res.string.app_name)) },
                 subtitle = {
                     Text(
-                        text = stringResource(
-                            Res.string.settings_about_version,
-                            state.appVersionName.orEmpty(),
-                        ),
+                        text =
+                            stringResource(
+                                Res.string.settings_about_version,
+                                state.appVersionName.orEmpty(),
+                            ),
                     )
                 },
             )
@@ -209,11 +212,12 @@ private fun SettingsSectionAboutContent(
                 title = { Text(text = stringResource(Res.string.settings_about_license_title)) },
                 subtitle = {
                     Text(
-                        text = stringResource(
-                            Res.string.settings_about_license_subtitle,
-                            stringResource(Res.string.app_name),
-                            stringResource(Res.string.app_license_name),
-                        ),
+                        text =
+                            stringResource(
+                                Res.string.settings_about_license_subtitle,
+                                stringResource(Res.string.app_name),
+                                stringResource(Res.string.app_license_name),
+                            ),
                     )
                 },
                 trailingIcon = {
@@ -233,10 +237,11 @@ private fun SettingsSectionAboutContent(
                 title = { Text(text = stringResource(Res.string.settings_about_xtra_title)) },
                 subtitle = {
                     Text(
-                        text = stringResource(
-                            Res.string.settings_about_xtra_subtitle,
-                            stringResource(Res.string.app_name),
-                        ),
+                        text =
+                            stringResource(
+                                Res.string.settings_about_xtra_subtitle,
+                                stringResource(Res.string.app_name),
+                            ),
                     )
                 },
                 trailingIcon = {
@@ -283,16 +288,28 @@ private fun SettingsSectionAboutContent(
 }
 
 @Composable
-private fun AppUpdateState.subtitle(): String = when {
-    isChecking -> stringResource(Res.string.settings_about_update_subtitle_checking)
+private fun AppUpdateState.subtitle(): String =
+    when {
+        isChecking -> {
+            stringResource(Res.string.settings_about_update_subtitle_checking)
+        }
 
-    error != null -> stringResource(Res.string.settings_about_update_subtitle_error)
+        error != null -> {
+            stringResource(Res.string.settings_about_update_subtitle_error)
+        }
 
-    availableVersion != null -> {
-        stringResource(Res.string.settings_about_update_subtitle_available, availableVersion.orEmpty())
+        availableVersion != null -> {
+            stringResource(
+                Res.string.settings_about_update_subtitle_available,
+                availableVersion.orEmpty(),
+            )
+        }
+
+        hasChecked -> {
+            stringResource(Res.string.settings_about_update_subtitle_upToDate)
+        }
+
+        else -> {
+            stringResource(Res.string.settings_about_update_subtitle_never)
+        }
     }
-
-    hasChecked -> stringResource(Res.string.settings_about_update_subtitle_upToDate)
-
-    else -> stringResource(Res.string.settings_about_update_subtitle_never)
-}

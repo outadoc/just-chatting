@@ -44,18 +44,20 @@ internal fun ChatRichEmbed(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.surface)
-                    .fillMaxHeight()
-                    .aspectRatio(16 / 9f),
+                modifier =
+                    Modifier
+                        .background(MaterialTheme.colorScheme.surface)
+                        .fillMaxHeight()
+                        .aspectRatio(16 / 9f),
                 model = thumbnailUrl,
                 contentDescription = null,
             )
 
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
                 verticalArrangement = Arrangement.Center,
             ) {
                 Text(
@@ -66,10 +68,11 @@ internal fun ChatRichEmbed(
                 )
 
                 Text(
-                    text = stringResource(
-                        Res.string.richEmbed_author_title,
-                        authorName,
-                    ),
+                    text =
+                        stringResource(
+                            Res.string.richEmbed_author_title,
+                            authorName,
+                        ),
                     style = MaterialTheme.typography.bodySmall,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,

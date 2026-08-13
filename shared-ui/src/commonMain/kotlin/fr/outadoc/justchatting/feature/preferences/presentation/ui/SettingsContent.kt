@@ -41,7 +41,9 @@ internal fun SettingsContent(
 
                 is SettingsViewModel.Event.ShareLogs,
                 is SettingsViewModel.Event.CopyLogsToClipboard,
-                -> Unit // Handled in SettingsSectionAbout, next to the triggering button.
+                -> {
+                    Unit
+                } // Handled in SettingsSectionAbout, next to the triggering button.
             }
         }
     }

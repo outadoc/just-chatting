@@ -72,15 +72,15 @@ internal class LiveChatWebSocketTest {
                 parser = parser,
                 httpClient = httpClient,
                 recentMessagesRepository =
-                RecentMessagesRepository(
-                    recentMessagesApi = recentMessagesApi,
-                    parser = parser,
-                    dispatchersProvider = dispatchersProvider,
-                ),
+                    RecentMessagesRepository(
+                        recentMessagesApi = recentMessagesApi,
+                        parser = parser,
+                        dispatchersProvider = dispatchersProvider,
+                    ),
                 preferencesRepository =
-                FakePreferenceRepository(
-                    AppPreferences(enableRecentMessages = enableRecentMessages),
-                ),
+                    FakePreferenceRepository(
+                        AppPreferences(enableRecentMessages = enableRecentMessages),
+                    ),
                 dispatchersProvider = dispatchersProvider,
                 endpoint = endpoint,
                 messageTimeout = messageTimeout,
@@ -97,225 +97,247 @@ internal class LiveChatWebSocketTest {
     }
 
     @Test
-    fun `connects with anonymous handshake and emits join event`() = webSocketTest {
-        startCollecting()
+    fun `connects with anonymous handshake and emits join event`() =
+        webSocketTest {
+            startCollecting()
 
-        val connection = server.awaitConnection()
+            val connection = server.awaitConnection()
 
-        assertTrue(connection.awaitLine().startsWith("NICK justinfan"))
-        assertEquals("CAP REQ :twitch.tv/tags twitch.tv/commands", connection.awaitLine())
-        assertEquals("JOIN #$TEST_CHANNEL_LOGIN", connection.awaitLine())
+            assertTrue(connection.awaitLine().startsWith("NICK justinfan"))
+            assertEquals("CAP REQ :twitch.tv/tags twitch.tv/commands", connection.awaitLine())
+            assertEquals("JOIN #$TEST_CHANNEL_LOGIN", connection.awaitLine())
 
-        assertEquals(
-            ChatEvent.Message.Join(
-                timestamp = testClock.now(),
-                channelLogin = TEST_CHANNEL_LOGIN,
-            ),
-            awaitEvent(),
-        )
-    }
-
-    @Test
-    fun `emits chat messages received from the server`() = webSocketTest {
-        startCollecting()
-
-        val connection = server.awaitConnection()
-        awaitEvent() // Join
-
-        connection.send(SAMPLE_PRIVMSG)
-
-        val message = assertIs<ChatEvent.Message.ChatMessage>(awaitEvent())
-        assertEquals("ronni", message.userLogin)
-        assertEquals("Kappa Keepo Kappa", message.message)
-    }
+            assertEquals(
+                ChatEvent.Message.Join(
+                    timestamp = testClock.now(),
+                    channelLogin = TEST_CHANNEL_LOGIN,
+                ),
+                awaitEvent(),
+            )
+        }
 
     @Test
-    fun `replies to server pings`() = webSocketTest {
-        startCollecting()
+    fun `emits chat messages received from the server`() =
+        webSocketTest {
+            startCollecting()
 
-        val connection = server.awaitConnection()
-        repeat(3) { connection.awaitLine() } // Handshake
+            val connection = server.awaitConnection()
+            awaitEvent() // Join
 
-        connection.send("PING :tmi.twitch.tv")
+            connection.send(SAMPLE_PRIVMSG)
 
-        assertEquals("PONG :tmi.twitch.tv", connection.awaitLine())
-    }
-
-    @Test
-    fun `does not emit notice or userstate events`() = webSocketTest {
-        startCollecting()
-
-        val connection = server.awaitConnection()
-        awaitEvent() // Join
-
-        connection.send(SAMPLE_NOTICE)
-        connection.send(SAMPLE_USERSTATE)
-        connection.send(SAMPLE_PRIVMSG)
-
-        // The notice and userstate should have been skipped
-        assertIs<ChatEvent.Message.ChatMessage>(awaitEvent())
-    }
+            val message = assertIs<ChatEvent.Message.ChatMessage>(awaitEvent())
+            assertEquals("ronni", message.userLogin)
+            assertEquals("Kappa Keepo Kappa", message.message)
+        }
 
     @Test
-    fun `reconnects after the connection is lost`() = webSocketTest {
-        startCollecting()
+    fun `replies to server pings`() =
+        webSocketTest {
+            startCollecting()
 
-        val firstConnection = server.awaitConnection()
-        awaitEvent() // Join
-        firstConnection.close()
+            val connection = server.awaitConnection()
+            repeat(3) { connection.awaitLine() } // Handshake
 
-        val secondConnection = server.awaitConnection()
-        assertTrue(secondConnection.awaitLine().startsWith("NICK justinfan"))
+            connection.send("PING :tmi.twitch.tv")
 
-        assertEquals(
-            ChatEvent.Message.Join(
-                timestamp = testClock.now(),
-                channelLogin = TEST_CHANNEL_LOGIN,
-            ),
-            awaitEvent(),
-        )
-    }
+            assertEquals("PONG :tmi.twitch.tv", connection.awaitLine())
+        }
 
     @Test
-    fun `tracks listeners and liveness in connection status`() = webSocketTest {
-        assertEquals(0, socket.connectionStatus.value.registeredListeners)
+    fun `does not emit notice or userstate events`() =
+        webSocketTest {
+            startCollecting()
 
-        startCollecting()
-        server.awaitConnection()
+            val connection = server.awaitConnection()
+            awaitEvent() // Join
 
-        withTimeout(10.seconds) {
-            socket.connectionStatus.first { status ->
-                status.isAlive && status.registeredListeners == 1
+            connection.send(SAMPLE_NOTICE)
+            connection.send(SAMPLE_USERSTATE)
+            connection.send(SAMPLE_PRIVMSG)
+
+            // The notice and userstate should have been skipped
+            assertIs<ChatEvent.Message.ChatMessage>(awaitEvent())
+        }
+
+    @Test
+    fun `reconnects after the connection is lost`() =
+        webSocketTest {
+            startCollecting()
+
+            val firstConnection = server.awaitConnection()
+            awaitEvent() // Join
+            firstConnection.close()
+
+            val secondConnection = server.awaitConnection()
+            assertTrue(secondConnection.awaitLine().startsWith("NICK justinfan"))
+
+            assertEquals(
+                ChatEvent.Message.Join(
+                    timestamp = testClock.now(),
+                    channelLogin = TEST_CHANNEL_LOGIN,
+                ),
+                awaitEvent(),
+            )
+        }
+
+    @Test
+    fun `tracks listeners and liveness in connection status`() =
+        webSocketTest {
+            assertEquals(0, socket.connectionStatus.value.registeredListeners)
+
+            startCollecting()
+            server.awaitConnection()
+
+            withTimeout(10.seconds) {
+                socket.connectionStatus.first { status ->
+                    status.isAlive && status.registeredListeners == 1
+                }
+            }
+
+            collectJob?.cancelAndJoin()
+
+            withTimeout(10.seconds) {
+                socket.connectionStatus.first { status ->
+                    !status.isAlive && status.registeredListeners == 0
+                }
             }
         }
 
-        collectJob?.cancelAndJoin()
+    @Test
+    fun `waits for network availability before connecting`() =
+        webSocketTest(
+            initialNetworkState = NetworkStateObserver.NetworkState.Unavailable,
+        ) {
+            startCollecting()
 
-        withTimeout(10.seconds) {
-            socket.connectionStatus.first { status ->
-                !status.isAlive && status.registeredListeners == 0
-            }
+            assertNull(server.awaitConnectionOrNull(timeout = 500.milliseconds))
+
+            networkStateObserver.mutableState.value = NetworkStateObserver.NetworkState.Available
+
+            server.awaitConnection()
         }
-    }
 
     @Test
-    fun `waits for network availability before connecting`() = webSocketTest(
-        initialNetworkState = NetworkStateObserver.NetworkState.Unavailable,
-    ) {
-        startCollecting()
+    fun `replays recent messages after joining live chat`() =
+        webSocketTest(
+            enableRecentMessages = true,
+            recentMessages = listOf(SAMPLE_PRIVMSG),
+        ) {
+            startCollecting()
 
-        assertNull(server.awaitConnectionOrNull(timeout = 500.milliseconds))
+            assertIs<ChatEvent.Message.Join>(awaitEvent())
 
-        networkStateObserver.mutableState.value = NetworkStateObserver.NetworkState.Available
-
-        server.awaitConnection()
-    }
-
-    @Test
-    fun `replays recent messages after joining live chat`() = webSocketTest(
-        enableRecentMessages = true,
-        recentMessages = listOf(SAMPLE_PRIVMSG),
-    ) {
-        startCollecting()
-
-        assertIs<ChatEvent.Message.Join>(awaitEvent())
-
-        val recentMessage = assertIs<ChatEvent.Message.ChatMessage>(awaitEvent())
-        assertEquals("Kappa Keepo Kappa", recentMessage.message)
-    }
+            val recentMessage = assertIs<ChatEvent.Message.ChatMessage>(awaitEvent())
+            assertEquals("Kappa Keepo Kappa", recentMessage.message)
+        }
 
     @Test
-    fun `does not replay recent messages when disabled`() = webSocketTest(
-        enableRecentMessages = false,
-        recentMessages = listOf(SAMPLE_PRIVMSG),
-    ) {
-        startCollecting()
+    fun `does not replay recent messages when disabled`() =
+        webSocketTest(
+            enableRecentMessages = false,
+            recentMessages = listOf(SAMPLE_PRIVMSG),
+        ) {
+            startCollecting()
 
-        assertIs<ChatEvent.Message.Join>(awaitEvent())
-    }
-
-    @Test
-    fun `reconnects when the server goes silent`() = webSocketTest(
-        messageTimeout = 2.seconds,
-    ) {
-        startCollecting()
-
-        server.awaitConnection()
-        awaitEvent() // Join
-
-        // Say nothing: the watchdog should drop the connection and reconnect
-        val secondConnection = server.awaitConnection()
-        assertTrue(secondConnection.awaitLine().startsWith("NICK justinfan"))
-    }
+            assertIs<ChatEvent.Message.Join>(awaitEvent())
+        }
 
     @Test
-    fun `backfills messages missed while network was out`() = webSocketTest(
-        enableRecentMessages = true,
-        recentMessages = listOf(privMsg("old message", timestamp = 1_000_000_000_000)),
-    ) {
-        startCollecting()
+    fun `reconnects when the server goes silent`() =
+        webSocketTest(
+            messageTimeout = 2.seconds,
+        ) {
+            startCollecting()
 
-        assertIs<ChatEvent.Message.Join>(awaitEvent())
-        assertEquals("old message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
+            server.awaitConnection()
+            awaitEvent() // Join
 
-        val connection = server.awaitConnection()
-        connection.send(privMsg("live message", timestamp = 1_000_000_100_000))
-        assertEquals("live message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
+            // Say nothing: the watchdog should drop the connection and reconnect
+            val secondConnection = server.awaitConnection()
+            assertTrue(secondConnection.awaitLine().startsWith("NICK justinfan"))
+        }
 
-        recentMessagesApi.messages =
-            listOf(
-                privMsg("old message", timestamp = 1_000_000_000_000),
-                privMsg("missed message", timestamp = 1_000_000_200_000),
+    @Test
+    fun `backfills messages missed while network was out`() =
+        webSocketTest(
+            enableRecentMessages = true,
+            recentMessages = listOf(privMsg("old message", timestamp = 1_000_000_000_000)),
+        ) {
+            startCollecting()
+
+            assertIs<ChatEvent.Message.Join>(awaitEvent())
+            assertEquals("old message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
+
+            val connection = server.awaitConnection()
+            connection.send(privMsg("live message", timestamp = 1_000_000_100_000))
+            assertEquals("live message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
+
+            recentMessagesApi.messages =
+                listOf(
+                    privMsg("old message", timestamp = 1_000_000_000_000),
+                    privMsg("missed message", timestamp = 1_000_000_200_000),
+                )
+
+            networkStateObserver.mutableState.value = NetworkStateObserver.NetworkState.Unavailable
+            connection.awaitClose()
+            networkStateObserver.mutableState.value = NetworkStateObserver.NetworkState.Available
+
+            // Only the messages newer than the last one received should be replayed
+            assertIs<ChatEvent.Message.Join>(awaitEvent())
+            assertEquals(
+                "missed message",
+                assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message,
+            )
+        }
+
+    @Test
+    fun `does not lose messages sent while recent messages are loading`() =
+        webSocketTest(
+            enableRecentMessages = true,
+            recentMessages = listOf(privMsg("recent message", timestamp = 1_000_000_000_000)),
+        ) {
+            recentMessagesApi.responseDelay = 500.milliseconds
+
+            startCollecting()
+
+            val connection = server.awaitConnection()
+            repeat(3) { connection.awaitLine() } // Handshake
+
+            // The channel is joined at this point, but the recent messages are
+            // still being fetched: this message should be buffered, not dropped
+            connection.send(privMsg("live message", timestamp = 1_000_000_100_000))
+
+            assertIs<ChatEvent.Message.Join>(awaitEvent())
+            assertEquals(
+                "recent message",
+                assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message,
+            )
+            assertEquals("live message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
+        }
+
+    @Test
+    fun `does not replay the same messages twice after reconnecting`() =
+        webSocketTest(
+            enableRecentMessages = true,
+            recentMessages = listOf(privMsg("recent message", timestamp = 1_000_000_000_000)),
+        ) {
+            startCollecting()
+
+            assertIs<ChatEvent.Message.Join>(awaitEvent())
+            assertEquals(
+                "recent message",
+                assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message,
             )
 
-        networkStateObserver.mutableState.value = NetworkStateObserver.NetworkState.Unavailable
-        connection.awaitClose()
-        networkStateObserver.mutableState.value = NetworkStateObserver.NetworkState.Available
+            val firstConnection = server.awaitConnection()
+            firstConnection.close()
 
-        // Only the messages newer than the last one received should be replayed
-        assertIs<ChatEvent.Message.Join>(awaitEvent())
-        assertEquals("missed message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
-    }
+            val secondConnection = server.awaitConnection()
+            assertIs<ChatEvent.Message.Join>(awaitEvent())
 
-    @Test
-    fun `does not lose messages sent while recent messages are loading`() = webSocketTest(
-        enableRecentMessages = true,
-        recentMessages = listOf(privMsg("recent message", timestamp = 1_000_000_000_000)),
-    ) {
-        recentMessagesApi.responseDelay = 500.milliseconds
-
-        startCollecting()
-
-        val connection = server.awaitConnection()
-        repeat(3) { connection.awaitLine() } // Handshake
-
-        // The channel is joined at this point, but the recent messages are
-        // still being fetched: this message should be buffered, not dropped
-        connection.send(privMsg("live message", timestamp = 1_000_000_100_000))
-
-        assertIs<ChatEvent.Message.Join>(awaitEvent())
-        assertEquals("recent message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
-        assertEquals("live message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
-    }
-
-    @Test
-    fun `does not replay the same messages twice after reconnecting`() = webSocketTest(
-        enableRecentMessages = true,
-        recentMessages = listOf(privMsg("recent message", timestamp = 1_000_000_000_000)),
-    ) {
-        startCollecting()
-
-        assertIs<ChatEvent.Message.Join>(awaitEvent())
-        assertEquals("recent message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
-
-        val firstConnection = server.awaitConnection()
-        firstConnection.close()
-
-        val secondConnection = server.awaitConnection()
-        assertIs<ChatEvent.Message.Join>(awaitEvent())
-
-        // The recent message was already replayed; the next event should be the live one
-        secondConnection.send(privMsg("live message", timestamp = 1_000_000_100_000))
-        assertEquals("live message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
-    }
+            // The recent message was already replayed; the next event should be the live one
+            secondConnection.send(privMsg("live message", timestamp = 1_000_000_100_000))
+            assertEquals("live message", assertIs<ChatEvent.Message.ChatMessage>(awaitEvent()).message)
+        }
 }

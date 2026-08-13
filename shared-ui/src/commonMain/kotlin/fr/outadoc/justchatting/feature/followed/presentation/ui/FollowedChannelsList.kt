@@ -91,11 +91,12 @@ internal fun FollowedChannelsList(
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
-                modifier = Modifier
-                    .hazeEffect(
-                        state = hazeState,
-                        style = HazeMaterials.regular(),
-                    ),
+                modifier =
+                    Modifier
+                        .hazeEffect(
+                            state = hazeState,
+                            style = HazeMaterials.regular(),
+                        ),
                 title = { Text(stringResource(Res.string.channels)) },
                 scrollBehavior = scrollBehavior,
                 actions = {
@@ -122,9 +123,10 @@ internal fun FollowedChannelsList(
         content = { insets ->
             if (hasMouse) {
                 InnerFollowedChannelsList(
-                    modifier = Modifier
-                        .hazeSource(hazeState)
-                        .fillMaxSize(),
+                    modifier =
+                        Modifier
+                            .hazeSource(hazeState)
+                            .fillMaxSize(),
                     insets = insets,
                     items = state.data,
                     isRefreshing = state.isLoading,
@@ -135,9 +137,10 @@ internal fun FollowedChannelsList(
             } else {
                 val pullToRefreshState = rememberPullToRefreshState()
                 PullToRefreshBox(
-                    modifier = Modifier
-                        .hazeSource(hazeState)
-                        .fillMaxSize(),
+                    modifier =
+                        Modifier
+                            .hazeSource(hazeState)
+                            .fillMaxSize(),
                     state = pullToRefreshState,
                     isRefreshing = state.isLoading,
                     onRefresh = { viewModel.synchronize() },
@@ -145,9 +148,10 @@ internal fun FollowedChannelsList(
                         PullToRefreshDefaults.Indicator(
                             state = pullToRefreshState,
                             isRefreshing = state.isLoading,
-                            modifier = Modifier
-                                .align(Alignment.TopCenter)
-                                .padding(top = insets.calculateTopPadding()),
+                            modifier =
+                                Modifier
+                                    .align(Alignment.TopCenter)
+                                    .padding(top = insets.calculateTopPadding()),
                         )
                     },
                 ) {
@@ -178,12 +182,12 @@ private fun InnerFollowedChannelsList(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding =
-        insets +
-            PaddingValues(
-                start = 16.dp,
-                end = 16.dp,
-                bottom = 16.dp,
-            ),
+            insets +
+                PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp,
+                ),
     ) {
         if (items.isEmpty()) {
             if (!isRefreshing) {
@@ -203,9 +207,10 @@ private fun InnerFollowedChannelsList(
                 key = { item -> item.user.id },
             ) { item ->
                 UserItemCard(
-                    modifier = Modifier
-                        .animateItem()
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .animateItem()
+                            .fillMaxWidth(),
                     displayName = item.user.displayName,
                     profileImageUrl = item.user.profileImageUrl,
                     followedAt = item.followedAt,

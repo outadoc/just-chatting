@@ -29,16 +29,16 @@ public inline fun logError(
         level = Logger.Level.Error,
         tag = tag,
         content =
-        if (throwable != null) {
-            {
-                buildString {
-                    appendLine(content())
-                    appendLine(throwable.stackTraceToString())
+            if (throwable != null) {
+                {
+                    buildString {
+                        appendLine(content())
+                        appendLine(throwable.stackTraceToString())
+                    }
                 }
-            }
-        } else {
-            content
-        },
+            } else {
+                content
+            },
     )
 }
 

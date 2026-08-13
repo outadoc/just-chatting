@@ -37,11 +37,12 @@ internal fun OnboardingScreen(
 ) {
     Scaffold(modifier = modifier) { insets ->
         Column(
-            modifier = Modifier
-                .padding(insets)
-                .padding(16.dp)
-                .fillMaxSize()
-                .widthIn(max = 320.dp),
+            modifier =
+                Modifier
+                    .padding(insets)
+                    .padding(16.dp)
+                    .fillMaxSize()
+                    .widthIn(max = 320.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(
@@ -63,12 +64,13 @@ internal fun OnboardingScreen(
                         )
 
                         Text(
-                            text = buildAnnotatedString {
-                                appendLine(stringResource(Res.string.onboarding_title))
-                                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    appendLine(stringResource(Res.string.app_name))
-                                }
-                            },
+                            text =
+                                buildAnnotatedString {
+                                    appendLine(stringResource(Res.string.onboarding_title))
+                                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                                        appendLine(stringResource(Res.string.app_name))
+                                    }
+                                },
                             style = MaterialTheme.typography.headlineSmall,
                             textAlign = TextAlign.Center,
                         )

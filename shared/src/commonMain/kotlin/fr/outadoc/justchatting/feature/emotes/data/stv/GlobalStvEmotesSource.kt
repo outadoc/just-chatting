@@ -21,22 +21,23 @@ internal class GlobalStvEmotesSource(
         next: Params,
     ): Boolean = true
 
-    override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> = withContext(dispatchersProvider.io) {
-        val prefs = preferencesRepository.currentPreferences.first()
-        if (!prefs.enableStvEmotes) {
-            return@withContext Result.success(emptyList())
-        }
-
-        stvEmotesApi
-            .getGlobalStvEmotes()
-            .map { emotes ->
-                flatListOf(
-                    EmoteSetItem.Header(
-                        title = null,
-                        source = Res.string.chat_source_stv.desc(),
-                    ),
-                    emotes.map { emote -> EmoteSetItem.Emote(emote) },
-                )
+    override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> =
+        withContext(dispatchersProvider.io) {
+            val prefs = preferencesRepository.currentPreferences.first()
+            if (!prefs.enableStvEmotes) {
+                return@withContext Result.success(emptyList())
             }
-    }
+
+            stvEmotesApi
+                .getGlobalStvEmotes()
+                .map { emotes ->
+                    flatListOf(
+                        EmoteSetItem.Header(
+                            title = null,
+                            source = Res.string.chat_source_stv.desc(),
+                        ),
+                        emotes.map { emote -> EmoteSetItem.Emote(emote) },
+                    )
+                }
+        }
 }

@@ -15,9 +15,10 @@ internal class AndroidLogRepository(
     private val dispatchersProvider: DispatchersProvider,
     clock: Clock,
 ) : FileLogRepository(logFilePath, dumpDirectory, fileSystem, dispatchersProvider, clock) {
-    override suspend fun exportLogs(): LogExportResult = withContext(dispatchersProvider.io) {
-        LogExportResult.Share(
-            uri = LogFileProvider.getUri(applicationContext, gzipLogFile()),
-        )
-    }
+    override suspend fun exportLogs(): LogExportResult =
+        withContext(dispatchersProvider.io) {
+            LogExportResult.Share(
+                uri = LogFileProvider.getUri(applicationContext, gzipLogFile()),
+            )
+        }
 }

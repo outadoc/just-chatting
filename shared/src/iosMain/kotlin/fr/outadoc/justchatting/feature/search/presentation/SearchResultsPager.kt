@@ -12,24 +12,40 @@ public class SearchResultsPager {
     private val differ =
         AsyncPagingDataDiffer(
             diffCallback =
-            object : DiffUtil.ItemCallback<ChannelSearchResult>() {
-                override fun areItemsTheSame(
-                    oldItem: ChannelSearchResult,
-                    newItem: ChannelSearchResult,
-                ): Boolean = oldItem == newItem
+                object : DiffUtil.ItemCallback<ChannelSearchResult>() {
+                    override fun areItemsTheSame(
+                        oldItem: ChannelSearchResult,
+                        newItem: ChannelSearchResult,
+                    ): Boolean = oldItem == newItem
 
-                override fun areContentsTheSame(
-                    oldItem: ChannelSearchResult,
-                    newItem: ChannelSearchResult,
-                ): Boolean = oldItem == newItem
-            },
+                    override fun areContentsTheSame(
+                        oldItem: ChannelSearchResult,
+                        newItem: ChannelSearchResult,
+                    ): Boolean = oldItem == newItem
+                },
             updateCallback =
-            object : ListUpdateCallback {
-                override fun onInserted(position: Int, count: Int) = Unit
-                override fun onRemoved(position: Int, count: Int) = Unit
-                override fun onMoved(fromPosition: Int, toPosition: Int) = Unit
-                override fun onChanged(position: Int, count: Int, payload: Any?) = Unit
-            },
+                object : ListUpdateCallback {
+                    override fun onInserted(
+                        position: Int,
+                        count: Int,
+                    ) = Unit
+
+                    override fun onRemoved(
+                        position: Int,
+                        count: Int,
+                    ) = Unit
+
+                    override fun onMoved(
+                        fromPosition: Int,
+                        toPosition: Int,
+                    ) = Unit
+
+                    override fun onChanged(
+                        position: Int,
+                        count: Int,
+                        payload: Any?,
+                    ) = Unit
+                },
         )
 
     public val loadStateFlow: Flow<CombinedLoadStates> = differ.loadStateFlow

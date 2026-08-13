@@ -46,7 +46,12 @@ internal class FileLogStrategy(
 
     private suspend fun writeLoop() {
         try {
-            logFilePath.parent?.let { parent -> fileSystem.createDirectories(parent, mustCreate = false) }
+            logFilePath.parent?.let { parent ->
+                fileSystem.createDirectories(
+                    parent,
+                    mustCreate = false,
+                )
+            }
 
             // Not appendingSink: each new instance (i.e. each app launch) should start from
             // a clean file rather than keep appending to whatever was left over.

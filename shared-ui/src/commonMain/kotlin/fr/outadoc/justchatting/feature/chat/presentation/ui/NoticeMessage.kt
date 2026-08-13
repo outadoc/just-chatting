@@ -41,17 +41,19 @@ internal fun NoticeMessage(
 ) {
     Row(modifier = modifier.height(IntrinsicSize.Min)) {
         Box(
-            modifier = Modifier
-                .padding(vertical = 4.dp)
-                .background(MaterialTheme.colorScheme.primary)
-                .width(4.dp)
-                .fillMaxHeight(),
+            modifier =
+                Modifier
+                    .padding(vertical = 4.dp)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .width(4.dp)
+                    .fillMaxHeight(),
         )
 
         Card(
-            modifier = Modifier
-                .padding(vertical = 4.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(vertical = 4.dp)
+                    .fillMaxWidth(),
             shape = RectangleShape,
         ) {
             Text(

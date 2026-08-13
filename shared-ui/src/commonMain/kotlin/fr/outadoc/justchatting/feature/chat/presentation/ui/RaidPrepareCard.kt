@@ -39,22 +39,24 @@ internal fun RaidPrepareCard(
     Card(
         modifier = modifier,
         colors =
-        CardDefaults.cardColors(
-            containerColor = color,
-        ),
+            CardDefaults.cardColors(
+                containerColor = color,
+            ),
     ) {
         Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AsyncImage(
-                modifier = Modifier
-                    .size(56.dp)
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surface),
+                modifier =
+                    Modifier
+                        .size(56.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surface),
                 model = remoteImageModel(raid.targetProfileImageUrl),
                 contentDescription = null,
             )
@@ -70,15 +72,16 @@ internal fun RaidPrepareCard(
                 )
 
                 Text(
-                    text = stringResource(
-                        Res.string.raid_prepare_message,
-                        raid.targetDisplayName,
-                        Res.plurals.viewers
-                            .desc(
-                                number = raid.viewerCount,
-                                raid.viewerCount.formatNumber(),
-                            ).localized(),
-                    ),
+                    text =
+                        stringResource(
+                            Res.string.raid_prepare_message,
+                            raid.targetDisplayName,
+                            Res.plurals.viewers
+                                .desc(
+                                    number = raid.viewerCount,
+                                    raid.viewerCount.formatNumber(),
+                                ).localized(),
+                        ),
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
@@ -92,13 +95,13 @@ private fun RaidPrepareCardPreview() {
     AppTheme {
         RaidPrepareCard(
             raid =
-            Raid.Preparing(
-                targetId = "",
-                targetLogin = "",
-                targetDisplayName = "HortyUnderscore",
-                targetProfileImageUrl = null,
-                viewerCount = 12_000,
-            ),
+                Raid.Preparing(
+                    targetId = "",
+                    targetLogin = "",
+                    targetDisplayName = "HortyUnderscore",
+                    targetProfileImageUrl = null,
+                    viewerCount = 12_000,
+                ),
         )
     }
 }

@@ -54,17 +54,18 @@ public sealed interface StringDesc {
             )
         }
 
-        override fun localizedString(): String = runBlocking {
-            val formattedArgs: Array<Any> =
-                args
-                    .map { desc ->
-                        when (desc) {
-                            is StringDesc -> desc.localizedString()
-                            else -> desc
-                        }
-                    }.toTypedArray()
-            getString(resource = resource, *formattedArgs)
-        }
+        override fun localizedString(): String =
+            runBlocking {
+                val formattedArgs: Array<Any> =
+                    args
+                        .map { desc ->
+                            when (desc) {
+                                is StringDesc -> desc.localizedString()
+                                else -> desc
+                            }
+                        }.toTypedArray()
+                getString(resource = resource, *formattedArgs)
+            }
     }
 
     public class Plural(
@@ -72,10 +73,11 @@ public sealed interface StringDesc {
         private val number: Int,
     ) : StringDesc {
         @Composable
-        override fun localized(): String = pluralStringResource(
-            resource = resource,
-            quantity = number,
-        )
+        override fun localized(): String =
+            pluralStringResource(
+                resource = resource,
+                quantity = number,
+            )
 
         override fun localizedString(): String = runBlocking { getPluralString(resource, number) }
     }
@@ -103,17 +105,18 @@ public sealed interface StringDesc {
             )
         }
 
-        override fun localizedString(): String = runBlocking {
-            val formattedArgs: Array<Any> =
-                args
-                    .map { desc ->
-                        when (desc) {
-                            is StringDesc -> desc.localizedString()
-                            else -> desc
-                        }
-                    }.toTypedArray()
-            getPluralString(resource, number, *formattedArgs)
-        }
+        override fun localizedString(): String =
+            runBlocking {
+                val formattedArgs: Array<Any> =
+                    args
+                        .map { desc ->
+                            when (desc) {
+                                is StringDesc -> desc.localizedString()
+                                else -> desc
+                            }
+                        }.toTypedArray()
+                getPluralString(resource, number, *formattedArgs)
+            }
     }
 }
 

@@ -1,13 +1,11 @@
 package fr.outadoc.justchatting.feature.chat.presentation.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Token
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.Placeholder
@@ -23,11 +21,12 @@ import fr.outadoc.justchatting.utils.presentation.formatNumber
 private const val emoteSizeFloat = 1.8
 internal val emoteSize = emoteSizeFloat.em
 
-private fun getEmotePlaceholder(ratio: Float = 1f) = Placeholder(
-    width = emoteSize * ratio,
-    height = emoteSize,
-    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
-)
+private fun getEmotePlaceholder(ratio: Float = 1f) =
+    Placeholder(
+        width = emoteSize * ratio,
+        height = emoteSize,
+        placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
+    )
 
 private val badgePlaceholder =
     Placeholder(
@@ -36,15 +35,17 @@ private val badgePlaceholder =
         placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
     )
 
-internal fun emoteTextContent(emote: Emote): InlineTextContent = InlineTextContent(getEmotePlaceholder(ratio = emote.ratio)) {
-    EmoteItem(
-        emote = emote,
-    )
-}
+internal fun emoteTextContent(emote: Emote): InlineTextContent =
+    InlineTextContent(getEmotePlaceholder(ratio = emote.ratio)) {
+        EmoteItem(
+            emote = emote,
+        )
+    }
 
-internal fun badgeTextContent(badge: TwitchBadge): InlineTextContent = InlineTextContent(badgePlaceholder) {
-    BadgeItem(badge = badge)
-}
+internal fun badgeTextContent(badge: TwitchBadge): InlineTextContent =
+    InlineTextContent(badgePlaceholder) {
+        BadgeItem(badge = badge)
+    }
 
 internal fun cheerEmoteTextContent(cheer: Emote): InlineTextContent {
     val textWidthEm: Float = cheer.bitsValue?.let { it.formatNumber().length / 1.8f } ?: 0f
@@ -61,18 +62,21 @@ internal fun cheerEmoteTextContent(cheer: Emote): InlineTextContent {
     }
 }
 
-internal fun sourceChannelTextContent(user: User): InlineTextContent = InlineTextContent(badgePlaceholder) {
-    AsyncImage(
-        modifier = Modifier
-            .fillMaxSize()
-            .clip(RoundedCornerShape(4.dp)),
-        model = remoteImageModel(user.profileImageUrl),
-        contentDescription = user.displayName,
-    )
-}
+internal fun sourceChannelTextContent(user: User): InlineTextContent =
+    InlineTextContent(badgePlaceholder) {
+        AsyncImage(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(4.dp)),
+            model = remoteImageModel(user.profileImageUrl),
+            contentDescription = user.displayName,
+        )
+    }
 
 internal fun sourceChannelInlineContentId(roomId: String): String = "source-channel:$roomId"
 
-internal fun previewTextContent(): InlineTextContent = InlineTextContent(badgePlaceholder) {
-    Icon(Icons.Default.Token, contentDescription = null)
-}
+internal fun previewTextContent(): InlineTextContent =
+    InlineTextContent(badgePlaceholder) {
+        Icon(Icons.Default.Token, contentDescription = null)
+    }

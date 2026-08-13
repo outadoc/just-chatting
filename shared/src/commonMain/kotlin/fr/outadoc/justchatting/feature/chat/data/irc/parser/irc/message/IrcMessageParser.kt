@@ -63,19 +63,21 @@ internal object IrcMessageParser : IIrcMessageParser {
         if (line[position] == CharacterCodes.AT) {
             position++
 
-            val nextSpace = ParseHelper.findNext(line, position, CharacterCodes.SPACE) ?: return null
+            val nextSpace =
+                ParseHelper.findNext(line, position, CharacterCodes.SPACE) ?: return null
             if (nextSpace <= 0) {
                 // @ but no tags
                 return null
             }
 
             val unparsedTags = line.substring(position, nextSpace)
-            val tags = ParseHelper.parseToKeysAndOptionalValues(
-                unparsedTags,
-                CharacterCodes.SEMICOLON,
-                CharacterCodes.EQUALS,
-                ::unescapeTagValue,
-            )
+            val tags =
+                ParseHelper.parseToKeysAndOptionalValues(
+                    unparsedTags,
+                    CharacterCodes.SEMICOLON,
+                    CharacterCodes.EQUALS,
+                    ::unescapeTagValue,
+                )
 
             position = ParseHelper.skipSpaces(line, nextSpace + 1)
             return Pair(tags, position)
@@ -87,32 +89,33 @@ internal object IrcMessageParser : IIrcMessageParser {
     // Unescapes IRCv3 tag values in a single pass; sequential replace() calls
     // would re-interpret backslashes produced by earlier replacements
     // (e.g. "\\n" must yield "\n" the two characters, not a line feed).
-    private fun unescapeTagValue(raw: String): String = buildString {
-        var i = 0
-        while (i < raw.length) {
-            val c = raw[i]
-            if (c == CharacterCodes.BACKSLASH && i + 1 < raw.length) {
-                when (raw[i + 1]) {
-                    ':' -> append(CharacterCodes.SEMICOLON)
+    private fun unescapeTagValue(raw: String): String =
+        buildString {
+            var i = 0
+            while (i < raw.length) {
+                val c = raw[i]
+                if (c == CharacterCodes.BACKSLASH && i + 1 < raw.length) {
+                    when (raw[i + 1]) {
+                        ':' -> append(CharacterCodes.SEMICOLON)
 
-                    's' -> append(CharacterCodes.SPACE)
+                        's' -> append(CharacterCodes.SPACE)
 
-                    CharacterCodes.BACKSLASH -> append(CharacterCodes.BACKSLASH)
+                        CharacterCodes.BACKSLASH -> append(CharacterCodes.BACKSLASH)
 
-                    'r' -> append(CharacterCodes.CR)
+                        'r' -> append(CharacterCodes.CR)
 
-                    'n' -> append(CharacterCodes.LF)
+                        'n' -> append(CharacterCodes.LF)
 
-                    // Unknown escape: the spec says to drop the backslash
-                    else -> append(raw[i + 1])
+                        // Unknown escape: the spec says to drop the backslash
+                        else -> append(raw[i + 1])
+                    }
+                    i += 2
+                } else {
+                    append(c)
+                    i++
                 }
-                i += 2
-            } else {
-                append(c)
-                i++
             }
         }
-    }
 
     private fun parsePrefix(
         line: String,
@@ -127,7 +130,8 @@ internal object IrcMessageParser : IIrcMessageParser {
         if (line[position] == CharacterCodes.COLON) {
             position++
 
-            val nextSpace = ParseHelper.findNext(line, position, CharacterCodes.SPACE) ?: return null
+            val nextSpace =
+                ParseHelper.findNext(line, position, CharacterCodes.SPACE) ?: return null
             if (nextSpace < position + 1) {
                 // : but nothing else
                 return null
@@ -198,17 +202,18 @@ internal object IrcMessageParser : IIrcMessageParser {
             }
 
             val nextSpace = ParseHelper.findNext(line, position, CharacterCodes.SPACE)
-            position = if (nextSpace != null) {
-                val parameter = line.substring(position, nextSpace)
-                parameters.add(parameter)
+            position =
+                if (nextSpace != null) {
+                    val parameter = line.substring(position, nextSpace)
+                    parameters.add(parameter)
 
-                ParseHelper.skipSpaces(line, nextSpace + 1)
-            } else {
-                val parameter = line.substring(position)
-                parameters.add(parameter)
+                    ParseHelper.skipSpaces(line, nextSpace + 1)
+                } else {
+                    val parameter = line.substring(position)
+                    parameters.add(parameter)
 
-                line.length
-            }
+                    line.length
+                }
         }
 
         return Pair(parameters, position)

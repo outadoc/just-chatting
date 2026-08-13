@@ -58,15 +58,15 @@ internal class SearchChannelsDataSource(
                             ChannelSearchResult(
                                 title = search.title,
                                 user =
-                                User(
-                                    id = search.userId,
-                                    login = search.userLogin,
-                                    displayName = search.userDisplayName,
-                                    description = "",
-                                    profileImageUrl = "",
-                                    createdAt = Instant.DISTANT_PAST,
-                                    usedAt = Instant.DISTANT_PAST,
-                                ),
+                                    User(
+                                        id = search.userId,
+                                        login = search.userLogin,
+                                        displayName = search.userDisplayName,
+                                        description = "",
+                                        profileImageUrl = "",
+                                        createdAt = Instant.DISTANT_PAST,
+                                        usedAt = Instant.DISTANT_PAST,
+                                    ),
                                 language = search.broadcasterLanguage,
                                 gameId = search.gameId,
                                 gameName = search.gameName,
@@ -84,11 +84,12 @@ internal class SearchChannelsDataSource(
                     LoadResult.Page(
                         data = listOf(newResults),
                         prevKey = null,
-                        nextKey = response.pagination.cursor?.let { cursor ->
-                            Pagination.Next(
-                                cursor,
-                            )
-                        },
+                        nextKey =
+                            response.pagination.cursor?.let { cursor ->
+                                Pagination.Next(
+                                    cursor,
+                                )
+                            },
                         itemsAfter = itemsAfter,
                     )
                 },

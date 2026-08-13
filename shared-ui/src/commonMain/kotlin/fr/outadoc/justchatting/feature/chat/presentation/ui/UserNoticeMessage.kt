@@ -41,11 +41,11 @@ internal fun UserNoticeMessagePreview(
             inlineContent = inlineBadges,
             showTimestamps = true,
             appUser =
-            AppUser.LoggedIn(
-                userId = "123",
-                userLogin = "outadoc",
-                token = "",
-            ),
+                AppUser.LoggedIn(
+                    userId = "123",
+                    userLogin = "outadoc",
+                    token = "",
+                ),
         )
     }
 }
@@ -72,9 +72,10 @@ internal fun UserNoticeMessage(
             ) {
                 if (titleIcon != null) {
                     Icon(
-                        modifier = Modifier
-                            .size(iconSize)
-                            .padding(end = 4.dp),
+                        modifier =
+                            Modifier
+                                .size(iconSize)
+                                .padding(end = 4.dp),
                         imageVector = titleIcon,
                         contentDescription = null,
                     )
@@ -94,9 +95,10 @@ internal fun UserNoticeMessage(
                 ) {
                     if (titleIcon != null) {
                         Spacer(
-                            modifier = Modifier
-                                .size(iconSize)
-                                .padding(end = 4.dp),
+                            modifier =
+                                Modifier
+                                    .size(iconSize)
+                                    .padding(end = 4.dp),
                         )
                     }
 

@@ -29,127 +29,140 @@ internal class LocalStreamsDb(
     override fun getPastStreams(
         notBefore: Instant,
         notAfter: Instant,
-    ): Flow<List<ChannelScheduleSegment>> = streamQueries
-        .getPastStreams(
-            notBefore = notBefore.toEpochMilliseconds(),
-            notAfter = notAfter.toEpochMilliseconds(),
-        ).asFlow()
-        .mapToList(dispatchersProvider.io)
-        .map { streams ->
-            streams.map { stream ->
-                val categoryId = stream.category_id
-                val categoryName = stream.category_name
-                ChannelScheduleSegment(
-                    id = stream.id,
-                    user = User(
-                        id = stream.user_id,
-                        login = stream.login,
-                        displayName = stream.display_name,
-                        profileImageUrl = stream.profile_image_url,
-                        description = stream.description,
-                        createdAt = Instant.fromEpochMilliseconds(stream.created_at),
-                        usedAt = if (stream.used_at > 0) {
-                            Instant.fromEpochMilliseconds(stream.used_at)
-                        } else {
-                            null
-                        },
-                    ),
-                    startTime = Instant.fromEpochMilliseconds(stream.start_time),
-                    endTime = stream.end_time
-                        .takeIf { it > 0 }
-                        ?.let { Instant.fromEpochMilliseconds(it) },
-                    title = stream.title,
-                    category = if (categoryId != null && categoryName != null) {
-                        StreamCategory(
-                            id = categoryId,
-                            name = categoryName,
-                        )
-                    } else {
-                        null
-                    },
-                )
-            }
-        }.flowOn(dispatchersProvider.io)
+    ): Flow<List<ChannelScheduleSegment>> =
+        streamQueries
+            .getPastStreams(
+                notBefore = notBefore.toEpochMilliseconds(),
+                notAfter = notAfter.toEpochMilliseconds(),
+            ).asFlow()
+            .mapToList(dispatchersProvider.io)
+            .map { streams ->
+                streams.map { stream ->
+                    val categoryId = stream.category_id
+                    val categoryName = stream.category_name
+                    ChannelScheduleSegment(
+                        id = stream.id,
+                        user =
+                            User(
+                                id = stream.user_id,
+                                login = stream.login,
+                                displayName = stream.display_name,
+                                profileImageUrl = stream.profile_image_url,
+                                description = stream.description,
+                                createdAt = Instant.fromEpochMilliseconds(stream.created_at),
+                                usedAt =
+                                    if (stream.used_at > 0) {
+                                        Instant.fromEpochMilliseconds(stream.used_at)
+                                    } else {
+                                        null
+                                    },
+                            ),
+                        startTime = Instant.fromEpochMilliseconds(stream.start_time),
+                        endTime =
+                            stream.end_time
+                                .takeIf { it > 0 }
+                                ?.let { Instant.fromEpochMilliseconds(it) },
+                        title = stream.title,
+                        category =
+                            if (categoryId != null && categoryName != null) {
+                                StreamCategory(
+                                    id = categoryId,
+                                    name = categoryName,
+                                )
+                            } else {
+                                null
+                            },
+                    )
+                }
+            }.flowOn(dispatchersProvider.io)
 
-    override fun getMostRecentPastStream(user: User): Flow<Instant?> = streamQueries
-        .getMostRecentPastStream(user.id)
-        .asFlow()
-        .mapToOneOrNull(dispatchersProvider.io)
-        .map { endTime: Long? ->
-            endTime?.let { Instant.fromEpochMilliseconds(it) }
-        }.flowOn(dispatchersProvider.io)
+    override fun getMostRecentPastStream(user: User): Flow<Instant?> =
+        streamQueries
+            .getMostRecentPastStream(user.id)
+            .asFlow()
+            .mapToOneOrNull(dispatchersProvider.io)
+            .map { endTime: Long? ->
+                endTime?.let { Instant.fromEpochMilliseconds(it) }
+            }.flowOn(dispatchersProvider.io)
 
-    override fun getLiveStreams(): Flow<List<Stream>> = streamQueries
-        .getLiveStreams()
-        .asFlow()
-        .mapToList(dispatchersProvider.io)
-        .map { streams ->
-            streams.map { stream ->
-                val categoryId = stream.category_id
-                val categoryName = stream.category_name
-                Stream(
-                    id = stream.id,
-                    userId = stream.user_id,
-                    startedAt = Instant.fromEpochMilliseconds(stream.start_time),
-                    title = stream.title,
-                    viewerCount = stream.viewer_count,
-                    category = if (categoryId != null && categoryName != null) {
-                        StreamCategory(
-                            id = categoryId,
-                            name = categoryName,
-                        )
-                    } else {
-                        null
-                    },
-                    tags = stream.tags.split(',').toPersistentSet(),
-                )
-            }
-        }.flowOn(dispatchersProvider.io)
+    override fun getLiveStreams(): Flow<List<Stream>> =
+        streamQueries
+            .getLiveStreams()
+            .asFlow()
+            .mapToList(dispatchersProvider.io)
+            .map { streams ->
+                streams.map { stream ->
+                    val categoryId = stream.category_id
+                    val categoryName = stream.category_name
+                    Stream(
+                        id = stream.id,
+                        userId = stream.user_id,
+                        startedAt = Instant.fromEpochMilliseconds(stream.start_time),
+                        title = stream.title,
+                        viewerCount = stream.viewer_count,
+                        category =
+                            if (categoryId != null && categoryName != null) {
+                                StreamCategory(
+                                    id = categoryId,
+                                    name = categoryName,
+                                )
+                            } else {
+                                null
+                            },
+                        tags = stream.tags.split(',').toPersistentSet(),
+                    )
+                }
+            }.flowOn(dispatchersProvider.io)
 
     override fun getFutureStreams(
         notBefore: Instant,
         notAfter: Instant,
-    ): Flow<List<ChannelScheduleSegment>> = streamQueries
-        .getFutureStreams(
-            notBefore = notBefore.toEpochMilliseconds(),
-            notAfter = notAfter.toEpochMilliseconds(),
-        ).asFlow()
-        .mapToList(dispatchersProvider.io)
-        .map { streams ->
-            streams.map { stream ->
-                val categoryId = stream.category_id
-                val categoryName = stream.category_name
-                ChannelScheduleSegment(
-                    id = stream.id,
-                    user = User(
-                        id = stream.user_id,
-                        login = stream.login,
-                        displayName = stream.display_name,
-                        profileImageUrl = stream.profile_image_url,
-                        description = stream.description,
-                        createdAt = Instant.fromEpochMilliseconds(stream.created_at),
-                        usedAt = if (stream.used_at > 0) {
-                            Instant.fromEpochMilliseconds(stream.used_at)
-                        } else {
-                            null
-                        },
-                    ),
-                    startTime = Instant.fromEpochMilliseconds(stream.start_time),
-                    endTime = stream.end_time
-                        .takeIf { it > 0 }
-                        ?.let { Instant.fromEpochMilliseconds(it) },
-                    title = stream.title,
-                    category = if (categoryId != null && categoryName != null) {
-                        StreamCategory(
-                            id = categoryId,
-                            name = categoryName,
-                        )
-                    } else {
-                        null
-                    },
-                )
-            }
-        }.flowOn(dispatchersProvider.io)
+    ): Flow<List<ChannelScheduleSegment>> =
+        streamQueries
+            .getFutureStreams(
+                notBefore = notBefore.toEpochMilliseconds(),
+                notAfter = notAfter.toEpochMilliseconds(),
+            ).asFlow()
+            .mapToList(dispatchersProvider.io)
+            .map { streams ->
+                streams.map { stream ->
+                    val categoryId = stream.category_id
+                    val categoryName = stream.category_name
+                    ChannelScheduleSegment(
+                        id = stream.id,
+                        user =
+                            User(
+                                id = stream.user_id,
+                                login = stream.login,
+                                displayName = stream.display_name,
+                                profileImageUrl = stream.profile_image_url,
+                                description = stream.description,
+                                createdAt = Instant.fromEpochMilliseconds(stream.created_at),
+                                usedAt =
+                                    if (stream.used_at > 0) {
+                                        Instant.fromEpochMilliseconds(stream.used_at)
+                                    } else {
+                                        null
+                                    },
+                            ),
+                        startTime = Instant.fromEpochMilliseconds(stream.start_time),
+                        endTime =
+                            stream.end_time
+                                .takeIf { it > 0 }
+                                ?.let { Instant.fromEpochMilliseconds(it) },
+                        title = stream.title,
+                        category =
+                            if (categoryId != null && categoryName != null) {
+                                StreamCategory(
+                                    id = categoryId,
+                                    name = categoryName,
+                                )
+                            } else {
+                                null
+                            },
+                    )
+                }
+            }.flowOn(dispatchersProvider.io)
 
     override suspend fun savePastStreams(
         user: User,

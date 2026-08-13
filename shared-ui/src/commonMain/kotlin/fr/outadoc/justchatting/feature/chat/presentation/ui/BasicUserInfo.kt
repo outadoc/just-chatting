@@ -29,10 +29,11 @@ internal fun BasicUserInfo(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             AsyncImage(
-                modifier = Modifier
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .size(48.dp),
+                modifier =
+                    Modifier
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .size(48.dp),
                 model = user.profileImageUrl,
                 contentDescription = null,
             )

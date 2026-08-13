@@ -32,13 +32,14 @@ public class UserProfileImageContentProvider : ContentProvider() {
         public fun createForUser(
             context: Context,
             userId: String,
-        ): Uri = Uri
-            .Builder()
-            .scheme(ContentResolver.SCHEME_CONTENT)
-            .authority("${context.applicationContext.packageName}.user-image-provider")
-            .appendPath(PATH_ID)
-            .appendPath(userId)
-            .build()
+        ): Uri =
+            Uri
+                .Builder()
+                .scheme(ContentResolver.SCHEME_CONTENT)
+                .authority("${context.applicationContext.packageName}.user-image-provider")
+                .appendPath(PATH_ID)
+                .appendPath(userId)
+                .build()
     }
 
     private val apiRepository by inject<TwitchRepository>()
@@ -62,8 +63,9 @@ public class UserProfileImageContentProvider : ContentProvider() {
         val segments = uri.pathSegments.toList()
         return when (segments.getOrNull(0)) {
             PATH_ID -> {
-                val userId: String = segments.getOrNull(1)
-                    ?: throw FileNotFoundException("User id was null.")
+                val userId: String =
+                    segments.getOrNull(1)
+                        ?: throw FileNotFoundException("User id was null.")
 
                 val file = getFile(context, userId)
 

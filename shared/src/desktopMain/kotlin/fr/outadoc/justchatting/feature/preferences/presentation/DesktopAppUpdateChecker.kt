@@ -44,7 +44,12 @@ internal class DesktopAppUpdateChecker : AppUpdateChecker {
         when (val result = updater.checkForUpdates()) {
             is UpdateResult.Available -> {
                 pendingUpdate = result.info
-                _state.update { AppUpdateState(hasChecked = true, availableVersion = result.info.version) }
+                _state.update {
+                    AppUpdateState(
+                        hasChecked = true,
+                        availableVersion = result.info.version,
+                    )
+                }
             }
 
             UpdateResult.NotAvailable -> {
@@ -53,7 +58,12 @@ internal class DesktopAppUpdateChecker : AppUpdateChecker {
 
             is UpdateResult.Error -> {
                 logError<DesktopAppUpdateChecker>(result.exception) { "Failed to check for updates" }
-                _state.update { AppUpdateState(hasChecked = true, error = result.exception.message) }
+                _state.update {
+                    AppUpdateState(
+                        hasChecked = true,
+                        error = result.exception.message,
+                    )
+                }
             }
         }
     }

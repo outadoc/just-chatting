@@ -32,6 +32,7 @@ import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.timeline.presentation.ui.ContextualButton
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.chat_copyToClipboard
+import fr.outadoc.justchatting.shared.internal.chat_messageActions_emotes
 import fr.outadoc.justchatting.shared.internal.chat_replyTo
 import fr.outadoc.justchatting.utils.presentation.formatFullDateTime
 import kotlinx.collections.immutable.ImmutableList
@@ -118,6 +119,19 @@ internal fun MessageActionsBottomSheet(
                             style = MaterialTheme.typography.bodySmall,
                             color = LocalContentColor.current.copy(alpha = 0.6f),
                         )
+                    }
+                }
+
+                if (body.embeddedEmotes.isNotEmpty()) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.chat_messageActions_emotes),
+                            style = MaterialTheme.typography.labelLarge,
+                        )
+
+                        EmoteList(emotes = body.embeddedEmotes)
                     }
                 }
             }

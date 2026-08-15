@@ -4,8 +4,8 @@ on:
   pull_request:
 
 jobs:
-  spotless:
-    name: Run Spotless
+  ktlint:
+    name: Run ktlint
     runs-on: ubuntu-latest
 
     concurrency:
@@ -28,4 +28,4 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Check formatting
-        run: ./gradlew spotlessCheck
+        run: ./gradlew ktlintCheck

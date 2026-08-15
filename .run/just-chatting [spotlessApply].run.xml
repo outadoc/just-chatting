@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration name="just-chatting [spotlessApply]" default="false" factoryName="Gradle"
+    <configuration name="just-chatting [ktlintApply]" default="false" factoryName="Gradle"
         nameIsGenerated="true" type="GradleRunConfiguration">
         <ExternalSystemSettings>
             <option name="executionName" />
@@ -11,7 +11,7 @@
             </option>
             <option name="taskNames">
                 <list>
-                    <option value="spotlessApply" />
+                    <option value="ktlintApply" />
                 </list>
             </option>
             <option name="vmOptions" />

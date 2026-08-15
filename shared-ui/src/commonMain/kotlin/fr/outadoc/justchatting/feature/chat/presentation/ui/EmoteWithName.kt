@@ -3,9 +3,10 @@ package fr.outadoc.justchatting.feature.chat.presentation.ui
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +32,10 @@ internal fun EmoteWithName(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         EmoteItem(
-            modifier = Modifier.size(40.dp),
+            modifier =
+                Modifier
+                    .height(40.dp)
+                    .aspectRatio(emote.ratio),
             emote = emote,
         )
 

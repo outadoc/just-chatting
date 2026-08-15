@@ -23,8 +23,8 @@ This file provides guidance to AI agents when working with code in this reposito
 ./gradlew :shared-internal:verifySqlDelightMigration         # Validate DB migrations
 
 # Formatting — always run before committing, CI enforces it
-./gradlew spotlessApply    # Auto-format (ktlint)
-./gradlew spotlessCheck    # Check only
+./gradlew ktlintApply    # Auto-format (ktlint)
+./gradlew ktlintCheck    # Check only
 
 # ABI — run after any public API change in shared modules
 ./gradlew updateKotlinAbi  # Regenerate ABI dump files

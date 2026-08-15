@@ -82,13 +82,18 @@ internal fun OnboardingScreen(
                             text = stringResource(Res.string.onboarding_message),
                         )
 
-                        SignInWithTwitchButton(
+                        Column(
                             modifier = Modifier.padding(top = 24.dp),
-                            onClick = onLoginClick,
-                        )
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            SignInWithTwitchButton(
+                                onClick = onLoginClick,
+                            )
 
-                        TextButton(onClick = onDemoModeClick) {
-                            Text(text = stringResource(Res.string.onboarding_demo_action))
+                            TextButton(onClick = onDemoModeClick) {
+                                Text(text = stringResource(Res.string.onboarding_demo_action))
+                            }
                         }
                     }
                 }

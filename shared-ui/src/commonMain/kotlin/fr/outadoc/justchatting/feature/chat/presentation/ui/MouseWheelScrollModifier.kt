@@ -31,7 +31,11 @@ internal fun Modifier.horizontalMouseWheelScroll(
                 while (true) {
                     val event = awaitPointerEvent()
                     if (event.type == PointerEventType.Scroll) {
-                        val scrollDelta = event.changes.firstOrNull()?.scrollDelta?.y ?: 0f
+                        val scrollDelta =
+                            event.changes
+                                .firstOrNull()
+                                ?.scrollDelta
+                                ?.y ?: 0f
                         if (scrollDelta != 0f) {
                             scope.launch {
                                 state.scrollBy(scrollDelta * with(density) { step.toPx() })

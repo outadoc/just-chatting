@@ -30,6 +30,5 @@ internal class DemoAwareAuthRepository(
 
     override fun getExternalAuthorizeUrl(): Uri = current().getExternalAuthorizeUrl()
 
-    private fun current(): AuthRepository =
-        if (demoModeRepository.isDemoMode.value) demo else real.value
+    private fun current(): AuthRepository = if (demoModeRepository.isDemoMode.value) demo else real.value
 }

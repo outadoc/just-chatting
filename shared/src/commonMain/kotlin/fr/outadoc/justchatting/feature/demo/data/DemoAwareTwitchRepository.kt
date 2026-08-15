@@ -42,8 +42,7 @@ internal class DemoAwareTwitchRepository(
 
     override suspend fun getUserById(id: String): Flow<Result<User>> = liveFlow { repository -> repository.getUserById(id) }
 
-    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
-        liveFlow { repository -> repository.getUsersById(ids) }
+    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> = liveFlow { repository -> repository.getUsersById(ids) }
 
     override suspend fun getCheerEmotes(userId: String): Result<List<Emote>> = current().getCheerEmotes(userId)
 

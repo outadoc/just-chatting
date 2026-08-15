@@ -79,8 +79,9 @@ internal object DemoData {
             login = "solanum",
             displayName = "Solanum",
             avatar = "demo_avatar_solanum",
-            description = "The Eye might have called out to any sentient species. " +
-                "Or it might not have been calling out at all.",
+            description =
+                "The Eye might have called out to any sentient species. " +
+                    "Or it might not have been calling out at all.",
         )
 
     private val yarrow =
@@ -89,8 +90,9 @@ internal object DemoData {
             login = "yarrow",
             displayName = "Yarrow",
             avatar = "demo_avatar_yarrow",
-            description = "Perhaps a change of task would help: Spire noticed a comet " +
-                "approaching this star system.",
+            description =
+                "Perhaps a change of task would help: Spire noticed a comet " +
+                    "approaching this star system.",
         )
 
     private val poke =
@@ -298,11 +300,12 @@ internal object DemoData {
             ChatScriptEntry(delayAfter = 3.seconds) { timestamp, id ->
                 ChatEvent.Message.Announcement(
                     timestamp = timestamp,
-                    userMessage = chatMessage(
-                        solanum.login,
-                        solanum.displayName,
-                        "I'm entirely delighted! It's never too early to appreciate biology!",
-                    )(timestamp, id),
+                    userMessage =
+                        chatMessage(
+                            solanum.login,
+                            solanum.displayName,
+                            "I'm entirely delighted! It's never too early to appreciate biology!",
+                        )(timestamp, id),
                 )
             },
             ChatScriptEntry(delayAfter = 3.seconds) { timestamp, id ->
@@ -369,11 +372,12 @@ internal object DemoData {
             ChatScriptEntry(delayAfter = 3.seconds) { timestamp, id ->
                 ChatEvent.Message.HighlightedMessage(
                     timestamp = timestamp,
-                    userMessage = chatMessage(
-                        "cassava",
-                        "Cassava",
-                        "I enjoy precision as much as the next Nomai, provided the next Nomai is not @Poke.",
-                    )(timestamp, id),
+                    userMessage =
+                        chatMessage(
+                            "cassava",
+                            "Cassava",
+                            "I enjoy precision as much as the next Nomai, provided the next Nomai is not @Poke.",
+                        )(timestamp, id),
                 )
             },
             ChatScriptEntry(delayAfter = 2.seconds) { timestamp, id ->

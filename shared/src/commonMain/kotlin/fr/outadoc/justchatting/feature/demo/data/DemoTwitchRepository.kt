@@ -60,8 +60,7 @@ internal class DemoTwitchRepository(
                 ?: Result.failure(NoSuchElementException("No live stream for user $userId")),
         )
 
-    override suspend fun getUserById(id: String): Flow<Result<User>> =
-        flowOf(Result.success(findOrSynthesizeUser(id)))
+    override suspend fun getUserById(id: String): Flow<Result<User>> = flowOf(Result.success(findOrSynthesizeUser(id)))
 
     override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
         flowOf(Result.success(ids.map { id -> findOrSynthesizeUser(id) }))

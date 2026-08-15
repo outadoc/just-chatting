@@ -247,7 +247,7 @@ internal object DemoData {
             chatMessage("conoy", "Conoy", "I believe I have a solution for that problem!"),
             chatMessage("filix", "Filix", "Hypothesis: This rock shard's presence is significant. We should study it!"),
             chatMessage("daz", "Daz", "om", embeddedEmotes = listOf(omEmote)),
-            chatMessage("plume", "Plume", "I can only hope that you are safe, Keek, wherever you are."),
+            chatMessage("plume", "Plume", "Suppose this moon is too shy to show us its face."),
             chatMessage("ilex", "Ilex", "Pog", embeddedEmotes = listOf(pogEmote)),
         )
 
@@ -277,7 +277,7 @@ internal object DemoData {
                     userMessage = chatMessage(
                         solanum.login,
                         solanum.displayName,
-                        "Recall these Nomai, and carry their curiosity onward with you.",
+                        "I'm entirely delighted! It's never too early to appreciate biology!",
                     )(timestamp, id),
                 )
             },
@@ -285,14 +285,14 @@ internal object DemoData {
                 chatMessage(
                     "coleus",
                     "Coleus",
-                    "If the search for the Eye is a futile one, we should choose the option with the least potential for harm.",
+                    "I'm relieved by our clan's decision to use Timber Hearth's ore only for constructing the shell.",
                 )(timestamp, id)
             },
             ChatScriptEntry(delayAfter = 2.seconds) { timestamp, id ->
                 chatMessage("clary", "Clary", "o", embeddedEmotes = listOf(oEmote))(timestamp, id)
             },
             ChatScriptEntry(delayAfter = 3.seconds) { timestamp, id ->
-                chatMessage("lami", "Lami", "Ignore her, Yarrow. The core is finished.")(timestamp, id)
+                chatMessage("lami", "Lami", "Why are we changing it? It's too hard if you can't see anything!")(timestamp, id)
             },
             ChatScriptEntry(delayAfter = 3.seconds) { timestamp, _ ->
                 ChatEvent.Message.Subscription(
@@ -329,7 +329,7 @@ internal object DemoData {
                 chatMessage(
                     "idaea",
                     "Idaea",
-                    "The potential annihilation of an entire star system is too severe a cost.",
+                    "I almost can't comprehend this is being suggested seriously.",
                 )(timestamp, id)
             },
             ChatScriptEntry(delayAfter = 3.seconds) { timestamp, _ ->
@@ -348,7 +348,7 @@ internal object DemoData {
                     userMessage = chatMessage(
                         "cassava",
                         "Cassava",
-                        "We're no closer to finding it than you were when you first arrived here.",
+                        "I enjoy precision as much as the next Nomai, provided the next Nomai is not @Poke.",
                     )(timestamp, id),
                 )
             },

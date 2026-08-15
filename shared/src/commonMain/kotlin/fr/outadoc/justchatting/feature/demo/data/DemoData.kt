@@ -252,6 +252,7 @@ internal object DemoData {
         userName: String,
         message: String,
         embeddedEmotes: List<Emote> = emptyList(),
+        badges: List<Badge> = emptyList(),
     ): (Instant, String) -> ChatEvent.Message.ChatMessage =
         { timestamp, id ->
             ChatEvent.Message.ChatMessage(
@@ -263,7 +264,7 @@ internal object DemoData {
                 message = message,
                 color = null,
                 embeddedEmotes = embeddedEmotes,
-                badges = emptyList<Badge>(),
+                badges = badges,
                 rewardId = null,
                 inReplyTo = null,
             )
@@ -272,9 +273,9 @@ internal object DemoData {
     /**
      * Chatter names and message text below must be sourced from real Nomai characters and exact
      * quotes at https://outadoc.github.io/nomai-scrolls/en/index.html — no invented names or lines.
+     *
+     * Burst shown immediately when the chat screen opens, so it isn't empty.
      */
-
-    /** Burst shown immediately when the chat screen opens, so it isn't empty. */
     val chatOpeningBurst: List<(Instant, String) -> ChatEvent.Message> =
         listOf(
             chatMessage("ramie", "Ramie", "Hypothesis confirmed! Hypothesis confirmed! I saw it! Hypothesis confirmed!"),
@@ -313,6 +314,7 @@ internal object DemoData {
                             solanum.login,
                             solanum.displayName,
                             "I'm entirely delighted! It's never too early to appreciate biology!",
+                            badges = listOf(Badge(id = "broadcaster", version = "1")),
                         )(timestamp, id),
                 )
             },
@@ -345,6 +347,7 @@ internal object DemoData {
                     "avens",
                     "Avens",
                     "Is the safest path the best one? Our goal is worth the risk.",
+                    badges = listOf(Badge(id = "subscriber", version = "1")),
                 )(timestamp, id)
             },
             ChatScriptEntry(delayAfter = 2.seconds) { timestamp, id ->
@@ -355,6 +358,7 @@ internal object DemoData {
                     "thatch",
                     "Thatch",
                     "Imagine what rare and profound knowledge it might offer. We must find this Eye of the universe.",
+                    badges = listOf(Badge(id = "moderator", version = "1")),
                 )(timestamp, id)
             },
             ChatScriptEntry(delayAfter = 2.seconds) { timestamp, id ->

@@ -236,10 +236,22 @@ jobs:
       contents: write
 
     steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
       - name: Download build artifacts
         uses: actions/download-artifact@v8.0.1
         with:
           path: artifacts
+
+      - name: Generate release notes
+        id: release-notes
+        run: |
+          TAG="${{ github.ref_name }}"
+          PREV_TAG=$(git describe --tags --abbrev=0 "${TAG}~1" 2>/dev/null || echo "")
+          .github/scripts/generate-changelog.sh "$PREV_TAG" "$TAG" > release-notes.md
 
       - name: Create release with artifacts
         env:
@@ -249,7 +261,7 @@ jobs:
         run: |
           find artifacts -type f -print0 \
             | xargs -0 gh release create "$TAG" \
-              --generate-notes \
+              --notes-file release-notes.md \
               --title "$TAG" \
               --latest \
               --repo "$REPO"

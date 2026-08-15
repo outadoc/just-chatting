@@ -261,6 +261,7 @@ jobs:
         run: |
           find artifacts -type f -print0 \
             | xargs -0 gh release create "$TAG" \
+              release-notes.md \
               --notes-file release-notes.md \
               --title "$TAG" \
               --latest \

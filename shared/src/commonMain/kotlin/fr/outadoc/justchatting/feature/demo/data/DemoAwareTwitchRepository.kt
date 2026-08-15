@@ -12,11 +12,14 @@ import fr.outadoc.justchatting.feature.shared.domain.TwitchRepositoryImpl
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlin.time.Instant
 
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class DemoAwareTwitchRepository(
     private val demoModeRepository: DemoModeRepository,
     private val real: Lazy<TwitchRepositoryImpl>,
@@ -24,21 +27,29 @@ internal class DemoAwareTwitchRepository(
 ) : TwitchRepository {
     private fun current(): TwitchRepository = if (demoModeRepository.isDemoMode.value) demo else real.value
 
-    override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> = current().searchChannels(query)
+    private fun <T> liveFlow(block: suspend (TwitchRepository) -> Flow<T>): Flow<T> =
+        demoModeRepository.isDemoMode.flatMapLatest { isDemoMode ->
+            block(if (isDemoMode) demo else real.value)
+        }
 
-    override suspend fun getFollowedChannels(): Flow<List<ChannelFollow>> = current().getFollowedChannels()
+    override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> =
+        liveFlow { repository -> repository.searchChannels(query) }
 
-    override suspend fun getStreamByUserId(userId: String): Flow<Result<Stream>> = current().getStreamByUserId(userId)
+    override suspend fun getFollowedChannels(): Flow<List<ChannelFollow>> = liveFlow { repository -> repository.getFollowedChannels() }
 
-    override suspend fun getUserById(id: String): Flow<Result<User>> = current().getUserById(id)
+    override suspend fun getStreamByUserId(userId: String): Flow<Result<Stream>> =
+        liveFlow { repository -> repository.getStreamByUserId(userId) }
 
-    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> = current().getUsersById(ids)
+    override suspend fun getUserById(id: String): Flow<Result<User>> = liveFlow { repository -> repository.getUserById(id) }
+
+    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
+        liveFlow { repository -> repository.getUsersById(ids) }
 
     override suspend fun getCheerEmotes(userId: String): Result<List<Emote>> = current().getCheerEmotes(userId)
 
     override suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>> = current().getEmotesFromSet(setIds)
 
-    override suspend fun getRecentChannels(): Flow<List<User>> = current().getRecentChannels()
+    override suspend fun getRecentChannels(): Flow<List<User>> = liveFlow { repository -> repository.getRecentChannels() }
 
     override suspend fun forgetRecentChannel(userId: String) {
         current().forgetRecentChannel(userId)
@@ -47,7 +58,7 @@ internal class DemoAwareTwitchRepository(
     override suspend fun getFollowedChannelsSchedule(
         today: LocalDate,
         timeZone: TimeZone,
-    ): Flow<FullSchedule> = current().getFollowedChannelsSchedule(today, timeZone)
+    ): Flow<FullSchedule> = liveFlow { repository -> repository.getFollowedChannelsSchedule(today, timeZone) }
 
     override suspend fun markChannelAsVisited(
         userId: String,

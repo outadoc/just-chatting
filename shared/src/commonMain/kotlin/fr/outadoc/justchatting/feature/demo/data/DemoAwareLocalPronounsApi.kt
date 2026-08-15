@@ -6,8 +6,11 @@ import fr.outadoc.justchatting.feature.pronouns.domain.LocalPronounsApi
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.pronouns.domain.model.UserPronounIds
 import fr.outadoc.justchatting.feature.pronouns.domain.model.UserPronouns
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class DemoAwareLocalPronounsApi(
     private val demoModeRepository: DemoModeRepository,
     private val real: Lazy<LocalPronounsDb>,
@@ -21,7 +24,10 @@ internal class DemoAwareLocalPronounsApi(
         current().saveAndReplacePronouns(pronouns)
     }
 
-    override suspend fun getPronounsForUser(userId: String): Flow<UserPronouns?> = current().getPronounsForUser(userId)
+    override suspend fun getPronounsForUser(userId: String): Flow<UserPronouns?> =
+        demoModeRepository.isDemoMode.flatMapLatest { isDemoMode ->
+            (if (isDemoMode) demo else real.value).getPronounsForUser(userId)
+        }
 
     override suspend fun saveUserPronouns(userPronoun: UserPronounIds) {
         current().saveUserPronouns(userPronoun)

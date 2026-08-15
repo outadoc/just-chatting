@@ -34,6 +34,22 @@ import fr.outadoc.justchatting.feature.chat.presentation.LoadEmotesAndBadgesUseC
 import fr.outadoc.justchatting.feature.chat.presentation.SubmitMessageUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.UserInfoViewModel
 import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
+import fr.outadoc.justchatting.feature.demo.data.DemoAuthRepository
+import fr.outadoc.justchatting.feature.demo.data.DemoAwareAuthRepository
+import fr.outadoc.justchatting.feature.demo.data.DemoAwareChatRepository
+import fr.outadoc.justchatting.feature.demo.data.DemoAwareLocalPronounsApi
+import fr.outadoc.justchatting.feature.demo.data.DemoAwarePronounsApi
+import fr.outadoc.justchatting.feature.demo.data.DemoAwareRecentEmotesApi
+import fr.outadoc.justchatting.feature.demo.data.DemoAwareTwitchRepository
+import fr.outadoc.justchatting.feature.demo.data.DemoChatBus
+import fr.outadoc.justchatting.feature.demo.data.DemoChatRepository
+import fr.outadoc.justchatting.feature.demo.data.DemoEmoteListSource
+import fr.outadoc.justchatting.feature.demo.data.DemoLocalPronounsApi
+import fr.outadoc.justchatting.feature.demo.data.DemoPronounsApi
+import fr.outadoc.justchatting.feature.demo.data.DemoRecentEmotesApi
+import fr.outadoc.justchatting.feature.demo.data.DemoTwitchRepository
+import fr.outadoc.justchatting.feature.demo.data.InMemoryDemoModeRepository
+import fr.outadoc.justchatting.feature.demo.domain.DemoModeRepository
 import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesApi
 import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesServer
 import fr.outadoc.justchatting.feature.emotes.data.bttv.ChannelBttvEmotesSource
@@ -55,6 +71,7 @@ import fr.outadoc.justchatting.feature.emotes.domain.RecentEmotesApi
 import fr.outadoc.justchatting.feature.followed.presentation.FollowedChannelsViewModel
 import fr.outadoc.justchatting.feature.preferences.data.DataStorePreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
+import fr.outadoc.justchatting.feature.preferences.domain.DefaultAuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.DefaultReadExternalDependenciesList
 import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
@@ -99,7 +116,19 @@ internal val sharedModule: Module
         module {
             single<Clock> { Clock.System }
             single<DispatchersProvider> { DefaultDispatchersProvider() }
-            single<AuthRepository> { AuthRepository(get(), get(), get(), get()) }
+            single<DemoModeRepository> { InMemoryDemoModeRepository() }
+            single { DemoChatBus() }
+            single { DemoTwitchRepository(get(), get()) }
+
+            single { DefaultAuthRepository(get(), get(), get(), get()) }
+            single { DemoAuthRepository(get()) }
+            single<AuthRepository> {
+                DemoAwareAuthRepository(
+                    get(),
+                    lazy { get<DefaultAuthRepository>() },
+                    get<DemoAuthRepository>(),
+                )
+            }
             single { DeeplinkParser(get()) }
 
             single<PreferenceRepository> { DataStorePreferenceRepository(get()) }
@@ -110,7 +139,7 @@ internal val sharedModule: Module
 
             factory<DeeplinkReceiver> { get<MainRouterViewModel>() }
 
-            single { MainRouterViewModel(get(), get(), get()) }
+            single { MainRouterViewModel(get(), get(), get(), get()) }
             viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get(), get()) }
             viewModel { ChannelSearchViewModel(get()) }
             viewModel { FollowedChannelsViewModel(get(), get(), get()) }
@@ -176,14 +205,30 @@ internal val sharedModule: Module
             }
 
             single { AggregateChatEventHandler(get()) }
-            single<ChatRepository> { DefaultChatRepository(get()) }
+            single { DefaultChatRepository(get()) }
+            single { DemoChatRepository(get(), get()) }
+            single<ChatRepository> {
+                DemoAwareChatRepository(
+                    get(),
+                    lazy { get<DefaultChatRepository>() },
+                    get<DemoChatRepository>(),
+                )
+            }
 
             single { TwitchIrcCommandParser(get()) }
             single { ChatEventViewMapper() }
 
             single { RecentMessagesRepository(get(), get(), get()) }
 
-            single<PronounsApi> { AlejoPronounsApi(get()) }
+            single { AlejoPronounsApi(get()) }
+            single { DemoPronounsApi() }
+            single<PronounsApi> {
+                DemoAwarePronounsApi(
+                    get(),
+                    lazy { get<AlejoPronounsApi>() },
+                    get<DemoPronounsApi>(),
+                )
+            }
             single { AlejoPronounsClient(get()) }
             single { PronounsRepository(get(), get(), get(), get()) }
 
@@ -200,7 +245,8 @@ internal val sharedModule: Module
             single { GlobalTwitchEmotesSource(get()) }
             single { DelegateTwitchEmotesSource(get()) }
 
-            single {
+            single { DemoEmoteListSource() }
+            single<EmoteListSourcesProvider>(named("real")) {
                 EmoteListSourcesProvider {
                     listOf(
                         get<ChannelTwitchEmotesSource>(),
@@ -214,11 +260,29 @@ internal val sharedModule: Module
                     )
                 }
             }
+            single<EmoteListSourcesProvider> {
+                val demoModeRepository = get<DemoModeRepository>()
+                EmoteListSourcesProvider {
+                    if (demoModeRepository.isDemoMode.value) {
+                        listOf(get<DemoEmoteListSource>())
+                    } else {
+                        get<EmoteListSourcesProvider>(named("real")).getSources()
+                    }
+                }
+            }
 
             single { AppDatabase(get<SqlDriver>()) }
 
             single<RecentEmoteQueries> { get<AppDatabase>().recentEmoteQueries }
-            single<RecentEmotesApi> { RecentEmotesDb(get(), get()) }
+            single { RecentEmotesDb(get(), get()) }
+            single { DemoRecentEmotesApi() }
+            single<RecentEmotesApi> {
+                DemoAwareRecentEmotesApi(
+                    get(),
+                    lazy { get<RecentEmotesDb>() },
+                    get<DemoRecentEmotesApi>(),
+                )
+            }
 
             single<UserQueries> { get<AppDatabase>().userQueries }
             single<LocalUsersApi> { LocalUsersDb(get(), get(), get()) }
@@ -227,11 +291,26 @@ internal val sharedModule: Module
             single<LocalStreamsApi> { LocalStreamsDb(get(), get(), get()) }
 
             single<PronounQueries> { get<AppDatabase>().pronounQueries }
-            single<LocalPronounsApi> { LocalPronounsDb(get(), get(), get()) }
+            single { LocalPronounsDb(get(), get(), get()) }
+            single { DemoLocalPronounsApi() }
+            single<LocalPronounsApi> {
+                DemoAwareLocalPronounsApi(
+                    get(),
+                    lazy { get<LocalPronounsDb>() },
+                    get<DemoLocalPronounsApi>(),
+                )
+            }
 
             single<Json> { DefaultJson }
 
-            single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get(), get()) }
+            single { TwitchRepositoryImpl(get(), get(), get(), get()) }
+            single<TwitchRepository> {
+                DemoAwareTwitchRepository(
+                    get(),
+                    lazy { get<TwitchRepositoryImpl>() },
+                    get<DemoTwitchRepository>(),
+                )
+            }
             single<TwitchApi> { TwitchApiImpl(get()) }
             single { TwitchClient(get(named("twitch"))) }
 

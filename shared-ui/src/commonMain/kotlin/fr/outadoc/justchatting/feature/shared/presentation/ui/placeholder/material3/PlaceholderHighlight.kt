@@ -20,6 +20,7 @@ import androidx.annotation.FloatRange
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.InfiniteRepeatableSpec
 import androidx.compose.runtime.Composable
+import fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.core.PlaceholderDefaults
 import fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.core.PlaceholderHighlight
 import fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.core.fade
 import fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.core.shimmer
@@ -34,12 +35,10 @@ import fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.core.s
  */
 @Composable
 internal fun PlaceholderHighlight.Companion.fade(
-    animationSpec: InfiniteRepeatableSpec<Float> = fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.core.PlaceholderDefaults.fadeAnimationSpec,
+    animationSpec: InfiniteRepeatableSpec<Float> = PlaceholderDefaults.fadeAnimationSpec,
 ): PlaceholderHighlight =
     PlaceholderHighlight.fade(
-        highlightColor =
-            fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.core.PlaceholderDefaults
-                .fadeHighlightColor(),
+        highlightColor = PlaceholderDefaults.fadeHighlightColor(),
         animationSpec = animationSpec,
     )
 
@@ -58,13 +57,11 @@ internal fun PlaceholderHighlight.Companion.fade(
  */
 @Composable
 internal fun PlaceholderHighlight.Companion.shimmer(
-    animationSpec: InfiniteRepeatableSpec<Float> = fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.core.PlaceholderDefaults.shimmerAnimationSpec,
+    animationSpec: InfiniteRepeatableSpec<Float> = PlaceholderDefaults.shimmerAnimationSpec,
     @FloatRange(from = 0.0, to = 1.0) progressForMaxAlpha: Float = 0.6f,
 ): PlaceholderHighlight =
     PlaceholderHighlight.shimmer(
-        highlightColor =
-            fr.outadoc.justchatting.feature.shared.presentation.ui.placeholder.core.PlaceholderDefaults
-                .shimmerHighlightColor(),
+        highlightColor = PlaceholderDefaults.shimmerHighlightColor(),
         animationSpec = animationSpec,
         progressForMaxAlpha = progressForMaxAlpha,
     )

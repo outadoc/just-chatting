@@ -236,6 +236,7 @@
     <string name="no">Non</string>
     <string name="nothing_here">Rien pour l'instant</string>
     <string name="notification_action_disconnect">Déconnecter</string>
+    <string name="onboarding_demo_action">Essayer la démo</string>
     <string name="onboarding_login_action">Continuer avec Twitch</string>
     <string name="onboarding_message">Pour parcourir vos chaînes suivies et poster dans le tchat, vous devez lier votre compte Twitch.</string>
     <string name="onboarding_title">Bienvenue dans</string>

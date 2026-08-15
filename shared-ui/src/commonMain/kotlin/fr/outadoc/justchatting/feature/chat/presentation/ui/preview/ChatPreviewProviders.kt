@@ -53,7 +53,9 @@ private val simpleEntries =
                                 id = "232421548",
                                 login = "kolorye",
                             ),
-                        message = "@djessy728 il avait dit quand mathieu avait sortit sa vidéo après longtemps qu'ils n'étaient plus en contact plus que ça, donc j'imagine que non",
+                        message =
+                            "@djessy728 il avait dit quand mathieu avait sortit sa vidéo après longtemps " +
+                                "qu'ils n'étaient plus en contact plus que ça, donc j'imagine que non",
                         messageId = "4b3f4db7-5956-4ade-adba-ed282c22eb50",
                         isAction = false,
                         color = "#5F9EA0",

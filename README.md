@@ -73,14 +73,14 @@ Unit tests are located in `shared/src/androidUnitTest/kotlin/`.
 
 ## Code Formatting
 
-Use **Spotless** with ktlint:
+Use ktlint:
 
 ```bash
-./gradlew spotlessCheck    # Check formatting
-./gradlew spotlessApply    # Auto-format
+./gradlew ktlintCheck    # Check formatting
+./gradlew ktlintApply    # Auto-format
 ```
 
-Always run `spotlessApply` before committing. CI enforces formatting on PRs.
+Always run `ktlintApply` before committing. CI enforces formatting on PRs.
 
 ## Architecture
 

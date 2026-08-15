@@ -236,6 +236,7 @@
     <string name="no">No</string>
     <string name="nothing_here">Nothing here yet</string>
     <string name="notification_action_disconnect">Disconnect</string>
+    <string name="onboarding_demo_action">Try the demo</string>
     <string name="onboarding_login_action">Continue with Twitch</string>
     <string name="onboarding_message">In order to browse your followed channels and post in chat, you will need to link your Twitch account.</string>
     <string name="onboarding_title">Welcome to</string>

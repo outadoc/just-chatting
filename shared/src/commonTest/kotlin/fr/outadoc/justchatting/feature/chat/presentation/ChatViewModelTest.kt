@@ -25,7 +25,7 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteSetItem
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.emotes.domain.model.RecentEmote
 import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
+import fr.outadoc.justchatting.feature.preferences.domain.DefaultAuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
@@ -180,7 +180,7 @@ internal class ChatViewModelTest {
                             getRecentEmotes = GetRecentEmotesUseCase(recentEmotesApi),
                             chatRepository = chatRepository,
                             authRepository =
-                                AuthRepository(
+                                DefaultAuthRepository(
                                     preferenceRepository = preferenceRepository,
                                     authApi = FakeAuthApi(),
                                     oAuthAppCredentials =

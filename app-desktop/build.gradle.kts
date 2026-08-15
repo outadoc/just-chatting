@@ -7,6 +7,7 @@ plugins {
     kotlin("plugin.compose")
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.nucleus)
+    alias(libs.plugins.ktlint)
 }
 
 kotlin {

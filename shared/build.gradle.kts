@@ -10,6 +10,13 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.licenseReport)
     alias(libs.plugins.skie)
+    alias(libs.plugins.ktlint)
+}
+
+ktlint {
+    filter {
+        exclude("**/ActualResourceCollectors.kt", "**/generated/**")
+    }
 }
 
 kotlin {

@@ -99,6 +99,52 @@ after schema changes.
 Shared modules expose ABI dump files in their `abi/` directories. Run `./gradlew updateKotlinAbi`
 after any public API change and commit the updated dumps alongside the code change.
 
+### Demo mode
+
+"Enter demo mode" on the onboarding screen puts the app in a fully offline, logged-in state backed
+entirely by hand-written domain models — no HTTP, no websockets, no SQLDelight. This lets app
+reviewers, instrumented tests, and prospective users see the app without a real Twitch login.
+
+All demo code lives under `fr.outadoc.justchatting.feature.demo` in `shared/commonMain`:
+
+- `data/DemoData.kt` — **single source of truth** for every fixture (users, streams, schedule,
+  badges, emotes, chat script). Add new fixtures here as named `val`s/`fun`s rather than inlining
+  data elsewhere.
+- `data/Demo*Repository.kt`, `data/Demo*Api.kt` — fake implementations of each repository/API
+  interface (`TwitchRepository`, `ChatRepository`, `AuthRepository`, `PronounsApi`,
+  `LocalPronounsApi`, `RecentEmotesApi`), returning `DemoData` fixtures directly.
+- `data/DemoAware*.kt` — routers bound to each interface in Koin. Each holds the real
+  implementation as `Lazy<T>` so it's never constructed (and never touches disk/network) while
+  demo mode is active, and reads `DemoModeRepository.isDemoMode` at call time to pick a side.
+- `domain/DemoModeRepository.kt` / `data/InMemoryDemoModeRepository.kt` — the in-memory on/off
+  switch (`StateFlow<Boolean>`); flipping it off routes `AuthRepository.currentUser` back to
+  `NotLoggedIn`, which is what the existing Settings → Log out button triggers in demo mode.
+- `data/DemoChatBus.kt` — lets a message sent while in demo mode (via
+  `DemoTwitchRepository.sendChatMessage`) get echoed back into `DemoChatRepository`'s chat event
+  flow, so typing in demo mode doesn't look broken.
+
+Gotchas when editing `DemoData.kt`:
+
+- The chat data (`chatOpeningBurst`, `chatScript`) is themed around Nomai characters from *Outer
+  Wilds*. Usernames and message text must be verbatim quotes sourced from
+  https://outadoc.github.io/nomai-scrolls/en/index.html — never invent new dialogue, even to avoid
+  a spoilery quote; pick a different real, spoiler-free line instead.
+- `chatScript` must be written in terms of `ChatEvent` (domain), not `ChatViewModel.Action`
+  (presentation) — Konsist forbids `feature.demo.data` from importing anything under
+  `..presentation..`.
+- Non-square emotes need an explicit `Emote.ratio = width / height`; it defaults to `1f` (square),
+  which squishes wide emotes like `om`/`o`. See `getEmotePlaceholder()` in
+  `ChatInlineTextContent.kt`.
+- Chat messages default to `badges = emptyList()`. To have a badge actually render on a scripted
+  message, pass `badges = listOf(Badge(id = "<setId>", version = "<version>"))` to `chatMessage(...)`
+  matching an entry in `DemoData.globalBadges`/`channelBadges` — resolution is by string-key match
+  (`"badge_${setId}_$version"`), so a mismatched id/version silently renders nothing.
+- Chat viewers (e.g. `"demo-viewer-ramie"`) are never added to `DemoData.allUsers` — there'd be too
+  many to maintain by hand. `DemoTwitchRepository.getUserById` falls back to
+  `DemoData.syntheticUser(id)` for any unrecognized id, which derives both `login` and
+  `displayName` from the id itself (stripping the `demo-viewer-` prefix and capitalizing), so it
+  stays consistent with the name already shown inline in the chat message.
+
 ## Live testing on desktop
 
 `./gradlew :app-desktop:run` is the fastest way to see a change working or investigate a bug live —

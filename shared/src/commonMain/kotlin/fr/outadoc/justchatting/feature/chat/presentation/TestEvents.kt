@@ -114,7 +114,9 @@ internal object TestEvents {
                             body =
                                 ChatListItem.Message.Body(
                                     messageId = "14124",
-                                    message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
+                                    message =
+                                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                                            "Quisque at arcu at neque tempus sollicitudin.",
                                     chatter =
                                         Chatter(
                                             id = "1462345",
@@ -144,7 +146,9 @@ internal object TestEvents {
                                     ),
                                 content =
                                     PinnedMessage.Message.Content(
-                                        text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
+                                        text =
+                                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                                                "Quisque at arcu at neque tempus sollicitudin.",
                                     ),
                                 startsAt = Instant.DISTANT_PAST,
                                 endsAt = Instant.DISTANT_FUTURE,

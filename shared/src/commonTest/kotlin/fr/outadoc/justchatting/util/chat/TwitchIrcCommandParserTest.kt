@@ -276,7 +276,10 @@ internal class TwitchIrcCommandParserTest {
                             userId = "651859616",
                             userLogin = "pepitipepibot",
                             userName = "pepitipepibot",
-                            message = "LEZGONGUE LA MIXTAPE ELLE EST LAAAAAAAA : https://open.spotify.com/album/0X9kU5VLUmXoi6Hk6ou3PP?si=85JnJJSARpqCJ_ugsGNVhQ !! Pepe a 2 track : Dig dig deep deep & Light you up !",
+                            message =
+                                "LEZGONGUE LA MIXTAPE ELLE EST LAAAAAAAA : " +
+                                    "https://open.spotify.com/album/0X9kU5VLUmXoi6Hk6ou3PP?si=85JnJJSARpqCJ_ugsGNVhQ " +
+                                    "!! Pepe a 2 track : Dig dig deep deep & Light you up !",
                             color = "#8A2BE2",
                             embeddedEmotes = emptyList(),
                             badges =

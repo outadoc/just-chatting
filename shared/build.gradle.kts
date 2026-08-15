@@ -13,6 +13,12 @@ plugins {
     alias(libs.plugins.ktlint)
 }
 
+ktlint {
+    filter {
+        exclude("**/ActualResourceCollectors.kt", "**/generated/**")
+    }
+}
+
 kotlin {
     explicitApi()
 

@@ -33,8 +33,8 @@ internal class DemoTwitchRepository(
     private val clock: Clock,
     private val demoChatBus: DemoChatBus,
 ) : TwitchRepository {
-    private val _recentChannels = MutableStateFlow(DemoData.channels.take(1))
-    private val recentChannels: StateFlow<List<User>> = _recentChannels
+    private val mutableRecentChannels = MutableStateFlow(DemoData.channels.take(1))
+    private val recentChannels: StateFlow<List<User>> = mutableRecentChannels
 
     override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> =
         flowOf(
@@ -72,7 +72,7 @@ internal class DemoTwitchRepository(
     override suspend fun getRecentChannels(): Flow<List<User>> = recentChannels
 
     override suspend fun forgetRecentChannel(userId: String) {
-        _recentChannels.value = _recentChannels.value.filterNot { it.id == userId }
+        mutableRecentChannels.value = mutableRecentChannels.value.filterNot { it.id == userId }
     }
 
     override suspend fun getFollowedChannelsSchedule(
@@ -92,7 +92,7 @@ internal class DemoTwitchRepository(
         visitedAt: Instant,
     ) {
         val user = findOrSynthesizeUser(userId)
-        _recentChannels.value = (listOf(user) + _recentChannels.value.filterNot { it.id == userId }).take(10)
+        mutableRecentChannels.value = (listOf(user) + mutableRecentChannels.value.filterNot { it.id == userId }).take(10)
     }
 
     override suspend fun getGlobalBadges(): Result<List<TwitchBadge>> = Result.success(DemoData.globalBadges)

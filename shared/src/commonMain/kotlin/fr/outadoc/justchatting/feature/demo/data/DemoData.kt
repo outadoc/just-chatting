@@ -127,6 +127,30 @@ internal object DemoData {
                         startedAt = now - 90.minutes,
                     ),
             ),
+            UserStream(
+                user = yarrow,
+                stream =
+                    Stream(
+                        id = "demo-stream-yarrow",
+                        userId = yarrow.id,
+                        category = category,
+                        title = "Scieeeeence!",
+                        viewerCount = 17,
+                        startedAt = now - 40.minutes,
+                    ),
+            ),
+            UserStream(
+                user = poke,
+                stream =
+                    Stream(
+                        id = "demo-stream-poke",
+                        userId = poke.id,
+                        category = category,
+                        title = "Working on my new project",
+                        viewerCount = 8,
+                        startedAt = now - 20.minutes,
+                    ),
+            ),
         )
 
     val futureSchedule: List<DaySchedule> =

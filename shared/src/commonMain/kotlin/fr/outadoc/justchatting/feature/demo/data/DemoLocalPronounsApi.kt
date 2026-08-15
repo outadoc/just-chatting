@@ -13,7 +13,7 @@ internal class DemoLocalPronounsApi : LocalPronounsApi {
 
     private val pronounsByUserId =
         mapOf(
-            "demo-viewer-avens" to hePronoun,
+            "avens" to hePronoun,
             "demo-solanum" to shePronoun,
         )
 

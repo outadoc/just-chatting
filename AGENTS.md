@@ -139,11 +139,11 @@ Gotchas when editing `DemoData.kt`:
   message, pass `badges = listOf(Badge(id = "<setId>", version = "<version>"))` to `chatMessage(...)`
   matching an entry in `DemoData.globalBadges`/`channelBadges` — resolution is by string-key match
   (`"badge_${setId}_$version"`), so a mismatched id/version silently renders nothing.
-- Chat viewers (e.g. `"demo-viewer-ramie"`) are never added to `DemoData.allUsers` — there'd be too
-  many to maintain by hand. `DemoTwitchRepository.getUserById` falls back to
-  `DemoData.syntheticUser(id)` for any unrecognized id, which derives both `login` and
-  `displayName` from the id itself (stripping the `demo-viewer-` prefix and capitalizing), so it
-  stays consistent with the name already shown inline in the chat message.
+- Chat viewers (id/login are the same plain string, e.g. `"ramie"`) are never added to
+  `DemoData.allUsers` — there'd be too many to maintain by hand. `DemoTwitchRepository.getUserById`
+  falls back to `DemoData.syntheticUser(id)` for any unrecognized id, which derives `displayName`
+  by capitalizing the id, so it stays consistent with the name already shown inline in the chat
+  message.
 
 ## Live testing on desktop
 

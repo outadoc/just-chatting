@@ -236,8 +236,8 @@ internal object DemoData {
     fun syntheticUser(id: String): User =
         user(
             id = id,
-            login = "channel_$id",
-            displayName = "channel_$id",
+            login = id,
+            displayName = id.replaceFirstChar { it.uppercase() },
             avatar = "demo_avatar_viewer",
         )
 
@@ -258,7 +258,7 @@ internal object DemoData {
             ChatEvent.Message.ChatMessage(
                 timestamp = timestamp,
                 id = id,
-                userId = "demo-viewer-$userLogin",
+                userId = userLogin,
                 userLogin = userLogin,
                 userName = userName,
                 message = message,

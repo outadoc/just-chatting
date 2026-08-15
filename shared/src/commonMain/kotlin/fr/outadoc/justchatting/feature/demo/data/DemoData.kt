@@ -122,7 +122,7 @@ internal object DemoData {
                         id = "demo-stream-solanum",
                         userId = solanum.id,
                         category = category,
-                        title = "We must find this Eye of the universe",
+                        title = "Exploring the universe",
                         viewerCount = 42,
                         startedAt = now - 90.minutes,
                     ),

@@ -25,6 +25,8 @@ internal class DemoChatRepository(
         user: User,
         appUser: AppUser.LoggedIn,
     ): Flow<ChatEvent> {
+        val liveStream = DemoData.liveStreams.firstOrNull { it.user.id == user.id }?.stream
+
         val initialState =
             flowOf(
                 ChatEvent.Command.RoomStateDelta(),
@@ -32,11 +34,11 @@ internal class DemoChatRepository(
                 ChatEvent.Message.Join(timestamp = clock.now(), channelLogin = user.login),
                 ChatEvent.Message.BroadcastSettingsUpdate(
                     timestamp = clock.now(),
-                    streamTitle = "Building a demo mode, of all things",
-                    categoryId = "demo-category",
-                    categoryName = "Software and Game Development",
+                    streamTitle = liveStream?.title.orEmpty(),
+                    categoryId = liveStream?.category?.id.orEmpty(),
+                    categoryName = liveStream?.category?.name.orEmpty(),
                 ),
-                ChatEvent.Message.ViewerCountUpdate(timestamp = clock.now(), viewerCount = 42),
+                ChatEvent.Message.ViewerCountUpdate(timestamp = clock.now(), viewerCount = liveStream?.viewerCount ?: 0),
             )
 
         val openingBurst =

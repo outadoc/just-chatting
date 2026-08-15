@@ -247,22 +247,31 @@ internal object DemoData {
             chatMessage("conoy", "Conoy", "I believe I have a solution for that problem!"),
             chatMessage("filix", "Filix", "Hypothesis: This rock shard's presence is significant. We should study it!"),
             chatMessage("daz", "Daz", "om", embeddedEmotes = listOf(omEmote)),
+            chatMessage("plume", "Plume", "I can only hope that you are safe, Keek, wherever you are."),
+            chatMessage("ilex", "Ilex", "Pog", embeddedEmotes = listOf(pogEmote)),
         )
 
     /** Looping scripted feed, exercising the rich message cards. Text is quoted from Nomai scrolls. */
     val chatScript: List<ChatScriptEntry> =
         listOf(
-            ChatScriptEntry(delayAfter = 5.seconds) { timestamp, id ->
+            ChatScriptEntry(delayAfter = 3.seconds) { timestamp, id ->
                 chatMessage(
                     "mallow",
                     "Mallow",
                     "The thought of concluding our elders' search increases my heart's temperature!",
                 )(timestamp, id)
             },
-            ChatScriptEntry(delayAfter = 4.seconds) { timestamp, id ->
+            ChatScriptEntry(delayAfter = 2.seconds) { timestamp, id ->
                 chatMessage("privet", "Privet", "Pog", embeddedEmotes = listOf(pogEmote))(timestamp, id)
             },
-            ChatScriptEntry(delayAfter = 5.seconds) { timestamp, id ->
+            ChatScriptEntry(delayAfter = 3.seconds) { timestamp, id ->
+                chatMessage(
+                    "phlox",
+                    "Phlox",
+                    "We can model the Timber Hearth tower after a geyser mountain!",
+                )(timestamp, id)
+            },
+            ChatScriptEntry(delayAfter = 3.seconds) { timestamp, id ->
                 ChatEvent.Message.Announcement(
                     timestamp = timestamp,
                     userMessage = chatMessage(
@@ -272,17 +281,20 @@ internal object DemoData {
                     )(timestamp, id),
                 )
             },
-            ChatScriptEntry(delayAfter = 6.seconds) { timestamp, id ->
+            ChatScriptEntry(delayAfter = 3.seconds) { timestamp, id ->
                 chatMessage(
                     "coleus",
                     "Coleus",
                     "If the search for the Eye is a futile one, we should choose the option with the least potential for harm.",
                 )(timestamp, id)
             },
-            ChatScriptEntry(delayAfter = 4.seconds) { timestamp, id ->
+            ChatScriptEntry(delayAfter = 2.seconds) { timestamp, id ->
                 chatMessage("clary", "Clary", "o", embeddedEmotes = listOf(oEmote))(timestamp, id)
             },
-            ChatScriptEntry(delayAfter = 5.seconds) { timestamp, _ ->
+            ChatScriptEntry(delayAfter = 3.seconds) { timestamp, id ->
+                chatMessage("lami", "Lami", "Ignore her, Yarrow. The core is finished.")(timestamp, id)
+            },
+            ChatScriptEntry(delayAfter = 3.seconds) { timestamp, _ ->
                 ChatEvent.Message.Subscription(
                     timestamp = timestamp,
                     userDisplayName = "Avens",
@@ -293,37 +305,44 @@ internal object DemoData {
                     userMessage = null,
                 )
             },
-            ChatScriptEntry(delayAfter = 7.seconds) { timestamp, id ->
+            ChatScriptEntry(delayAfter = 3.seconds) { timestamp, id ->
                 chatMessage(
                     "avens",
                     "Avens",
                     "Is the safest path the best one? Our goal is worth the risk.",
                 )(timestamp, id)
             },
-            ChatScriptEntry(delayAfter = 4.seconds) { timestamp, id ->
-                chatMessage("spire", "Spire", "Pog Pog", embeddedEmotes = listOf(pogEmote))(timestamp, id)
+            ChatScriptEntry(delayAfter = 2.seconds) { timestamp, id ->
+                chatMessage("spire", "Spire", "Pog", embeddedEmotes = listOf(pogEmote))(timestamp, id)
             },
-            ChatScriptEntry(delayAfter = 6.seconds) { timestamp, id ->
+            ChatScriptEntry(delayAfter = 3.seconds) { timestamp, id ->
                 chatMessage(
                     "thatch",
                     "Thatch",
                     "Imagine what rare and profound knowledge it might offer. We must find this Eye of the universe.",
                 )(timestamp, id)
             },
-            ChatScriptEntry(delayAfter = 5.seconds) { timestamp, id ->
-                chatMessage("ramie", "Ramie", "om om", embeddedEmotes = listOf(omEmote))(timestamp, id)
+            ChatScriptEntry(delayAfter = 2.seconds) { timestamp, id ->
+                chatMessage("ramie", "Ramie", "om", embeddedEmotes = listOf(omEmote))(timestamp, id)
             },
-            ChatScriptEntry(delayAfter = 5.seconds) { timestamp, _ ->
+            ChatScriptEntry(delayAfter = 3.seconds) { timestamp, id ->
+                chatMessage(
+                    "idaea",
+                    "Idaea",
+                    "The potential annihilation of an entire star system is too severe a cost.",
+                )(timestamp, id)
+            },
+            ChatScriptEntry(delayAfter = 3.seconds) { timestamp, _ ->
                 ChatEvent.Message.IncomingRaid(
                     timestamp = timestamp,
                     userDisplayName = "Idaea",
                     raidersCount = 12,
                 )
             },
-            ChatScriptEntry(delayAfter = 4.seconds) { timestamp, id ->
+            ChatScriptEntry(delayAfter = 2.seconds) { timestamp, id ->
                 chatMessage("annona", "Annona", "EEK", embeddedEmotes = listOf(eekEmote))(timestamp, id)
             },
-            ChatScriptEntry(delayAfter = 6.seconds) { timestamp, id ->
+            ChatScriptEntry(delayAfter = 3.seconds) { timestamp, id ->
                 ChatEvent.Message.HighlightedMessage(
                     timestamp = timestamp,
                     userMessage = chatMessage(
@@ -333,13 +352,13 @@ internal object DemoData {
                     )(timestamp, id),
                 )
             },
-            ChatScriptEntry(delayAfter = 4.seconds) { timestamp, id ->
+            ChatScriptEntry(delayAfter = 2.seconds) { timestamp, id ->
                 chatMessage("root", "Root", "o", embeddedEmotes = listOf(oEmote))(timestamp, id)
             },
-            ChatScriptEntry(delayAfter = 6.seconds) { timestamp, id ->
+            ChatScriptEntry(delayAfter = 3.seconds) { timestamp, id ->
                 chatMessage("pye", "Pye", "This is beyond extraordinary! This changes everything!")(timestamp, id)
             },
-            ChatScriptEntry(delayAfter = 5.seconds) { timestamp, id ->
+            ChatScriptEntry(delayAfter = 2.seconds) { timestamp, id ->
                 chatMessage("melorae", "Melorae", "Pog Pog", embeddedEmotes = listOf(pogEmote))(timestamp, id)
             },
         )

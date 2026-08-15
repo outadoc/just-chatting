@@ -228,6 +228,9 @@ internal object DemoData {
 
     val setEmotes: List<Emote> = listOf(omEmote, eekEmote, pogEmote, oEmote)
 
+    /** Fixed so the follow-up [ChatEvent.Command.ClearMessage] entry can target the exact same message. */
+    private const val REMOVED_MESSAGE_ID = "demo-removed-message"
+
     fun findUser(id: String): User? = allUsers.firstOrNull { it.id == id }
 
     fun syntheticUser(id: String): User =
@@ -241,7 +244,7 @@ internal object DemoData {
     /** One scripted chat feed entry: how to build the event, and how long to wait before the next one. */
     class ChatScriptEntry(
         val delayAfter: Duration,
-        val build: (timestamp: Instant, id: String) -> ChatEvent.Message,
+        val build: (timestamp: Instant, id: String) -> ChatEvent,
     )
 
     private fun chatMessage(
@@ -265,6 +268,11 @@ internal object DemoData {
                 inReplyTo = null,
             )
         }
+
+    /**
+     * Chatter names and message text below must be sourced from real Nomai characters and exact
+     * quotes at https://outadoc.github.io/nomai-scrolls/en/index.html — no invented names or lines.
+     */
 
     /** Burst shown immediately when the chat screen opens, so it isn't empty. */
     val chatOpeningBurst: List<(Instant, String) -> ChatEvent.Message> =
@@ -358,6 +366,22 @@ internal object DemoData {
                     "Idaea",
                     "I almost can't comprehend this is being suggested seriously.",
                 )(timestamp, id)
+            },
+            ChatScriptEntry(delayAfter = 4.seconds) { timestamp, _ ->
+                // Uses a fixed id (instead of the one passed in) so the ClearMessage entry below can target it.
+                chatMessage(
+                    "bur",
+                    "Bur",
+                    "I found your note, Melorae; kindly count me among this moon's admirers!",
+                )(timestamp, REMOVED_MESSAGE_ID)
+            },
+            ChatScriptEntry(delayAfter = 3.seconds) { timestamp, _ ->
+                ChatEvent.Command.ClearMessage(
+                    timestamp = timestamp,
+                    targetMessage = null,
+                    targetMessageId = REMOVED_MESSAGE_ID,
+                    targetUserLogin = "bur",
+                )
             },
             ChatScriptEntry(delayAfter = 3.seconds) { timestamp, _ ->
                 ChatEvent.Message.IncomingRaid(

@@ -103,6 +103,9 @@ public fun App(
                         onLoginClick = {
                             viewModel.onLoginClick()
                         },
+                        onDemoModeClick = {
+                            viewModel.onDemoModeClick()
+                        },
                     )
                 }
 

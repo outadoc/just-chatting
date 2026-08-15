@@ -11,6 +11,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.app_name
+import fr.outadoc.justchatting.shared.internal.onboarding_demo_action
 import fr.outadoc.justchatting.shared.internal.onboarding_message
 import fr.outadoc.justchatting.shared.internal.onboarding_title
 import fr.outadoc.justchatting.shared.presentation.icons.AppIcon
@@ -34,6 +36,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun OnboardingScreen(
     modifier: Modifier = Modifier,
     onLoginClick: () -> Unit,
+    onDemoModeClick: () -> Unit = {},
 ) {
     Scaffold(modifier = modifier) { insets ->
         Column(
@@ -83,6 +86,10 @@ internal fun OnboardingScreen(
                             modifier = Modifier.padding(top = 24.dp),
                             onClick = onLoginClick,
                         )
+
+                        TextButton(onClick = onDemoModeClick) {
+                            Text(text = stringResource(Res.string.onboarding_demo_action))
+                        }
                     }
                 }
             }

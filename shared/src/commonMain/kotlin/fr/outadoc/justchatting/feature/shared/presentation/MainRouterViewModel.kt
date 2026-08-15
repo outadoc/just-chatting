@@ -6,6 +6,7 @@ import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.auth.data.LocalCallbackWebServer
 import fr.outadoc.justchatting.feature.deeplink.Deeplink
 import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
+import fr.outadoc.justchatting.feature.demo.domain.DemoModeRepository
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.logging.logError
@@ -26,6 +27,7 @@ public class MainRouterViewModel internal constructor(
     private val authRepository: AuthRepository,
     private val deeplinkParser: DeeplinkParser,
     private val localCallbackWebServer: LocalCallbackWebServer,
+    private val demoModeRepository: DemoModeRepository,
 ) : ViewModel(),
     DeeplinkReceiver {
     public sealed class State {
@@ -104,6 +106,10 @@ public class MainRouterViewModel internal constructor(
                 ),
             )
         }
+    }
+
+    public fun onDemoModeClick() {
+        demoModeRepository.setDemoMode(true)
     }
 
     override fun onDeeplinkReceived(uriString: String) {

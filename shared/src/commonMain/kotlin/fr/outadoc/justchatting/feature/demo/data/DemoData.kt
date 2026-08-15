@@ -45,6 +45,9 @@ internal object DemoData {
      */
     private fun drawableUri(name: String): String = Res.getUri("drawable/$name.png")
 
+    /** Same caveat as [drawableUri]: only touched lazily, once demo mode is actually entered. */
+    private fun fileUri(name: String): String = Res.getUri("files/$name")
+
     private fun user(
         id: String,
         login: String,
@@ -189,10 +192,13 @@ internal object DemoData {
             Emote(name = "Cheer100", urls = EmoteUrls(url = drawableUri("demo_emote_cheer")), bitsValue = 100),
         )
 
+    private val rainbowEmote = Emote(name = "demoRainbow", urls = EmoteUrls(url = fileUri("demo_emote_rainbow.gif")))
+
     val setEmotes: List<Emote> =
         listOf(
             Emote(name = "demoPog", urls = EmoteUrls(url = drawableUri("demo_emote_pog"))),
             Emote(name = "demoKappa", urls = EmoteUrls(url = drawableUri("demo_emote_kappa"))),
+            rainbowEmote,
         )
 
     fun findUser(id: String): User? = allUsers.firstOrNull { it.id == id }
@@ -215,6 +221,7 @@ internal object DemoData {
         userLogin: String,
         userName: String,
         message: String,
+        embeddedEmotes: List<Emote> = emptyList(),
     ): (Instant, String) -> ChatEvent.Message.ChatMessage =
         { timestamp, id ->
             ChatEvent.Message.ChatMessage(
@@ -225,7 +232,7 @@ internal object DemoData {
                 userName = userName,
                 message = message,
                 color = null,
-                embeddedEmotes = emptyList(),
+                embeddedEmotes = embeddedEmotes,
                 badges = emptyList<Badge>(),
                 rewardId = null,
                 inReplyTo = null,
@@ -268,6 +275,14 @@ internal object DemoData {
             },
             ChatScriptEntry(delayAfter = 8.seconds) { timestamp, id ->
                 chatMessage("lofilistener", "LofiListener", "thanks for having me!")(timestamp, id)
+            },
+            ChatScriptEntry(delayAfter = 6.seconds) { timestamp, id ->
+                chatMessage(
+                    userLogin = "pixelfan92",
+                    userName = "PixelFan92",
+                    message = "demoRainbow demoRainbow",
+                    embeddedEmotes = listOf(rainbowEmote),
+                )(timestamp, id)
             },
             ChatScriptEntry(delayAfter = 6.seconds) { timestamp, _ ->
                 ChatEvent.Message.IncomingRaid(

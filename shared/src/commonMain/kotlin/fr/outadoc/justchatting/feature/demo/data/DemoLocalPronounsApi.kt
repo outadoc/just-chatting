@@ -9,12 +9,12 @@ import kotlinx.coroutines.flow.flowOf
 
 internal class DemoLocalPronounsApi : LocalPronounsApi {
     private val shePronoun = Pronoun(id = "she", nominative = "she", objective = "her", isSingular = true)
-    private val theyPronoun = Pronoun(id = "they", nominative = "they", objective = "them", isSingular = false)
+    private val hePronoun = Pronoun(id = "he", nominative = "he", objective = "him", isSingular = true)
 
     private val pronounsByUserId =
         mapOf(
-            "demo-viewer-lofilistener" to shePronoun,
-            "demo-viewer-retrogamerx" to theyPronoun,
+            "demo-viewer-avens" to hePronoun,
+            "demo-solanum" to shePronoun,
         )
 
     override suspend fun arePronounsSynced(): Boolean = true

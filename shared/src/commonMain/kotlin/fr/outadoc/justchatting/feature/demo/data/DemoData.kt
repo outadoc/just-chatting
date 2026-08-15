@@ -73,34 +73,36 @@ internal object DemoData {
             description = "Just here to try things out.",
         )
 
-    private val ada =
+    private val solanum =
         user(
-            id = "demo-ada",
-            login = "ada_codes",
-            displayName = "ada_codes",
-            avatar = "demo_avatar_ada",
-            description = "Streaming some Kotlin Multiplatform tonight!",
+            id = "demo-solanum",
+            login = "solanum",
+            displayName = "Solanum",
+            avatar = "demo_avatar_solanum",
+            description = "The Eye might have called out to any sentient species. " +
+                "Or it might not have been calling out at all.",
         )
 
-    private val grace =
+    private val yarrow =
         user(
-            id = "demo-grace",
-            login = "grace_plays",
-            displayName = "grace_plays",
-            avatar = "demo_avatar_grace",
-            description = "Retro games every week.",
+            id = "demo-yarrow",
+            login = "yarrow",
+            displayName = "Yarrow",
+            avatar = "demo_avatar_yarrow",
+            description = "Perhaps a change of task would help: Spire noticed a comet " +
+                "approaching this star system.",
         )
 
-    private val alan =
+    private val poke =
         user(
-            id = "demo-alan",
-            login = "alan_music",
-            displayName = "alan_music",
-            avatar = "demo_avatar_alan",
-            description = "Lo-fi beats and chill vibes.",
+            id = "demo-poke",
+            login = "poke",
+            displayName = "Poke",
+            avatar = "demo_avatar_poke",
+            description = "All I can give is my best. And as Annona would say, we will find another way.",
         )
 
-    val channels: List<User> = listOf(ada, grace, alan)
+    val channels: List<User> = listOf(solanum, yarrow, poke)
 
     val allUsers: List<User> = channels + currentUser
 
@@ -109,18 +111,18 @@ internal object DemoData {
             ChannelFollow(user = user, followedAt = now - 30.days)
         }
 
-    private val category = StreamCategory(id = "demo-category", name = "Software and Game Development")
+    private val category = StreamCategory(id = "demo-category", name = "Quantum Archaeology")
 
     val liveStreams: List<UserStream> =
         listOf(
             UserStream(
-                user = ada,
+                user = solanum,
                 stream =
                     Stream(
-                        id = "demo-stream-ada",
-                        userId = ada.id,
+                        id = "demo-stream-solanum",
+                        userId = solanum.id,
                         category = category,
-                        title = "Building a demo mode, of all things",
+                        title = "We must find this Eye of the universe",
                         viewerCount = 42,
                         startedAt = now - 90.minutes,
                     ),
@@ -134,11 +136,11 @@ internal object DemoData {
                 schedule =
                     listOf(
                         ChannelScheduleSegment(
-                            id = "demo-segment-grace",
-                            user = grace,
+                            id = "demo-segment-yarrow",
+                            user = yarrow,
                             startTime = now + 1.days,
                             endTime = now + 1.days + 2.hours,
-                            title = "Retro game night",
+                            title = "Tracking the approaching comet",
                             category = category,
                         ),
                     ),
@@ -148,11 +150,11 @@ internal object DemoData {
                 schedule =
                     listOf(
                         ChannelScheduleSegment(
-                            id = "demo-segment-alan",
-                            user = alan,
+                            id = "demo-segment-poke",
+                            user = poke,
                             startTime = now + 2.days,
                             endTime = now + 2.days + 3.hours,
-                            title = "Chill beats to code to",
+                            title = "Searching for another way",
                             category = category,
                         ),
                     ),
@@ -242,30 +244,42 @@ internal object DemoData {
     /** Burst shown immediately when the chat screen opens, so it isn't empty. */
     val chatOpeningBurst: List<(Instant, String) -> ChatEvent.Message> =
         listOf(
-            chatMessage("pixelfan92", "PixelFan92", "hey chat! 👋"),
-            chatMessage("retrogamerx", "RetroGamerX", "pog"),
-            chatMessage("lofilistener", "LofiListener", "excited for this one"),
+            chatMessage("ramie", "Ramie", "Hypothesis confirmed! Hypothesis confirmed! I saw it! Hypothesis confirmed!"),
+            chatMessage("conoy", "Conoy", "I believe I have a solution for that problem!"),
+            chatMessage("filix", "Filix", "Hypothesis: This rock shard's presence is significant. We should study it!"),
         )
 
-    /** Looping scripted feed, exercising the rich message cards. */
+    /** Looping scripted feed, exercising the rich message cards. Text is quoted from Nomai scrolls. */
     val chatScript: List<ChatScriptEntry> =
         listOf(
             ChatScriptEntry(delayAfter = 6.seconds) { timestamp, id ->
-                chatMessage("pixelfan92", "PixelFan92", "this demo is pretty neat")(timestamp, id)
+                chatMessage(
+                    "mallow",
+                    "Mallow",
+                    "The thought of concluding our elders' search increases my heart's temperature!",
+                )(timestamp, id)
             },
             ChatScriptEntry(delayAfter = 5.seconds) { timestamp, id ->
                 ChatEvent.Message.Announcement(
                     timestamp = timestamp,
-                    userMessage = chatMessage(currentUser.login, currentUser.displayName, "Don't forget to follow!")(timestamp, id),
+                    userMessage = chatMessage(
+                        currentUser.login,
+                        currentUser.displayName,
+                        "Recall these Nomai, and carry their curiosity onward with you.",
+                    )(timestamp, id),
                 )
             },
             ChatScriptEntry(delayAfter = 7.seconds) { timestamp, id ->
-                chatMessage("retrogamerx", "RetroGamerX", "lol")(timestamp, id)
+                chatMessage(
+                    "coleus",
+                    "Coleus",
+                    "If the search for the Eye is a futile one, we should choose the option with the least potential for harm.",
+                )(timestamp, id)
             },
             ChatScriptEntry(delayAfter = 6.seconds) { timestamp, _ ->
                 ChatEvent.Message.Subscription(
                     timestamp = timestamp,
-                    userDisplayName = "LofiListener",
+                    userDisplayName = "Avens",
                     months = 3,
                     streakMonths = 3,
                     cumulativeMonths = 3,
@@ -274,12 +288,16 @@ internal object DemoData {
                 )
             },
             ChatScriptEntry(delayAfter = 8.seconds) { timestamp, id ->
-                chatMessage("lofilistener", "LofiListener", "thanks for having me!")(timestamp, id)
+                chatMessage(
+                    "avens",
+                    "Avens",
+                    "Is the safest path the best one? Our goal is worth the risk.",
+                )(timestamp, id)
             },
             ChatScriptEntry(delayAfter = 6.seconds) { timestamp, id ->
                 chatMessage(
-                    userLogin = "pixelfan92",
-                    userName = "PixelFan92",
+                    userLogin = "ramie",
+                    userName = "Ramie",
                     message = "demoRainbow demoRainbow",
                     embeddedEmotes = listOf(rainbowEmote),
                 )(timestamp, id)
@@ -287,18 +305,22 @@ internal object DemoData {
             ChatScriptEntry(delayAfter = 6.seconds) { timestamp, _ ->
                 ChatEvent.Message.IncomingRaid(
                     timestamp = timestamp,
-                    userDisplayName = "AnotherStreamer",
+                    userDisplayName = "Idaea",
                     raidersCount = 12,
                 )
             },
             ChatScriptEntry(delayAfter = 7.seconds) { timestamp, id ->
                 ChatEvent.Message.HighlightedMessage(
                     timestamp = timestamp,
-                    userMessage = chatMessage("retrogamerx", "RetroGamerX", "welcome raiders!")(timestamp, id),
+                    userMessage = chatMessage(
+                        "cassava",
+                        "Cassava",
+                        "We're no closer to finding it than you were when you first arrived here.",
+                    )(timestamp, id),
                 )
             },
             ChatScriptEntry(delayAfter = 6.seconds) { timestamp, id ->
-                chatMessage("pixelfan92", "PixelFan92", "GG everyone!")(timestamp, id)
+                chatMessage("pye", "Pye", "This is beyond extraordinary! This changes everything!")(timestamp, id)
             },
         )
 }

@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -39,62 +41,56 @@ internal fun OnboardingScreen(
     onDemoModeClick: () -> Unit = {},
 ) {
     Scaffold(modifier = modifier) { insets ->
-        Column(
+        Box(
             modifier =
                 Modifier
                     .padding(insets)
-                    .padding(16.dp)
-                    .fillMaxSize()
-                    .widthIn(max = 320.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                    .fillMaxSize(),
+            contentAlignment = Alignment.Center,
         ) {
-            Box(
-                modifier = Modifier.widthIn(max = 320.dp),
+            Column(
+                modifier =
+                    Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(16.dp)
+                        .widthIn(max = 320.dp),
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(AppIconSize),
-                            painter = rememberVectorPainter(AppIcon),
-                            tint = MaterialTheme.colorScheme.onSurface,
-                            contentDescription = null,
-                        )
+                Icon(
+                    modifier = Modifier.size(AppIconSize),
+                    painter = rememberVectorPainter(AppIcon),
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    contentDescription = null,
+                )
 
-                        Text(
-                            text =
-                                buildAnnotatedString {
-                                    appendLine(stringResource(Res.string.onboarding_title))
-                                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        appendLine(stringResource(Res.string.app_name))
-                                    }
-                                },
-                            style = MaterialTheme.typography.headlineSmall,
-                            textAlign = TextAlign.Center,
-                        )
-
-                        Text(
-                            text = stringResource(Res.string.onboarding_message),
-                        )
-
-                        Column(
-                            modifier = Modifier.padding(top = 24.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                        ) {
-                            SignInWithTwitchButton(
-                                onClick = onLoginClick,
-                            )
-
-                            TextButton(onClick = onDemoModeClick) {
-                                Text(text = stringResource(Res.string.onboarding_demo_action))
+                Text(
+                    text =
+                        buildAnnotatedString {
+                            appendLine(stringResource(Res.string.onboarding_title))
+                            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                                appendLine(stringResource(Res.string.app_name))
                             }
-                        }
+                        },
+                    style = MaterialTheme.typography.headlineSmall,
+                    textAlign = TextAlign.Center,
+                )
+
+                Text(
+                    text = stringResource(Res.string.onboarding_message),
+                )
+
+                Column(
+                    modifier = Modifier.padding(top = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    SignInWithTwitchButton(
+                        onClick = onLoginClick,
+                    )
+
+                    TextButton(onClick = onDemoModeClick) {
+                        Text(text = stringResource(Res.string.onboarding_demo_action))
                     }
                 }
             }

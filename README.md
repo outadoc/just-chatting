@@ -4,6 +4,7 @@ An app focused on a great Twitch chat experience.
 
 - Available on **desktop, Android, and iOS** (soon).
 - Vibrant Material interface with **dynamic colors** that varies per-stream.
+- **Quick emote access**. Your recently-used emotes are always one tap away.
 - Multi-chat. Open multiple **chat bubbles**, and switch between them (only on Android.)
 - **Tablet- and foldable-optimized** interface.
 - **Custom emotes**. If the default emotes aren't enough for you, we support third-party emote sets!

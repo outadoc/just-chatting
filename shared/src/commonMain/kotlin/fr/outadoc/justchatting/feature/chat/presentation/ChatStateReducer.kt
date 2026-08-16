@@ -352,12 +352,14 @@ internal class ChatStateReducer {
             lastSentMessage = sentMessage,
             selectionRange = 0..0,
             replyingTo = null,
+            lastChangeWasAutoCompleteSelection = false,
         )
 
     private fun ChatViewModel.InputAction.ChangeMessageInput.reduce(inputState: ChatViewModel.InputState): ChatViewModel.InputState =
         inputState.copy(
             message = message,
             selectionRange = selectionRange,
+            lastChangeWasAutoCompleteSelection = false,
         )
 
     private fun ChatViewModel.InputAction.AppendEmote.reduce(inputState: ChatViewModel.InputState): ChatViewModel.InputState =
@@ -365,6 +367,7 @@ internal class ChatStateReducer {
             inputState = inputState,
             text = emote.name,
             replaceLastWord = autocomplete,
+            isAutoCompleteSelection = autocomplete,
         )
 
     private fun ChatViewModel.InputAction.AppendChatter.reduce(inputState: ChatViewModel.InputState): ChatViewModel.InputState =
@@ -372,6 +375,7 @@ internal class ChatStateReducer {
             inputState = inputState,
             text = "${ChatPrefixConstants.ChatterPrefix}${chatter.displayName}",
             replaceLastWord = autocomplete,
+            isAutoCompleteSelection = autocomplete,
         )
 
     private fun ChatViewModel.InputAction.ReplyToMessage.reduce(inputState: ChatViewModel.InputState): ChatViewModel.InputState =
@@ -395,6 +399,7 @@ internal class ChatStateReducer {
                     start = newMessage.length,
                     endInclusive = newMessage.length,
                 ),
+            lastChangeWasAutoCompleteSelection = false,
         )
     }
 
@@ -402,6 +407,7 @@ internal class ChatStateReducer {
         inputState: ChatViewModel.InputState,
         text: String,
         replaceLastWord: Boolean,
+        isAutoCompleteSelection: Boolean,
     ): ChatViewModel.InputState {
         val previousWord =
             inputState.message
@@ -426,6 +432,7 @@ internal class ChatStateReducer {
                     start = textBefore.length + text.length + 1,
                     endInclusive = textBefore.length + text.length + 1,
                 ),
+            lastChangeWasAutoCompleteSelection = isAutoCompleteSelection,
         )
     }
 }

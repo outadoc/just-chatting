@@ -84,6 +84,13 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
+// How long to wait after the user stops typing before refreshing autocomplete suggestions.
+private val AUTOCOMPLETE_TYPING_DEBOUNCE = 300.milliseconds
+
+// How long to keep showing the same autocomplete suggestions after the user taps one,
+// so that tapping the same emote/chatter repeatedly inserts it multiple times in a row.
+private val AUTOCOMPLETE_SELECTION_HOLD = 1.seconds
+
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 public class ChatViewModel internal constructor(
     private val clock: Clock,
@@ -309,6 +316,7 @@ public class ChatViewModel internal constructor(
         val replyingTo: ChatListItem.Message? = null,
         val lastSentMessage: String? = null,
         val autoCompleteItems: ImmutableList<AutoCompleteItem> = persistentListOf(),
+        val lastChangeWasAutoCompleteSelection: Boolean = false,
     ) {
         val canReuseLastMessage: Boolean
             get() = message.isBlank() && lastSentMessage.isNullOrBlank().not()
@@ -751,12 +759,20 @@ public class ChatViewModel internal constructor(
             val debouncedWord =
                 inputState
                     .map { inputState ->
-                        inputState.message
-                            .substring(
-                                startIndex = 0,
-                                endIndex = inputState.selectionRange.first,
-                            ).takeLastWhile { it != ' ' }
-                    }.debounce(300.milliseconds)
+                        val word =
+                            inputState.message
+                                .substring(
+                                    startIndex = 0,
+                                    endIndex = inputState.selectionRange.first,
+                                ).takeLastWhile { it != ' ' }
+                        word to inputState.lastChangeWasAutoCompleteSelection
+                    }.debounce { (_, isAutoCompleteSelection) ->
+                        if (isAutoCompleteSelection) {
+                            AUTOCOMPLETE_SELECTION_HOLD
+                        } else {
+                            AUTOCOMPLETE_TYPING_DEBOUNCE
+                        }
+                    }.map { (word, _) -> word }
 
             state
                 .filterIsInstance<State.Chatting>()

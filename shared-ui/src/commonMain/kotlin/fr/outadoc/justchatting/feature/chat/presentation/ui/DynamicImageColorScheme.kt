@@ -2,16 +2,14 @@ package fr.outadoc.justchatting.feature.chat.presentation.ui
 
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import coil3.compose.rememberAsyncImagePainter
 import com.eygraber.uri.Uri
-import com.kmpalette.DominantColorState
-import com.kmpalette.loader.rememberNetworkLoader
-import com.kmpalette.rememberDominantColorState
+import com.kmpalette.rememberPainterDominantColorState
 import com.materialkolor.DynamicMaterialTheme
 import com.materialkolor.PaletteStyle
-import fr.outadoc.justchatting.utils.http.toKtorUrl
 import fr.outadoc.justchatting.utils.presentation.isAppInDarkTheme
-import io.ktor.http.Url
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -19,16 +17,19 @@ internal fun DynamicImageColorTheme(
     imageUrl: Uri?,
     content: @Composable () -> Unit,
 ) {
-    val networkLoader = rememberNetworkLoader()
-    val dominantColorState: DominantColorState<Url> =
-        rememberDominantColorState(loader = networkLoader)
+    val dominantColorState = rememberPainterDominantColorState()
+    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(imageUrl) {
-        val url = imageUrl?.toKtorUrl()
-        if (url != null) {
-            dominantColorState.updateFrom(url)
-        }
-    }
+    // Loaded through Coil so that any scheme it supports (http, local resources, etc.)
+    // can feed the palette, instead of being limited to plain network URLs.
+    rememberAsyncImagePainter(
+        model = imageUrl?.toString(),
+        onSuccess = { state ->
+            scope.launch {
+                dominantColorState.updateFrom(state.painter)
+            }
+        },
+    )
 
     DynamicMaterialTheme(
         seedColor = dominantColorState.color,

@@ -1881,7 +1881,6 @@ public final class fr/outadoc/justchatting/utils/datetime/JCLocalDate {
 }
 
 public final class fr/outadoc/justchatting/utils/http/UriExtKt {
-	public static final fun toKtorUrl (Lcom/eygraber/uri/Uri;)Lio/ktor/http/Url;
 	public static final fun toUri (Ljava/lang/String;)Lcom/eygraber/uri/Uri;
 }
 

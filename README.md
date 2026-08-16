@@ -2,23 +2,23 @@
 
 An app focused on a great Twitch chat experience.
 
-- iOS and Android support.
+- Available on desktop, Android, and iOS (soon).
 - Multi-chat. Open multiple chat bubbles, and switch between them (only on Android.)
 - Tablet- and foldable-optimized interface.
 - Custom emotes. If the default emotes aren't enough for you, we support third-party emote sets!
 - Slide to reply to any message, and see the context of the conversation.
-- See your favorite channels' schedule -- past, present, and future, in a unified timeline.
+- See your favorite channels' future schedule.
 
 <table>
 <tr>
 <td>
 
-https://github.com/user-attachments/assets/0f107cee-6294-4fbf-aa15-5466b57a548f
+![](./assets/screenshots/chat-narrow.webp)
 
 </td>
 <td>
 
-![](./assets/screenshots/ios/ipad-static.png)
+![](./assets/screenshots/chat-wide.webp)
 
 </td>
 </tr>

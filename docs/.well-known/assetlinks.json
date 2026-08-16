@@ -19,7 +19,8 @@
       "namespace": "android_app",
       "package_name": "fr.outadoc.justchatting",
       "sha256_cert_fingerprints": [
-        "AB:F1:F8:0F:4C:40:F7:F0:5B:6A:8D:8E:BD:65:1A:AD:E8:BD:DE:D6:AA:93:53:BC:AE:59:B9:EF:36:70:61:00"
+        "AB:F1:F8:0F:4C:40:F7:F0:5B:6A:8D:8E:BD:65:1A:AD:E8:BD:DE:D6:AA:93:53:BC:AE:59:B9:EF:36:70:61:00",
+        "D4:B8:82:55:4A:1B:96:4B:92:EE:E9:D7:1D:1A:38:D7:30:3E:1D:60:56:F1:65:DE:AA:81:18:6D:0D:F2:78:55"
       ]
     }
   }

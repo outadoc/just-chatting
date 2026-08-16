@@ -40,7 +40,7 @@ internal fun SuggestionChip(
         shape = MaterialTheme.shapes.small,
     ) {
         Row(
-            modifier = Modifier.padding(4.dp),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             CompositionLocalProvider(

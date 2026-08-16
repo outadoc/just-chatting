@@ -15,10 +15,11 @@ import fr.outadoc.justchatting.utils.presentation.isDark
 internal fun EmoteItem(
     modifier: Modifier = Modifier,
     emote: Emote,
+    useIntrinsicSize: Boolean = false,
 ) {
     val density = LocalDensity.current.density
     AsyncImage(
-        modifier = modifier.fillMaxSize(),
+        modifier = if (useIntrinsicSize) modifier else modifier.fillMaxSize(),
         contentScale = ContentScale.Fit,
         contentDescription = emote.name,
         model =

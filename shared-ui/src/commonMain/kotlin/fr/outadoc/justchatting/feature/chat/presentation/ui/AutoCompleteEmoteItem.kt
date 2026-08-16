@@ -2,8 +2,8 @@ package fr.outadoc.justchatting.feature.chat.presentation.ui
 
 import androidx.compose.foundation.BasicTooltipBox
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberBasicTooltipState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
@@ -42,11 +42,15 @@ internal fun AutoCompleteEmoteItem(
         },
     ) {
         SuggestionChip(
-            modifier = modifier.width(48.dp),
+            modifier = modifier,
             onClick = onClick,
             clickLabel = emote.name,
         ) {
-            EmoteItem(emote = emote)
+            EmoteItem(
+                modifier = Modifier.height(24.dp),
+                emote = emote,
+                useIntrinsicSize = true,
+            )
         }
     }
 }

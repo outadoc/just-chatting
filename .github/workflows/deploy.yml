@@ -203,19 +203,19 @@ jobs:
         id: version
         run: echo "::set-output name=version::$(git rev-list HEAD --count)"
 
-      - name: Build app bundle
+      - name: Build app bundle and APK
         run: |
-          ./gradlew bundleRelease \
+          ./gradlew bundleRelease assembleRelease \
           "-PreleaseKeystorePassword=${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" \
           "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" \
           "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
           "-PenableLogging=false"
 
-      - name: Upload app bundle to GitHub
+      - name: Upload APK to GitHub
         uses: actions/upload-artifact@v7.0.1
         with:
           name: apk
-          path: app-android/build/outputs/bundle/release/app-android-release.aab
+          path: app-android/build/outputs/apk/release/app-android-release.apk
 
       - name: Publish nightly build to internal track
         uses: r0adkll/upload-google-play@v1

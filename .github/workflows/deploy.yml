@@ -136,13 +136,13 @@ jobs:
         shell: bash
         run: |
           mv ${{ matrix.dist-dir }}/*.${{ matrix.ext }} \
-            "${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}-${{ steps.version.outputs.version }}.${{ matrix.ext }}"
+            "${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}.${{ matrix.ext }}"
 
       - name: Stage artifact for update metadata
         shell: bash
         run: |
           mkdir -p "artifacts/release-assets-${{ matrix.label }}"
-          cp "${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}-${{ steps.version.outputs.version }}.${{ matrix.ext }}" \
+          cp "${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}.${{ matrix.ext }}" \
             "artifacts/release-assets-${{ matrix.label }}/"
 
       - name: Install modern Bash (macOS)
@@ -167,7 +167,7 @@ jobs:
         uses: actions/upload-artifact@v7.0.1
         with:
           path: |
-            ${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}-${{ steps.version.outputs.version }}.${{ matrix.ext }}
+            ${{ matrix.dist-dir }}/JustChatting-${{ matrix.label }}.${{ matrix.ext }}
             ${{ steps.update-yml.outputs.path }}
           name: build-${{ matrix.label }}
 
@@ -211,11 +211,16 @@ jobs:
           "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
           "-PenableLogging=false"
 
+      - name: Rename output
+        run: |
+          mv app-android/build/outputs/apk/release/app-android-release.apk \
+            app-android/build/outputs/apk/release/JustChatting-android.apk
+
       - name: Upload APK to GitHub
         uses: actions/upload-artifact@v7.0.1
         with:
           name: apk
-          path: app-android/build/outputs/apk/release/app-android-release.apk
+          path: app-android/build/outputs/apk/release/JustChatting-android.apk
 
       - name: Publish nightly build to internal track
         uses: r0adkll/upload-google-play@v1

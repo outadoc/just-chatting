@@ -24,6 +24,16 @@ https://github.com/user-attachments/assets/0f107cee-6294-4fbf-aa15-5466b57a548f
 </tr>
 </table>
 
+## Download
+
+| Platform | Download |
+| --- | --- |
+| Android | [<img src="./assets/badges/google-play-badge.png" alt="Get it on Google Play" height="45">](https://play.google.com/store/apps/details?id=fr.outadoc.justchatting) [<img src="./assets/badges/obtainium-badge.png" alt="Get it on Obtainium" height="45">](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/outadoc/just-chatting) [<img src="./assets/badges/github-badge.svg" alt="Get it on GitHub" height="45">](https://github.com/outadoc/just-chatting/releases/latest/download/JustChatting-android.apk) |
+| Windows | [![Windows (amd64, .msi)](https://img.shields.io/badge/Windows%20%28amd64%2C%20.msi%29-0078D6?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHJlY3QgeD0iMSIgeT0iMSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjEzIiB5PSIxIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMSIgeT0iMTMiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxMyIgeT0iMTMiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0id2hpdGUiLz48L3N2Zz4=)](https://github.com/outadoc/just-chatting/releases/latest/download/JustChatting-windows-amd64.msi) |
+| macOS | [![macOS (aarch64, .dmg)](https://img.shields.io/badge/macOS%20%28aarch64%2C%20.dmg%29-000000?logo=apple&logoColor=white)](https://github.com/outadoc/just-chatting/releases/latest/download/JustChatting-macos-aarch64.dmg) |
+| Linux | [![Linux (amd64, .AppImage)](https://img.shields.io/badge/Linux%20%28amd64%2C%20.AppImage%29-FCC624?logo=linux&logoColor=black)](https://github.com/outadoc/just-chatting/releases/latest/download/JustChatting-linux-amd64.AppImage) |
+| iOS | ![iOS (private TestFlight beta)](https://img.shields.io/badge/iOS-private%20TestFlight%20beta-999999?logo=apple&logoColor=white) |
+
 ## Project setup
 
 ### Android
@@ -101,21 +111,21 @@ Platform-specific code is kept to an absolute minimum.
 Code is organized by feature under `fr.outadoc.justchatting.feature.*`, with each feature split
 into:
 
-- **domain** — Business logic, interfaces, use cases. No dependencies on other layers.
-- **presentation** — ViewModels, UI state. Depends only on domain.
-- **data** — Repositories, API clients, database. Depends only on domain.
+- **domain**: Business logic, interfaces, use cases. No dependencies on other layers.
+- **presentation**: ViewModels, UI state. Depends only on domain.
+- **data**: Repositories, API clients, database. Depends only on domain.
 
 ### Source Sets (shared module)
 
-- `commonMain` — Cross-platform code (vast majority of logic and UI)
-- `androidMain`, `iosMain`, `desktopMain` — Platform-specific implementations
-- `skiaMain` — Shared between iOS and Desktop (Skia renderer)
-- `appleMain` — Shared Apple platform code
+- `commonMain`: Cross-platform code (vast majority of logic and UI)
+- `androidMain`, `iosMain`, `desktopMain`: Platform-specific implementations
+- `skiaMain`: Shared between iOS and Desktop (Skia renderer)
+- `appleMain`: Shared Apple platform code
 
 ## Main dependencies
 
-- **Compose Multiplatform** — Shared UI across all platforms
-- **Koin** — Dependency injection. DI modules in `fr.outadoc.justchatting.di`
-- **SQLDelight** — Database. Schema files in `shared/src/commonMain/sqldelight/`
-- **Ktor** — HTTP client and WebSocket connections
-- **kotlinx-serialization** — JSON serialization
+- **Compose Multiplatform**: Shared UI across all platforms
+- **Koin**: Dependency injection. DI modules in `fr.outadoc.justchatting.di`
+- **SQLDelight**: Database. Schema files in `shared/src/commonMain/sqldelight/`
+- **Ktor**: HTTP client and WebSocket connections
+- **kotlinx-serialization**: JSON serialization

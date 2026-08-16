@@ -57,6 +57,7 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
@@ -66,7 +67,6 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
@@ -745,6 +745,19 @@ public class ChatViewModel internal constructor(
                 .catch { e -> logError<ChatViewModel>(e) { "Source channel badges pipeline failed" } }
                 .launchIn(scope)
 
+            // Debounced independently of chat/emote data so that busy chat activity
+            // (which changes `chatters` on every message batch) can't keep resetting
+            // this timer and starve it of a chance to ever fire.
+            val debouncedWord =
+                inputState
+                    .map { inputState ->
+                        inputState.message
+                            .substring(
+                                startIndex = 0,
+                                endIndex = inputState.selectionRange.first,
+                            ).takeLastWhile { it != ' ' }
+                    }.debounce(300.milliseconds)
+
             state
                 .filterIsInstance<State.Chatting>()
                 .map { state ->
@@ -754,24 +767,17 @@ public class ChatViewModel internal constructor(
                         state.recentEmotes,
                     )
                 }.distinctUntilChanged()
-                .flatMapLatest { (pickableEmotes, chatters, recentEmotes) ->
-                    val allEmotesMap = buildAllEmotesMap(pickableEmotes)
-                    inputState
-                        .debounce(300.milliseconds)
-                        .map { inputState ->
-                            inputState.message
-                                .substring(
-                                    startIndex = 0,
-                                    endIndex = inputState.selectionRange.first,
-                                ).takeLastWhile { it != ' ' }
-                        }.mapLatest { word ->
-                            filterAutocompleteItemsUseCase(
-                                filter = word,
-                                allEmotesMap = allEmotesMap,
-                                recentEmotes = recentEmotes,
-                                chatters = chatters,
-                            )
-                        }.flowOn(dispatchersProvider.default)
+                .combine(debouncedWord) { data, word -> word to data }
+                .mapLatest { (word, data) ->
+                    val (pickableEmotes, chatters, recentEmotes) = data
+                    withContext(dispatchersProvider.default) {
+                        filterAutocompleteItemsUseCase(
+                            filter = word,
+                            allEmotesMap = buildAllEmotesMap(pickableEmotes),
+                            recentEmotes = recentEmotes,
+                            chatters = chatters,
+                        )
+                    }
                 }.onEach { autoCompleteItems ->
                     dispatchInputIfCurrent(
                         InputAction.UpdateAutoCompleteItems(autoCompleteItems),

@@ -220,13 +220,13 @@ internal object DemoData {
             Emote(name = "Cheer100", urls = EmoteUrls(url = drawableUri("demo_emote_cheer")), bitsValue = 100),
         )
 
-    /** Real 7TV emotes (om, EEK, Pog, o), bundled as static assets. `ratio` mirrors each source image's width/height. */
-    private val omEmote = Emote(name = "om", urls = EmoteUrls(url = fileUri("demo_emote_om.gif")), ratio = 192f / 42f)
+    /** Real 7TV emotes (Joel, EEK, Pog, o), bundled as static assets. `ratio` mirrors each source image's width/height. */
+    private val joelEmote = Emote(name = "Joel", urls = EmoteUrls(url = fileUri("demo_emote_joel.gif")), ratio = 192f / 64f)
     private val eekEmote = Emote(name = "EEK", urls = EmoteUrls(url = drawableUri("demo_emote_eek")))
     private val pogEmote = Emote(name = "Pog", urls = EmoteUrls(url = drawableUri("demo_emote_pog")))
     private val oEmote = Emote(name = "o", urls = EmoteUrls(url = drawableUri("demo_emote_o")), ratio = 192f / 64f)
 
-    val setEmotes: List<Emote> = listOf(omEmote, eekEmote, pogEmote, oEmote)
+    val setEmotes: List<Emote> = listOf(joelEmote, eekEmote, pogEmote, oEmote)
 
     /** Fixed so the follow-up [ChatEvent.Command.ClearMessage] entry can target the exact same message. */
     private const val REMOVED_MESSAGE_ID = "demo-removed-message"
@@ -281,7 +281,7 @@ internal object DemoData {
             chatMessage("ramie", "Ramie", "Hypothesis confirmed! Hypothesis confirmed! I saw it! Hypothesis confirmed!"),
             chatMessage("conoy", "Conoy", "I believe I have a solution for that problem!"),
             chatMessage("filix", "Filix", "Hypothesis: This rock shard's presence is significant. We should study it!"),
-            chatMessage("daz", "Daz", "om", embeddedEmotes = listOf(omEmote)),
+            chatMessage("daz", "Daz", "Joel", embeddedEmotes = listOf(joelEmote)),
             chatMessage("plume", "Plume", "Suppose this moon is too shy to show us its face."),
             chatMessage("ilex", "Ilex", "Pog", embeddedEmotes = listOf(pogEmote)),
         )
@@ -362,7 +362,7 @@ internal object DemoData {
                 )(timestamp, id)
             },
             ChatScriptEntry(delayAfter = 2.seconds) { timestamp, id ->
-                chatMessage("ramie", "Ramie", "om", embeddedEmotes = listOf(omEmote))(timestamp, id)
+                chatMessage("ramie", "Ramie", "Joel", embeddedEmotes = listOf(joelEmote))(timestamp, id)
             },
             ChatScriptEntry(delayAfter = 3.seconds) { timestamp, id ->
                 chatMessage(

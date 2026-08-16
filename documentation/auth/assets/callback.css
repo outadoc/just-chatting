@@ -1,0 +1,19 @@
+html, body, main {
+    height: 100%;
+}
+
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+main .redirect {
+    text-align: center;
+}
+
+main .redirect img {
+    width: 96px;
+    height: 96px;
+}

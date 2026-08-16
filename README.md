@@ -15,12 +15,12 @@ An app focused on a great Twitch chat experience.
 <tr>
 <td>
 
-![](./assets/screenshots/chat-narrow.webp)
+![](./documentation/assets/screenshots/chat-narrow.webp)
 
 </td>
 <td>
 
-![](./assets/screenshots/chat-wide.webp)
+![](./documentation/assets/screenshots/chat-wide.webp)
 
 </td>
 </tr>
@@ -30,11 +30,11 @@ An app focused on a great Twitch chat experience.
 
 | Platform | Download |
 | --- | --- |
-| Android | [<img src="./assets/badges/google-play-badge.png" alt="Get it on Google Play" height="45">](https://play.google.com/store/apps/details?id=fr.outadoc.justchatting) [<img src="./assets/badges/obtainium-badge.png" alt="Get it on Obtainium" height="45">](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/outadoc/just-chatting) [<img src="./assets/badges/github-badge.svg" alt="Get it on GitHub" height="45">](https://github.com/outadoc/just-chatting/releases/latest/download/JustChatting-android.apk) |
+| Android | [<img src="./documentation/assets/badges/google-play-badge.png" alt="Get it on Google Play" height="45">](https://play.google.com/store/apps/details?id=fr.outadoc.justchatting) [<img src="./documentation/assets/badges/obtainium-badge.png" alt="Get it on Obtainium" height="45">](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/outadoc/just-chatting) [<img src="./documentation/assets/badges/github-badge.svg" alt="Get it on GitHub" height="45">](https://github.com/outadoc/just-chatting/releases/latest/download/JustChatting-android.apk) |
 | Windows | [![Windows (amd64, .msi)](https://img.shields.io/badge/Windows%20%28amd64%2C%20.msi%29-0078D6?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHJlY3QgeD0iMSIgeT0iMSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjEzIiB5PSIxIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMSIgeT0iMTMiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxMyIgeT0iMTMiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0id2hpdGUiLz48L3N2Zz4=)](https://github.com/outadoc/just-chatting/releases/latest/download/JustChatting-windows-amd64.msi) |
 | macOS | [![macOS (aarch64, .dmg)](https://img.shields.io/badge/macOS%20%28aarch64%2C%20.dmg%29-000000?logo=apple&logoColor=white)](https://github.com/outadoc/just-chatting/releases/latest/download/JustChatting-macos-aarch64.dmg) |
 | Linux | [![Linux (amd64, .AppImage)](https://img.shields.io/badge/Linux%20%28amd64%2C%20.AppImage%29-FCC624?logo=linux&logoColor=black)](https://github.com/outadoc/just-chatting/releases/latest/download/JustChatting-linux-amd64.AppImage) |
-| iOS | ![iOS (private TestFlight beta)](https://img.shields.io/badge/iOS-private%20TestFlight%20beta-999999?logo=apple&logoColor=white) |
+| iOS | [![iOS (private TestFlight beta)](https://img.shields.io/badge/iOS-private%20TestFlight%20beta-999999?logo=apple&logoColor=white)](https://testflight.apple.com/join/4AAnUWVX) |
 
 ## Project setup
 

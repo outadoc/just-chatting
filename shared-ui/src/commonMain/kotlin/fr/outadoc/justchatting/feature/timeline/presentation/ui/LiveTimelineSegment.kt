@@ -21,6 +21,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun LiveTimelineSegment(
     modifier: Modifier = Modifier,
     userStream: UserStream,
+    isSelected: Boolean = false,
     onUserClick: () -> Unit = {},
     onOpenChat: () -> Unit = {},
     onOpenInBubble: () -> Unit = {},
@@ -46,6 +47,7 @@ internal fun LiveTimelineSegment(
             startedAt = userStream.stream.startedAt,
             tags = userStream.stream.tags,
             profileImageUrl = userStream.user.profileImageUrl,
+            isSelected = isSelected,
             onUserClick = onUserClick,
             onClick = onOpenChat,
             onLongClick = {

@@ -38,6 +38,7 @@ internal fun LiveTimelineContent(
     onRefresh: () -> Unit,
     showRefreshIndicator: Boolean,
     listState: LazyListState,
+    selectedChannelId: String? = null,
     onChannelClick: (User) -> Unit,
     onOpenInBubble: (User) -> Unit,
 ) {
@@ -67,6 +68,7 @@ internal fun LiveTimelineContent(
                 insets = insets,
                 live = live,
                 listState = listState,
+                selectedChannelId = selectedChannelId,
                 onChannelClick = onChannelClick,
                 onUserClick = { showUserDetails = it },
                 onOpenInBubble = onOpenInBubble,
@@ -78,6 +80,7 @@ internal fun LiveTimelineContent(
             insets = insets,
             live = live,
             listState = listState,
+            selectedChannelId = selectedChannelId,
             onChannelClick = onChannelClick,
             onUserClick = { showUserDetails = it },
             onOpenInBubble = onOpenInBubble,
@@ -103,6 +106,7 @@ private fun LiveTimelineList(
     insets: PaddingValues = PaddingValues(),
     live: ImmutableList<UserStream>,
     listState: LazyListState,
+    selectedChannelId: String? = null,
     onChannelClick: (User) -> Unit,
     onUserClick: (User) -> Unit,
     onOpenInBubble: (User) -> Unit,
@@ -140,6 +144,7 @@ private fun LiveTimelineList(
                             .animateItem()
                             .fillMaxWidth(),
                     userStream = userStream,
+                    isSelected = userStream.user.id == selectedChannelId,
                     onOpenChat = {
                         onChannelClick(userStream.user)
                     },

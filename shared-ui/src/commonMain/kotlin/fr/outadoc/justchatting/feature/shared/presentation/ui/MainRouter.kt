@@ -97,6 +97,8 @@ internal fun MainRouter(
 
                     entry<Screen.Live> {
                         LiveTimelineScreen(
+                            selectedChannelId =
+                                (navigator.currentDestination?.contentKey as? DetailScreen.Chat)?.id,
                             onNavigate = onNavigate,
                             onChannelClick = onChannelClick,
                         )

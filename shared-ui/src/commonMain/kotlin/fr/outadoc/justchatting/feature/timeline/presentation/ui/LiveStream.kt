@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.timeline.presentation.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -51,6 +53,7 @@ internal fun LiveStreamCard(
     startedAt: Instant? = null,
     profileImageUrl: String? = null,
     tags: ImmutableSet<String> = persistentSetOf(),
+    isSelected: Boolean = false,
     onUserClick: () -> Unit = {},
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
@@ -59,6 +62,20 @@ internal fun LiveStreamCard(
 
     OutlinedCard(
         modifier = modifier,
+        colors =
+            if (isSelected) {
+                CardDefaults.outlinedCardColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                )
+            } else {
+                CardDefaults.outlinedCardColors()
+            },
+        border =
+            if (isSelected) {
+                BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+            } else {
+                CardDefaults.outlinedCardBorder()
+            },
     ) {
         Column {
             Card(

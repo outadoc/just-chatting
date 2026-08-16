@@ -34,6 +34,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun LiveTimelineScreen(
     modifier: Modifier = Modifier,
+    selectedChannelId: String? = null,
     onNavigate: (Screen) -> Unit,
     onChannelClick: (userId: String) -> Unit,
 ) {
@@ -100,6 +101,7 @@ internal fun LiveTimelineScreen(
                 onRefresh = { viewModel.syncLiveStreamsNow() },
                 showRefreshIndicator = !hasMouse,
                 listState = listState,
+                selectedChannelId = selectedChannelId,
                 onChannelClick = { user ->
                     viewModel.onChannelClick(user.id)
                 },

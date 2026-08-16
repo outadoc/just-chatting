@@ -11,7 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import fr.outadoc.justchatting.feature.shared.presentation.ui.SwipeActionBox
+import fr.outadoc.justchatting.feature.shared.presentation.ui.ContextualActionBox
 import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.stream_info
@@ -29,7 +29,7 @@ internal fun LiveTimelineSegment(
     val haptic = LocalHapticFeedback.current
     var showDetailsDialog by remember { mutableStateOf(false) }
 
-    SwipeActionBox(
+    ContextualActionBox(
         onSwiped = { showDetailsDialog = true },
         icon = {
             Icon(

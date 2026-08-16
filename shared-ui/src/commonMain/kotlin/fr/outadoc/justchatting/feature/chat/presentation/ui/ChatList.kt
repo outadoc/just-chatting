@@ -41,7 +41,7 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.shared.domain.model.User
-import fr.outadoc.justchatting.feature.shared.presentation.ui.SwipeActionBox
+import fr.outadoc.justchatting.feature.shared.presentation.ui.ContextualActionBox
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.chat_copyToClipboard
 import fr.outadoc.justchatting.shared.internal.chat_replyTo
@@ -228,7 +228,7 @@ internal fun ChatList(
                 val canBeRepliedTo = item.body?.messageId != null
                 val replyToActionCd = stringResource(Res.string.chat_replyTo)
 
-                SwipeActionBox(
+                ContextualActionBox(
                     modifier = Modifier.animateItem(),
                     onSwiped = {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)

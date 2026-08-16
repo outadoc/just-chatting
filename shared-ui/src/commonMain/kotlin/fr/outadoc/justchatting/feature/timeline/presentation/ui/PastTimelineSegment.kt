@@ -33,7 +33,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.presentation.ui.BasicUserInfo
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
-import fr.outadoc.justchatting.feature.shared.presentation.ui.SwipeActionBox
+import fr.outadoc.justchatting.feature.shared.presentation.ui.ContextualActionBox
 import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.all_showDetails_cd
@@ -56,7 +56,7 @@ internal fun PastTimelineSegment(
 
     var showDetailsDialog by remember { mutableStateOf(false) }
 
-    SwipeActionBox(
+    ContextualActionBox(
         onSwiped = { showDetailsDialog = true },
         icon = {
             Icon(

@@ -683,13 +683,14 @@ internal class ChatEventViewMapper {
     private fun ChatEvent.Message.ChatMessage.map(): ChatListItem.Message.Body {
         val mentions = message.orEmpty().getMentionsPrefix()
         val mentionsLength = mentions.sumOf { mention -> mention.length + 1 }
+        val remainingMessage =
+            message
+                .orEmpty()
+                .drop(mentionsLength)
+                .removePrefix(" ")
 
         return ChatListItem.Message.Body(
-            message =
-                message
-                    .orEmpty()
-                    .drop(mentionsLength)
-                    .removePrefix(" "),
+            message = remainingMessage,
             messageId = id,
             chatter =
                 Chatter(
@@ -704,7 +705,7 @@ internal class ChatEventViewMapper {
             sourceRoomId = sourceRoomId,
             sourceBadges = sourceBadges.orEmpty().toImmutableList(),
             inReplyTo =
-                if (mentions.isNotEmpty()) {
+                if (mentions.isNotEmpty() && remainingMessage.isNotEmpty()) {
                     ChatListItem.Message.Body.InReplyTo(
                         message = inReplyTo?.message,
                         mentions =

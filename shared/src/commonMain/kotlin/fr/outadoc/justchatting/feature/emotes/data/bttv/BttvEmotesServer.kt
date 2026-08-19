@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.feature.emotes.data.bttv
 
 import fr.outadoc.justchatting.feature.emotes.data.bttv.model.BttvChannelResponse
 import fr.outadoc.justchatting.feature.emotes.data.bttv.model.BttvEmote
-import fr.outadoc.justchatting.feature.emotes.data.bttv.model.FfzEmote
 import fr.outadoc.justchatting.feature.emotes.data.bttv.model.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.shared.data.ApiEndpoints
@@ -40,23 +39,5 @@ internal class BttvEmotesServer(
             response
                 .allEmotes
                 .map { emote -> emote.map() }
-        }
-
-    override suspend fun getBttvGlobalFfzEmotes(): Result<List<Emote>> =
-        runCatching {
-            client
-                .get { url { path("3/cached/frankerfacez/emotes/global") } }
-                .body<List<FfzEmote>>()
-        }.map { response ->
-            response.map { emote -> emote.map() }
-        }
-
-    override suspend fun getBttvFfzEmotes(channelId: String): Result<List<Emote>> =
-        runCatching {
-            client
-                .get { url { path("3/cached/frankerfacez/users/twitch", channelId) } }
-                .body<List<FfzEmote>>()
-        }.map { response ->
-            response.map { emote -> emote.map() }
         }
 }

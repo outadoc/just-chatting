@@ -1,23 +1,21 @@
-package fr.outadoc.justchatting.feature.emotes.data.bttv.model
+package fr.outadoc.justchatting.feature.emotes.data.ffz.model
 
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.utils.core.filterKeysNotNull
 import fr.outadoc.justchatting.utils.core.filterValuesNotNull
 
-internal fun FfzEmote.map(): Emote =
+internal fun FfzEmoticon.map(): Emote =
     Emote(
-        name = code,
+        name = name,
         ownerId = null,
         isZeroWidth = false,
+        ratio = width.toFloat() / height.toFloat(),
         urls =
             EmoteUrls(
-                images
-                    .mapKeys { (key, _) ->
-                        key
-                            .removeSuffix("x")
-                            .toFloatOrNull()
-                    }.filterKeysNotNull()
+                urls
+                    .mapKeys { (key, _) -> key.toFloatOrNull() }
+                    .filterKeysNotNull()
                     .filterValuesNotNull(),
             ),
     )

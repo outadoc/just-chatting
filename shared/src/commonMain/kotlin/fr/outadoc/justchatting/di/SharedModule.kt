@@ -53,10 +53,12 @@ import fr.outadoc.justchatting.feature.demo.domain.DemoModeRepository
 import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesApi
 import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesServer
 import fr.outadoc.justchatting.feature.emotes.data.bttv.ChannelBttvEmotesSource
-import fr.outadoc.justchatting.feature.emotes.data.bttv.ChannelFfzEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.bttv.GlobalBttvEmotesSource
-import fr.outadoc.justchatting.feature.emotes.data.bttv.GlobalFfzEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.db.RecentEmotesDb
+import fr.outadoc.justchatting.feature.emotes.data.ffz.ChannelFfzEmotesSource
+import fr.outadoc.justchatting.feature.emotes.data.ffz.FfzEmotesApi
+import fr.outadoc.justchatting.feature.emotes.data.ffz.FfzEmotesServer
+import fr.outadoc.justchatting.feature.emotes.data.ffz.GlobalFfzEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.stv.ChannelStvEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.stv.GlobalStvEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesApi
@@ -316,6 +318,7 @@ internal val sharedModule: Module
 
             single<AuthApi> { TwitchAuthApi(get()) }
             single<BttvEmotesApi> { BttvEmotesServer(get()) }
+            single<FfzEmotesApi> { FfzEmotesServer(get()) }
             single<StvEmotesApi> { StvEmotesServer(get()) }
             single<RecentMessagesApi> { RecentMessagesServer(get()) }
 

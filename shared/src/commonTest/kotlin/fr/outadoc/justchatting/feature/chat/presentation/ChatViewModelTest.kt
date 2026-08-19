@@ -123,6 +123,7 @@ internal class ChatViewModelTest {
         Emote(
             name = "Kappa",
             urls = EmoteUrls("https://example.com/kappa.png"),
+            ratio = 3.75f,
         )
 
     private lateinit var twitchRepository: FakeTwitchRepository
@@ -463,6 +464,7 @@ internal class ChatViewModelTest {
                 } as ChatViewModel.State.Chatting
 
             assertEquals(listOf(pickableEmote.name), state.recentEmotes.map { emote -> emote.name })
+            assertEquals(listOf(pickableEmote.ratio), state.recentEmotes.map { emote -> emote.ratio })
         }
 
     @Test

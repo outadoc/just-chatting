@@ -15,7 +15,6 @@ import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.emotes.domain.GetRecentEmotesUseCase
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteSetItem
-import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
@@ -693,13 +692,7 @@ public class ChatViewModel internal constructor(
                         Action.ChangeRecentEmotes(
                             recentEmotes =
                                 recentEmotes
-                                    .filter { recentEmote -> recentEmote.name in allEmotesMap }
-                                    .map { recentEmote ->
-                                        Emote(
-                                            name = recentEmote.name,
-                                            urls = EmoteUrls(recentEmote.url),
-                                        )
-                                    },
+                                    .mapNotNull { recentEmote -> allEmotesMap[recentEmote.name] },
                         )
 
                     dispatchIfCurrent(action)

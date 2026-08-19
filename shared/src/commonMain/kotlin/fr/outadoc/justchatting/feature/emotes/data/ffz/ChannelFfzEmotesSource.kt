@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.emotes.data.bttv
+package fr.outadoc.justchatting.feature.emotes.data.ffz
 
 import fr.outadoc.justchatting.feature.emotes.domain.CachedEmoteListSource
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteSetItem
@@ -11,15 +11,15 @@ import fr.outadoc.justchatting.utils.resources.desc
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
-internal class GlobalFfzEmotesSource(
-    private val bttvEmotesApi: BttvEmotesApi,
+internal class ChannelFfzEmotesSource(
+    private val ffzEmotesApi: FfzEmotesApi,
     private val preferencesRepository: PreferenceRepository,
     private val dispatchersProvider: DispatchersProvider,
 ) : CachedEmoteListSource<List<EmoteSetItem>>() {
     override fun shouldUseCache(
         previous: Params,
         next: Params,
-    ): Boolean = true
+    ): Boolean = previous.channelId == next.channelId && previous.channelName == next.channelName
 
     override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> =
         withContext(dispatchersProvider.io) {
@@ -28,12 +28,12 @@ internal class GlobalFfzEmotesSource(
                 return@withContext Result.success(emptyList())
             }
 
-            bttvEmotesApi
-                .getBttvGlobalFfzEmotes()
+            ffzEmotesApi
+                .getFfzEmotes(params.channelId)
                 .map { emotes ->
                     flatListOf(
                         EmoteSetItem.Header(
-                            title = null,
+                            title = params.channelName.desc(),
                             source = Res.string.chat_source_ffz.desc(),
                         ),
                         emotes.map { emote -> EmoteSetItem.Emote(emote) },

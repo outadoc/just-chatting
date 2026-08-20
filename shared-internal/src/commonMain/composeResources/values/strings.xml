@@ -231,7 +231,9 @@
     <string name="irc_notice_whisper_restricted_recipient">That user’s settings prevent them from receiving this whisper.</string>
     <string name="logout_msg">You are currently logged in as %1$s.</string>
     <string name="logout_title">Log out?</string>
+    <string name="menu_file">File</string>
     <string name="menu_item_openInBubble">Open in bubble</string>
+    <string name="menu_new_window">New Window</string>
     <string name="message_limit">Message limit</string>
     <string name="no">No</string>
     <string name="nothing_here">Nothing here yet</string>

@@ -231,7 +231,9 @@
     <string name="irc_notice_whisper_restricted_recipient">Les paramètres de cet·te utilisateur·rice l'empêchent de recevoir ce chuchotement.</string>
     <string name="logout_msg">Vous êtes actuellement connecté·e en tant que %1$s.</string>
     <string name="logout_title">Se déconnecter ?</string>
+    <string name="menu_file">Fichier</string>
     <string name="menu_item_openInBubble">Ouvrir dans une bulle</string>
+    <string name="menu_new_window">Nouvelle fenêtre</string>
     <string name="message_limit">Limite de messages</string>
     <string name="no">Non</string>
     <string name="nothing_here">Rien pour l'instant</string>

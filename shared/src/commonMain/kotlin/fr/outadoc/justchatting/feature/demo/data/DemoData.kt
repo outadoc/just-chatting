@@ -417,5 +417,12 @@ internal object DemoData {
             ChatScriptEntry(delayAfter = 2.seconds) { timestamp, id ->
                 chatMessage("melorae", "Melorae", "Pog Pog", embeddedEmotes = listOf(pogEmote))(timestamp, id)
             },
+            ChatScriptEntry(delayAfter = 2.seconds) { timestamp, id ->
+                ChatEvent.Message.GigantifiedEmoteMessage(
+                    timestamp = timestamp,
+                    userMessage =
+                        chatMessage("yarrow", "Yarrow", "Pog", embeddedEmotes = listOf(pogEmote))(timestamp, id),
+                )
+            },
         )
 }

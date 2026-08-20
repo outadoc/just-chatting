@@ -55,6 +55,13 @@ internal class TwitchIrcCommandParser(
                 )
             }
 
+            "gigantified-emote-message" -> {
+                ChatEvent.Message.GigantifiedEmoteMessage(
+                    timestamp = timestamp,
+                    userMessage = parseMessage(ircMessage) ?: return null,
+                )
+            }
+
             else -> {
                 parseMessage(ircMessage)
             }

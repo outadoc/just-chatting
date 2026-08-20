@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import coil3.compose.AsyncImage
@@ -20,13 +21,16 @@ import fr.outadoc.justchatting.utils.presentation.formatNumber
 
 private const val emoteSizeFloat = 1.8
 internal val emoteSize = emoteSizeFloat.em
+internal val gigantifiedEmoteSize = (emoteSizeFloat * 4.5).em
 
-private fun getEmotePlaceholder(ratio: Float = 1f) =
-    Placeholder(
-        width = emoteSize * ratio,
-        height = emoteSize,
-        placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
-    )
+private fun getEmotePlaceholder(
+    ratio: Float = 1f,
+    size: TextUnit = emoteSize,
+) = Placeholder(
+    width = size * ratio,
+    height = size,
+    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
+)
 
 private val badgePlaceholder =
     Placeholder(
@@ -35,8 +39,16 @@ private val badgePlaceholder =
         placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
     )
 
-internal fun emoteTextContent(emote: Emote): InlineTextContent =
-    InlineTextContent(getEmotePlaceholder(ratio = emote.ratio)) {
+internal fun emoteTextContent(
+    emote: Emote,
+    isGigantified: Boolean = false,
+): InlineTextContent =
+    InlineTextContent(
+        getEmotePlaceholder(
+            ratio = emote.ratio,
+            size = if (isGigantified) gigantifiedEmoteSize else emoteSize,
+        ),
+    ) {
         EmoteItem(
             emote = emote,
         )

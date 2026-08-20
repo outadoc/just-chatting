@@ -117,6 +117,11 @@ internal sealed interface ChatEvent {
             val userMessage: ChatMessage,
         ) : Message
 
+        data class GigantifiedEmoteMessage(
+            override val timestamp: Instant,
+            val userMessage: ChatMessage,
+        ) : Message
+
         data class Notice(
             override val timestamp: Instant,
             val message: String,

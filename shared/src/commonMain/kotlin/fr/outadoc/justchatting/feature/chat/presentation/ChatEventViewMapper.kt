@@ -338,6 +338,13 @@ internal class ChatEventViewMapper {
                     )
                 }
 
+                is ChatEvent.Message.GigantifiedEmoteMessage -> {
+                    ChatListItem.Message.Simple(
+                        timestamp = timestamp,
+                        body = userMessage.map(isGigantifiedEmote = true),
+                    )
+                }
+
                 is ChatEvent.Message.Announcement -> {
                     ChatListItem.Message.Highlighted(
                         timestamp = timestamp,
@@ -680,7 +687,7 @@ internal class ChatEventViewMapper {
             else -> planId.desc()
         }
 
-    private fun ChatEvent.Message.ChatMessage.map(): ChatListItem.Message.Body {
+    private fun ChatEvent.Message.ChatMessage.map(isGigantifiedEmote: Boolean = false): ChatListItem.Message.Body {
         val mentions = message.orEmpty().getMentionsPrefix()
         val mentionsLength = mentions.sumOf { mention -> mention.length + 1 }
         val remainingMessage =
@@ -704,6 +711,7 @@ internal class ChatEventViewMapper {
             badges = badges.orEmpty().toImmutableList(),
             sourceRoomId = sourceRoomId,
             sourceBadges = sourceBadges.orEmpty().toImmutableList(),
+            isGigantifiedEmote = isGigantifiedEmote,
             inReplyTo =
                 if (mentions.isNotEmpty() && remainingMessage.isNotEmpty()) {
                     ChatListItem.Message.Body.InReplyTo(

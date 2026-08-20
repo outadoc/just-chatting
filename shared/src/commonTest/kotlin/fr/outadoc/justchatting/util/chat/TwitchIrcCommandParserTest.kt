@@ -668,6 +668,47 @@ internal class TwitchIrcCommandParserTest {
         }
 
     @Test
+    fun `Parse gigantified emote message`() =
+        test {
+            input {
+                "@badge-info=;badges=bits/100;color=#F7C4CD;display-name=Ala1nPr0ust;emotes=emotesv2_f8ad2ca6523b427baf20e3b61dc9384d:55-63;first-msg=0;flags=;id=fb3ae984-2740-4241-862d-2289e791dae4;mod=0;msg-id=gigantified-emote-message;returning-chatter=0;room-id=50597026;subscriber=0;tmi-sent-ts=1786969269497;turbo=0;user-id=30983168;user-type= :ala1npr0ust!ala1npr0ust@ala1npr0ust.tmi.twitch.tv PRIVMSG #ponce :pas de prime dispo mais j'offre un gros panard du coup dfgTimide"
+            }
+            expected {
+                ChatEvent.Message.GigantifiedEmoteMessage(
+                    timestamp = Instant.parse("2026-08-17T12:21:09.497Z"),
+                    userMessage =
+                        ChatEvent.Message.ChatMessage(
+                            id = "fb3ae984-2740-4241-862d-2289e791dae4",
+                            timestamp = Instant.parse("2026-08-17T12:21:09.497Z"),
+                            userId = "30983168",
+                            userLogin = "ala1npr0ust",
+                            userName = "Ala1nPr0ust",
+                            message = "pas de prime dispo mais j'offre un gros panard du coup dfgTimide",
+                            color = "#F7C4CD",
+                            isAction = false,
+                            embeddedEmotes =
+                                listOf(
+                                    ChatEmote(
+                                        id = "emotesv2_f8ad2ca6523b427baf20e3b61dc9384d",
+                                        name = "dfgTimide",
+                                    ).map(),
+                                ),
+                            badges =
+                                listOf(
+                                    Badge(
+                                        id = "bits",
+                                        version = "100",
+                                    ),
+                                ),
+                            isFirstMessageByUser = false,
+                            rewardId = null,
+                            inReplyTo = null,
+                        ),
+                )
+            }
+        }
+
+    @Test
     fun `Parse paid message`() =
         test {
             input {

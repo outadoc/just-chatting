@@ -73,4 +73,18 @@ internal class ChatEventViewMapperTest {
         assertEquals("hello", result.body.message)
         assertEquals<List<String>?>(listOf("user1", "user2"), result.body.inReplyTo?.mentions)
     }
+
+    @Test
+    fun `gigantified emote message maps to a simple item with the flag set`() {
+        val event =
+            ChatEvent.Message.GigantifiedEmoteMessage(
+                timestamp = Instant.fromEpochMilliseconds(1_000),
+                userMessage = chatMessageEvent(text = "dfgTimide"),
+            )
+
+        val result = mapper.map(event).single()
+
+        assertIs<ChatListItem.Message.Simple>(result)
+        assertEquals(true, result.body.isGigantifiedEmote)
+    }
 }

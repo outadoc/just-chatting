@@ -71,6 +71,7 @@ internal fun ChatMessageBody(
                             emote.name,
                             emoteTextContent(
                                 emote = emote,
+                                isGigantified = body.isGigantifiedEmote,
                             ),
                         )
                     }.toImmutableMap(),
@@ -98,7 +99,7 @@ internal fun ChatMessageBody(
             onTextLayout = { layoutResult.value = it },
             text = annotatedString,
             inlineContent = fullInlineContent,
-            lineHeight = emoteSize,
+            lineHeight = if (body.isGigantifiedEmote) gigantifiedEmoteSize else emoteSize,
             maxLines = maxLines,
             overflow = TextOverflow.Ellipsis,
             style =

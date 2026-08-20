@@ -71,6 +71,7 @@ public sealed interface ChatListItem {
             val inReplyTo: InReplyTo? = null,
             val sourceRoomId: String? = null,
             val sourceBadges: ImmutableList<Badge> = persistentListOf(),
+            val isGigantifiedEmote: Boolean = false,
         ) {
             @Immutable
             public data class InReplyTo(

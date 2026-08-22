@@ -267,6 +267,7 @@ internal fun ChatList(
                                 },
                         message = item,
                         inlineContent = inlineContent,
+                        emotes = emotes,
                         removedContent = removedContent,
                         pronouns = pronouns,
                         richEmbed = item.body?.messageId?.let { messageId -> richEmbeds[messageId] },

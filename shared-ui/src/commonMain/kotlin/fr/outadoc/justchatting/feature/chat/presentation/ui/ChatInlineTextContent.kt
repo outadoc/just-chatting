@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.presentation.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
@@ -53,6 +54,27 @@ internal fun emoteTextContent(
             emote = emote,
         )
     }
+
+internal fun zeroWidthEmoteTextContent(
+    base: Emote,
+    overlays: List<Emote>,
+    isGigantified: Boolean = false,
+): InlineTextContent =
+    InlineTextContent(
+        getEmotePlaceholder(
+            ratio = base.ratio,
+            size = if (isGigantified) gigantifiedEmoteSize else emoteSize,
+        ),
+    ) {
+        Box(Modifier.fillMaxSize()) {
+            EmoteItem(emote = base)
+            overlays.forEach { overlay ->
+                EmoteItem(modifier = Modifier.matchParentSize(), emote = overlay)
+            }
+        }
+    }
+
+internal fun zeroWidthGroupInlineContentId(words: List<String>): String = "zerowidth:" + words.joinToString(separator = "+")
 
 internal fun badgeTextContent(badge: TwitchBadge): InlineTextContent =
     InlineTextContent(badgePlaceholder) {

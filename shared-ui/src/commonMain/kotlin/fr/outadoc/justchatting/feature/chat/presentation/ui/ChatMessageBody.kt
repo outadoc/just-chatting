@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +34,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
+import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.shared.internal.Res
@@ -53,6 +55,7 @@ internal fun ChatMessageBody(
     modifier: Modifier = Modifier,
     body: ChatListItem.Message.Body,
     inlineContent: ImmutableMap<String, InlineTextContent>,
+    emotes: ImmutableMap<String, Emote>,
     pronouns: ImmutableMap<Chatter, Pronoun>,
     appUser: AppUser.LoggedIn,
     backgroundHint: Color,
@@ -77,13 +80,21 @@ internal fun ChatMessageBody(
                     }.toImmutableMap(),
             )
 
-    val annotatedString =
+    val emotesByName: ImmutableMap<String, Emote> =
+        emotes
+            .toPersistentHashMap()
+            .putAll(body.embeddedEmotes.associateBy { emote -> emote.name })
+
+    val annotatedMessage =
         body.toAnnotatedString(
             appUser = appUser,
             inlineContent = fullInlineContent,
+            emotesByName = emotesByName,
             pronouns = pronouns,
             backgroundHint = backgroundHint,
         )
+
+    val finalInlineContent = fullInlineContent.putAll(annotatedMessage.extraInlineContent)
 
     Column(modifier = modifier) {
         body.inReplyTo?.let { inReplyTo ->
@@ -97,8 +108,8 @@ internal fun ChatMessageBody(
 
         Text(
             onTextLayout = { layoutResult.value = it },
-            text = annotatedString,
-            inlineContent = fullInlineContent,
+            text = annotatedMessage.text,
+            inlineContent = finalInlineContent,
             lineHeight = if (body.isGigantifiedEmote) gigantifiedEmoteSize else emoteSize,
             maxLines = maxLines,
             overflow = TextOverflow.Ellipsis,
@@ -119,17 +130,24 @@ internal fun ChatMessageBody(
     }
 }
 
+@Immutable
+internal data class AnnotatedChatMessage(
+    val text: AnnotatedString,
+    val extraInlineContent: ImmutableMap<String, InlineTextContent>,
+)
+
 @Stable
 @Composable
 internal fun ChatListItem.Message.Body.toAnnotatedString(
     appUser: AppUser.LoggedIn,
     inlineContent: ImmutableMap<String, InlineTextContent>,
+    emotesByName: ImmutableMap<String, Emote>,
     pronouns: ImmutableMap<Chatter, Pronoun>,
     urlColor: Color = MaterialTheme.colorScheme.primary,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
     mentionBackground: Color = MaterialTheme.colorScheme.onBackground,
     mentionColor: Color = MaterialTheme.colorScheme.background,
-): AnnotatedString {
+): AnnotatedChatMessage {
     val accessibleChatterColor: Color? =
         color?.parseHexColor()?.let { rawColor ->
             ensureColorIsAccessible(rawColor, backgroundHint)
@@ -143,90 +161,139 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
 
     val pronoun: String? = pronouns[chatter]?.displayPronoun
 
-    return buildAnnotatedString {
-        sourceRoomId?.let { roomId ->
-            val sourceChannelId = sourceChannelInlineContentId(roomId)
-            if (sourceChannelId in inlineContent) {
+    val extraInlineContent = mutableMapOf<String, InlineTextContent>()
+
+    val text =
+        buildAnnotatedString {
+            sourceRoomId?.let { roomId ->
+                val sourceChannelId = sourceChannelInlineContentId(roomId)
+                if (sourceChannelId in inlineContent) {
+                    appendInlineContent(
+                        id = sourceChannelId,
+                        alternateText = " ",
+                    )
+
+                    append(' ')
+                }
+            }
+
+            if (pronoun != null) {
+                withStyle(SpanStyle(fontSize = 0.8.em)) {
+                    append("($pronoun) ")
+                }
+            }
+
+            val effectiveBadges = sourceBadges.takeIf { it.isNotEmpty() } ?: badges
+            val effectiveSourceRoomId = sourceRoomId
+
+            effectiveBadges.forEach { badge ->
+                val badgeId =
+                    if (sourceBadges.isNotEmpty() && effectiveSourceRoomId != null) {
+                        badge.sourceInlineContentId(effectiveSourceRoomId)
+                    } else {
+                        badge.inlineContentId
+                    }
+
                 appendInlineContent(
-                    id = sourceChannelId,
+                    id = badgeId,
                     alternateText = " ",
                 )
 
                 append(' ')
             }
-        }
 
-        if (pronoun != null) {
-            withStyle(SpanStyle(fontSize = 0.8.em)) {
-                append("($pronoun) ")
+            if (isAction) {
+                pushStyle(SpanStyle(fontStyle = FontStyle.Italic))
             }
-        }
 
-        val effectiveBadges = sourceBadges.takeIf { it.isNotEmpty() } ?: badges
-        val effectiveSourceRoomId = sourceRoomId
-
-        effectiveBadges.forEach { badge ->
-            val badgeId =
-                if (sourceBadges.isNotEmpty() && effectiveSourceRoomId != null) {
-                    badge.sourceInlineContentId(effectiveSourceRoomId)
-                } else {
-                    badge.inlineContentId
+            withStyle(
+                SpanStyle(
+                    color =
+                        MaterialTheme.colorScheme.harmonizeWithPrimary(
+                            accessibleChatterColor ?: fallbackColor,
+                        ),
+                ),
+            ) {
+                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append(chatter.displayName)
                 }
 
-            appendInlineContent(
-                id = badgeId,
-                alternateText = " ",
-            )
+                if (chatter.hasLocalizedDisplayName) {
+                    append(" (${chatter.login})")
+                }
 
-            append(' ')
-        }
-
-        if (isAction) {
-            pushStyle(SpanStyle(fontStyle = FontStyle.Italic))
-        }
-
-        withStyle(
-            SpanStyle(
-                color =
-                    MaterialTheme.colorScheme.harmonizeWithPrimary(
-                        accessibleChatterColor ?: fallbackColor,
+                append(
+                    stringResource(
+                        if (isAction) {
+                            Res.string.chat_message_actionSeparator
+                        } else {
+                            Res.string.chat_message_standardSeparator
+                        },
                     ),
-            ),
-        ) {
-            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                append(chatter.displayName)
+                )
             }
 
-            if (chatter.hasLocalizedDisplayName) {
-                append(" (${chatter.login})")
-            }
+            val words = message?.split(' ') ?: emptyList()
+            var wordIndex = 0
 
-            append(
-                stringResource(
-                    if (isAction) {
-                        Res.string.chat_message_actionSeparator
-                    } else {
-                        Res.string.chat_message_standardSeparator
-                    },
-                ),
-            )
-        }
+            while (wordIndex < words.size) {
+                val word = words[wordIndex]
 
-        message
-            ?.split(' ')
-            ?.forEach { word ->
                 when {
                     word.isValidWebUrl() -> {
                         // This is a URL
                         appendUrl(url = word, urlColor = urlColor)
+                        wordIndex++
                     }
 
                     word in inlineContent -> {
-                        // This is an emote
-                        appendInlineContent(
-                            id = word,
-                            alternateText = word,
-                        )
+                        // This is an emote, possibly followed by zero-width overlay emotes
+                        val baseEmote = emotesByName[word]
+
+                        val overlays: List<Emote> =
+                            if (baseEmote != null && !baseEmote.isZeroWidth) {
+                                buildList {
+                                    var overlayIndex = wordIndex + 1
+                                    while (overlayIndex < words.size) {
+                                        val overlayEmote = emotesByName[words[overlayIndex]]
+                                        if (overlayEmote != null && overlayEmote.isZeroWidth) {
+                                            add(overlayEmote)
+                                            overlayIndex++
+                                        } else {
+                                            break
+                                        }
+                                    }
+                                }
+                            } else {
+                                emptyList()
+                            }
+
+                        if (baseEmote != null && overlays.isNotEmpty()) {
+                            val groupWords = words.subList(wordIndex, wordIndex + 1 + overlays.size)
+                            val groupId = zeroWidthGroupInlineContentId(groupWords)
+
+                            extraInlineContent.getOrPut(groupId) {
+                                zeroWidthEmoteTextContent(
+                                    base = baseEmote,
+                                    overlays = overlays,
+                                    isGigantified = isGigantifiedEmote,
+                                )
+                            }
+
+                            appendInlineContent(
+                                id = groupId,
+                                alternateText = groupWords.joinToString(separator = " "),
+                            )
+
+                            wordIndex += 1 + overlays.size
+                        } else {
+                            appendInlineContent(
+                                id = word,
+                                alternateText = word,
+                            )
+
+                            wordIndex++
+                        }
                     }
 
                     word.startsWith(ChatPrefixConstants.ChatterPrefix) -> {
@@ -237,17 +304,24 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
                             mentionBackground = mentionBackground,
                             mentionColor = mentionColor,
                         )
+                        wordIndex++
                     }
 
                     else -> {
                         // Just a normal word living in a normal world
                         append(word)
+                        wordIndex++
                     }
                 }
 
                 append(' ')
             }
-    }
+        }
+
+    return AnnotatedChatMessage(
+        text = text,
+        extraInlineContent = extraInlineContent.toImmutableMap(),
+    )
 }
 
 private fun AnnotatedString.Builder.appendUrl(

@@ -4,7 +4,8 @@ import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 
-private const val FLAG_IS_ZERO_WIDTH = 1 shl 8
+// Bit 0 of the active-emote flags, not bit 8 of `data.flags` (a different bitfield)
+private const val FLAG_IS_ZERO_WIDTH = 1 shl 0
 
 // Returns null when the emote has no file in a supported format (e.g. AVIF-only),
 // so that a single such emote doesn't take down the whole 7TV emote source.

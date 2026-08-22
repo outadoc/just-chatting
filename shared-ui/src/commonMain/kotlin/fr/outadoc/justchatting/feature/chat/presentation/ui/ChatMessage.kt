@@ -20,6 +20,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.ui.preview.ChatMessagePreviewProvider
 import fr.outadoc.justchatting.feature.chat.presentation.ui.preview.previewBadges
+import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.utils.presentation.AppTheme
@@ -60,6 +61,7 @@ internal fun ChatMessage(
     modifier: Modifier = Modifier,
     message: ChatListItem.Message,
     inlineContent: ImmutableMap<String, InlineTextContent> = persistentMapOf(),
+    emotes: ImmutableMap<String, Emote> = persistentMapOf(),
     removedContent: ImmutableList<ChatListItem.RemoveContent> = persistentListOf(),
     pronouns: ImmutableMap<Chatter, Pronoun> = persistentMapOf(),
     richEmbed: ChatListItem.RichEmbed? = null,
@@ -114,6 +116,7 @@ internal fun ChatMessage(
                                     .padding(4.dp),
                             body = data,
                             inlineContent = inlineContent,
+                            emotes = emotes,
                             pronouns = pronouns,
                             appUser = appUser,
                             backgroundHint = backgroundHint,
@@ -142,6 +145,7 @@ internal fun ChatMessage(
                                 ),
                         body = message.body,
                         inlineContent = inlineContent,
+                        emotes = emotes,
                         pronouns = pronouns,
                         appUser = appUser,
                         backgroundHint = backgroundHint,

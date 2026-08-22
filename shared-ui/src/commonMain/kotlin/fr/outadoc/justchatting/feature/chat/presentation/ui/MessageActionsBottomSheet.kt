@@ -127,6 +127,7 @@ internal fun MessageActionsBottomSheet(
                         modifier = Modifier.clip(RoundedCornerShape(12.dp)),
                         message = message,
                         inlineContent = inlineContent,
+                        emotes = emotes,
                         pronouns = pronouns,
                         richEmbed = body.messageId?.let { messageId -> richEmbeds[messageId] },
                         showTimestamps = false,

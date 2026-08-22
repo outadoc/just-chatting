@@ -141,6 +141,7 @@ kotlin {
             dependsOn(skiaMain)
             dependencies {
                 implementation(libs.appdirs)
+                implementation(libs.flatlaf)
                 implementation(libs.nucleus.darkmode.detector)
             }
         }

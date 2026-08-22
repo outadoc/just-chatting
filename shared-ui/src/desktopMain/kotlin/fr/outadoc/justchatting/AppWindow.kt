@@ -33,7 +33,6 @@ import fr.outadoc.justchatting.shared.internal.menu_file
 import fr.outadoc.justchatting.shared.internal.menu_new_window
 import fr.outadoc.justchatting.shared.internal.settings_about_update_subtitle_available
 import fr.outadoc.justchatting.shared.internal.update_snackbar_action
-import fr.outadoc.justchatting.utils.presentation.getAppColorScheme
 import fr.outadoc.justchatting.utils.presentation.isAppInDarkTheme
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -51,9 +50,12 @@ internal fun ApplicationScope.AppWindow(
         onCloseRequest = onCloseRequest,
         icon = painterResource(Res.drawable.icon_masked),
     ) {
-        val menuBarColorScheme = getAppColorScheme(isDarkTheme = isAppInDarkTheme())
-        LaunchedEffect(menuBarColorScheme) {
-            applyMenuBarTheme(menuBarColorScheme)
+        val isDarkTheme = isAppInDarkTheme()
+        LaunchedEffect(isDarkTheme) {
+            applySwingTheme(
+                isDarkTheme = isDarkTheme,
+            )
+
             SwingUtilities.updateComponentTreeUI(window)
         }
 
@@ -62,7 +64,12 @@ internal fun ApplicationScope.AppWindow(
                 Item(
                     text = stringResource(Res.string.menu_new_window),
                     onClick = onNewWindowRequest,
-                    shortcut = KeyShortcut(Key.N, meta = isMacOs, ctrl = !isMacOs),
+                    shortcut =
+                        KeyShortcut(
+                            Key.N,
+                            meta = isMacOs,
+                            ctrl = !isMacOs,
+                        ),
                 )
             }
         }

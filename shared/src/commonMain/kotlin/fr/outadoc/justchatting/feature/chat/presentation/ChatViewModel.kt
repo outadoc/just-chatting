@@ -247,7 +247,7 @@ public class ChatViewModel internal constructor(
             val selectedMessageForActions: ChatListItem.Message? = null,
         ) : State() {
             val allEmotesMap: ImmutableMap<String, Emote>
-                get() = buildAllEmotesMap(pickableEmotes)
+                get() = AllEmotesMapCache.getOrCompute(pickableEmotes)
 
             val pickableEmotesWithRecent: ImmutableList<EmoteSetItem>
                 get() =
@@ -793,6 +793,24 @@ public class ChatViewModel internal constructor(
                     )
                 }.catch { e -> logError<ChatViewModel>(e) { "Autocomplete pipeline failed" } }
                 .launchIn(scope)
+        }
+    }
+}
+
+// pickableEmotes only changes on UpdateEmotes, but Chatting is copied on every incoming chat
+// message (AddMessages) and allEmotesMap is read on every recomposition of the chat list, so
+// rebuilding it from scratch each time showed up as a real CPU cost (confirmed via JFR
+// profiling on a high-traffic channel). Cache the last result, keyed by list identity, since
+// unrelated copy() calls reuse the same pickableEmotes reference.
+private object AllEmotesMapCache {
+    private var key: ImmutableList<EmoteSetItem>? = null
+    private var value: ImmutableMap<String, Emote>? = null
+
+    fun getOrCompute(pickableEmotes: ImmutableList<EmoteSetItem>): ImmutableMap<String, Emote> {
+        value?.let { cached -> if (key === pickableEmotes) return cached }
+        return buildAllEmotesMap(pickableEmotes).also {
+            key = pickableEmotes
+            value = it
         }
     }
 }

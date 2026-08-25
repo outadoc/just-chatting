@@ -58,6 +58,18 @@ internal class FileLogStrategy(
             fileSystem.sink(logFilePath, mustCreate = false).buffer().use { sink ->
                 for (line in pendingLines) {
                     sink.writeUtf8(line)
+
+                    // Batch the flush: drain everything already queued before touching disk
+                    // instead of flushing (a syscall) after every single line. Bursty callers
+                    // (e.g. one log line per chat message) end up costing one flush per burst
+                    // instead of one per line, while an idle logger still flushes promptly
+                    // since draining stops as soon as the channel has nothing buffered.
+                    var next = pendingLines.tryReceive().getOrNull()
+                    while (next != null) {
+                        sink.writeUtf8(next)
+                        next = pendingLines.tryReceive().getOrNull()
+                    }
+
                     sink.flush()
                 }
             }

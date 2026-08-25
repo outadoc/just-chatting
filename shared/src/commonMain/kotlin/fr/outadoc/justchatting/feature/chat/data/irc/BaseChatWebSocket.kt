@@ -47,6 +47,7 @@ internal abstract class BaseChatWebSocket(
     private val dispatchersProvider: DispatchersProvider,
     private val endpoint: String,
     private val messageTimeout: Duration,
+    private val commandsOfInterest: Set<String>? = null,
 ) : ChatEventHandler {
     companion object {
         internal const val DEFAULT_ENDPOINT = "wss://irc-ws.chat.twitch.tv"
@@ -181,7 +182,7 @@ internal abstract class BaseChatWebSocket(
     ) {
         logInfo(logTag) { "received: $line" }
 
-        when (val command = parser.parse(line)) {
+        when (val command = parser.parse(line, commandsOfInterest)) {
             is ChatEvent.Command.Ping -> {
                 connection.sendCommand("PONG :tmi.twitch.tv")
             }

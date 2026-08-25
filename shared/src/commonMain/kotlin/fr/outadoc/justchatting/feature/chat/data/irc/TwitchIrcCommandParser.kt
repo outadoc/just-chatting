@@ -12,9 +12,21 @@ import kotlin.time.Clock
 internal class TwitchIrcCommandParser(
     private val clock: Clock,
 ) {
-    fun parse(message: String): ChatEvent? =
+    /**
+     * @param commandsOfInterest If non-null, restricts parsing to these IRC commands (plus
+     * PING, always handled). Every other command is skipped before the (relatively expensive)
+     * per-command field extraction runs, and yields `null` instead of an "Unknown command"
+     * warning. Lets a caller that only reads a subset of commands (e.g.
+     * [fr.outadoc.justchatting.feature.chat.data.irc.LoggedInChatWebSocket], which only cares
+     * about NOTICE/USERSTATE) skip the cost of fully parsing every PRIVMSG - by far the most
+     * common command on a busy channel - just to discard it.
+     */
+    fun parse(
+        message: String,
+        commandsOfInterest: Set<String>? = null,
+    ): ChatEvent? =
         try {
-            parseInternal(message)
+            parseInternal(message, commandsOfInterest)
         } catch (e: Exception) {
             // A malformed line must never propagate: an exception thrown here would
             // close the chat socket, and recent-message backfill would replay the same
@@ -23,11 +35,26 @@ internal class TwitchIrcCommandParser(
             null
         }
 
-    private fun parseInternal(message: String): ChatEvent? {
+    private fun parseInternal(
+        message: String,
+        commandsOfInterest: Set<String>?,
+    ): ChatEvent? {
         val ircMessage = IrcMessageParser.parse(message)
+        if (ircMessage == null) {
+            logWarning<TwitchIrcCommandParser> { "Unknown command: $message" }
+            return null
+        }
+
+        if (ircMessage.command == "PING") {
+            return ChatEvent.Command.Ping
+        }
+
+        if (commandsOfInterest != null && ircMessage.command !in commandsOfInterest) {
+            return null
+        }
+
         val parsedMessage =
-            when (ircMessage?.command) {
-                "PING" -> ChatEvent.Command.Ping
+            when (ircMessage.command) {
                 "PRIVMSG" -> parsePrivateMsg(ircMessage)
                 "NOTICE" -> parseNotice(ircMessage)
                 "USERNOTICE" -> parseUserNotice(ircMessage)

@@ -30,6 +30,9 @@ internal class LoggedInChatWebSocket(
         dispatchersProvider = dispatchersProvider,
         endpoint = endpoint,
         messageTimeout = messageTimeout,
+        // Only NOTICE/USERSTATE are read below; skip fully parsing every other command
+        // (in particular PRIVMSG, by far the highest-volume one) just to discard it.
+        commandsOfInterest = setOf("NOTICE", "USERSTATE"),
     ) {
     override val logTag: String = "LoggedInChatWebSocket"
 

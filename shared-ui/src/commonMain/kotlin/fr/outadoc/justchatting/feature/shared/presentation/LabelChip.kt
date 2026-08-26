@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 
 @Composable
-internal fun LabelChip(
+public fun LabelChip(
     modifier: Modifier = Modifier,
     style: TextStyle = MaterialTheme.typography.labelSmall,
     color: Color = LocalContentColor.current.copy(alpha = 0.8f),

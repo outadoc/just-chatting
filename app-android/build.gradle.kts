@@ -1,11 +1,15 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.screenshot)
     alias(libs.plugins.ktlint)
 }
 
 android {
     namespace = "fr.outadoc.justchatting"
     compileSdk = 37
+
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true
 
     defaultConfig {
         applicationId = "fr.outadoc.justchatting"
@@ -88,6 +92,7 @@ android {
 
     buildFeatures {
         buildConfig = true
+        compose = true
     }
 }
 
@@ -96,4 +101,12 @@ dependencies {
     coreLibraryDesugaring(libs.desugar)
 
     implementation(project(":shared-ui"))
+    implementation(libs.compose.runtime)
+
+    screenshotTestImplementation(project(":shared-ui"))
+    screenshotTestImplementation(libs.compose.ui)
+    screenshotTestImplementation(libs.compose.ui.tooling)
+    screenshotTestImplementation(libs.compose.ui.tooling.preview)
+    screenshotTestImplementation(libs.compose.material3)
+    screenshotTestImplementation(libs.screenshot.validation.api)
 }

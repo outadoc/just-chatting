@@ -22,6 +22,7 @@ material3 = "1.12.0-alpha03"
 nucleus = "2.3.2"
 paging = "3.4.2"
 paging-multiplatform = "3.3.0-alpha02-0.5.1"
+screenshot = "0.0.1-alpha16"
 sqldelight = "2.3.2"
 stately = "2.1.0"
 
@@ -39,6 +40,7 @@ ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 ksp = { id = "com.google.devtools.ksp", version = "2.3.6" }
 licenseReport = { id = "com.github.jk1.dependency-license-report", version = "2.9" }
 nucleus = { id = "dev.nucleusframework", version.ref = "nucleus" }
+screenshot = { id = "com.android.compose.screenshot", version.ref = "screenshot" }
 skie = { id = "co.touchlab.skie", version = "0.10.11" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
@@ -123,6 +125,7 @@ nucleus-darkmode-detector = { module = "dev.nucleusframework:nucleus.darkmode-de
 nucleus-updater-runtime = { module = "dev.nucleusframework:nucleus.updater-runtime", version.ref = "nucleus" }
 okio = "com.squareup.okio:okio:3.17.0"
 okhttp = "com.squareup.okhttp3:okhttp:5.3.2"
+screenshot-validation-api = { module = "com.android.tools.screenshot:screenshot-validation-api", version.ref = "screenshot" }
 sqldelight-driver-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 sqldelight-driver-jvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
 sqldelight-driver-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }

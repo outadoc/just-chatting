@@ -5,7 +5,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 
 @Composable
-internal fun AppTheme(
+public fun AppTheme(
     isDarkTheme: Boolean = isAppInDarkTheme(),
     content: @Composable () -> Unit,
 ) {

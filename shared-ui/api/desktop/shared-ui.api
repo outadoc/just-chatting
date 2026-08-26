@@ -362,6 +362,10 @@ public final class fr/outadoc/justchatting/feature/shared/presentation/Composabl
 	public final fun getLambda$566857741$shared_ui ()Lkotlin/jvm/functions/Function2;
 }
 
+public final class fr/outadoc/justchatting/feature/shared/presentation/LabelChipKt {
+	public static final fun LabelChip-cf5BqRc (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/text/TextStyle;JLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class fr/outadoc/justchatting/feature/shared/presentation/ui/AppKt {
 	public static final fun App (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
 }
@@ -451,5 +455,9 @@ public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/Comp
 	public fun <init> ()V
 	public final fun getLambda$-1254607940$shared_ui ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$1303788346$shared_ui ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/utils/presentation/AppThemeKt {
+	public static final fun AppTheme (ZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
 }
 

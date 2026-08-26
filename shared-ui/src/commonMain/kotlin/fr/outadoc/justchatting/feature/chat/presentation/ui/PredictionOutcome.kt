@@ -27,7 +27,7 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatPercent
 
 @Composable
-internal fun PredictionOutcome(
+public fun PredictionOutcome(
     modifier: Modifier = Modifier,
     title: String,
     votes: Int,

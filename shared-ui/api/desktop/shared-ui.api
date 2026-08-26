@@ -8,6 +8,38 @@ public final class fr/outadoc/justchatting/MainWindowKt {
 	public static final fun startApp ()V
 }
 
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/AutoCompleteEmoteItemKt {
+	public static final fun AutoCompleteEmoteItem (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Lfr/outadoc/justchatting/feature/emotes/domain/model/Emote;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/AutoCompleteUserItemKt {
+	public static final fun AutoCompleteUserItem (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Lfr/outadoc/justchatting/feature/chat/domain/model/Chatter;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ChannelChatScreenContentKt {
+	public static final fun ChannelChatScreenContent (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/chat/presentation/ChatViewModel$State;Lfr/outadoc/justchatting/feature/chat/presentation/ChatViewModel$InputState;ZZZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;IIII)V
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ChatAutoCompleteRowKt {
+	public static final fun ChatAutoCompleteRow (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/util/List;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ChatInputKt {
+	public static final fun ChatInput-A819N5k (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;Landroidx/compose/ui/text/input/TextFieldValue;Lkotlinx/collections/immutable/ImmutableList;Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$Message;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;ZFLandroidx/compose/runtime/Composer;III)V
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ChatListPlaceholderKt {
+	public static final fun ChatListPlaceholder (Landroidx/compose/ui/Modifier;ILandroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ChatMessageKt {
+	public static final fun ChatMessage-owtK_Bk (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$Message;Lkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/ImmutableList;Lkotlinx/collections/immutable/ImmutableMap;Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$RichEmbed;ZJJLfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;ILandroidx/compose/runtime/Composer;III)V
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ChatRichEmbedKt {
+	public static final fun ChatRichEmbed (Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$AutoCompleteEmoteItemKt {
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$AutoCompleteEmoteItemKt;
 	public fun <init> ()V
@@ -144,6 +176,42 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/ui/Composab
 	public final fun getLambda$1195042783$shared_ui ()Lkotlin/jvm/functions/Function2;
 }
 
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/HighlighedMessageCardKt {
+	public static final fun HighlightedMessageCard (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$Message$Highlighted$Level;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/NoticeMessageKt {
+	public static final fun NoticeMessage (Landroidx/compose/ui/Modifier;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/PinnedMessageCardKt {
+	public static final fun PinnedMessageCard-fWhpE4E (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$Message;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;JLkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/ImmutableList;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/PollCardKt {
+	public static final fun PollCard-3IgeMak (Landroidx/compose/ui/Modifier;JLfr/outadoc/justchatting/feature/chat/domain/model/Poll;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/PredictionCardKt {
+	public static final fun PredictionCard-cf5BqRc (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/chat/domain/model/Prediction;JLkotlinx/collections/immutable/ImmutableList;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/PredictionOutcomeKt {
+	public static final fun PredictionOutcome-FHprtrg (Landroidx/compose/ui/Modifier;Ljava/lang/String;IIJLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/RaidGoCardKt {
+	public static final fun RaidGoCard-FNF3uiM (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/chat/domain/model/Raid$Go;JLandroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/RaidPrepareCardKt {
+	public static final fun RaidPrepareCard-FNF3uiM (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/chat/domain/model/Raid$Preparing;JLandroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/ui/UserNoticeMessageKt {
+	public static final fun UserNoticeMessage-PfoAEA0 (Landroidx/compose/ui/Modifier;Ljava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Ljava/lang/String;Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$Message$Highlighted$Level;FLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class fr/outadoc/justchatting/feature/details/presentation/ComposableSingletons$ActionBottomSheetKt {
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/details/presentation/ComposableSingletons$ActionBottomSheetKt;
 	public fun <init> ()V
@@ -170,6 +238,14 @@ public final class fr/outadoc/justchatting/feature/onboarding/presentation/ui/Co
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/onboarding/presentation/ui/ComposableSingletons$SignInWithTwitchButtonKt;
 	public fun <init> ()V
 	public final fun getLambda$-134583705$shared_ui ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class fr/outadoc/justchatting/feature/onboarding/presentation/ui/OnboardingScreenKt {
+	public static final fun OnboardingScreen (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/onboarding/presentation/ui/SignInWithTwitchButtonKt {
+	public static final fun SignInWithTwitchButton (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/ComposableSingletons$SettingsContentKt {
@@ -330,6 +406,26 @@ public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/C
 	public final fun getLambda$-263076067$shared_ui ()Lkotlin/jvm/functions/Function2;
 }
 
+public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/SettingsHeaderKt {
+	public static final fun SettingsHeader (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/SettingsListKt {
+	public static final fun SettingsList (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/shared/domain/model/User;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/SettingsSliderKt {
+	public static final fun SettingsSlider (Landroidx/compose/ui/Modifier;ILkotlin/jvm/functions/Function1;Lkotlin/ranges/IntRange;ILkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/SettingsSwitchKt {
+	public static final fun SettingsSwitch (Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/preferences/presentation/ui/SettingsTextKt {
+	public static final fun SettingsText (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class fr/outadoc/justchatting/feature/search/presentation/ui/ComposableSingletons$SearchResultsListKt {
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/search/presentation/ui/ComposableSingletons$SearchResultsListKt;
 	public fun <init> ()V
@@ -404,6 +500,18 @@ public final class fr/outadoc/justchatting/feature/shared/presentation/ui/Compos
 	public final fun getLambda$-1715509482$shared_ui ()Lkotlin/jvm/functions/Function2;
 }
 
+public final class fr/outadoc/justchatting/feature/shared/presentation/ui/MainNavigationKt {
+	public static final fun MainNavigation (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/shared/presentation/Screen;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/shared/presentation/ui/NoContentKt {
+	public static final fun NoContent (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/shared/presentation/ui/UserItemKt {
+	public static final fun UserItemCard (Landroidx/compose/ui/Modifier;Ljava/lang/String;Lkotlin/time/Instant;Ljava/lang/String;Lkotlinx/collections/immutable/ImmutableList;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$FutureTimelineContentKt {
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$FutureTimelineContentKt;
 	public fun <init> ()V
@@ -447,7 +555,7 @@ public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/Comp
 public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$LiveTimelineSegmentKt {
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$LiveTimelineSegmentKt;
 	public fun <init> ()V
-	public final fun getLambda$-1347741312$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-963358654$shared_ui ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$PastTimelineSegmentKt {
@@ -455,6 +563,22 @@ public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/Comp
 	public fun <init> ()V
 	public final fun getLambda$-1254607940$shared_ui ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$1303788346$shared_ui ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/FutureTimelineContentKt {
+	public static final fun FutureTimelineContent (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/layout/PaddingValues;Lkotlinx/collections/immutable/ImmutableList;ZLkotlin/jvm/functions/Function0;ZLandroidx/compose/foundation/lazy/LazyListState;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/LiveStreamKt {
+	public static final fun LiveStreamCard (Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Lfr/outadoc/justchatting/feature/timeline/domain/model/StreamCategory;Lkotlin/time/Instant;Ljava/lang/String;Lkotlinx/collections/immutable/ImmutableSet;ZLkotlin/time/Clock;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/LiveTimelineContentKt {
+	public static final fun LiveTimelineContent (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/layout/PaddingValues;Lkotlinx/collections/immutable/ImmutableList;ZLkotlin/jvm/functions/Function0;ZLandroidx/compose/foundation/lazy/LazyListState;Ljava/lang/String;Lkotlin/time/Clock;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/TimelineSegmentDetailsKt {
+	public static final fun TimelineSegmentDetails (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/timeline/domain/model/ChannelScheduleSegment;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class fr/outadoc/justchatting/utils/presentation/AppThemeKt {

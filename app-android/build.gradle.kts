@@ -108,5 +108,8 @@ dependencies {
     screenshotTestImplementation(libs.compose.ui.tooling)
     screenshotTestImplementation(libs.compose.ui.tooling.preview)
     screenshotTestImplementation(libs.compose.material3)
+    screenshotTestImplementation(libs.compose.materialIcons)
+    screenshotTestImplementation(libs.kotlinx.collections.immutable)
+    screenshotTestImplementation(libs.kotlinx.datetime)
     screenshotTestImplementation(libs.screenshot.validation.api)
 }

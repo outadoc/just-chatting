@@ -38,7 +38,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 @Composable
-internal fun PollCard(
+public fun PollCard(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.secondaryContainer,
     poll: Poll,

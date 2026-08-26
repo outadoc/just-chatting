@@ -16,12 +16,14 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.stream_info
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Clock
 
 @Composable
 internal fun LiveTimelineSegment(
     modifier: Modifier = Modifier,
     userStream: UserStream,
     isSelected: Boolean = false,
+    clock: Clock = Clock.System,
     onUserClick: () -> Unit = {},
     onOpenChat: () -> Unit = {},
     onOpenInBubble: () -> Unit = {},
@@ -48,6 +50,7 @@ internal fun LiveTimelineSegment(
             tags = userStream.stream.tags,
             profileImageUrl = userStream.user.profileImageUrl,
             isSelected = isSelected,
+            clock = clock,
             onUserClick = onUserClick,
             onClick = onOpenChat,
             onLongClick = {

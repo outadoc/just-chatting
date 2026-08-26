@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 
 @Composable
-internal fun SettingsHeader(
+public fun SettingsHeader(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {

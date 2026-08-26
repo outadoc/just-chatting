@@ -65,7 +65,7 @@ import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Instant
 
 @Composable
-internal fun ChatInput(
+public fun ChatInput(
     modifier: Modifier = Modifier,
     appUser: AppUser.LoggedIn? = null,
     message: TextFieldValue = TextFieldValue(),

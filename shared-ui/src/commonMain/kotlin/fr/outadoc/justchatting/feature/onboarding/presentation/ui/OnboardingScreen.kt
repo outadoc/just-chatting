@@ -35,7 +35,7 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun OnboardingScreen(
+public fun OnboardingScreen(
     modifier: Modifier = Modifier,
     onLoginClick: () -> Unit,
     onDemoModeClick: () -> Unit = {},

@@ -8,7 +8,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 
 @Composable
-internal fun AutoCompleteUserItem(
+public fun AutoCompleteUserItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     chatter: Chatter,

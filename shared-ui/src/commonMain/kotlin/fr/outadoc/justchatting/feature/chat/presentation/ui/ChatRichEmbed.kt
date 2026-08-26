@@ -28,7 +28,7 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun ChatRichEmbed(
+public fun ChatRichEmbed(
     modifier: Modifier = Modifier,
     title: String,
     authorName: String,

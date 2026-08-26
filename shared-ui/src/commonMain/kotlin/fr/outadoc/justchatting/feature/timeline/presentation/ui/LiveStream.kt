@@ -41,10 +41,11 @@ import fr.outadoc.justchatting.utils.presentation.formatTimeSince
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentSetOf
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Clock
 import kotlin.time.Instant
 
 @Composable
-internal fun LiveStreamCard(
+public fun LiveStreamCard(
     modifier: Modifier = Modifier,
     title: String? = null,
     userName: String? = null,
@@ -54,6 +55,7 @@ internal fun LiveStreamCard(
     profileImageUrl: String? = null,
     tags: ImmutableSet<String> = persistentSetOf(),
     isSelected: Boolean = false,
+    clock: Clock = Clock.System,
     onUserClick: () -> Unit = {},
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
@@ -99,6 +101,7 @@ internal fun LiveStreamCard(
                     category = category,
                     startedAt = startedAt,
                     profileImageUrl = profileImageUrl,
+                    clock = clock,
                     onUserClick = onUserClick,
                 )
             }
@@ -128,6 +131,7 @@ private fun LiveStream(
     category: StreamCategory?,
     startedAt: Instant?,
     profileImageUrl: String?,
+    clock: Clock = Clock.System,
     onUserClick: () -> Unit = {},
 ) {
     Column(
@@ -206,7 +210,7 @@ private fun LiveStream(
                     }
 
                     startedAt
-                        ?.formatTimeSince(showSeconds = false)
+                        ?.formatTimeSince(clock = clock, showSeconds = false)
                         ?.let { streamDuration ->
                             Icon(
                                 modifier =

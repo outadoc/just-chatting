@@ -29,7 +29,7 @@ import fr.outadoc.justchatting.shared.internal.timeline_live
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun MainNavigation(
+public fun MainNavigation(
     modifier: Modifier = Modifier,
     selectedScreen: Screen,
     onSelectedTabChange: (Screen) -> Unit,

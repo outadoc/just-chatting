@@ -27,7 +27,7 @@ import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import kotlin.time.Instant
 
 @Composable
-internal fun TimelineSegmentDetails(
+public fun TimelineSegmentDetails(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
 ) {

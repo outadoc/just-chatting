@@ -1881,6 +1881,7 @@ public final class fr/outadoc/justchatting/utils/core/TwitchExtKt {
 
 public final class fr/outadoc/justchatting/utils/datetime/JCLocalDate {
 	public static final field $stable I
+	public fun <init> (Lkotlinx/datetime/LocalDate;)V
 	public final fun getLocalDate ()Lkotlinx/datetime/LocalDate;
 }
 

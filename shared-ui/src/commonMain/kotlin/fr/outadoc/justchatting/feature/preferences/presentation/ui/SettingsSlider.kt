@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 
 @Composable
-internal fun SettingsSlider(
+public fun SettingsSlider(
     modifier: Modifier = Modifier,
     value: Int,
     onValueChange: (Int) -> Unit,

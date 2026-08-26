@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 
 @Composable
-internal fun SettingsText(
+public fun SettingsText(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     onClickLabel: String? = null,

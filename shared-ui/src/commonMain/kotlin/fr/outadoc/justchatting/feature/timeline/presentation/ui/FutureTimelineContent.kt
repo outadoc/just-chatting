@@ -38,7 +38,7 @@ import kotlinx.collections.immutable.ImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun FutureTimelineContent(
+public fun FutureTimelineContent(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
     future: ImmutableList<DaySchedule>,

@@ -30,7 +30,7 @@ import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Instant
 
 @Composable
-internal fun UserItemCard(
+public fun UserItemCard(
     modifier: Modifier = Modifier,
     displayName: String? = null,
     followedAt: Instant? = null,

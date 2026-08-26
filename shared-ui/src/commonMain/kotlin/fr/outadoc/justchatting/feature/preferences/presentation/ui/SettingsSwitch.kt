@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 
 @Composable
-internal fun SettingsSwitch(
+public fun SettingsSwitch(
     modifier: Modifier = Modifier,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,

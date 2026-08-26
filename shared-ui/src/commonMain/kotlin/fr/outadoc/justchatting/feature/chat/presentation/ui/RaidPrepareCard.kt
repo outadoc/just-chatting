@@ -31,7 +31,7 @@ import fr.outadoc.justchatting.utils.resources.desc
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun RaidPrepareCard(
+public fun RaidPrepareCard(
     modifier: Modifier = Modifier,
     raid: Raid.Preparing,
     color: Color = MaterialTheme.colorScheme.secondaryContainer,

@@ -33,7 +33,7 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun RaidGoCard(
+public fun RaidGoCard(
     modifier: Modifier = Modifier,
     raid: Raid.Go,
     color: Color = MaterialTheme.colorScheme.secondaryContainer,

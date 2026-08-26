@@ -22,7 +22,7 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlin.random.Random
 
 @Composable
-internal fun ChatListPlaceholder(
+public fun ChatListPlaceholder(
     modifier: Modifier = Modifier,
     placeholderItemCount: Int = 100,
 ) {

@@ -35,7 +35,7 @@ internal fun NoticeMessagePreview(
 }
 
 @Composable
-internal fun NoticeMessage(
+public fun NoticeMessage(
     modifier: Modifier = Modifier,
     text: String,
 ) {

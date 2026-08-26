@@ -49,7 +49,7 @@ internal fun ChatAutoCompleteRowPreview() {
 }
 
 @Composable
-internal fun ChatAutoCompleteRow(
+public fun ChatAutoCompleteRow(
     modifier: Modifier = Modifier,
     onChatterClick: (Chatter) -> Unit,
     onEmoteClick: (Emote) -> Unit,

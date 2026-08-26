@@ -57,7 +57,7 @@ internal fun ChatMessagePreview(
 }
 
 @Composable
-internal fun ChatMessage(
+public fun ChatMessage(
     modifier: Modifier = Modifier,
     message: ChatListItem.Message,
     inlineContent: ImmutableMap<String, InlineTextContent> = persistentMapOf(),

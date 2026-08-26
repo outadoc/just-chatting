@@ -37,7 +37,7 @@ import kotlinx.collections.immutable.persistentMapOf
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun PinnedMessageCard(
+public fun PinnedMessageCard(
     modifier: Modifier = Modifier,
     message: ChatListItem.Message,
     appUser: AppUser.LoggedIn,

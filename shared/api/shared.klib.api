@@ -1972,6 +1972,8 @@ final class fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineVi
 }
 
 final class fr.outadoc.justchatting.utils.datetime/JCLocalDate { // fr.outadoc.justchatting.utils.datetime/JCLocalDate|null[0]
+    constructor <init>(kotlinx.datetime/LocalDate) // fr.outadoc.justchatting.utils.datetime/JCLocalDate.<init>|<init>(kotlinx.datetime.LocalDate){}[0]
+
     final val localDate // fr.outadoc.justchatting.utils.datetime/JCLocalDate.localDate|{}localDate[0]
         final fun <get-localDate>(): kotlinx.datetime/LocalDate // fr.outadoc.justchatting.utils.datetime/JCLocalDate.localDate.<get-localDate>|<get-localDate>(){}[0]
 }

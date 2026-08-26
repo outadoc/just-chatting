@@ -19,7 +19,7 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun NoContent(modifier: Modifier = Modifier) {
+public fun NoContent(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,

@@ -27,7 +27,7 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.isAppInDarkTheme
 
 @Composable
-internal fun HighlightedMessageCard(
+public fun HighlightedMessageCard(
     modifier: Modifier = Modifier,
     level: Level = Level.Base,
     content: @Composable () -> Unit,

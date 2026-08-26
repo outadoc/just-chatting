@@ -21,7 +21,7 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-internal fun AutoCompleteEmoteItem(
+public fun AutoCompleteEmoteItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     emote: Emote,

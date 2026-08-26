@@ -53,7 +53,7 @@ import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Instant
 
 @Composable
-internal fun SettingsList(
+public fun SettingsList(
     modifier: Modifier = Modifier,
     loggedInUser: User?,
     onLogoutClick: () -> Unit,

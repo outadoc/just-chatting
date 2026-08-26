@@ -20,7 +20,7 @@ import fr.outadoc.justchatting.shared.presentation.icons.TwitchIcon
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun SignInWithTwitchButton(
+public fun SignInWithTwitchButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {

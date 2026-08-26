@@ -51,7 +51,7 @@ internal fun UserNoticeMessagePreview(
 }
 
 @Composable
-internal fun UserNoticeMessage(
+public fun UserNoticeMessage(
     modifier: Modifier = Modifier,
     title: String,
     titleIcon: ImageVector?,

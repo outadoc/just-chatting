@@ -62,7 +62,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalHazeMaterialsApi::class)
 @Composable
-internal fun ChannelChatScreenContent(
+public fun ChannelChatScreenContent(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
     inputState: ChatViewModel.InputState,

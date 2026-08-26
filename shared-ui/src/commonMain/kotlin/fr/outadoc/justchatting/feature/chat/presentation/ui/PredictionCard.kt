@@ -47,7 +47,7 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 
 @Composable
-internal fun PredictionCard(
+public fun PredictionCard(
     modifier: Modifier = Modifier,
     prediction: Prediction,
     color: Color = MaterialTheme.colorScheme.secondaryContainer,

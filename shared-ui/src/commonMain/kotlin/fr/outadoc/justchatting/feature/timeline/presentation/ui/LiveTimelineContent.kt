@@ -27,10 +27,11 @@ import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.ui.NoContent
 import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
 import kotlinx.collections.immutable.ImmutableList
+import kotlin.time.Clock
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun LiveTimelineContent(
+public fun LiveTimelineContent(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
     live: ImmutableList<UserStream>,
@@ -39,6 +40,7 @@ internal fun LiveTimelineContent(
     showRefreshIndicator: Boolean,
     listState: LazyListState,
     selectedChannelId: String? = null,
+    clock: Clock = Clock.System,
     onChannelClick: (User) -> Unit,
     onOpenInBubble: (User) -> Unit,
 ) {
@@ -69,6 +71,7 @@ internal fun LiveTimelineContent(
                 live = live,
                 listState = listState,
                 selectedChannelId = selectedChannelId,
+                clock = clock,
                 onChannelClick = onChannelClick,
                 onUserClick = { showUserDetails = it },
                 onOpenInBubble = onOpenInBubble,
@@ -81,6 +84,7 @@ internal fun LiveTimelineContent(
             live = live,
             listState = listState,
             selectedChannelId = selectedChannelId,
+            clock = clock,
             onChannelClick = onChannelClick,
             onUserClick = { showUserDetails = it },
             onOpenInBubble = onOpenInBubble,
@@ -107,6 +111,7 @@ private fun LiveTimelineList(
     live: ImmutableList<UserStream>,
     listState: LazyListState,
     selectedChannelId: String? = null,
+    clock: Clock = Clock.System,
     onChannelClick: (User) -> Unit,
     onUserClick: (User) -> Unit,
     onOpenInBubble: (User) -> Unit,
@@ -145,6 +150,7 @@ private fun LiveTimelineList(
                             .fillMaxWidth(),
                     userStream = userStream,
                     isSelected = userStream.user.id == selectedChannelId,
+                    clock = clock,
                     onOpenChat = {
                         onChannelClick(userStream.user)
                     },

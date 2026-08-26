@@ -466,6 +466,14 @@ public final class fr/outadoc/justchatting/feature/shared/presentation/ui/AppKt 
 	public static final fun App (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
 }
 
+public final class fr/outadoc/justchatting/feature/shared/presentation/ui/ComposableSingletons$DetailPaneCardKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/shared/presentation/ui/ComposableSingletons$DetailPaneCardKt;
+	public fun <init> ()V
+	public final fun getLambda$-45771941$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-866386688$shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1336880036$shared_ui ()Lkotlin/jvm/functions/Function2;
+}
+
 public final class fr/outadoc/justchatting/feature/shared/presentation/ui/ComposableSingletons$MainNavigationKt {
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/shared/presentation/ui/ComposableSingletons$MainNavigationKt;
 	public fun <init> ()V
@@ -498,6 +506,10 @@ public final class fr/outadoc/justchatting/feature/shared/presentation/ui/Compos
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/shared/presentation/ui/ComposableSingletons$UserItemKt;
 	public fun <init> ()V
 	public final fun getLambda$-1715509482$shared_ui ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class fr/outadoc/justchatting/feature/shared/presentation/ui/DetailPaneCardKt {
+	public static final fun DetailPaneCard (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class fr/outadoc/justchatting/feature/shared/presentation/ui/MainNavigationKt {

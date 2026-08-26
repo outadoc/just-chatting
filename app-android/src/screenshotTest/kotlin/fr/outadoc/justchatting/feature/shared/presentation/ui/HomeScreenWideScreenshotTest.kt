@@ -26,18 +26,20 @@ import kotlin.time.Instant
 
 // Recreates the wide-screen home layout (nav rail, live streams list, and an open chat in
 // the details pane) directly from the already-public, already-tested pieces, since the real
-// MainRouter is wired to Koin and Navigation3 and can't be screenshot-tested as-is.
+// MainRouter is wired to Koin and Navigation3 and can't be screenshot-tested as-is. Mirrors
+// MainRouter's actual composition shape: MainNavigation wraps only the list pane (as it does
+// for LiveTimelineScreen); the details pane is a sibling, not nested inside it.
 @PreviewTest
 @Preview(widthDp = 1280, heightDp = 800)
 @Composable
 internal fun HomeScreenWideScreenshotTest() {
     AppTheme {
-        MainNavigation(
-            selectedScreen = Screen.Live,
-            onSelectedTabChange = {},
-        ) { insets ->
-            Row(modifier = Modifier.fillMaxSize()) {
-                Box(modifier = Modifier.width(500.dp)) {
+        Row(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.width(580.dp)) {
+                MainNavigation(
+                    selectedScreen = Screen.Live,
+                    onSelectedTabChange = {},
+                ) { insets ->
                     LiveTimelineContent(
                         insets = insets,
                         live =
@@ -78,8 +80,12 @@ internal fun HomeScreenWideScreenshotTest() {
                         onOpenInBubble = {},
                     )
                 }
+            }
 
-                Box(modifier = Modifier.weight(1f)) {
+            Box(modifier = Modifier.weight(1f)) {
+                // Matches MainRouter's wide-screen detail pane, which wraps its content
+                // in a DetailPaneCard whenever the list and detail panes are both visible.
+                DetailPaneCard {
                     ChannelChatScreenContent(
                         state =
                             ChatViewModel.State.Chatting(

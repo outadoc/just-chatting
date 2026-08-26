@@ -5,6 +5,7 @@ import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
@@ -152,86 +153,102 @@ internal fun MainRouter(
         },
         detailPane = {
             AnimatedPane {
-                when (val screen = navigator.currentDestination?.contentKey) {
-                    is DetailScreen.Chat -> {
-                        ChannelChatScreen(
-                            modifier = Modifier.keepScreenOn(),
-                            userId = screen.id,
-                            isStandalone = false,
-                            canNavigateUp = navigator.canNavigateBack(),
-                            onNavigateUp = {
-                                scope.launch {
-                                    navigator.navigateBack()
-                                }
-                            },
-                        )
-                    }
+                val detailContent: @Composable () -> Unit = {
+                    when (val screen = navigator.currentDestination?.contentKey) {
+                        is DetailScreen.Chat -> {
+                            ChannelChatScreen(
+                                modifier = Modifier.keepScreenOn(),
+                                userId = screen.id,
+                                isStandalone = false,
+                                canNavigateUp = navigator.canNavigateBack(),
+                                onNavigateUp = {
+                                    scope.launch {
+                                        navigator.navigateBack()
+                                    }
+                                },
+                            )
+                        }
 
-                    DetailScreen.About -> {
-                        SettingsSectionAbout(
-                            canNavigateUp = navigator.canNavigateBack(),
-                            onNavigateUp = {
-                                scope.launch {
-                                    navigator.navigateBack()
-                                }
-                            },
-                            onShareLogs = onShareLogs,
-                        )
-                    }
+                        DetailScreen.About -> {
+                            SettingsSectionAbout(
+                                canNavigateUp = navigator.canNavigateBack(),
+                                onNavigateUp = {
+                                    scope.launch {
+                                        navigator.navigateBack()
+                                    }
+                                },
+                                onShareLogs = onShareLogs,
+                            )
+                        }
 
-                    DetailScreen.Appearance -> {
-                        SettingsSectionAppearance(
-                            canNavigateUp = navigator.canNavigateBack(),
-                            onNavigateUp = {
-                                scope.launch {
-                                    navigator.navigateBack()
-                                }
-                            },
-                            onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
-                        )
-                    }
+                        DetailScreen.Appearance -> {
+                            SettingsSectionAppearance(
+                                canNavigateUp = navigator.canNavigateBack(),
+                                onNavigateUp = {
+                                    scope.launch {
+                                        navigator.navigateBack()
+                                    }
+                                },
+                                onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
+                            )
+                        }
 
-                    DetailScreen.DependencyCredits -> {
-                        SettingsSectionDependencies(
-                            canNavigateUp = navigator.canNavigateBack(),
-                            onNavigateUp = {
-                                scope.launch {
-                                    navigator.navigateBack()
-                                }
-                            },
-                        )
-                    }
+                        DetailScreen.DependencyCredits -> {
+                            SettingsSectionDependencies(
+                                canNavigateUp = navigator.canNavigateBack(),
+                                onNavigateUp = {
+                                    scope.launch {
+                                        navigator.navigateBack()
+                                    }
+                                },
+                            )
+                        }
 
-                    DetailScreen.Notifications -> {
-                        SettingsSectionNotifications(
-                            canNavigateUp = navigator.canNavigateBack(),
-                            onNavigateUp = {
-                                scope.launch {
-                                    navigator.navigateBack()
-                                }
-                            },
-                            onOpenNotificationPreferences = onOpenNotificationPreferences,
-                            onOpenBubblePreferences = onOpenBubblePreferences,
-                        )
-                    }
+                        DetailScreen.Notifications -> {
+                            SettingsSectionNotifications(
+                                canNavigateUp = navigator.canNavigateBack(),
+                                onNavigateUp = {
+                                    scope.launch {
+                                        navigator.navigateBack()
+                                    }
+                                },
+                                onOpenNotificationPreferences = onOpenNotificationPreferences,
+                                onOpenBubblePreferences = onOpenBubblePreferences,
+                            )
+                        }
 
-                    DetailScreen.ThirdParties -> {
-                        SettingsSectionThirdParties(
-                            canNavigateUp = navigator.canNavigateBack(),
-                            onNavigateUp = {
-                                scope.launch {
-                                    navigator.navigateBack()
-                                }
-                            },
-                        )
-                    }
+                        DetailScreen.ThirdParties -> {
+                            SettingsSectionThirdParties(
+                                canNavigateUp = navigator.canNavigateBack(),
+                                onNavigateUp = {
+                                    scope.launch {
+                                        navigator.navigateBack()
+                                    }
+                                },
+                            )
+                        }
 
-                    null -> {
-                        // No detail screen selected
-                        NoContent(
-                            modifier = Modifier.fillMaxSize(),
-                        )
+                        null -> {
+                            // No detail screen selected
+                            NoContent(
+                                modifier = Modifier.fillMaxSize(),
+                            )
+                        }
                     }
+                }
+
+                // Both list and detail panes are expanded at once only on wide screens; on
+                // compact screens a single pane fills the whole scaffold and stays unboxed.
+                val isListAndDetailVisible =
+                    navigator.scaffoldValue[ListDetailPaneScaffoldRole.List] == PaneAdaptedValue.Expanded &&
+                        navigator.scaffoldValue[ListDetailPaneScaffoldRole.Detail] == PaneAdaptedValue.Expanded
+
+                if (isListAndDetailVisible) {
+                    DetailPaneCard {
+                        detailContent()
+                    }
+                } else {
+                    detailContent()
                 }
             }
         },

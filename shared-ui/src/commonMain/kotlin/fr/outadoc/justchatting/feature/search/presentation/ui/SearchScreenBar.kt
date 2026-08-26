@@ -17,7 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -46,7 +46,7 @@ internal fun SearchScreenBar(
     onClearSearchBar: () -> Unit,
     onDismissSearchBar: () -> Unit,
 ) {
-    val sizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val sizeClass = currentWindowAdaptiveInfoV2().windowSizeClass
     if (sizeClass.isHeightAtLeastBreakpoint(900)) {
         CompactSearchBar(
             modifier = modifier,

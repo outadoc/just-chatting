@@ -161,3 +161,29 @@ while the app is running:
 ```bash
 curl "http://localhost:45563/user/<login>"
 ```
+
+## Testing UI changes with Compose Hot Reload (MCP)
+
+Preferred way to verify UI changes: drive the live app via MCP instead of `:app-desktop:run`.
+
+Setup:
+
+- `.mcp.json` registers the `compose-hot-reload` server (`:app-desktop:hotMcpServer`). Editing
+  `.mcp.json` requires a session reconnect (`/mcp`) before its tools appear.
+- Launch the app with `./gradlew :app-desktop:hotRun` in the background (not `:run`).
+
+Key tools (`mcp__compose-hot-reload__*`):
+
+- `status` — check connection/reload health first
+- `get_semantic_tree` — UI hierarchy with node ids/text/bounds/actions; main inspection tool
+- `click` / `long_click` / `type_text` / `scroll` — drive the UI via node ids
+- `reload` — hot-swap changed Kotlin *and* Compose resource files into the running app
+- `get_logs`, `get_ui_error` — debugging
+- `take_screenshot` — can time out over remote/headless Wayland; fall back to `get_semantic_tree`
+
+Gotcha: `reload` runs the build with Gradle's configuration cache enabled. Any custom task in
+`app-desktop/build.gradle.kts` that touches `Project` (via `file(...)`, `findProperty(...)`, etc.)
+inside `doLast` will fail to reload even though `./gradlew` runs fine standalone. Capture what you
+need into local `val`s *inside* the task registration block (not as top-level script properties —
+those still leak an implicit script/`Project` reference into the closure) before referencing them
+in `doLast`.

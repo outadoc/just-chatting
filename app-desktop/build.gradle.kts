@@ -109,19 +109,22 @@ tasks.register("generateVersionProperties") {
     group = "Build"
     description = "Generate file containing the app version"
 
+    val versionPropertiesFile = layout.buildDirectory.file("generated/lib_version/version.txt")
+    val externalVersionName = findProperty("externalVersionName") as String?
+
+    outputs.file(versionPropertiesFile)
+
     doLast {
         val propertiesFile =
-            file("$buildDir/generated/lib_version/version.txt").apply {
+            versionPropertiesFile.get().asFile.apply {
                 parentFile.mkdirs()
             }
-
-        val version = findProperty("externalVersionName") as String?
 
         FileOutputStream(propertiesFile)
             .bufferedWriter()
             .use { bw ->
-                if (version != null) {
-                    bw.appendLine(version)
+                if (externalVersionName != null) {
+                    bw.appendLine(externalVersionName)
                 }
             }
     }

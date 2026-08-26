@@ -3,5 +3,8 @@
     "allow": [
       "Bash(./gradlew:*)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "compose-hot-reload"
+  ]
 }

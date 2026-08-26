@@ -7,18 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.tools.screenshot.PreviewTest
-import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
+import fr.outadoc.justchatting.preview.PreviewFixtures
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.collections.immutable.persistentSetOf
-import kotlin.time.Clock
-import kotlin.time.Instant
-
-// A fixed clock keeps the rendered "time since" duration stable across the
-// update/validate Gradle runs, instead of ticking with the real system clock.
-private val fixedClock =
-    object : Clock {
-        override fun now(): Instant = Instant.parse("2022-01-01T18:00:00Z")
-    }
 
 @PreviewTest
 @Preview
@@ -27,17 +18,13 @@ internal fun LiveStreamScreenshotTest() {
     AppTheme {
         LiveStreamCard(
             modifier = Modifier.padding(8.dp),
-            userName = "Maghla",
-            category =
-                StreamCategory(
-                    id = "1",
-                    name = "Powerwash Simulator",
-                ),
-            title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
+            userName = PreviewFixtures.sampleUser.displayName,
+            category = PreviewFixtures.sampleStreamCategory,
+            title = PreviewFixtures.sampleTextLong,
             viewerCount = 5_305,
-            startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
+            startedAt = PreviewFixtures.sampleTimestamp,
             profileImageUrl = null,
-            clock = fixedClock,
+            clock = PreviewFixtures.fixedClock,
             tags =
                 persistentSetOf(
                     "French",
@@ -60,17 +47,13 @@ internal fun LiveStreamLongScreenshotTest() {
                 Modifier
                     .width(250.dp)
                     .padding(8.dp),
-            userName = "Maghla",
-            category =
-                StreamCategory(
-                    id = "1",
-                    name = "Powerwash Simulator",
-                ),
-            title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
+            userName = PreviewFixtures.sampleUser.displayName,
+            category = PreviewFixtures.sampleStreamCategory,
+            title = PreviewFixtures.sampleTextLong,
             viewerCount = 5_305,
-            startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
+            startedAt = PreviewFixtures.sampleTimestamp,
             profileImageUrl = null,
-            clock = fixedClock,
+            clock = PreviewFixtures.fixedClock,
         )
     }
 }

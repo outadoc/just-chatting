@@ -6,6 +6,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.android.tools.screenshot.PreviewTest
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
+import fr.outadoc.justchatting.preview.PreviewFixtures
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlin.time.Instant
 
@@ -26,10 +27,7 @@ internal fun ChatInputBasicScreenshotTest() {
 internal fun ChatInputLongMessageScreenshotTest() {
     AppTheme {
         ChatInput(
-            message =
-                TextFieldValue(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
-                ),
+            message = TextFieldValue(PreviewFixtures.sampleTextLong),
         )
     }
 }

@@ -84,6 +84,7 @@ kotlin {
                 implementation(libs.coil.compose)
                 implementation(libs.coil.core)
                 implementation(libs.coil.ktor)
+                implementation(libs.androidx.lifecycle.runtime.compose)
                 implementation(libs.haze.core)
                 implementation(libs.haze.materials)
                 implementation(libs.compose.components.resources)

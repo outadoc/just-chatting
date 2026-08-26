@@ -3,7 +3,7 @@ accompanist = "0.37.3"
 android = "9.3.1"
 coil = "3.4.0"
 connectivity = "2.4.1"
-compose-multiplatform = "1.11.1"
+compose-multiplatform = "1.12.0"
 compose-navigation3 = "1.1.1"
 coroutines = "1.10.2"
 emoji = "1.6.0"
@@ -50,6 +50,7 @@ androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.2.1
 androidx-emoji2-core = { module = "androidx.emoji2:emoji2", version.ref = "emoji" }
 androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
 androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }
+androidx-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
 androidx-paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging-multiplatform" }

@@ -2,16 +2,14 @@ package fr.outadoc.justchatting.feature.shared.presentation.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.layout.AnimatedPane
-import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
-import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
-import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
-import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
-import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
-import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
+import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldScope
+import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
+import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.rememberListDetailSceneStrategy
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.keepScreenOn
@@ -19,9 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberDecoratedNavEntries
 import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.chat.presentation.ui.ChannelChatScreen
@@ -40,7 +36,6 @@ import fr.outadoc.justchatting.feature.shared.presentation.Screen
 import fr.outadoc.justchatting.feature.shared.presentation.ScreenNavBackStackConfig
 import fr.outadoc.justchatting.feature.timeline.presentation.ui.FutureTimelineScreen
 import fr.outadoc.justchatting.feature.timeline.presentation.ui.LiveTimelineScreen
-import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalComposeUiApi::class)
@@ -48,27 +43,35 @@ import org.koin.compose.koinInject
 internal fun MainRouter(
     modifier: Modifier = Modifier,
     backStack: NavBackStack<NavKey> = rememberNavBackStack(ScreenNavBackStackConfig, DefaultScreen),
-    navigator: ThreePaneScaffoldNavigator<DetailScreen> = rememberListDetailPaneScaffoldNavigator<DetailScreen>(),
     onOpenNotificationPreferences: () -> Unit = {},
     onOpenBubblePreferences: () -> Unit = {},
     onOpenAccessibilityPreferences: () -> Unit = {},
     onShareLogs: (Uri) -> Unit = {},
     onChannelClick: (String) -> Unit = {},
 ) {
-    val scope = rememberCoroutineScope()
     val mainRouterViewModel: MainRouterViewModel = koinInject()
 
-    ThreePaneScaffoldPredictiveBackHandler(
-        navigator = navigator,
-        backBehavior = BackNavigationBehavior.PopUntilScaffoldValueChange,
-    )
+    val windowAdaptiveInfo = currentWindowAdaptiveInfoV2()
+    val directive =
+        remember(windowAdaptiveInfo) {
+            calculatePaneScaffoldDirective(windowAdaptiveInfo)
+                .copy(defaultPanePreferredWidth = 500.dp)
+        }
+    val isTwoPane = directive.maxHorizontalPartitions > 1
+    val listDetailStrategy =
+        rememberListDetailSceneStrategy<NavKey>(
+            directive = directive,
+            paneExpansionDragHandle = { state -> DragHandle(state = state) },
+        )
 
     LaunchedEffect(mainRouterViewModel.events) {
         mainRouterViewModel.events.collect { event ->
             when (event) {
                 is MainRouterViewModel.Event.NavigateToTab -> {
+                    val openChat = backStack.lastOrNull() as? DetailScreen.Chat
                     backStack.clear()
                     backStack.add(event.screen)
+                    openChat?.let(backStack::add)
                 }
 
                 else -> {
@@ -82,175 +85,150 @@ internal fun MainRouter(
         mainRouterViewModel.onTabSelected(screen)
     }
 
-    val saveableDecorator = rememberSaveableStateHolderNavEntryDecorator<NavKey>()
-    val entries =
-        rememberDecoratedNavEntries<NavKey>(
-            backStack = backStack,
-            entryDecorators = listOf(saveableDecorator),
-            entryProvider =
-                entryProvider {
-                    entry<Screen.Followed> {
-                        FollowedChannelsList(
-                            onNavigate = onNavigate,
-                            onItemClick = onChannelClick,
-                        )
-                    }
+    val detailPlaceholder: @Composable ThreePaneScaffoldScope.() -> Unit = {
+        DetailPaneContent(isTwoPane) {
+            NoContent(modifier = Modifier.fillMaxSize())
+        }
+    }
 
-                    entry<Screen.Live> {
-                        LiveTimelineScreen(
-                            selectedChannelId =
-                                (navigator.currentDestination?.contentKey as? DetailScreen.Chat)?.id,
-                            onNavigate = onNavigate,
-                            onChannelClick = onChannelClick,
-                        )
-                    }
-
-                    entry<Screen.Future> {
-                        FutureTimelineScreen(
-                            onNavigate = onNavigate,
-                        )
-                    }
-
-                    entry<Screen.Search> {
-                        SearchScreen(
-                            onNavigate = onNavigate,
-                            onChannelClick = onChannelClick,
-                        )
-                    }
-
-                    entry<Screen.Settings> {
-                        SettingsContent(
-                            onNavigate = onNavigate,
-                            onNavigateDetails = { screen ->
-                                scope.launch {
-                                    navigator.navigateTo(
-                                        pane = ListDetailPaneScaffoldRole.Detail,
-                                        contentKey = screen,
-                                    )
-                                }
-                            },
-                        )
-                    }
-                },
-        )
-
-    ListDetailPaneScaffold(
+    NavDisplay(
         modifier = modifier,
-        directive = navigator.scaffoldDirective,
-        value = navigator.scaffoldValue,
-        paneExpansionDragHandle = { state ->
-            DragHandle(state = state)
-        },
-        listPane = {
-            AnimatedPane(
-                modifier = Modifier.preferredWidth(500.dp),
-            ) {
-                NavDisplay(
-                    entries = entries,
-                    onBack = { backStack.removeLastOrNull() },
-                )
-            }
-        },
-        detailPane = {
-            AnimatedPane {
-                val detailContent: @Composable () -> Unit = {
-                    when (val screen = navigator.currentDestination?.contentKey) {
-                        is DetailScreen.Chat -> {
-                            ChannelChatScreen(
-                                modifier = Modifier.keepScreenOn(),
-                                userId = screen.id,
-                                isStandalone = false,
-                                canNavigateUp = navigator.canNavigateBack(),
-                                onNavigateUp = {
-                                    scope.launch {
-                                        navigator.navigateBack()
-                                    }
-                                },
-                            )
-                        }
+        backStack = backStack,
+        onBack = { backStack.removeLastOrNull() },
+        sceneStrategies = listOf(listDetailStrategy),
+        entryProvider =
+            entryProvider {
+                entry<Screen.Followed>(
+                    metadata = ListDetailSceneStrategy.listPane(detailPlaceholder = detailPlaceholder),
+                ) {
+                    FollowedChannelsList(
+                        onNavigate = onNavigate,
+                        onItemClick = onChannelClick,
+                    )
+                }
 
-                        DetailScreen.About -> {
-                            SettingsSectionAbout(
-                                canNavigateUp = navigator.canNavigateBack(),
-                                onNavigateUp = {
-                                    scope.launch {
-                                        navigator.navigateBack()
-                                    }
-                                },
-                                onShareLogs = onShareLogs,
-                            )
-                        }
+                entry<Screen.Live>(
+                    metadata = ListDetailSceneStrategy.listPane(detailPlaceholder = detailPlaceholder),
+                ) {
+                    LiveTimelineScreen(
+                        selectedChannelId = (backStack.lastOrNull() as? DetailScreen.Chat)?.id,
+                        onNavigate = onNavigate,
+                        onChannelClick = onChannelClick,
+                    )
+                }
 
-                        DetailScreen.Appearance -> {
-                            SettingsSectionAppearance(
-                                canNavigateUp = navigator.canNavigateBack(),
-                                onNavigateUp = {
-                                    scope.launch {
-                                        navigator.navigateBack()
-                                    }
-                                },
-                                onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
-                            )
-                        }
+                entry<Screen.Future>(
+                    metadata = ListDetailSceneStrategy.listPane(detailPlaceholder = detailPlaceholder),
+                ) {
+                    FutureTimelineScreen(
+                        onNavigate = onNavigate,
+                    )
+                }
 
-                        DetailScreen.DependencyCredits -> {
-                            SettingsSectionDependencies(
-                                canNavigateUp = navigator.canNavigateBack(),
-                                onNavigateUp = {
-                                    scope.launch {
-                                        navigator.navigateBack()
-                                    }
-                                },
-                            )
-                        }
+                entry<Screen.Search>(
+                    metadata = ListDetailSceneStrategy.listPane(detailPlaceholder = detailPlaceholder),
+                ) {
+                    SearchScreen(
+                        onNavigate = onNavigate,
+                        onChannelClick = onChannelClick,
+                    )
+                }
 
-                        DetailScreen.Notifications -> {
-                            SettingsSectionNotifications(
-                                canNavigateUp = navigator.canNavigateBack(),
-                                onNavigateUp = {
-                                    scope.launch {
-                                        navigator.navigateBack()
-                                    }
-                                },
-                                onOpenNotificationPreferences = onOpenNotificationPreferences,
-                                onOpenBubblePreferences = onOpenBubblePreferences,
-                            )
-                        }
+                entry<Screen.Settings>(
+                    metadata = ListDetailSceneStrategy.listPane(detailPlaceholder = detailPlaceholder),
+                ) {
+                    SettingsContent(
+                        onNavigate = onNavigate,
+                        onNavigateDetails = { screen -> backStack.navigateToDetail(screen) },
+                    )
+                }
 
-                        DetailScreen.ThirdParties -> {
-                            SettingsSectionThirdParties(
-                                canNavigateUp = navigator.canNavigateBack(),
-                                onNavigateUp = {
-                                    scope.launch {
-                                        navigator.navigateBack()
-                                    }
-                                },
-                            )
-                        }
-
-                        null -> {
-                            // No detail screen selected
-                            NoContent(
-                                modifier = Modifier.fillMaxSize(),
-                            )
-                        }
+                entry<DetailScreen.Chat>(
+                    metadata = ListDetailSceneStrategy.detailPane(),
+                ) { screen ->
+                    DetailPaneContent(isTwoPane) {
+                        ChannelChatScreen(
+                            modifier = Modifier.keepScreenOn(),
+                            userId = screen.id,
+                            isStandalone = false,
+                            canNavigateUp = !isTwoPane,
+                            onNavigateUp = { backStack.removeLastOrNull() },
+                        )
                     }
                 }
 
-                // Both list and detail panes are expanded at once only on wide screens; on
-                // compact screens a single pane fills the whole scaffold and stays unboxed.
-                val isListAndDetailVisible =
-                    navigator.scaffoldValue[ListDetailPaneScaffoldRole.List] == PaneAdaptedValue.Expanded &&
-                        navigator.scaffoldValue[ListDetailPaneScaffoldRole.Detail] == PaneAdaptedValue.Expanded
-
-                if (isListAndDetailVisible) {
-                    DetailPaneCard {
-                        detailContent()
+                entry<DetailScreen.About>(
+                    metadata = ListDetailSceneStrategy.detailPane(),
+                ) {
+                    DetailPaneContent(isTwoPane) {
+                        SettingsSectionAbout(
+                            canNavigateUp = !isTwoPane,
+                            onNavigateUp = { backStack.removeLastOrNull() },
+                            onShareLogs = onShareLogs,
+                        )
                     }
-                } else {
-                    detailContent()
                 }
-            }
-        },
+
+                entry<DetailScreen.Appearance>(
+                    metadata = ListDetailSceneStrategy.detailPane(),
+                ) {
+                    DetailPaneContent(isTwoPane) {
+                        SettingsSectionAppearance(
+                            canNavigateUp = !isTwoPane,
+                            onNavigateUp = { backStack.removeLastOrNull() },
+                            onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
+                        )
+                    }
+                }
+
+                entry<DetailScreen.DependencyCredits>(
+                    metadata = ListDetailSceneStrategy.detailPane(),
+                ) {
+                    DetailPaneContent(isTwoPane) {
+                        SettingsSectionDependencies(
+                            canNavigateUp = !isTwoPane,
+                            onNavigateUp = { backStack.removeLastOrNull() },
+                        )
+                    }
+                }
+
+                entry<DetailScreen.Notifications>(
+                    metadata = ListDetailSceneStrategy.detailPane(),
+                ) {
+                    DetailPaneContent(isTwoPane) {
+                        SettingsSectionNotifications(
+                            canNavigateUp = !isTwoPane,
+                            onNavigateUp = { backStack.removeLastOrNull() },
+                            onOpenNotificationPreferences = onOpenNotificationPreferences,
+                            onOpenBubblePreferences = onOpenBubblePreferences,
+                        )
+                    }
+                }
+
+                entry<DetailScreen.ThirdParties>(
+                    metadata = ListDetailSceneStrategy.detailPane(),
+                ) {
+                    DetailPaneContent(isTwoPane) {
+                        SettingsSectionThirdParties(
+                            canNavigateUp = !isTwoPane,
+                            onNavigateUp = { backStack.removeLastOrNull() },
+                        )
+                    }
+                }
+            },
     )
+}
+
+@Composable
+private fun DetailPaneContent(
+    isTwoPane: Boolean,
+    content: @Composable () -> Unit,
+) {
+    if (isTwoPane) {
+        DetailPaneCard {
+            content()
+        }
+    } else {
+        content()
+    }
 }

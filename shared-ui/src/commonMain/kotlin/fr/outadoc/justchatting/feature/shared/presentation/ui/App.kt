@@ -5,14 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
-import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -26,10 +22,8 @@ import fr.outadoc.justchatting.feature.shared.presentation.ScreenNavBackStackCon
 import fr.outadoc.justchatting.utils.coil.ImageLoaderFactory
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.OnLifecycleEvent
-import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 public fun App(
     onOpenNotificationPreferences: () -> Unit = {},
@@ -42,8 +36,6 @@ public fun App(
     val state by viewModel.state.collectAsState()
 
     val backStack = rememberNavBackStack(ScreenNavBackStackConfig, DefaultScreen)
-    val navigator = rememberListDetailPaneScaffoldNavigator<DetailScreen>()
-    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         // Initialize Coil
@@ -52,12 +44,7 @@ public fun App(
 
     val onChannelClick: (String) -> Unit =
         { userId: String ->
-            scope.launch {
-                navigator.navigateTo(
-                    pane = ListDetailPaneScaffoldRole.Detail,
-                    contentKey = DetailScreen.Chat(userId),
-                )
-            }
+            backStack.navigateToDetail(DetailScreen.Chat(userId))
         }
 
     LaunchedEffect(viewModel.events) {
@@ -112,7 +99,6 @@ public fun App(
                 is MainRouterViewModel.State.LoggedIn -> {
                     MainRouter(
                         backStack = backStack,
-                        navigator = navigator,
                         onOpenNotificationPreferences = onOpenNotificationPreferences,
                         onOpenBubblePreferences = onOpenBubblePreferences,
                         onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,

@@ -97,7 +97,20 @@ internal class TwitchIrcCommandParser(
 
     private fun parseUserNotice(ircMessage: IrcMessage): ChatEvent.Message? {
         val timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
-        return when (ircMessage.tags.messageId) {
+
+        // In a shared chat session, a notice originating in a source channel is forwarded
+        // to every other channel in the session wrapped in `msg-id=sharedchatnotice`; the
+        // actual notice type is carried in `source-msg-id` instead, while every other tag
+        // (msg-param-*, display-name, etc.) is left as-is. Unwrap it so the rest of this
+        // function can treat it exactly like a native notice of that type.
+        val effectiveMessageId =
+            if (ircMessage.tags.messageId == "sharedchatnotice") {
+                ircMessage.tags.sourceMessageId
+            } else {
+                ircMessage.tags.messageId
+            }
+
+        return when (effectiveMessageId) {
             "raid" -> {
                 ChatEvent.Message.IncomingRaid(
                     timestamp = timestamp,
@@ -194,7 +207,7 @@ internal class TwitchIrcCommandParser(
                     else -> {
                         ChatEvent.Message.UserNotice(
                             timestamp = timestamp,
-                            msgId = ircMessage.tags.messageId,
+                            msgId = effectiveMessageId,
                             systemMsg = ircMessage.tags.systemMsg ?: return null,
                             userMessage = parseMessage(ircMessage),
                         )
@@ -205,7 +218,7 @@ internal class TwitchIrcCommandParser(
             else -> {
                 ChatEvent.Message.UserNotice(
                     timestamp = timestamp,
-                    msgId = ircMessage.tags.messageId,
+                    msgId = effectiveMessageId,
                     systemMsg = ircMessage.tags.systemMsg ?: return null,
                     userMessage = parseMessage(ircMessage),
                 )

@@ -347,6 +347,56 @@ internal class TwitchIrcCommandParserTest {
         }
 
     @Test
+    fun `Parse shared chat sub USERNOTICE`() =
+        test {
+            input {
+                "@badge-info=;badges=;color=#FF0000;display-name=Soko_TYA;emotes=;flags=;id=57687be6-76ac-466e-87f2-3aecf8142a02;login=soko_tya;mod=0;msg-id=sharedchatnotice;msg-param-cumulative-months=1;msg-param-months=0;msg-param-multimonth-duration=1;msg-param-multimonth-tenure=0;msg-param-should-share-streak=0;msg-param-sub-plan-name=Channel\\sSubscription\\s(chloeramdani);msg-param-sub-plan=Prime;msg-param-was-gifted=false;room-id=612088082;source-badge-info=subscriber/1;source-badges=subscriber/0;source-id=82d6dcbe-08eb-4a30-849e-b25bced5a3b5;source-msg-id=sub;source-only=0;source-room-id=203096177;subscriber=0;system-msg=Soko_TYA\\ssubscribed\\swith\\sPrime.;tmi-sent-ts=1787851654513;user-id=94440150;user-type=;vip=0 :tmi.twitch.tv USERNOTICE #vicky_spleen"
+            }
+            expected {
+                ChatEvent.Message.Subscription(
+                    timestamp = Instant.fromEpochMilliseconds(1787851654513),
+                    userDisplayName = "Soko_TYA",
+                    subscriptionPlan = "Prime",
+                    months = 1,
+                    streakMonths = 0,
+                    cumulativeMonths = 1,
+                    userMessage = null,
+                )
+            }
+        }
+
+    @Test
+    fun `Parse shared chat raid USERNOTICE`() =
+        test {
+            input {
+                "@badge-info=;badges=hype-train/2;color=#C8C8C8;display-name=maxent__;emotes=;flags=;historical=1;id=5bca8513-e6b2-455b-a898-1cc7d3bf5332;login=maxent__;mod=0;msg-id=sharedchatnotice;msg-param-displayName=maxent__;msg-param-login=maxent__;msg-param-viewerCount=3;rm-received-ts=1657303912918;room-id=402890635;source-badges=hype-train/2;source-id=5bca8513-e6b2-455b-a898-1cc7d3bf5332;source-msg-id=raid;source-only=0;source-room-id=203096177;subscriber=0;system-msg=3\\sraiders\\sfrom\\smaxent__\\shave\\sjoined!;tmi-sent-ts=1657303912832;user-id=563254735;user-type= :tmi.twitch.tv USERNOTICE #pelerine\n"
+            }
+            expected {
+                ChatEvent.Message.IncomingRaid(
+                    timestamp = Instant.parse("2022-07-08T18:11:52.832Z"),
+                    raidersCount = 3,
+                    userDisplayName = "maxent__",
+                )
+            }
+        }
+
+    @Test
+    fun `Parse shared chat USERNOTICE with unknown source msg-id`() =
+        test {
+            input {
+                "@badge-info=;badges=;color=;display-name=someviewer;emotes=;flags=;id=aaaaaaaa-1111-2222-3333-444444444444;login=someviewer;mod=0;msg-id=sharedchatnotice;room-id=402890635;source-id=bbbbbbbb-1111-2222-3333-444444444444;source-msg-id=some-future-type;source-only=0;source-room-id=203096177;subscriber=0;system-msg=someviewer\\sdid\\ssomething\\sunusual!;tmi-sent-ts=1786384731167;user-id=657603581;user-type=;vip=0 :tmi.twitch.tv USERNOTICE #antoinedaniel"
+            }
+            expected {
+                ChatEvent.Message.UserNotice(
+                    timestamp = Instant.parse("2026-08-10T17:58:51.167Z"),
+                    msgId = "some-future-type",
+                    systemMsg = "someviewer did something unusual!",
+                    userMessage = null,
+                )
+            }
+        }
+
+    @Test
     fun `Parse raid USERNOTICE`() =
         test {
             input {

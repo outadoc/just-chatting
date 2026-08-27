@@ -171,6 +171,9 @@ internal val Map<String, String?>.login: String?
 internal val Map<String, String?>.messageId: String?
     get() = this["msg-id"]?.takeUnless { it.isEmpty() }
 
+internal val Map<String, String?>.sourceMessageId: String?
+    get() = this["source-msg-id"]?.takeUnless { it.isEmpty() }
+
 internal val Map<String, String?>.targetMessageId: String?
     get() = this["target-msg-id"]?.takeUnless { it.isEmpty() }
 

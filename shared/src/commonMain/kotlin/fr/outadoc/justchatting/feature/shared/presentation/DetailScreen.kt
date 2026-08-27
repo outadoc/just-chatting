@@ -1,11 +1,9 @@
 package fr.outadoc.justchatting.feature.shared.presentation
 
-import fr.outadoc.justchatting.utils.parcel.Parcelable
-import fr.outadoc.justchatting.utils.parcel.Parcelize
+import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
-@Parcelize
-public sealed interface DetailScreen : Parcelable {
+public sealed interface DetailScreen : NavKey {
     @Serializable
     public data class Chat(
         val id: String,

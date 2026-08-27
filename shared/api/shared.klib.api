@@ -402,7 +402,7 @@ sealed interface fr.outadoc.justchatting.feature.chat.domain.model/ChatListItem 
     }
 }
 
-sealed interface fr.outadoc.justchatting.feature.shared.presentation/DetailScreen : fr.outadoc.justchatting.utils.parcel/Parcelable { // fr.outadoc.justchatting.feature.shared.presentation/DetailScreen|null[0]
+sealed interface fr.outadoc.justchatting.feature.shared.presentation/DetailScreen : androidx.navigation3.runtime/NavKey { // fr.outadoc.justchatting.feature.shared.presentation/DetailScreen|null[0]
     final class Chat : fr.outadoc.justchatting.feature.shared.presentation/DetailScreen { // fr.outadoc.justchatting.feature.shared.presentation/DetailScreen.Chat|null[0]
         constructor <init>(kotlin/String) // fr.outadoc.justchatting.feature.shared.presentation/DetailScreen.Chat.<init>|<init>(kotlin.String){}[0]
 

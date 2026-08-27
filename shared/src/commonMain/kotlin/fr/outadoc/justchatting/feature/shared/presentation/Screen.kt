@@ -39,6 +39,15 @@ public val ScreenNavBackStackConfig: SavedStateConfiguration =
                     subclass(Screen.Future::class, Screen.Future.serializer())
                     subclass(Screen.Search::class, Screen.Search.serializer())
                     subclass(Screen.Settings::class, Screen.Settings.serializer())
+                    subclass(DetailScreen.Chat::class, DetailScreen.Chat.serializer())
+                    subclass(DetailScreen.About::class, DetailScreen.About.serializer())
+                    subclass(DetailScreen.Appearance::class, DetailScreen.Appearance.serializer())
+                    subclass(
+                        DetailScreen.DependencyCredits::class,
+                        DetailScreen.DependencyCredits.serializer(),
+                    )
+                    subclass(DetailScreen.Notifications::class, DetailScreen.Notifications.serializer())
+                    subclass(DetailScreen.ThirdParties::class, DetailScreen.ThirdParties.serializer())
                 }
             }
     }

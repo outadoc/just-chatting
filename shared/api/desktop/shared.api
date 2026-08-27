@@ -1477,7 +1477,7 @@ public abstract interface class fr/outadoc/justchatting/feature/shared/presentat
 	public abstract fun onDeeplinkReceived (Ljava/lang/String;)V
 }
 
-public abstract interface class fr/outadoc/justchatting/feature/shared/presentation/DetailScreen : fr/outadoc/justchatting/utils/parcel/Parcelable {
+public abstract interface class fr/outadoc/justchatting/feature/shared/presentation/DetailScreen : androidx/navigation3/runtime/NavKey {
 }
 
 public final class fr/outadoc/justchatting/feature/shared/presentation/DetailScreen$About : fr/outadoc/justchatting/feature/shared/presentation/DetailScreen {

@@ -90,7 +90,7 @@ kotlin {
                 implementation(libs.compose.components.resources)
                 implementation(libs.compose.material.adaptive.core)
                 implementation(libs.compose.material.adaptive.layout)
-                implementation(libs.compose.material.adaptive.navigation)
+                implementation(libs.compose.material.adaptive.navigation3)
                 implementation(libs.compose.material.adaptive.navigation.suite)
                 implementation(libs.compose.material.windowSizeClass)
                 implementation(libs.compose.material3)

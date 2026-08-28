@@ -71,7 +71,7 @@ They can be found in the modules' `abi/` directory.
 ```bash
 ./gradlew updateKotlinAbi        # Generate ABI files
 ./gradlew checkKotlinAbi         # Check ABI compatibility
-̀```
+```
 
 ## Testing
 

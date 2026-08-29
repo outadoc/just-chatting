@@ -146,6 +146,20 @@ kotlin {
                 implementation(libs.nucleus.darkmode.detector)
             }
         }
+
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
+
+        val desktopTest by getting {
+            dependencies {
+                // Needed for the native Skiko binaries Skia decode tests rely on.
+                implementation(compose.desktop.currentOs)
+            }
+        }
     }
 }
 

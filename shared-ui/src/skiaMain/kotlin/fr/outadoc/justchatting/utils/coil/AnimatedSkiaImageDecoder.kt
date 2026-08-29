@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.utils.coil
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
@@ -70,7 +71,8 @@ internal class AnimatedSkiaImageDecoder(
     }
 }
 
-private class AnimatedSkiaImage(
+@VisibleForTesting
+internal class AnimatedSkiaImage(
     codec: Codec,
     prerenderFrames: Boolean,
 ) : Image {
@@ -146,7 +148,8 @@ private class AnimatedSkiaImage(
      */
     private var frameDecoder: FrameDecoder? = FrameDecoder(codec, imageInfo)
 
-    private val frames: Array<SkiaImage?> =
+    @VisibleForTesting
+    internal val frames: Array<SkiaImage?> =
         Array(frameCount) { index ->
             if (prerenderFrames) decodeFrame(index) else null
         }
@@ -205,7 +208,8 @@ private class AnimatedSkiaImage(
     }
 
     /** The frame that should be visible [positionInPlayThrough] milliseconds into a play through. */
-    private fun frameIndexAt(positionInPlayThrough: Long): Int {
+    @VisibleForTesting
+    internal fun frameIndexAt(positionInPlayThrough: Long): Int {
         for (index in 1 until frameCount) {
             if (frameStartOffsets[index] > positionInPlayThrough) {
                 return index - 1
@@ -250,11 +254,14 @@ private class AnimatedSkiaImage(
  * Decodes frames out of a [Codec] into rasterised images, reusing a single [Bitmap] as scratch
  * space. Holds native memory for as long as it is open.
  */
-private class FrameDecoder(
+@VisibleForTesting
+internal class FrameDecoder(
     private val codec: Codec,
     private val imageInfo: ImageInfo,
 ) : AutoCloseable {
-    private val bitmap = Bitmap().apply { allocPixels(codec.imageInfo) }
+    // codec.imageInfo only reflects frame 0's alpha type. A later frame with a different alpha
+    // type (e.g. transparent when frame 0 isn't) would fail to decode into a bitmap sized from it.
+    private val bitmap = Bitmap().also { it.allocPixels(imageInfo) }
 
     /** Index of the frame currently held in [bitmap], or [NO_PRIOR_FRAME] if it holds none. */
     private var bitmapFrameIndex: Int = NO_PRIOR_FRAME

@@ -2,12 +2,13 @@ package fr.outadoc.justchatting.feature.timeline.presentation.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.LiveTv
 import androidx.compose.material.icons.filled.PictureInPictureAlt
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -66,8 +67,12 @@ internal fun LiveDetailsDialog(
                 ExtraUserInfo(user = user)
 
                 if (stream != null) {
-                    HorizontalDivider()
-                    StreamInfo(stream = stream)
+                    Card {
+                        StreamInfo(
+                            modifier = Modifier.padding(16.dp),
+                            stream = stream,
+                        )
+                    }
                 }
             }
         },

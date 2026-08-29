@@ -15,7 +15,7 @@ class AnimatedSkiaImageDecoderTest {
     @Test
     fun `decodes opcrotteRage gif dimensions and frame count`() =
         runTest {
-            val result: DecodeResult = AnimatedSkiaImageDecoder(source = opcrotteRageImageSource()).decode()
+            val result: DecodeResult = AnimatedSkiaImageDecoder(source = gifImageSource(OPCROTTE_RAGE)).decode()
             val image = result.image as AnimatedSkiaImage
 
             assertEquals(112, image.width)
@@ -39,7 +39,7 @@ class AnimatedSkiaImageDecoderTest {
      */
     @Test
     fun `every frame of opcrotteRage gif decodes successfully`() {
-        val diagnostics = diagnoseFrames(opcrotteRageCodec())
+        val diagnostics = diagnoseFrames(gifCodec(OPCROTTE_RAGE))
         val failed = diagnostics.filterNot { it.decoded }
 
         assertTrue(
@@ -49,9 +49,8 @@ class AnimatedSkiaImageDecoderTest {
     }
 
     @Test
-    fun `frameIndexAt returns the frame active at a given offset`() {
-        val codec = opcrotteRageCodec()
-        val image = AnimatedSkiaImage(codec, prerenderFrames = false)
+    fun `frameIndexAt returns the frame active at a given offset for opcrotteRage gif`() {
+        val image = AnimatedSkiaImage(gifCodec(OPCROTTE_RAGE), prerenderFrames = false)
 
         // opcrotteRage.gif: 9 frames, 60ms each, looping forever (total play-through = 540ms).
         assertEquals(0, image.frameIndexAt(positionInPlayThrough = 0))
@@ -67,21 +66,69 @@ class AnimatedSkiaImageDecoderTest {
         assertEquals(0, image.frameIndexAt(positionInPlayThrough = 540 % OPCROTTE_RAGE_TOTAL_DURATION_MS))
     }
 
+    @Test
+    fun `decodes angledDance gif dimensions and frame count`() =
+        runTest {
+            val result: DecodeResult = AnimatedSkiaImageDecoder(source = gifImageSource(ANGLED_DANCE)).decode()
+            val image = result.image as AnimatedSkiaImage
+
+            assertEquals(112, image.width)
+            assertEquals(112, image.height)
+            assertEquals(ANGLED_DANCE_FRAME_COUNT, image.frames.size)
+        }
+
+    /**
+     * Known-good control fixture, contrasting with `opcrotteRage.gif` above: all 16 frames use
+     * the *same* transparent-color-index alpha type (`UNPREMUL`), unlike `opcrotteRage.gif`,
+     * which mixes opaque and transparent frames. `codec.imageInfo`'s aggregate alpha type
+     * therefore matches every individual frame here, so none of them hit the `FrameDecoder`
+     * allocation mismatch. Keeping this test passing guards against a future fix for the
+     * `opcrotteRage.gif` regression accidentally breaking a GIF that already decodes correctly.
+     */
+    @Test
+    fun `every frame of angledDance gif decodes successfully`() {
+        val diagnostics = diagnoseFrames(gifCodec(ANGLED_DANCE))
+        val failed = diagnostics.filterNot { it.decoded }
+
+        assertTrue(
+            failed.isEmpty(),
+            "Expected every frame to decode, but ${failed.size} frame(s) failed:${diagnostics.toReportString()}",
+        )
+    }
+
+    @Test
+    fun `frameIndexAt returns the frame active at a given offset for angledDance gif`() {
+        val image = AnimatedSkiaImage(gifCodec(ANGLED_DANCE), prerenderFrames = false)
+
+        // angledDance.gif: 16 frames, 40ms each, looping forever (total play-through = 640ms).
+        assertEquals(0, image.frameIndexAt(positionInPlayThrough = 0))
+        assertEquals(0, image.frameIndexAt(positionInPlayThrough = 39))
+        assertEquals(1, image.frameIndexAt(positionInPlayThrough = 40))
+        assertEquals(15, image.frameIndexAt(positionInPlayThrough = 639))
+
+        assertEquals(0, image.frameIndexAt(positionInPlayThrough = 640 % ANGLED_DANCE_TOTAL_DURATION_MS))
+    }
+
     private companion object {
+        private const val OPCROTTE_RAGE = "opcrotteRage.gif"
         private const val OPCROTTE_RAGE_FRAME_COUNT = 9
         private const val OPCROTTE_RAGE_TOTAL_DURATION_MS = 540L
+
+        private const val ANGLED_DANCE = "angledDance.gif"
+        private const val ANGLED_DANCE_FRAME_COUNT = 16
+        private const val ANGLED_DANCE_TOTAL_DURATION_MS = 640L
     }
 }
 
-private fun opcrotteRageBytes(): ByteArray =
+private fun gifBytes(fileName: String): ByteArray =
     checkNotNull(
-        AnimatedSkiaImageDecoderTest::class.java.getResourceAsStream("/gif/opcrotteRage.gif"),
-    ) { "Test resource /gif/opcrotteRage.gif not found on classpath" }.use { it.readBytes() }
+        AnimatedSkiaImageDecoderTest::class.java.getResourceAsStream("/gif/$fileName"),
+    ) { "Test resource /gif/$fileName not found on classpath" }.use { it.readBytes() }
 
-private fun opcrotteRageCodec(): Codec = Codec.makeFromData(Data.makeFromBytes(opcrotteRageBytes()))
+private fun gifCodec(fileName: String): Codec = Codec.makeFromData(Data.makeFromBytes(gifBytes(fileName)))
 
-private fun opcrotteRageImageSource(): ImageSource =
+private fun gifImageSource(fileName: String): ImageSource =
     ImageSource(
-        source = Buffer().apply { write(opcrotteRageBytes()) },
+        source = Buffer().apply { write(gifBytes(fileName)) },
         fileSystem = FileSystem.SYSTEM,
     )

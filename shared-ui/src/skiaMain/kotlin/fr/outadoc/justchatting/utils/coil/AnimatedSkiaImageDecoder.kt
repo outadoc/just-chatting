@@ -35,7 +35,7 @@ import org.jetbrains.skia.Image as SkiaImage
 @Deprecated("Replace with proper coil3 implementation once available")
 internal class AnimatedSkiaImageDecoder(
     private val source: ImageSource,
-    private val prerenderFrames: Boolean = true,
+    private val prerenderFrames: Boolean,
 ) : Decoder {
     override suspend fun decode(): DecodeResult {
         val bytes = source.source().use { it.readByteArray() }
@@ -47,7 +47,7 @@ internal class AnimatedSkiaImageDecoder(
     }
 
     class Factory(
-        private val prerenderFrames: Boolean = false,
+        private val prerenderFrames: Boolean,
     ) : Decoder.Factory {
         override fun create(
             result: SourceFetchResult,

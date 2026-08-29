@@ -256,7 +256,16 @@ internal class FrameDecoder(
     private val codec: Codec,
     private val imageInfo: ImageInfo,
 ) : AutoCloseable {
-    private val bitmap = Bitmap().apply { allocPixels(codec.imageInfo) }
+    // codec.imageInfo reflects only the aggregate/first frame's alpha type (e.g. OPAQUE if frame
+    // 0 has no transparency), but individual later frames may have a different one (e.g. UNPREMUL
+    // if they use a transparent color index). Skia's readPixels() refuses to decode a frame into a
+    // bitmap whose alpha type doesn't match that frame's, so allocate from imageInfo instead,
+    // which is alpha-capable for every frame.
+    // NOT `Bitmap().apply { allocPixels(imageInfo) }`: Bitmap itself has an `imageInfo` property
+    // (via IHasImageInfo), so inside an `apply` block's implicit receiver, an unqualified
+    // `imageInfo` resolves to the (empty, not-yet-allocated) bitmap's own property instead of this
+    // class's constructor parameter — silently allocating a zero-sized/UNKNOWN-typed bitmap.
+    private val bitmap = Bitmap().also { it.allocPixels(imageInfo) }
 
     /** Index of the frame currently held in [bitmap], or [NO_PRIOR_FRAME] if it holds none. */
     private var bitmapFrameIndex: Int = NO_PRIOR_FRAME

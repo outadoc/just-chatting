@@ -24,18 +24,15 @@ class AnimatedSkiaImageDecoderTest {
         }
 
     /**
-     * Regression test — **expected to fail** until the underlying bug is fixed.
-     *
-     * `opcrotteRage.gif` mixes fully-opaque frames with frames 2, 5 and 7, which use a
-     * transparent color index (Skia reports their [org.jetbrains.skia.AnimationFrameInfo.alphaType]
-     * as `UNPREMUL`). [FrameDecoder] allocates its reusable scratch bitmap from
-     * `codec.imageInfo`, which reflects only frame 0's (`OPAQUE`) alpha type. Skia's
-     * `Codec.readPixels` refuses to decode a frame whose native alpha type doesn't match that
-     * bitmap, throwing `IllegalArgumentException`, which [AnimatedSkiaImage.decodeFrame] swallows
-     * — so those three frames are silently never drawn, i.e. the animation appears to drop them.
-     *
-     * Fix: allocate `FrameDecoder`'s scratch bitmap from its own `imageInfo` field (already
-     * `UNPREMUL`) instead of `codec.imageInfo`.
+     * Regression test for the dropped-frames bug: `opcrotteRage.gif` mixes fully-opaque frames
+     * with frames 2, 5 and 7, which use a transparent color index (Skia reports their
+     * [org.jetbrains.skia.AnimationFrameInfo.alphaType] as `UNPREMUL`). [FrameDecoder] used to
+     * allocate its reusable scratch bitmap from `codec.imageInfo`, which reflects only frame 0's
+     * (`OPAQUE`) alpha type — Skia's `Codec.readPixels` refuses to decode a frame whose native
+     * alpha type doesn't match that bitmap, throwing `IllegalArgumentException`, which
+     * [AnimatedSkiaImage.decodeFrame] swallows, so those three frames were silently never drawn.
+     * Fixed by allocating the scratch bitmap from `FrameDecoder`'s own `imageInfo` field (already
+     * `UNPREMUL`) instead.
      */
     @Test
     fun `every frame of opcrotteRage gif decodes successfully`() {

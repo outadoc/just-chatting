@@ -421,7 +421,7 @@ internal object DemoData {
                 ChatEvent.Message.GigantifiedEmoteMessage(
                     timestamp = timestamp,
                     userMessage =
-                        chatMessage("yarrow", "Yarrow", "Pog", embeddedEmotes = listOf(pogEmote))(timestamp, id),
+                        chatMessage("yarrow", "Yarrow", "Joel", embeddedEmotes = listOf(joelEmote))(timestamp, id),
                 )
             },
         )

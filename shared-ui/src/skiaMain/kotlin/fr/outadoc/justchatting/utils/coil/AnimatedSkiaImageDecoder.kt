@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.utils.coil
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
@@ -70,6 +71,7 @@ internal class AnimatedSkiaImageDecoder(
     }
 }
 
+@VisibleForTesting
 internal class AnimatedSkiaImage(
     codec: Codec,
     prerenderFrames: Boolean,
@@ -146,8 +148,7 @@ internal class AnimatedSkiaImage(
      */
     private var frameDecoder: FrameDecoder? = FrameDecoder(codec, imageInfo)
 
-    /** Exposed as `internal` (rather than `private`) only so tests can inspect which frames
-     * failed to decode; production code never reads it from outside this class. */
+    @VisibleForTesting
     internal val frames: Array<SkiaImage?> =
         Array(frameCount) { index ->
             if (prerenderFrames) decodeFrame(index) else null
@@ -207,6 +208,7 @@ internal class AnimatedSkiaImage(
     }
 
     /** The frame that should be visible [positionInPlayThrough] milliseconds into a play through. */
+    @VisibleForTesting
     internal fun frameIndexAt(positionInPlayThrough: Long): Int {
         for (index in 1 until frameCount) {
             if (frameStartOffsets[index] > positionInPlayThrough) {
@@ -252,19 +254,13 @@ internal class AnimatedSkiaImage(
  * Decodes frames out of a [Codec] into rasterised images, reusing a single [Bitmap] as scratch
  * space. Holds native memory for as long as it is open.
  */
+@VisibleForTesting
 internal class FrameDecoder(
     private val codec: Codec,
     private val imageInfo: ImageInfo,
 ) : AutoCloseable {
-    // codec.imageInfo reflects only the aggregate/first frame's alpha type (e.g. OPAQUE if frame
-    // 0 has no transparency), but individual later frames may have a different one (e.g. UNPREMUL
-    // if they use a transparent color index). Skia's readPixels() refuses to decode a frame into a
-    // bitmap whose alpha type doesn't match that frame's, so allocate from imageInfo instead,
-    // which is alpha-capable for every frame.
-    // NOT `Bitmap().apply { allocPixels(imageInfo) }`: Bitmap itself has an `imageInfo` property
-    // (via IHasImageInfo), so inside an `apply` block's implicit receiver, an unqualified
-    // `imageInfo` resolves to the (empty, not-yet-allocated) bitmap's own property instead of this
-    // class's constructor parameter — silently allocating a zero-sized/UNKNOWN-typed bitmap.
+    // codec.imageInfo only reflects frame 0's alpha type. A later frame with a different alpha
+    // type (e.g. transparent when frame 0 isn't) would fail to decode into a bitmap sized from it.
     private val bitmap = Bitmap().also { it.allocPixels(imageInfo) }
 
     /** Index of the frame currently held in [bitmap], or [NO_PRIOR_FRAME] if it holds none. */

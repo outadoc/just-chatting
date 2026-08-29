@@ -156,9 +156,7 @@ kotlin {
 
         val desktopTest by getting {
             dependencies {
-                // Skia decode tests need the real native Skiko binaries on the classpath; the
-                // production desktop app gets these transitively via app-desktop's own
-                // compose.desktop.currentOs dependency, which isn't on shared-ui's classpath.
+                // Needed for the native Skiko binaries Skia decode tests rely on.
                 implementation(compose.desktop.currentOs)
             }
         }

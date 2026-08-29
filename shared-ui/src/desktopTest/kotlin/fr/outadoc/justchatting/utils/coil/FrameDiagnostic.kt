@@ -3,8 +3,8 @@ package fr.outadoc.justchatting.utils.coil
 import org.jetbrains.skia.Codec
 
 /**
- * Per-frame decode outcome, gathered by decoding [codec] through the real [AnimatedSkiaImage]
- * production code path (not a reimplementation), alongside the frame metadata Skia reports.
+ * Per-frame decode outcome from driving [codec] through the real [AnimatedSkiaImage] code path,
+ * alongside the frame metadata Skia reports.
  */
 internal data class FrameDiagnostic(
     val index: Int,
@@ -15,15 +15,13 @@ internal data class FrameDiagnostic(
 )
 
 /**
- * Drives [codec] through [AnimatedSkiaImage] exactly as production does (prerendering every
- * frame), then reports which frames failed to decode alongside their disposal/alpha metadata.
+ * Decodes every frame of [codec] via [AnimatedSkiaImage], same as production, and reports which
+ * frames failed alongside their disposal/alpha metadata.
  *
- * Point this at any GIF/WebP dropped into `src/desktopTest/resources/gif/` to see exactly which
- * frame(s) drop and why — e.g. an `alphaType` that differs from frame 0's is what causes the
- * `opcrotteRage.gif` regression covered by [AnimatedSkiaImageDecoderTest].
+ * Point this at any GIF/WebP dropped into `src/desktopTest/resources/gif/` to see which frame(s)
+ * fail and why.
  *
- * Consumes [codec]: prerendering releases the underlying native codec once done, matching what
- * [AnimatedSkiaImageDecoder] does in production, so don't reuse it afterwards.
+ * Consumes [codec]: prerendering closes it, so don't reuse it afterwards.
  */
 internal fun diagnoseFrames(codec: Codec): List<FrameDiagnostic> {
     val framesInfo = codec.framesInfo

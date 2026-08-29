@@ -24,15 +24,10 @@ class AnimatedSkiaImageDecoderTest {
         }
 
     /**
-     * Regression test for the dropped-frames bug: `opcrotteRage.gif` mixes fully-opaque frames
-     * with frames 2, 5 and 7, which use a transparent color index (Skia reports their
-     * [org.jetbrains.skia.AnimationFrameInfo.alphaType] as `UNPREMUL`). [FrameDecoder] used to
-     * allocate its reusable scratch bitmap from `codec.imageInfo`, which reflects only frame 0's
-     * (`OPAQUE`) alpha type — Skia's `Codec.readPixels` refuses to decode a frame whose native
-     * alpha type doesn't match that bitmap, throwing `IllegalArgumentException`, which
-     * [AnimatedSkiaImage.decodeFrame] swallows, so those three frames were silently never drawn.
-     * Fixed by allocating the scratch bitmap from `FrameDecoder`'s own `imageInfo` field (already
-     * `UNPREMUL`) instead.
+     * Frames 2, 5 and 7 use a transparent color index; the rest don't. [FrameDecoder] used to
+     * allocate its scratch bitmap from `codec.imageInfo`, which only reflects frame 0's alpha
+     * type. Skia refused frames whose alpha type didn't match, and the failure got swallowed —
+     * so those frames were silently never drawn.
      */
     @Test
     fun `every frame of opcrotteRage gif decodes successfully`() {
@@ -57,9 +52,8 @@ class AnimatedSkiaImageDecoderTest {
         assertEquals(2, image.frameIndexAt(positionInPlayThrough = 120))
         assertEquals(8, image.frameIndexAt(positionInPlayThrough = 539))
 
-        // Positions are taken modulo totalDuration by draw(), so 540 itself is never passed in
-        // practice, but the wraparound is what a caller relies on: position 0 of the next
-        // play-through must resolve back to frame 0.
+        // draw() takes position modulo totalDuration, so the next play-through's position 0
+        // must resolve back to frame 0.
         assertEquals(0, image.frameIndexAt(positionInPlayThrough = 540 % OPCROTTE_RAGE_TOTAL_DURATION_MS))
     }
 
@@ -75,12 +69,8 @@ class AnimatedSkiaImageDecoderTest {
         }
 
     /**
-     * Known-good control fixture, contrasting with `opcrotteRage.gif` above: all 16 frames use
-     * the *same* transparent-color-index alpha type (`UNPREMUL`), unlike `opcrotteRage.gif`,
-     * which mixes opaque and transparent frames. `codec.imageInfo`'s aggregate alpha type
-     * therefore matches every individual frame here, so none of them hit the `FrameDecoder`
-     * allocation mismatch. Keeping this test passing guards against a future fix for the
-     * `opcrotteRage.gif` regression accidentally breaking a GIF that already decodes correctly.
+     * Control fixture: every frame here uses the same alpha type, so it never hit the bug above.
+     * Keep this passing so a future change can't quietly break a GIF that already works.
      */
     @Test
     fun `every frame of angledDance gif decodes successfully`() {

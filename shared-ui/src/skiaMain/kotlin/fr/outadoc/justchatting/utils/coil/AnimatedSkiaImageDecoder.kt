@@ -26,6 +26,8 @@ import org.jetbrains.skia.ColorSpace
 import org.jetbrains.skia.ColorType
 import org.jetbrains.skia.Data
 import org.jetbrains.skia.ImageInfo
+import org.jetbrains.skia.Rect
+import org.jetbrains.skia.SamplingMode
 import kotlin.experimental.and
 import kotlin.time.TimeSource
 import org.jetbrains.skia.Image as SkiaImage
@@ -241,11 +243,28 @@ internal class AnimatedSkiaImage(
     }
 
     private fun Canvas.drawFrame(frameIndex: Int) {
-        val frame = frames[frameIndex] ?: decodeFrame(frameIndex)?.also { frames[frameIndex] = it }
-        drawImage(
-            image = frame ?: return,
-            left = 0f,
-            top = 0f,
+        val frame: SkiaImage =
+            frames[frameIndex]
+                ?: decodeFrame(frameIndex)
+                    ?.also { frames[frameIndex] = it }
+                ?: return
+
+        drawImageRect(
+            image = frame,
+            src =
+                Rect.makeWH(
+                    w = frame.width.toFloat(),
+                    h = frame.height.toFloat(),
+                ),
+            dst =
+                Rect.makeWH(
+                    w = frame.width.toFloat(),
+                    h = frame.height.toFloat(),
+                ),
+            // Linear sampling for smoother scaling
+            samplingMode = SamplingMode.LINEAR,
+            paint = null,
+            strict = true,
         )
     }
 }

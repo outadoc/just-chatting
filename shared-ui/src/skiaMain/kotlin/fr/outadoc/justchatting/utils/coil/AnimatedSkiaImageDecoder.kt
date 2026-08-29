@@ -70,7 +70,7 @@ internal class AnimatedSkiaImageDecoder(
     }
 }
 
-private class AnimatedSkiaImage(
+internal class AnimatedSkiaImage(
     codec: Codec,
     prerenderFrames: Boolean,
 ) : Image {
@@ -146,7 +146,9 @@ private class AnimatedSkiaImage(
      */
     private var frameDecoder: FrameDecoder? = FrameDecoder(codec, imageInfo)
 
-    private val frames: Array<SkiaImage?> =
+    /** Exposed as `internal` (rather than `private`) only so tests can inspect which frames
+     * failed to decode; production code never reads it from outside this class. */
+    internal val frames: Array<SkiaImage?> =
         Array(frameCount) { index ->
             if (prerenderFrames) decodeFrame(index) else null
         }
@@ -205,7 +207,7 @@ private class AnimatedSkiaImage(
     }
 
     /** The frame that should be visible [positionInPlayThrough] milliseconds into a play through. */
-    private fun frameIndexAt(positionInPlayThrough: Long): Int {
+    internal fun frameIndexAt(positionInPlayThrough: Long): Int {
         for (index in 1 until frameCount) {
             if (frameStartOffsets[index] > positionInPlayThrough) {
                 return index - 1
@@ -250,7 +252,7 @@ private class AnimatedSkiaImage(
  * Decodes frames out of a [Codec] into rasterised images, reusing a single [Bitmap] as scratch
  * space. Holds native memory for as long as it is open.
  */
-private class FrameDecoder(
+internal class FrameDecoder(
     private val codec: Codec,
     private val imageInfo: ImageInfo,
 ) : AutoCloseable {

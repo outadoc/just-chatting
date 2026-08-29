@@ -146,6 +146,22 @@ kotlin {
                 implementation(libs.nucleus.darkmode.detector)
             }
         }
+
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
+
+        val desktopTest by getting {
+            dependencies {
+                // Skia decode tests need the real native Skiko binaries on the classpath; the
+                // production desktop app gets these transitively via app-desktop's own
+                // compose.desktop.currentOs dependency, which isn't on shared-ui's classpath.
+                implementation(compose.desktop.currentOs)
+            }
+        }
     }
 }
 

@@ -27,6 +27,7 @@ kotlin {
 
         withHostTest {}
 
+        @Suppress("UnstableApiUsage")
         optimization {
             consumerKeepRules.apply {
                 publish = true

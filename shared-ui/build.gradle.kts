@@ -19,7 +19,7 @@ kotlin {
     android {
         namespace = "fr.outadoc.justchatting.shared.ui"
         compileSdk = 37
-        minSdk = 23
+        minSdk = 24
 
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)

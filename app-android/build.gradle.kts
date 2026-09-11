@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "fr.outadoc.justchatting"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 37
         versionCode = (findProperty("externalVersionCode") as String?)?.toInt() ?: 99
         versionName = (findProperty("externalVersionName") as String?) ?: "SNAPSHOT"

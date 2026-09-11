@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -12,18 +13,13 @@ plugins {
 kotlin {
     explicitApi()
 
-    @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
-    abiValidation {
-        enabled = true
-        klib {
-            keepUnsupportedTargets = false
-        }
-    }
+    @OptIn(ExperimentalAbiValidation::class)
+    abiValidation()
 
     android {
         namespace = "fr.outadoc.justchatting.shared.ui"
         compileSdk = 37
-        minSdk = 23
+        minSdk = 24
 
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
@@ -41,6 +37,7 @@ kotlin {
 
         enableCoreLibraryDesugaring = true
 
+        @Suppress("UnstableApiUsage")
         optimization {
             consumerKeepRules.apply {
                 publish = true

@@ -32,13 +32,11 @@ internal class DemoAwareTwitchRepository(
             block(if (isDemoMode) demo else real.value)
         }
 
-    override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> =
-        liveFlow { repository -> repository.searchChannels(query) }
+    override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> = liveFlow { repository -> repository.searchChannels(query) }
 
     override suspend fun getFollowedChannels(): Flow<List<ChannelFollow>> = liveFlow { repository -> repository.getFollowedChannels() }
 
-    override suspend fun getStreamByUserId(userId: String): Flow<Result<Stream>> =
-        liveFlow { repository -> repository.getStreamByUserId(userId) }
+    override suspend fun getStreamByUserId(userId: String): Flow<Result<Stream>> = liveFlow { repository -> repository.getStreamByUserId(userId) }
 
     override suspend fun getUserById(id: String): Flow<Result<User>> = liveFlow { repository -> repository.getUserById(id) }
 

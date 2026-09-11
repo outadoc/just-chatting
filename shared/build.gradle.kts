@@ -1,5 +1,6 @@
 import com.github.jk1.license.render.JsonReportRenderer
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -22,18 +23,13 @@ ktlint {
 kotlin {
     explicitApi()
 
-    @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
-    abiValidation {
-        enabled = true
-        klib {
-            keepUnsupportedTargets = false
-        }
-    }
+    @OptIn(ExperimentalAbiValidation::class)
+    abiValidation()
 
     android {
         namespace = "fr.outadoc.justchatting.shared"
         compileSdk = 37
-        minSdk = 23
+        minSdk = 24
 
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
@@ -53,6 +49,7 @@ kotlin {
 
         withHostTest {}
 
+        @Suppress("UnstableApiUsage")
         optimization {
             consumerKeepRules.apply {
                 publish = true

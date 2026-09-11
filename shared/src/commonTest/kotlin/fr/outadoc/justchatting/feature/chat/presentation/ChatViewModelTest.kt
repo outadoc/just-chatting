@@ -868,8 +868,7 @@ private class FakeTwitchRepository : TwitchRepository {
 
     override suspend fun getFollowedChannels(): Flow<List<ChannelFollow>> = error("Not used in tests")
 
-    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
-        users.map { users -> Result.success(ids.mapNotNull { id -> users[id] }) }
+    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> = users.map { users -> Result.success(ids.mapNotNull { id -> users[id] }) }
 
     override suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>> = error("Not used in tests")
 
@@ -905,8 +904,7 @@ private class FakeChatRepository : ChatRepository {
 
     fun eventsFor(userId: String): MutableSharedFlow<ChatEvent> = eventFlows.getOrPut(userId) { MutableSharedFlow() }
 
-    fun connectionStatusFor(userId: String): MutableStateFlow<ConnectionStatus> =
-        connectionStatusFlows.getOrPut(userId) { MutableStateFlow(ConnectionStatus()) }
+    fun connectionStatusFor(userId: String): MutableStateFlow<ConnectionStatus> = connectionStatusFlows.getOrPut(userId) { MutableStateFlow(ConnectionStatus()) }
 
     override fun getChatEventFlow(
         user: User,

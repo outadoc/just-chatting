@@ -13,6 +13,5 @@ import fr.outadoc.justchatting.feature.pronouns.domain.model.UserPronounIds
 internal class DemoPronounsApi : PronounsApi {
     override suspend fun getPronouns(): Result<List<Pronoun>> = Result.success(emptyList())
 
-    override suspend fun getUserPronouns(chatter: Chatter): Result<UserPronounIds> =
-        Result.success(UserPronounIds(userId = chatter.id, mainPronounId = null, altPronounId = null))
+    override suspend fun getUserPronouns(chatter: Chatter): Result<UserPronounIds> = Result.success(UserPronounIds(userId = chatter.id, mainPronounId = null, altPronounId = null))
 }

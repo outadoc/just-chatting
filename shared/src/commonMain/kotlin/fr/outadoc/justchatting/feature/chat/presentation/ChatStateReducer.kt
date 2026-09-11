@@ -378,11 +378,9 @@ internal class ChatStateReducer {
             isAutoCompleteSelection = autocomplete,
         )
 
-    private fun ChatViewModel.InputAction.ReplyToMessage.reduce(inputState: ChatViewModel.InputState): ChatViewModel.InputState =
-        inputState.copy(replyingTo = chatListItem)
+    private fun ChatViewModel.InputAction.ReplyToMessage.reduce(inputState: ChatViewModel.InputState): ChatViewModel.InputState = inputState.copy(replyingTo = chatListItem)
 
-    private fun ChatViewModel.InputAction.UpdateAutoCompleteItems.reduce(inputState: ChatViewModel.InputState): ChatViewModel.InputState =
-        inputState.copy(autoCompleteItems = items)
+    private fun ChatViewModel.InputAction.UpdateAutoCompleteItems.reduce(inputState: ChatViewModel.InputState): ChatViewModel.InputState = inputState.copy(autoCompleteItems = items)
 
     @Suppress("UnusedReceiverParameter")
     private fun ChatViewModel.InputAction.ReplaceInputWithLastSentMessage.reduce(

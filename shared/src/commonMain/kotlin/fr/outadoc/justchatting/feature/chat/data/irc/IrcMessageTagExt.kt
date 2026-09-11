@@ -4,6 +4,7 @@ import de.cketti.codepoints.offsetByCodePoints
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEmote
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.Gif
 import fr.outadoc.justchatting.feature.emotes.data.twitch.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import kotlin.time.Duration
@@ -33,13 +34,58 @@ internal fun Map<String, String?>.parseEmotes(message: String): List<Emote>? =
                         }
                     val realEnd = if (begin == realBegin) end else end + realBegin - begin
 
-                    if (realBegin > realEnd || realEnd >= message.length) return@mapNotNull null
+                    if (realBegin > realEnd || realEnd >= message.length) {
+                        return@mapNotNull null
+                    }
 
                     ChatEmote(
                         id = emote.key,
                         name = message.slice(realBegin..realEnd),
                     ).map()
                 }.orEmpty()
+        }
+
+internal fun Map<String, String?>.parseGifs(message: String): List<Gif>? =
+    this["gifs"]
+        // A single message theoretically carries several GIFs, comma-separated.
+        // Giphy URLs never contain commas, so this split is safe.
+        ?.split(",")
+        ?.dropLastWhile { it.isEmpty() }
+        ?.mapNotNull { entry ->
+            // Each entry is formatted as `start-end|id|url`, where the range mirrors the
+            // `emotes` tag and points at the placeholder text describing the GIF.
+            // Values are server-provided, so skip malformed entries rather than crash.
+            val fields = entry.split("|")
+            val range = fields.getOrNull(0)?.split("-") ?: return@mapNotNull null
+            val begin = range.getOrNull(0)?.toIntOrNull() ?: return@mapNotNull null
+            val end = range.getOrNull(1)?.toIntOrNull() ?: return@mapNotNull null
+
+            val id = fields.getOrNull(1)?.takeUnless { it.isEmpty() } ?: return@mapNotNull null
+            val url = fields.getOrNull(2)?.takeUnless { it.isEmpty() } ?: return@mapNotNull null
+
+            val realBegin =
+                try {
+                    message.offsetByCodePoints(0, begin)
+                } catch (e: IndexOutOfBoundsException) {
+                    return@mapNotNull null
+                }
+
+            val realEnd =
+                if (begin == realBegin) {
+                    end
+                } else {
+                    end + realBegin - begin
+                }
+
+            if (realBegin > realEnd || realEnd >= message.length) {
+                return@mapNotNull null
+            }
+
+            Gif(
+                id = id,
+                url = url,
+                description = message.slice(realBegin..realEnd),
+            )
         }
 
 internal fun Map<String, String?>.parseBadges(): List<Badge>? = parseBadgeList("badges")

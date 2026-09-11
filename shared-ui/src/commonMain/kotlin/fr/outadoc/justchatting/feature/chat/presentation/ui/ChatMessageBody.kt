@@ -2,7 +2,9 @@ package fr.outadoc.justchatting.feature.chat.presentation.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.MaterialTheme
@@ -13,7 +15,9 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -29,6 +33,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import coil3.compose.AsyncImage
 import com.materialkolor.ktx.harmonizeWithPrimary
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
@@ -118,6 +123,19 @@ internal fun ChatMessageBody(
                     hyphens = Hyphens.Auto,
                 ),
         )
+
+        body.gifs.forEach { gif ->
+            AsyncImage(
+                modifier =
+                    Modifier
+                        .padding(top = 4.dp)
+                        .heightIn(max = 200.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                model = remoteImageModel(gif.url),
+                contentDescription = gif.description,
+                contentScale = ContentScale.Fit,
+            )
+        }
 
         AnimatedVisibility(visible = richEmbed != null) {
             if (richEmbed != null) {

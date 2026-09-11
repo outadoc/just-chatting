@@ -246,6 +246,7 @@ internal class TwitchIrcCommandParser(
             color = ircMessage.tags.color,
             isAction = actionGroups != null,
             embeddedEmotes = ircMessage.tags.parseEmotes(message).orEmpty(),
+            embeddedGifs = ircMessage.tags.parseGifs(message).orEmpty(),
             badges = ircMessage.tags.parseBadges(),
             sourceBadges = ircMessage.tags.parseSourceBadges(),
             isFirstMessageByUser = ircMessage.tags.firstMsg,

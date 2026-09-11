@@ -19,6 +19,7 @@ internal sealed interface ChatEvent {
             val color: String?,
             val isAction: Boolean = false,
             val embeddedEmotes: List<Emote>,
+            val embeddedGifs: List<Gif> = emptyList(),
             val badges: List<Badge>?,
             val sourceBadges: List<Badge>? = null,
             val isFirstMessageByUser: Boolean = false,

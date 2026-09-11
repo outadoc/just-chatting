@@ -697,7 +697,10 @@ internal class ChatEventViewMapper {
                 .removePrefix(" ")
 
         return ChatListItem.Message.Body(
-            message = remainingMessage,
+            // The message text of a GIF message is only a bracketed placeholder describing
+            // the GIF; suppress it and render the image instead (the description is kept on
+            // each Gif). Observed GIFs always span the whole message.
+            message = if (embeddedGifs.isEmpty()) remainingMessage else null,
             messageId = id,
             chatter =
                 Chatter(
@@ -708,6 +711,7 @@ internal class ChatEventViewMapper {
             isAction = isAction,
             color = color,
             embeddedEmotes = embeddedEmotes.toImmutableList(),
+            gifs = embeddedGifs.toImmutableList(),
             badges = badges.orEmpty().toImmutableList(),
             sourceRoomId = sourceRoomId,
             sourceBadges = sourceBadges.orEmpty().toImmutableList(),

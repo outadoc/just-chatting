@@ -67,6 +67,7 @@ public sealed interface ChatListItem {
             val isAction: Boolean = false,
             val color: String? = null,
             val embeddedEmotes: ImmutableList<Emote> = persistentListOf(),
+            val gifs: ImmutableList<Gif> = persistentListOf(),
             val badges: ImmutableList<Badge> = persistentListOf(),
             val inReplyTo: InReplyTo? = null,
             val sourceRoomId: String? = null,

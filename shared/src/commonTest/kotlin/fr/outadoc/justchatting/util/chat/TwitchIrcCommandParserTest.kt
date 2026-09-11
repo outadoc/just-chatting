@@ -4,6 +4,7 @@ import fr.outadoc.justchatting.feature.chat.data.irc.TwitchIrcCommandParser
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEmote
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.Gif
 import fr.outadoc.justchatting.feature.emotes.data.twitch.map
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -53,6 +54,92 @@ internal class TwitchIrcCommandParserTest {
                         ),
                     isFirstMessageByUser = false,
                     timestamp = Instant.parse("2017-10-05T23:36:12.675Z"),
+                    rewardId = null,
+                    inReplyTo = null,
+                )
+            }
+        }
+
+    @Test
+    fun `Parse PRIVMSG with embedded GIF`() =
+        test {
+            input {
+                "@tmi-sent-ts=1789130720225;id=c3d67573-e850-4d00-9f42-7d306e01aa61;badges=subscriber/3048,mouseathon/1;user-id=725360911;room-id=68594999;emotes;returning-chatter=0;subscriber=1;user-type;color=#1DAA75;first-msg=0;rm-received-ts=1789130720405;badge-info=subscriber/49;historical=1;gifs=0-36|MkAqCLyL6kJuE|https://media3.giphy.com/media/MkAqCLyL6kJuE/giphy.gif?cid=095d7a5d7f504pda8gc7eppkz12i7wk1n4jf8d10ywh8fgn3&ep=v1_gifs_search&rid=giphy.gif&ct=g;flags;turbo=0;display-name=Molosse__;mod=0 :molosse__!molosse__@molosse__.tmi.twitch.tv PRIVMSG #ultia :[music video squad GIF by Little Mix]"
+            }
+            expected {
+                ChatEvent.Message.ChatMessage(
+                    id = "c3d67573-e850-4d00-9f42-7d306e01aa61",
+                    userId = "725360911",
+                    userLogin = "molosse__",
+                    userName = "Molosse__",
+                    message = "[music video squad GIF by Little Mix]",
+                    color = "#1DAA75",
+                    isAction = false,
+                    embeddedEmotes = emptyList(),
+                    embeddedGifs =
+                        listOf(
+                            Gif(
+                                id = "MkAqCLyL6kJuE",
+                                url = "https://media3.giphy.com/media/MkAqCLyL6kJuE/giphy.gif?cid=095d7a5d7f504pda8gc7eppkz12i7wk1n4jf8d10ywh8fgn3&ep=v1_gifs_search&rid=giphy.gif&ct=g",
+                                description = "[music video squad GIF by Little Mix]",
+                            ),
+                        ),
+                    badges =
+                        listOf(
+                            Badge(
+                                id = "subscriber",
+                                version = "3048",
+                            ),
+                            Badge(
+                                id = "mouseathon",
+                                version = "1",
+                            ),
+                        ),
+                    isFirstMessageByUser = false,
+                    timestamp = Instant.fromEpochMilliseconds(1789130720225),
+                    rewardId = null,
+                    inReplyTo = null,
+                )
+            }
+        }
+
+    @Test
+    fun `Parse another PRIVMSG with embedded GIF`() =
+        test {
+            input {
+                "@gifs=0-42|xIwZO9UUuVlgi3EP91|https://media3.giphy.com/media/xIwZO9UUuVlgi3EP91/giphy.gif?cid=095d7a5dl3q3ez9ezt4elk6v8xqhm0srx4k8nrdlw54j3l41&ep=v1_gifs_search&rid=giphy.gif&ct=g;returning-chatter=0;rm-received-ts=1789131159295;badges=subscriber/3048,mouseathon/1;user-id=725360911;badge-info=subscriber/49;mod=0;historical=1;room-id=68594999;first-msg=0;flags;user-type;emotes;tmi-sent-ts=1789131159102;display-name=Molosse__;color=#1DAA75;id=c9bb7068-68fc-44bb-9390-b5f93a15d433;turbo=0;subscriber=1 :molosse__!molosse__@molosse__.tmi.twitch.tv PRIVMSG #ultia :[Happy Cookie Monster GIF by Sesame Street]"
+            }
+            expected {
+                ChatEvent.Message.ChatMessage(
+                    id = "c9bb7068-68fc-44bb-9390-b5f93a15d433",
+                    userId = "725360911",
+                    userLogin = "molosse__",
+                    userName = "Molosse__",
+                    message = "[Happy Cookie Monster GIF by Sesame Street]",
+                    color = "#1DAA75",
+                    isAction = false,
+                    embeddedEmotes = emptyList(),
+                    embeddedGifs =
+                        listOf(
+                            Gif(
+                                id = "xIwZO9UUuVlgi3EP91",
+                                url = "https://media3.giphy.com/media/xIwZO9UUuVlgi3EP91/giphy.gif?cid=095d7a5dl3q3ez9ezt4elk6v8xqhm0srx4k8nrdlw54j3l41&ep=v1_gifs_search&rid=giphy.gif&ct=g",
+                                description = "[Happy Cookie Monster GIF by Sesame Street]",
+                            ),
+                        ),
+                    badges =
+                        listOf(
+                            Badge(
+                                id = "subscriber",
+                                version = "3048",
+                            ),
+                            Badge(
+                                id = "mouseathon",
+                                version = "1",
+                            ),
+                        ),
+                    isFirstMessageByUser = false,
+                    timestamp = Instant.fromEpochMilliseconds(1789131159102),
                     rewardId = null,
                     inReplyTo = null,
                 )

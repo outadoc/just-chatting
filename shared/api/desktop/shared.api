@@ -682,8 +682,19 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/AutoComplet
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class fr/outadoc/justchatting/feature/chat/presentation/BubblePermission : java/lang/Enum {
+	public static final field AllConversations Lfr/outadoc/justchatting/feature/chat/presentation/BubblePermission;
+	public static final field Disabled Lfr/outadoc/justchatting/feature/chat/presentation/BubblePermission;
+	public static final field SelectedConversationsOnly Lfr/outadoc/justchatting/feature/chat/presentation/BubblePermission;
+	public static final field Unsupported Lfr/outadoc/justchatting/feature/chat/presentation/BubblePermission;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lfr/outadoc/justchatting/feature/chat/presentation/BubblePermission;
+	public static fun values ()[Lfr/outadoc/justchatting/feature/chat/presentation/BubblePermission;
+}
+
 public abstract interface class fr/outadoc/justchatting/feature/chat/presentation/ChatNotifier {
 	public abstract fun getAreNotificationsEnabled ()Z
+	public abstract fun getBubblePermission ()Lfr/outadoc/justchatting/feature/chat/presentation/BubblePermission;
 	public abstract fun notify (Lfr/outadoc/justchatting/feature/shared/domain/model/User;)V
 }
 

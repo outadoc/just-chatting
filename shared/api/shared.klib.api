@@ -30,9 +30,24 @@ final enum class fr.outadoc.justchatting.feature.chat.domain.model/Icon : kotlin
     final fun values(): kotlin/Array<fr.outadoc.justchatting.feature.chat.domain.model/Icon> // fr.outadoc.justchatting.feature.chat.domain.model/Icon.values|values#static(){}[0]
 }
 
+final enum class fr.outadoc.justchatting.feature.chat.presentation/BubblePermission : kotlin/Enum<fr.outadoc.justchatting.feature.chat.presentation/BubblePermission> { // fr.outadoc.justchatting.feature.chat.presentation/BubblePermission|null[0]
+    enum entry AllConversations // fr.outadoc.justchatting.feature.chat.presentation/BubblePermission.AllConversations|null[0]
+    enum entry Disabled // fr.outadoc.justchatting.feature.chat.presentation/BubblePermission.Disabled|null[0]
+    enum entry SelectedConversationsOnly // fr.outadoc.justchatting.feature.chat.presentation/BubblePermission.SelectedConversationsOnly|null[0]
+    enum entry Unsupported // fr.outadoc.justchatting.feature.chat.presentation/BubblePermission.Unsupported|null[0]
+
+    final val entries // fr.outadoc.justchatting.feature.chat.presentation/BubblePermission.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<fr.outadoc.justchatting.feature.chat.presentation/BubblePermission> // fr.outadoc.justchatting.feature.chat.presentation/BubblePermission.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): fr.outadoc.justchatting.feature.chat.presentation/BubblePermission // fr.outadoc.justchatting.feature.chat.presentation/BubblePermission.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<fr.outadoc.justchatting.feature.chat.presentation/BubblePermission> // fr.outadoc.justchatting.feature.chat.presentation/BubblePermission.values|values#static(){}[0]
+}
+
 abstract interface fr.outadoc.justchatting.feature.chat.presentation/ChatNotifier { // fr.outadoc.justchatting.feature.chat.presentation/ChatNotifier|null[0]
     abstract val areNotificationsEnabled // fr.outadoc.justchatting.feature.chat.presentation/ChatNotifier.areNotificationsEnabled|{}areNotificationsEnabled[0]
         abstract fun <get-areNotificationsEnabled>(): kotlin/Boolean // fr.outadoc.justchatting.feature.chat.presentation/ChatNotifier.areNotificationsEnabled.<get-areNotificationsEnabled>|<get-areNotificationsEnabled>(){}[0]
+    abstract val bubblePermission // fr.outadoc.justchatting.feature.chat.presentation/ChatNotifier.bubblePermission|{}bubblePermission[0]
+        abstract fun <get-bubblePermission>(): fr.outadoc.justchatting.feature.chat.presentation/BubblePermission // fr.outadoc.justchatting.feature.chat.presentation/ChatNotifier.bubblePermission.<get-bubblePermission>|<get-bubblePermission>(){}[0]
 
     abstract fun notify(fr.outadoc.justchatting.feature.shared.domain.model/User) // fr.outadoc.justchatting.feature.chat.presentation/ChatNotifier.notify|notify(fr.outadoc.justchatting.feature.shared.domain.model.User){}[0]
 }

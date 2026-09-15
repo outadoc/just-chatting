@@ -55,8 +55,11 @@ internal fun ChannelChatScreen(
         isEmotePickerOpen = false
     }
 
+    // Whether the notification should actually be posted (app preference, notification permission,
+    // bubble permission) is decided by the notifier itself, off the main thread. Deciding it here
+    // would race with DataStore: `prefs` starts out as the defaults, where notifications are off.
     val canOpenInBubble: Boolean =
-        !isStandalone && areBubblesSupported() && prefs.enableNotifications && notifier.areNotificationsEnabled
+        !isStandalone && areBubblesSupported()
 
     OnLifecycleEvent(
         onPause = {

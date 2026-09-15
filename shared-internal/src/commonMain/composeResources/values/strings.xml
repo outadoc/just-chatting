@@ -305,6 +305,9 @@
     <string name="settings_notifications_enable_title">Persistent notifications (Experimental)</string>
     <string name="settings_notifications_header">Notifications</string>
     <string name="settings_notifications_openBubbleSettings">Chat bubble settings</string>
+    <string name="settings_notifications_bubbles_allowed">Bubbles are enabled for all conversations.</string>
+    <string name="settings_notifications_bubbles_selectedOnly">Only selected conversations can bubble, so chats will not open in a bubble. Choose "All conversations can bubble" here.</string>
+    <string name="settings_notifications_bubbles_disabled">Bubbles are turned off, so chats will not open in a bubble.</string>
     <string name="settings_notifications_openNotificationsSettings">Notification settings</string>
     <string name="settings_thirdparty_bttv_subtitle">Data provided by betterttv.net</string>
     <string name="settings_thirdparty_bttv_title">Show BetterTTV Emotes</string>

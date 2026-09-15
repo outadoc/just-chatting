@@ -32,6 +32,8 @@ internal class ConnectivityNetworkStateObserverTest {
         override fun start() = Unit
 
         override fun stop() = Unit
+
+        override fun close() = Unit
     }
 
     @Test

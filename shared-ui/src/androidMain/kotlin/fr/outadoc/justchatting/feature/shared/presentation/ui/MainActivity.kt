@@ -16,11 +16,15 @@ import androidx.glance.action.Action
 import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.actionStartActivity
+import androidx.lifecycle.lifecycleScope
 import com.eygraber.uri.Uri
 import com.eygraber.uri.toAndroidUri
 import com.eygraber.uri.toKmpUri
 import fr.outadoc.justchatting.feature.chat.presentation.ui.createChannelDeeplink
 import fr.outadoc.justchatting.feature.shared.presentation.DeeplinkReceiver
+import fr.outadoc.justchatting.feature.shared.presentation.glance.publishWidgetPreviews
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 internal class MainActivity : AppCompatActivity() {
@@ -65,6 +69,14 @@ internal class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             handleIntent(intent)
+        }
+
+        // Publishing these from an app-startup initializer would race with MainApplication setting
+        // up logging, leaving any failure invisible. There is no hurry either: the previews are
+        // only read by the launcher's widget picker, which the user cannot reach without leaving
+        // the app first.
+        lifecycleScope.launch(Dispatchers.Default) {
+            publishWidgetPreviews(applicationContext)
         }
 
         setContent {

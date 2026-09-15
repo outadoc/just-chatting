@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.followed.presentation.widget
 
 import android.content.Context
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -13,6 +14,7 @@ import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.PreviewSizeMode
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.Scaffold
@@ -25,10 +27,15 @@ import androidx.glance.layout.Column
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import fr.outadoc.justchatting.feature.followed.presentation.FollowedChannelsViewModel
+import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.glance.GlanceUserItem
+import fr.outadoc.justchatting.feature.shared.presentation.glance.WidgetPreviewData
 import fr.outadoc.justchatting.feature.shared.presentation.glance.adaptiveGridCellsCompat
+import fr.outadoc.justchatting.feature.shared.presentation.glance.rememberProfileImageProvider
 import fr.outadoc.justchatting.feature.shared.presentation.ui.MainActivity
 import fr.outadoc.justchatting.shared.ui.R
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import org.koin.compose.koinInject
 
 internal class FollowedChannelsWidget : GlanceAppWidget() {
@@ -47,6 +54,11 @@ internal class FollowedChannelsWidget : GlanceAppWidget() {
             ),
         )
 
+    // The picker shows a single image, so compose it at the size the widget asks to be placed at
+    // (4x2 cells, per widget_followed.xml) rather than at its minimum, which fits one channel.
+    override val previewSizeMode: PreviewSizeMode =
+        SizeMode.Responsive(setOf(HORIZONTAL_RECTANGLE))
+
     override suspend fun provideGlance(
         context: Context,
         id: GlanceId,
@@ -58,48 +70,75 @@ internal class FollowedChannelsWidget : GlanceAppWidget() {
                 viewModel.synchronize()
             }
 
-            GlanceTheme(colors = GlanceTheme.colors) {
-                Scaffold(
-                    titleBar = {
-                        TitleBar(
-                            startIcon = ImageProvider(R.drawable.ic_notif),
-                            title = LocalContext.current.getString(R.string.widget_channels_title),
-                            actions = {
-                                CircleIconButton(
-                                    modifier = GlanceModifier.padding(8.dp),
-                                    imageProvider = ImageProvider(R.drawable.ic_sync),
-                                    contentDescription = LocalContext.current.getString(R.string.widget_refresh_action_cd),
-                                    backgroundColor = null,
-                                    key = "refresh",
-                                    onClick = viewModel::synchronize,
-                                )
-                            },
-                        )
-                    },
+            val state by viewModel.state.collectAsState()
+
+            Content(
+                users = state.data.map { follow -> follow.user }.toImmutableList(),
+                onRefresh = viewModel::synchronize,
+            )
+        }
+    }
+
+    override suspend fun providePreview(
+        context: Context,
+        widgetCategory: Int,
+    ) {
+        provideContent {
+            Content(
+                users = WidgetPreviewData.users(LocalContext.current),
+                onRefresh = {},
+                profileImage = { user -> WidgetPreviewData.profileImage(user) },
+            )
+        }
+    }
+
+    @Composable
+    private fun Content(
+        users: ImmutableList<User>,
+        onRefresh: () -> Unit,
+        profileImage: @Composable (User) -> ImageProvider = { user -> rememberProfileImageProvider(user) },
+    ) {
+        GlanceTheme(colors = GlanceTheme.colors) {
+            Scaffold(
+                titleBar = {
+                    TitleBar(
+                        startIcon = ImageProvider(R.drawable.ic_notif),
+                        title = LocalContext.current.getString(R.string.widget_channels_title),
+                        actions = {
+                            CircleIconButton(
+                                modifier = GlanceModifier.padding(8.dp),
+                                imageProvider = ImageProvider(R.drawable.ic_sync),
+                                contentDescription = LocalContext.current.getString(R.string.widget_refresh_action_cd),
+                                backgroundColor = null,
+                                key = "refresh",
+                                onClick = onRefresh,
+                            )
+                        },
+                    )
+                },
+            ) {
+                LazyVerticalGrid(
+                    gridCells = adaptiveGridCellsCompat(minSize = 64.dp),
                 ) {
-                    val state by viewModel.state.collectAsState()
-                    LazyVerticalGrid(
-                        gridCells = adaptiveGridCellsCompat(minSize = 64.dp),
-                    ) {
-                        items(state.data) { follow ->
-                            Column {
-                                Box(
+                    items(users) { user ->
+                        Column {
+                            Box(
+                                modifier =
+                                    GlanceModifier
+                                        .clickable(
+                                            MainActivity.createGlanceAction(
+                                                userId = user.id,
+                                            ),
+                                        ),
+                            ) {
+                                GlanceUserItem(
                                     modifier =
                                         GlanceModifier
-                                            .clickable(
-                                                MainActivity.createGlanceAction(
-                                                    userId = follow.user.id,
-                                                ),
-                                            ),
-                                ) {
-                                    GlanceUserItem(
-                                        modifier =
-                                            GlanceModifier
-                                                .fillMaxWidth()
-                                                .padding(8.dp),
-                                        user = follow.user,
-                                    )
-                                }
+                                            .fillMaxWidth()
+                                            .padding(8.dp),
+                                    user = user,
+                                    profileImage = profileImage(user),
+                                )
                             }
                         }
                     }

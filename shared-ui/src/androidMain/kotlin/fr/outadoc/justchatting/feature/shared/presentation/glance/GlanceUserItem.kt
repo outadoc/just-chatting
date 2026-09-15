@@ -5,6 +5,7 @@ import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
+import androidx.glance.ImageProvider
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.Spacer
@@ -18,6 +19,7 @@ import fr.outadoc.justchatting.feature.shared.domain.model.User
 internal fun GlanceUserItem(
     modifier: GlanceModifier = GlanceModifier,
     user: User,
+    profileImage: ImageProvider = rememberProfileImageProvider(user),
 ) {
     Column(
         modifier = modifier,
@@ -26,7 +28,7 @@ internal fun GlanceUserItem(
     ) {
         Image(
             modifier = GlanceModifier.size(48.dp),
-            provider = rememberProfileImageProvider(user),
+            provider = profileImage,
             contentDescription = null,
         )
 

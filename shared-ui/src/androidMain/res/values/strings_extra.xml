@@ -10,6 +10,13 @@
     <string name="widget_description_live">Shows your followed channels that are currently live.</string>
     <string name="widget_description_recent">Shows your recently visited channels.</string>
     <string name="widget_live_title">Currently live</string>
+    <string name="widget_preview_channel_poke" translatable="false">Poke</string>
+    <string name="widget_preview_channel_solanum" translatable="false">Solanum</string>
+    <string name="widget_preview_channel_yarrow" translatable="false">Yarrow</string>
+    <string name="widget_preview_category">Quantum Archaeology</string>
+    <string name="widget_preview_separator" translatable="false"> • </string>
+    <string name="widget_preview_stream_solanum">Exploring the universe</string>
+    <string name="widget_preview_stream_yarrow">Scieeeeence!</string>
     <string name="widget_recent_title">Recent</string>
     <string name="widget_refresh_action_cd">Refresh</string>
 </resources>

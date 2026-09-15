@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:description="@string/widget_description_followed"
     android:initialLayout="@layout/glance_default_loading_layout"
+    android:previewLayout="@layout/widget_preview_followed"
     android:minWidth="40dp"
     android:minHeight="40dp"
     android:resizeMode="horizontal|vertical"

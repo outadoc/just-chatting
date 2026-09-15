@@ -18,6 +18,7 @@ import androidx.core.content.getSystemService
 import fr.outadoc.justchatting.feature.chat.presentation.BubblePermission
 import fr.outadoc.justchatting.feature.chat.presentation.ChatConnectionService
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
+import fr.outadoc.justchatting.feature.chat.presentation.ProfileImageCache
 import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageIcon
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.shared.domain.model.User
@@ -34,10 +35,12 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 
 internal class AndroidChatNotifier(
     private val context: Context,
     private val preferenceRepository: PreferenceRepository,
+    private val profileImageCache: ProfileImageCache,
 ) : ChatNotifier {
     companion object {
         private const val NOTIFICATION_CHANNEL_ID = "channel_bubble_v2"
@@ -54,6 +57,9 @@ internal class AndroidChatNotifier(
 
         /** How long to give the system to make up its mind before we check whether we got a bubble. */
         private const val BUBBLE_VERIFICATION_DELAY_MS = 750L
+
+        /** How long to wait for the user's profile picture before posting without it. */
+        private const val PROFILE_PICTURE_TIMEOUT_MS = 2_000L
     }
 
     // Without a handler, an uncaught throwable in a child coroutine still reaches the thread's
@@ -137,6 +143,16 @@ internal class AndroidChatNotifier(
             if (!areNotificationsEnabled) return@launch
 
             createGenericBubbleChannelIfNeeded(context) ?: return@launch
+
+            // Both the shortcut and the bubble icon are content URIs into
+            // UserProfileImageContentProvider, which only ever serves what is already on disk.
+            // Download the picture here, on our own coroutine, rather than leaving SystemUI to fall
+            // back to the app icon. Bounded, because a bubble that shows up late is worse than one
+            // wearing the wrong icon; the download carries on regardless and will be there next
+            // time.
+            withTimeoutOrNull(PROFILE_PICTURE_TIMEOUT_MS) {
+                profileImageCache.fetch(user.id)
+            }
 
             // The system resolves the notification's shortcut id synchronously while enqueuing it,
             // and silently strips the bubble metadata when it finds nothing. Publish first.

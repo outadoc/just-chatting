@@ -8,6 +8,6 @@ import org.koin.dsl.module
 
 internal val androidUiModule =
     module {
-        single<ChatNotifier> { AndroidChatNotifier(get(), get()) }
-        single<CreateShortcutForChannelUseCase> { AndroidCreateShortcutForChannelUseCase(get()) }
+        single<ChatNotifier> { AndroidChatNotifier(get(), get(), get()) }
+        single<CreateShortcutForChannelUseCase> { AndroidCreateShortcutForChannelUseCase(get(), get()) }
     }

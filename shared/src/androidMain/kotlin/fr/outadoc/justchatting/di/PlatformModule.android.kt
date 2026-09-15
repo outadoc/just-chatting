@@ -13,6 +13,7 @@ import fr.outadoc.justchatting.data.db.AppDatabase
 import fr.outadoc.justchatting.feature.auth.data.LocalCallbackWebServer
 import fr.outadoc.justchatting.feature.auth.data.NoopLocalCallbackWebServer
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
+import fr.outadoc.justchatting.feature.chat.presentation.ProfileImageCache
 import fr.outadoc.justchatting.feature.preferences.presentation.AndroidAppVersionNameProvider
 import fr.outadoc.justchatting.feature.preferences.presentation.AndroidLogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.AppUpdateChecker
@@ -65,6 +66,7 @@ internal actual val platformModule: Module
             }
 
             single<ConnectivityManager> { get<Context>().getSystemService()!! }
+            single { ProfileImageCache(get(), get(), get()) }
             single<BaseHttpClientProvider> { AndroidHttpClientProvider(get(), get()) }
 
             single<LogStrategy> {

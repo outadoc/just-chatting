@@ -14,7 +14,6 @@ import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.ImageProvider
 import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.components.TitleBar
@@ -33,9 +32,9 @@ import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextDefaults
-import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageUri
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.glance.GlanceCard
+import fr.outadoc.justchatting.feature.shared.presentation.glance.rememberProfileImageProvider
 import fr.outadoc.justchatting.feature.shared.presentation.ui.MainActivity
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.feature.timeline.presentation.LiveTimelineViewModel
@@ -132,10 +131,7 @@ internal class LiveWidget : GlanceAppWidget() {
             ) {
                 Image(
                     modifier = GlanceModifier.size(20.dp),
-                    provider =
-                        ImageProvider(
-                            user.getProfileImageUri(LocalContext.current),
-                        ),
+                    provider = rememberProfileImageProvider(user),
                     contentDescription = null,
                 )
 

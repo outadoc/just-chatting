@@ -46,25 +46,22 @@ internal class AndroidChatNotifier(
         private const val NOTIFICATION_CHANNEL_ID = "channel_bubble_v2"
 
         /**
-         * The original channel was created with `IMPORTANCE_MIN`, which made every bubble
-         * notification "silent". Silent notifications are dropped by SystemUI's keyguard suppressor,
-         * which also applies to bubbles, so a bubble posted while the device was locking would
-         * vanish. Channel importance is immutable once created, hence the new id.
+         * Was `IMPORTANCE_MIN`, which let the keyguard suppressor drop bubbles. Channel importance
+         * is immutable once created, hence the new id.
          */
         private const val LEGACY_NOTIFICATION_CHANNEL_ID = "channel_bubble"
 
         private const val KEY_QUICK_REPLY_TEXT = "quick_reply"
 
-        /** How long to give the system to make up its mind before we check whether we got a bubble. */
+        /** How long to let the system settle before reading the notification back. */
         private const val BUBBLE_VERIFICATION_DELAY_MS = 750L
 
-        /** How long to wait for the user's profile picture before posting without it. */
+        /** How long to wait for the profile picture before posting without it. */
         private const val PROFILE_PICTURE_TIMEOUT_MS = 2_000L
     }
 
-    // Without a handler, an uncaught throwable in a child coroutine still reaches the thread's
-    // default handler and takes the process down: SupervisorJob only stops sibling cancellation.
-    // Nothing here is worth crashing over — a missing bubble is the worst case.
+    // SupervisorJob only stops sibling cancellation; without a handler an uncaught throwable
+    // would still take the process down.
     private val scope =
         CoroutineScope(
             SupervisorJob() +
@@ -77,8 +74,7 @@ internal class AndroidChatNotifier(
     private val notificationManager: NotificationManager?
         get() = context.getSystemService()
 
-    // System-level state only; the enableNotifications app preference is checked
-    // by notify(), which reads it off the main thread.
+    // System-level state only; the enableNotifications preference is checked by notify().
     override val areNotificationsEnabled: Boolean
         get() {
             val nm = NotificationManagerCompat.from(context)
@@ -87,7 +83,13 @@ internal class AndroidChatNotifier(
 
             return when (notificationsPermissionCheck) {
                 PackageManager.PERMISSION_GRANTED -> {
-                    nm.areNotificationsEnabled()
+                    nm.areNotificationsEnabled().also { enabled ->
+                        if (!enabled) {
+                            logWarning<AndroidChatNotifier> {
+                                "Notifications are turned off for the app in system settings"
+                            }
+                        }
+                    }
                 }
 
                 else -> {
@@ -130,6 +132,8 @@ internal class AndroidChatNotifier(
 
     override fun notify(user: User) {
         scope.launch {
+            logInfo<AndroidChatNotifier> { "Notifying for ${user.displayName} (${user.id})" }
+
             val notificationsEnabledByUser: Boolean =
                 preferenceRepository.currentPreferences
                     .first()
@@ -140,16 +144,18 @@ internal class AndroidChatNotifier(
                 return@launch
             }
 
+            // areNotificationsEnabled logs why it said no.
             if (!areNotificationsEnabled) return@launch
 
-            createGenericBubbleChannelIfNeeded(context) ?: return@launch
+            if (createGenericBubbleChannelIfNeeded(context) == null) {
+                logError<AndroidChatNotifier> {
+                    "Could not create the $NOTIFICATION_CHANNEL_ID channel, not notifying"
+                }
+                return@launch
+            }
 
-            // Both the shortcut and the bubble icon are content URIs into
-            // UserProfileImageContentProvider, which only ever serves what is already on disk.
-            // Download the picture here, on our own coroutine, rather than leaving SystemUI to fall
-            // back to the app icon. Bounded, because a bubble that shows up late is worse than one
-            // wearing the wrong icon; the download carries on regardless and will be there next
-            // time.
+            // The icons are content URIs that only serve what is already on disk. Bounded: a late
+            // bubble is worse than one wearing the app icon, and the download continues regardless.
             withTimeoutOrNull(PROFILE_PICTURE_TIMEOUT_MS) {
                 profileImageCache.fetch(user.id)
             }
@@ -163,17 +169,24 @@ internal class AndroidChatNotifier(
 
             delay(BUBBLE_VERIFICATION_DELAY_MS)
 
-            if (!isShowingAsBubble(user)) {
-                logBubbleDiagnosis(user)
+            val outcome: PostOutcome = readBackOutcome(user)
+            logBubbleDiagnosis(user, outcome)
 
-                // Only worth another go when the system would allow a bubble at all: the shortcut
-                // may just have become visible to the notification service, or the device may have
-                // been mid-lock. Reposting is cheap and idempotent (same notification id).
+            if (outcome != PostOutcome.Bubbled) {
+                // The shortcut may only now have become visible to the notification service, or
+                // the device may have been mid-lock. Reposting is idempotent (same id).
                 if (bubblePermission == BubblePermission.AllConversations) {
                     publishConversationShortcut(context = context, user = user)
 
                     // noinspection MissingPermission
                     createNotificationForUser(context, user)
+
+                    delay(BUBBLE_VERIFICATION_DELAY_MS)
+
+                    logInfo<AndroidChatNotifier> {
+                        "Reposted notification for ${user.displayName} (${user.id}), " +
+                            "outcome=${readBackOutcome(user)}"
+                    }
                 }
             }
         }
@@ -266,28 +279,60 @@ internal class AndroidChatNotifier(
     }
 
     /**
-     * Whether the notification we just posted for [user] actually ended up flagged as a bubble.
+     * What became of the notification we just posted, as far as an app can tell.
      *
-     * The system never tells an app that it declined to bubble a notification, so we read our own
-     * notification back and look at the flag it came away with.
+     * [Bubbled] is not proof the user saw a bubble: `FLAG_BUBBLE` only means the notification
+     * service permitted one. Whether SystemUI shows it, overflows it or drops it is unobservable.
      */
-    private fun isShowingAsBubble(user: User): Boolean {
-        val id = notificationIdFor(user.id)
-        return NotificationManagerCompat
-            .from(context)
-            .activeNotifications
-            .any { posted -> posted.id == id && (posted.notification.flags and Notification.FLAG_BUBBLE) != 0 }
+    private enum class PostOutcome {
+        /** Not there at all: the post did not take. */
+        Missing,
+
+        /** Posted, but the system declined to bubble it and stripped the metadata. */
+        NotBubbled,
+
+        /** Posted, and the system allowed it to bubble. */
+        Bubbled,
     }
 
-    private fun logBubbleDiagnosis(user: User) {
+    private fun readBackOutcome(user: User): PostOutcome {
+        val id = notificationIdFor(user.id)
+        val posted =
+            NotificationManagerCompat
+                .from(context)
+                .activeNotifications
+                .firstOrNull { notification -> notification.id == id }
+                ?: return PostOutcome.Missing
+
+        return if ((posted.notification.flags and Notification.FLAG_BUBBLE) != 0) {
+            PostOutcome.Bubbled
+        } else {
+            PostOutcome.NotBubbled
+        }
+    }
+
+    private fun logBubbleDiagnosis(
+        user: User,
+        outcome: PostOutcome,
+    ) {
         val keyguardManager: KeyguardManager? = context.getSystemService()
 
-        logWarning<AndroidChatNotifier> {
-            "Notification for ${user.displayName} (${user.id}) did not become a bubble. " +
+        val diagnosis =
+            "outcome=$outcome, " +
                 "bubblePermission=$bubblePermission, " +
                 "hasConversationShortcut=${hasValidConversationShortcut(context, user.id)}, " +
                 "keyguardLocked=${keyguardManager?.isKeyguardLocked}, " +
                 "notificationsEnabled=$areNotificationsEnabled"
+
+        // Logged either way: a recorded Bubbled rules out everything up to the notification service.
+        if (outcome == PostOutcome.Bubbled) {
+            logInfo<AndroidChatNotifier> {
+                "Posted notification for ${user.displayName} (${user.id}). $diagnosis"
+            }
+        } else {
+            logWarning<AndroidChatNotifier> {
+                "Notification for ${user.displayName} (${user.id}) did not become a bubble. $diagnosis"
+            }
         }
     }
 

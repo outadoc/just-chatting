@@ -73,6 +73,7 @@ internal actual val platformModule: Module
                 FileLogStrategy(
                     logFilePath = get(named("logFilePath")),
                     fileSystem = FileSystem.SYSTEM,
+                    clock = get(),
                 )
             }
             single<LogRepository> {

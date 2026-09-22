@@ -5,11 +5,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import okio.FileSystem
 import okio.IOException
 import okio.Path
 import okio.buffer
 import okio.use
+import kotlin.time.Clock
 
 /**
  * Persists every log line to [logFilePath] using [fileSystem], so it can later be read back
@@ -28,6 +31,7 @@ import okio.use
 internal class FileLogStrategy(
     private val logFilePath: Path,
     private val fileSystem: FileSystem = FileSystem.SYSTEM,
+    private val clock: Clock = Clock.System,
 ) : LogStrategy {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val pendingLines = Channel<String>(capacity = Channel.UNLIMITED)
@@ -41,7 +45,27 @@ internal class FileLogStrategy(
         tag: String?,
         content: String,
     ) {
-        pendingLines.trySend("[${level.tag}] $tag: $content\n")
+        // Stamped here, not in the write loop: that batches, so lines reach the sink late.
+        pendingLines.trySend("${now()} [${level.tag}] $tag: $content\n")
+    }
+
+    /** Local wall-clock time as `HH:mm:ss.SSS`; no date, since the file holds one session. */
+    private fun now(): String {
+        val time =
+            clock
+                .now()
+                .toLocalDateTime(TimeZone.currentSystemDefault())
+                .time
+
+        return buildString {
+            append(time.hour.toString().padStart(2, '0'))
+            append(':')
+            append(time.minute.toString().padStart(2, '0'))
+            append(':')
+            append(time.second.toString().padStart(2, '0'))
+            append('.')
+            append((time.nanosecond / 1_000_000).toString().padStart(3, '0'))
+        }
     }
 
     private suspend fun writeLoop() {

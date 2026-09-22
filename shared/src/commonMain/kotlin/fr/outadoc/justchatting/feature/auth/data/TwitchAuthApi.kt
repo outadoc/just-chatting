@@ -5,6 +5,7 @@ import fr.outadoc.justchatting.feature.auth.data.model.TwitchAuthValidationRespo
 import fr.outadoc.justchatting.feature.auth.domain.AuthApi
 import fr.outadoc.justchatting.feature.auth.domain.model.AuthValidationResponse
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
+import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.shared.data.ApiEndpoints
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -26,12 +27,12 @@ internal class TwitchAuthApi(
             }
         }
 
-    override suspend fun validateToken(token: String): Result<AuthValidationResponse> =
+    override suspend fun validateToken(token: ApiToken): Result<AuthValidationResponse> =
         runCatching {
             client
                 .get {
                     url { path("validate") }
-                    headers { append("Authorization", "Bearer $token") }
+                    headers { append("Authorization", "Bearer ${token.value}") }
                 }.body<TwitchAuthValidationResponse>()
         }.map { response ->
             AuthValidationResponse(
@@ -44,14 +45,14 @@ internal class TwitchAuthApi(
 
     override suspend fun revokeToken(
         clientId: String,
-        token: String,
+        token: ApiToken,
     ): Result<Unit> =
         runCatching {
             client.post {
                 url {
                     path("revoke")
                     parameter("client_id", clientId)
-                    parameter("token", token)
+                    parameter("token", token.value)
                 }
             }
         }

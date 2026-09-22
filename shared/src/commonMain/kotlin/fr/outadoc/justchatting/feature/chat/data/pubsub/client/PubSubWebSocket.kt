@@ -107,7 +107,7 @@ internal class PubSubWebSocket(
                                 pubSubPluginsProvider
                                     .get()
                                     .map { plugin -> plugin.getTopic(channelId) },
-                            authToken = appUser.token,
+                            authToken = appUser.token.value,
                         ),
                 ),
             )

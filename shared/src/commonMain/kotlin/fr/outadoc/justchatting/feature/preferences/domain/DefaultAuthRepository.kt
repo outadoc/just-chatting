@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.preferences.domain
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.auth.domain.AuthApi
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
+import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logError
@@ -64,7 +65,7 @@ internal class DefaultAuthRepository internal constructor(
                 logInfo<DefaultAuthRepository> { "User is now $user" }
             }
 
-    override suspend fun saveToken(token: String) {
+    override suspend fun saveToken(token: ApiToken) {
         preferenceRepository.updatePreferences { prefs ->
             prefs.copy(apiToken = token)
         }

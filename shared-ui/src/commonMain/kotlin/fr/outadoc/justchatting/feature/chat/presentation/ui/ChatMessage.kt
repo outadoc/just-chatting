@@ -21,6 +21,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.ui.preview.ChatMessagePreviewProvider
 import fr.outadoc.justchatting.feature.chat.presentation.ui.preview.previewBadges
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
+import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.utils.presentation.AppTheme
@@ -50,7 +51,7 @@ internal fun ChatMessagePreview(
                 AppUser.LoggedIn(
                     userId = "123",
                     userLogin = "outadoc",
-                    token = "",
+                    token = ApiToken(""),
                 ),
         )
     }

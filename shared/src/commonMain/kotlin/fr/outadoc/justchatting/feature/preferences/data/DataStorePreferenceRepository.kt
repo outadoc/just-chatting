@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.utils.logging.logInfo
 import kotlinx.coroutines.flow.Flow
@@ -54,11 +55,14 @@ internal class DataStorePreferenceRepository(
             enableNotifications =
                 this[ENABLE_NOTIFICATIONS]
                     ?: defaultPreferences.enableNotifications,
-            apiToken = this[USER_TOKEN]?.takeUnless { it.isBlank() },
+            apiToken =
+                this[USER_TOKEN]
+                    ?.takeUnless { it.isBlank() }
+                    ?.let { ApiToken(it) },
         )
 
     private fun AppPreferences.writeTo(prefs: MutablePreferences) {
-        prefs[USER_TOKEN] = apiToken.orEmpty()
+        prefs[USER_TOKEN] = apiToken?.value.orEmpty()
 
         prefs[CHAT_ACCESSIBILITY_TIMESTAMPS] = showTimestamps
 

@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.deeplink
 
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
+import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 
 internal data class DeeplinkParser(
     private val oAuthAppCredentials: OAuthAppCredentials,
@@ -44,12 +45,13 @@ internal data class DeeplinkParser(
         return isFromDeeplink || isFromUniversalLink
     }
 
-    private fun Uri.parseToken(): String? {
+    private fun Uri.parseToken(): ApiToken? {
         // URL contains query parameters encoded as a path fragment.
         // Copy the path fragment to query parameters and parse them this way.
         return buildUpon()
             .encodedQuery(fragment)
             .build()
             .getQueryParameter("access_token")
+            ?.let { ApiToken(it) }
     }
 }

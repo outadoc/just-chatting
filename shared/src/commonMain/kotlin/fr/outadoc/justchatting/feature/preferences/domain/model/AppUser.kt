@@ -4,7 +4,7 @@ public sealed class AppUser {
     public data class LoggedIn(
         val userId: String,
         val userLogin: String,
-        val token: String,
+        val token: ApiToken,
     ) : AppUser()
 
     public data object NotLoggedIn : AppUser()

@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.presentation.ui.preview.ChatMessagePreviewProvider
 import fr.outadoc.justchatting.feature.chat.presentation.ui.preview.previewBadges
+import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.collections.immutable.toPersistentHashMap
@@ -44,7 +45,7 @@ internal fun UserNoticeMessagePreview(
                 AppUser.LoggedIn(
                     userId = "123",
                     userLogin = "outadoc",
-                    token = "",
+                    token = ApiToken(""),
                 ),
         )
     }

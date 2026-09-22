@@ -33,7 +33,7 @@ internal class TwitchHttpClientProvider(
                                 logInfo<TwitchHttpClientProvider> { "Most fresh token is $token" }
                             }?.let { token ->
                                 BearerTokens(
-                                    accessToken = token,
+                                    accessToken = token.value,
                                     refreshToken = "",
                                 )
                             }
@@ -48,7 +48,7 @@ internal class TwitchHttpClientProvider(
                                 logInfo<TwitchHttpClientProvider> { "Most fresh token is $token" }
                             }?.let { token ->
                                 BearerTokens(
-                                    accessToken = token,
+                                    accessToken = token.value,
                                     refreshToken = "",
                                 )
                             }

@@ -7,6 +7,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
+import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
@@ -34,7 +35,7 @@ import kotlin.time.Instant
 internal object DemoData {
     const val CURRENT_USER_ID: String = "demo-self"
     const val CURRENT_USER_LOGIN: String = "demo_user"
-    const val CURRENT_USER_TOKEN: String = "demo-token"
+    val CURRENT_USER_TOKEN: ApiToken = ApiToken("demo-token")
 
     private val now: Instant get() = Clock.System.now()
 

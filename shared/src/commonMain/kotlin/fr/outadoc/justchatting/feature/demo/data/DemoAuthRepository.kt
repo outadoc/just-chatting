@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.demo.data
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.demo.domain.DemoModeRepository
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
+import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -23,7 +24,7 @@ internal class DemoAuthRepository(
             }
         }
 
-    override suspend fun saveToken(token: String) {
+    override suspend fun saveToken(token: ApiToken) {
         // No-op: demo mode has no real token to persist.
     }
 

@@ -27,6 +27,7 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.RecentEmote
 import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.preferences.domain.DefaultAuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.LocalPronounsApi
@@ -933,7 +934,7 @@ private class FakePreferenceRepository(
 }
 
 private class FakeAuthApi : AuthApi {
-    override suspend fun validateToken(token: String): Result<AuthValidationResponse> =
+    override suspend fun validateToken(token: ApiToken): Result<AuthValidationResponse> =
         Result.success(
             AuthValidationResponse(
                 clientId = "client-id",

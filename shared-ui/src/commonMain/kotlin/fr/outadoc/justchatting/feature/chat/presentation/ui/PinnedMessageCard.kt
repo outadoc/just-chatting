@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.presentation.ui.preview.ChatMessagePreviewProvider
+import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.poll_collapse_action
@@ -106,7 +107,7 @@ internal fun PinnedMessageCardPreview(
                 AppUser.LoggedIn(
                     userId = "",
                     userLogin = "",
-                    token = "",
+                    token = ApiToken(""),
                 ),
         )
     }

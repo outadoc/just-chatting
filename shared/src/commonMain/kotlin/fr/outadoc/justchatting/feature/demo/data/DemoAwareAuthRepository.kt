@@ -4,6 +4,7 @@ import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.demo.domain.DemoModeRepository
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.preferences.domain.DefaultAuthRepository
+import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +21,7 @@ internal class DemoAwareAuthRepository(
             if (isDemoMode) demo.currentUser else real.value.currentUser
         }
 
-    override suspend fun saveToken(token: String) {
+    override suspend fun saveToken(token: ApiToken) {
         current().saveToken(token)
     }
 

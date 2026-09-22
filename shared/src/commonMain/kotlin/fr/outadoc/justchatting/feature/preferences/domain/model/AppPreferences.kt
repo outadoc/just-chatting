@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.preferences.domain.model
 
 public data class AppPreferences(
-    val apiToken: String? = null,
+    val apiToken: ApiToken? = null,
     val showTimestamps: Boolean = true,
     val enableRecentMessages: Boolean = true,
     val enableFfzEmotes: Boolean = true,

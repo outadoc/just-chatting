@@ -3,13 +3,14 @@ package fr.outadoc.justchatting.feature.auth.domain
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.auth.domain.model.AuthValidationResponse
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
+import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 
 internal interface AuthApi {
-    suspend fun validateToken(token: String): Result<AuthValidationResponse>
+    suspend fun validateToken(token: ApiToken): Result<AuthValidationResponse>
 
     suspend fun revokeToken(
         clientId: String,
-        token: String,
+        token: ApiToken,
     ): Result<Unit>
 
     fun getExternalAuthorizeUrl(

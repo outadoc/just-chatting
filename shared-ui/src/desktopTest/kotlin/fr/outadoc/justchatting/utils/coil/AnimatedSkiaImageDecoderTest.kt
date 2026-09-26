@@ -15,7 +15,7 @@ class AnimatedSkiaImageDecoderTest {
     @Test
     fun `decodes opcrotteRage gif dimensions and frame count`() =
         runTest {
-            val result: DecodeResult = AnimatedSkiaImageDecoder(source = gifImageSource(OPCROTTE_RAGE)).decode()
+            val result: DecodeResult = AnimatedSkiaImageDecoder(source = gifImageSource(OPCROTTE_RAGE), prerenderFrames = true).decode()
             val image = result.image as AnimatedSkiaImage
 
             assertEquals(112, image.width)
@@ -60,7 +60,7 @@ class AnimatedSkiaImageDecoderTest {
     @Test
     fun `decodes angledDance gif dimensions and frame count`() =
         runTest {
-            val result: DecodeResult = AnimatedSkiaImageDecoder(source = gifImageSource(ANGLED_DANCE)).decode()
+            val result: DecodeResult = AnimatedSkiaImageDecoder(source = gifImageSource(ANGLED_DANCE), prerenderFrames = true).decode()
             val image = result.image as AnimatedSkiaImage
 
             assertEquals(112, image.width)

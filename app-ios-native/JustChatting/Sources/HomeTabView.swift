@@ -9,21 +9,23 @@ import SwiftUI
 struct HomeTabView: View {
     let viewModel: MainRouterViewModel
     @State private var selectedTab: Int = 0
+    @State private var selectedUserId: String?
+    @State private var preferredCompactColumn: NavigationSplitViewColumn = .sidebar
 
     var body: some View {
-        ChannelBrowserTab { navigate in
+        NavigationSplitView(preferredCompactColumn: $preferredCompactColumn) {
             TabView(selection: $selectedTab) {
                 Tab("Live", systemImage: "house", value: 0) {
-                    LiveChannelsView(navigateToChannel: navigate)
+                    LiveChannelsView(navigateToChannel: navigateToChannel)
                 }
                 Tab("Schedule", systemImage: "calendar.badge.clock", value: 1) {
                     ScheduleView()
                 }
                 Tab("Following", systemImage: "heart", value: 2) {
-                    FollowedChannelsView(navigateToChannel: navigate)
+                    FollowedChannelsView(navigateToChannel: navigateToChannel)
                 }
                 Tab("Search", systemImage: "magnifyingglass", value: 3) {
-                    SearchView(navigateToChannel: navigate)
+                    SearchView(navigateToChannel: navigateToChannel)
                 }
                 Tab("Settings", systemImage: "person.circle", value: 4) {
                     SettingsView()
@@ -39,7 +41,9 @@ struct HomeTabView: View {
                     case .search: selectedTab = 3
                     case .settings: selectedTab = 4
                     }
-                case .showAuthPage, .viewChannel:
+                case .viewChannel(let e):
+                    navigateToChannel(e.userId)
+                case .showAuthPage:
                     break
                 }
             }
@@ -53,25 +57,6 @@ struct HomeTabView: View {
                 }
                 viewModel.onTabSelected(screen: screen)
             }
-        }
-    }
-}
-
-private struct ChannelBrowserTab<Content: View>: View {
-    let content: (@escaping (String) -> Void) -> Content
-    @State private var selectedUserId: String?
-    @State private var preferredCompactColumn: NavigationSplitViewColumn = .sidebar
-
-    init(_ content: @escaping (@escaping (String) -> Void) -> Content) {
-        self.content = content
-    }
-
-    var body: some View {
-        NavigationSplitView(preferredCompactColumn: $preferredCompactColumn) {
-            content { userId in
-                selectedUserId = userId
-                preferredCompactColumn = .detail
-            }
         } detail: {
             if let userId = selectedUserId {
                 ChatView(userId: userId)
@@ -79,5 +64,10 @@ private struct ChannelBrowserTab<Content: View>: View {
                 ContentUnavailableView("Select a channel", systemImage: "message")
             }
         }
+    }
+
+    private func navigateToChannel(_ userId: String) {
+        selectedUserId = userId
+        preferredCompactColumn = .detail
     }
 }

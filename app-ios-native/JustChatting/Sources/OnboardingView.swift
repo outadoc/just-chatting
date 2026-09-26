@@ -21,15 +21,27 @@ struct OnboardingView: View {
                 .frame(width: 80, height: 80)
                 .foregroundStyle(twitchPurple)
 
-            Text("Just Chatting")
-                .font(.largeTitle.bold())
+            VStack(spacing: 8) {
+                Text("Welcome to")
+                    .font(.title3)
+                    .foregroundStyle(.secondary)
+                Text("Just Chatting")
+                    .font(.largeTitle.bold())
+            }
+            .accessibilityElement(children: .combine)
+
+            Text("In order to browse your followed channels and post in chat, you will need to link your Twitch account.")
+                .font(.body)
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 32)
 
             Spacer()
 
             Button {
                 viewModel.onLoginClick()
             } label: {
-                Text("Sign in with Twitch")
+                Text("Continue with Twitch")
                     .font(.headline)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
@@ -37,7 +49,11 @@ struct OnboardingView: View {
                     .background(twitchPurple, in: RoundedRectangle(cornerRadius: 12))
             }
             .padding(.horizontal, 32)
-            .padding(.bottom, 48)
+
+            Button("Try the demo") {
+                viewModel.onDemoModeClick()
+            }
+            .padding(.bottom, 32)
         }
     }
 }

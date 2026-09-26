@@ -50,7 +50,11 @@ struct FlowLayout: Layout {
         var currentRow = Row()
 
         for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
+            var size = subview.sizeThatFits(.unspecified)
+            if size.width > width {
+                // Let items that are wider than a whole line (e.g. long URLs) wrap.
+                size = subview.sizeThatFits(ProposedViewSize(width: width, height: nil))
+            }
             let neededWidth = currentRow.items.isEmpty
                 ? size.width
                 : currentRow.width + spacing + size.width

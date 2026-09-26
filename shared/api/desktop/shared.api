@@ -981,12 +981,12 @@ public abstract class fr/outadoc/justchatting/feature/deeplink/Deeplink {
 
 public final class fr/outadoc/justchatting/feature/deeplink/Deeplink$Authenticated : fr/outadoc/justchatting/feature/deeplink/Deeplink {
 	public static final field $stable I
-	public fun <init> (Ljava/lang/String;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;)Lfr/outadoc/justchatting/feature/deeplink/Deeplink$Authenticated;
-	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/deeplink/Deeplink$Authenticated;Ljava/lang/String;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/deeplink/Deeplink$Authenticated;
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-SpzNBn8 ()Ljava/lang/String;
+	public final fun copy-8OpCe8k (Ljava/lang/String;)Lfr/outadoc/justchatting/feature/deeplink/Deeplink$Authenticated;
+	public static synthetic fun copy-8OpCe8k$default (Lfr/outadoc/justchatting/feature/deeplink/Deeplink$Authenticated;Ljava/lang/String;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/deeplink/Deeplink$Authenticated;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getToken ()Ljava/lang/String;
+	public final fun getToken-SpzNBn8 ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1143,12 +1143,25 @@ public abstract interface class fr/outadoc/justchatting/feature/preferences/doma
 	public abstract fun updatePreferences (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
+public final class fr/outadoc/justchatting/feature/preferences/domain/model/ApiToken {
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lfr/outadoc/justchatting/feature/preferences/domain/model/ApiToken;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
 public final class fr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences {
 	public static final field $stable I
-	public fun <init> ()V
-	public fun <init> (Ljava/lang/String;ZZZZZZZ)V
 	public synthetic fun <init> (Ljava/lang/String;ZZZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
+	public synthetic fun <init> (Ljava/lang/String;ZZZZZZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-jAkYlvU ()Ljava/lang/String;
 	public final fun component2 ()Z
 	public final fun component3 ()Z
 	public final fun component4 ()Z
@@ -1156,10 +1169,10 @@ public final class fr/outadoc/justchatting/feature/preferences/domain/model/AppP
 	public final fun component6 ()Z
 	public final fun component7 ()Z
 	public final fun component8 ()Z
-	public final fun copy (Ljava/lang/String;ZZZZZZZ)Lfr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences;
-	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences;Ljava/lang/String;ZZZZZZZILjava/lang/Object;)Lfr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences;
+	public final fun copy-PDR_xC4 (Ljava/lang/String;ZZZZZZZ)Lfr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences;
+	public static synthetic fun copy-PDR_xC4$default (Lfr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences;Ljava/lang/String;ZZZZZZZILjava/lang/Object;)Lfr/outadoc/justchatting/feature/preferences/domain/model/AppPreferences;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getApiToken ()Ljava/lang/String;
+	public final fun getApiToken-jAkYlvU ()Ljava/lang/String;
 	public final fun getEnableBttvEmotes ()Z
 	public final fun getEnableFfzEmotes ()Z
 	public final fun getEnableNotifications ()Z
@@ -1184,14 +1197,14 @@ public abstract class fr/outadoc/justchatting/feature/preferences/domain/model/A
 
 public final class fr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn : fr/outadoc/justchatting/feature/preferences/domain/model/AppUser {
 	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;
-	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;
+	public final fun component3-SpzNBn8 ()Ljava/lang/String;
+	public final fun copy-nv4cWxU (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;
+	public static synthetic fun copy-nv4cWxU$default (Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getToken ()Ljava/lang/String;
+	public final fun getToken-SpzNBn8 ()Ljava/lang/String;
 	public final fun getUserId ()Ljava/lang/String;
 	public final fun getUserLogin ()Ljava/lang/String;
 	public fun hashCode ()I

@@ -29,9 +29,17 @@ struct SettingsView: View {
                     }
                 }
 
-                if let version = state.appVersionName {
-                    Section("About") {
-                        LabeledContent("Version", value: version)
+                Section {
+                    NavigationLink {
+                        SettingsAboutView(viewModel: viewModel)
+                    } label: {
+                        LabeledContent {
+                            if let version = state.appVersionName {
+                                Text(version)
+                            }
+                        } label: {
+                            Label("About", systemImage: "info.circle")
+                        }
                     }
                 }
             }

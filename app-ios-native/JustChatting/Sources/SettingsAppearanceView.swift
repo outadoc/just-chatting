@@ -19,16 +19,7 @@ struct SettingsAppearanceView: View {
                         isOn: Binding(
                             get: { prefs.showTimestamps },
                             set: { newValue in
-                                viewModel.updatePreferences(appPreferences: AppPreferences(
-                                    apiToken: prefs.apiToken,
-                                    showTimestamps: newValue,
-                                    enableRecentMessages: prefs.enableRecentMessages,
-                                    enableFfzEmotes: prefs.enableFfzEmotes,
-                                    enableStvEmotes: prefs.enableStvEmotes,
-                                    enableBttvEmotes: prefs.enableBttvEmotes,
-                                    enablePronouns: prefs.enablePronouns,
-                                    enableNotifications: prefs.enableNotifications
-                                ))
+                                viewModel.updatePreferences(appPreferences: prefs.with(showTimestamps: newValue))
                             }
                         )
                     )

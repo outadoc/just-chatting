@@ -1338,10 +1338,10 @@ final class fr.outadoc.justchatting.feature.followed.presentation/FollowedChanne
 }
 
 final class fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences { // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences|null[0]
-    constructor <init>(kotlin/String? = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...) // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.<init>|<init>(kotlin.String?;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
+    constructor <init>(fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken? = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...) // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.<init>|<init>(fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken?;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
 
     final val apiToken // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.apiToken|{}apiToken[0]
-        final fun <get-apiToken>(): kotlin/String? // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.apiToken.<get-apiToken>|<get-apiToken>(){}[0]
+        final fun <get-apiToken>(): fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken? // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.apiToken.<get-apiToken>|<get-apiToken>(){}[0]
     final val enableBttvEmotes // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.enableBttvEmotes|{}enableBttvEmotes[0]
         final fun <get-enableBttvEmotes>(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.enableBttvEmotes.<get-enableBttvEmotes>|<get-enableBttvEmotes>(){}[0]
     final val enableFfzEmotes // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.enableFfzEmotes|{}enableFfzEmotes[0]
@@ -1357,7 +1357,7 @@ final class fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferen
     final val showTimestamps // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.showTimestamps|{}showTimestamps[0]
         final fun <get-showTimestamps>(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.showTimestamps.<get-showTimestamps>|<get-showTimestamps>(){}[0]
 
-    final fun component1(): kotlin/String? // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component1|component1(){}[0]
+    final fun component1(): fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken? // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component1|component1(){}[0]
     final fun component2(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component2|component2(){}[0]
     final fun component3(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component3|component3(){}[0]
     final fun component4(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component4|component4(){}[0]
@@ -1365,7 +1365,7 @@ final class fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferen
     final fun component6(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component6|component6(){}[0]
     final fun component7(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component7|component7(){}[0]
     final fun component8(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component8|component8(){}[0]
-    final fun copy(kotlin/String? = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...): fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.copy|copy(kotlin.String?;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
+    final fun copy(fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken? = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...): fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.copy|copy(fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken?;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.toString|toString(){}[0]
@@ -1722,7 +1722,10 @@ final class fr.outadoc.justchatting.feature.shared.presentation/KoinHelper : org
     final fun getLiveTimelineViewModel(): fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getLiveTimelineViewModel|getLiveTimelineViewModel(){}[0]
     final fun getLogStrategy(): fr.outadoc.justchatting.utils.logging/LogStrategy // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getLogStrategy|getLogStrategy(){}[0]
     final fun getMainRouterViewModel(): fr.outadoc.justchatting.feature.shared.presentation/MainRouterViewModel // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getMainRouterViewModel|getMainRouterViewModel(){}[0]
+    final fun getPreferenceRepository(): fr.outadoc.justchatting.feature.preferences.domain/PreferenceRepository // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getPreferenceRepository|getPreferenceRepository(){}[0]
+    final fun getReadExternalDependenciesList(): fr.outadoc.justchatting.feature.preferences.presentation/ReadExternalDependenciesList // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getReadExternalDependenciesList|getReadExternalDependenciesList(){}[0]
     final fun getSettingsViewModel(): fr.outadoc.justchatting.feature.preferences.presentation/SettingsViewModel // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getSettingsViewModel|getSettingsViewModel(){}[0]
+    final fun getUserInfoViewModel(): fr.outadoc.justchatting.feature.chat.presentation/UserInfoViewModel // fr.outadoc.justchatting.feature.shared.presentation/KoinHelper.getUserInfoViewModel|getUserInfoViewModel(){}[0]
 }
 
 final class fr.outadoc.justchatting.feature.shared.presentation/MainRouterViewModel : androidx.lifecycle/ViewModel, fr.outadoc.justchatting.feature.shared.presentation/DeeplinkReceiver { // fr.outadoc.justchatting.feature.shared.presentation/MainRouterViewModel|null[0]
@@ -2021,6 +2024,17 @@ final class fr.outadoc.justchatting.utils.logging/CompositeLogStrategy : fr.outa
     final fun println(fr.outadoc.justchatting.utils.logging/Logger.Level, kotlin/String?, kotlin/String) // fr.outadoc.justchatting.utils.logging/CompositeLogStrategy.println|println(fr.outadoc.justchatting.utils.logging.Logger.Level;kotlin.String?;kotlin.String){}[0]
 }
 
+final value class fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken { // fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken|null[0]
+    constructor <init>(kotlin/String) // fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken.<init>|<init>(kotlin.String){}[0]
+
+    final val value // fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken.value|{}value[0]
+        final fun <get-value>(): kotlin/String // fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken.value.<get-value>|<get-value>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken.toString|toString(){}[0]
+}
+
 sealed class fr.outadoc.justchatting.feature.chat.domain.model/Raid { // fr.outadoc.justchatting.feature.chat.domain.model/Raid|null[0]
     final class Go : fr.outadoc.justchatting.feature.chat.domain.model/Raid { // fr.outadoc.justchatting.feature.chat.domain.model/Raid.Go|null[0]
         constructor <init>(kotlin/String, kotlin/String, kotlin/String, kotlin/String?, kotlin/Int) // fr.outadoc.justchatting.feature.chat.domain.model/Raid.Go.<init>|<init>(kotlin.String;kotlin.String;kotlin.String;kotlin.String?;kotlin.Int){}[0]
@@ -2103,13 +2117,13 @@ sealed class fr.outadoc.justchatting.feature.chat.presentation/AutoCompleteItem 
 
 sealed class fr.outadoc.justchatting.feature.deeplink/Deeplink { // fr.outadoc.justchatting.feature.deeplink/Deeplink|null[0]
     final class Authenticated : fr.outadoc.justchatting.feature.deeplink/Deeplink { // fr.outadoc.justchatting.feature.deeplink/Deeplink.Authenticated|null[0]
-        constructor <init>(kotlin/String) // fr.outadoc.justchatting.feature.deeplink/Deeplink.Authenticated.<init>|<init>(kotlin.String){}[0]
+        constructor <init>(fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken) // fr.outadoc.justchatting.feature.deeplink/Deeplink.Authenticated.<init>|<init>(fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken){}[0]
 
         final val token // fr.outadoc.justchatting.feature.deeplink/Deeplink.Authenticated.token|{}token[0]
-            final fun <get-token>(): kotlin/String // fr.outadoc.justchatting.feature.deeplink/Deeplink.Authenticated.token.<get-token>|<get-token>(){}[0]
+            final fun <get-token>(): fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken // fr.outadoc.justchatting.feature.deeplink/Deeplink.Authenticated.token.<get-token>|<get-token>(){}[0]
 
-        final fun component1(): kotlin/String // fr.outadoc.justchatting.feature.deeplink/Deeplink.Authenticated.component1|component1(){}[0]
-        final fun copy(kotlin/String = ...): fr.outadoc.justchatting.feature.deeplink/Deeplink.Authenticated // fr.outadoc.justchatting.feature.deeplink/Deeplink.Authenticated.copy|copy(kotlin.String){}[0]
+        final fun component1(): fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken // fr.outadoc.justchatting.feature.deeplink/Deeplink.Authenticated.component1|component1(){}[0]
+        final fun copy(fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken = ...): fr.outadoc.justchatting.feature.deeplink/Deeplink.Authenticated // fr.outadoc.justchatting.feature.deeplink/Deeplink.Authenticated.copy|copy(fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // fr.outadoc.justchatting.feature.deeplink/Deeplink.Authenticated.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // fr.outadoc.justchatting.feature.deeplink/Deeplink.Authenticated.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // fr.outadoc.justchatting.feature.deeplink/Deeplink.Authenticated.toString|toString(){}[0]
@@ -2165,10 +2179,10 @@ sealed class fr.outadoc.justchatting.feature.emotes.domain.model/EmoteSetItem { 
 
 sealed class fr.outadoc.justchatting.feature.preferences.domain.model/AppUser { // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser|null[0]
     final class LoggedIn : fr.outadoc.justchatting.feature.preferences.domain.model/AppUser { // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn|null[0]
-        constructor <init>(kotlin/String, kotlin/String, kotlin/String) // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.<init>|<init>(kotlin.String;kotlin.String;kotlin.String){}[0]
+        constructor <init>(kotlin/String, kotlin/String, fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken) // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.<init>|<init>(kotlin.String;kotlin.String;fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken){}[0]
 
         final val token // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.token|{}token[0]
-            final fun <get-token>(): kotlin/String // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.token.<get-token>|<get-token>(){}[0]
+            final fun <get-token>(): fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.token.<get-token>|<get-token>(){}[0]
         final val userId // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.userId|{}userId[0]
             final fun <get-userId>(): kotlin/String // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.userId.<get-userId>|<get-userId>(){}[0]
         final val userLogin // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.userLogin|{}userLogin[0]
@@ -2176,8 +2190,8 @@ sealed class fr.outadoc.justchatting.feature.preferences.domain.model/AppUser { 
 
         final fun component1(): kotlin/String // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.component1|component1(){}[0]
         final fun component2(): kotlin/String // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.component2|component2(){}[0]
-        final fun component3(): kotlin/String // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.component3|component3(){}[0]
-        final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ...): fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.copy|copy(kotlin.String;kotlin.String;kotlin.String){}[0]
+        final fun component3(): fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.component3|component3(){}[0]
+        final fun copy(kotlin/String = ..., kotlin/String = ..., fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken = ...): fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.copy|copy(kotlin.String;kotlin.String;fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // fr.outadoc.justchatting.feature.preferences.domain.model/AppUser.LoggedIn.toString|toString(){}[0]
@@ -2459,6 +2473,12 @@ final val fr.outadoc.justchatting.feature.chat.presentation/fr_outadoc_justchatt
 final val fr.outadoc.justchatting.feature.chat.presentation/fr_outadoc_justchatting_feature_chat_presentation_UserInfoViewModel_State_Error$stableprop // fr.outadoc.justchatting.feature.chat.presentation/fr_outadoc_justchatting_feature_chat_presentation_UserInfoViewModel_State_Error$stableprop|#static{}fr_outadoc_justchatting_feature_chat_presentation_UserInfoViewModel_State_Error$stableprop[0]
 final val fr.outadoc.justchatting.feature.chat.presentation/fr_outadoc_justchatting_feature_chat_presentation_UserInfoViewModel_State_Loaded$stableprop // fr.outadoc.justchatting.feature.chat.presentation/fr_outadoc_justchatting_feature_chat_presentation_UserInfoViewModel_State_Loaded$stableprop|#static{}fr_outadoc_justchatting_feature_chat_presentation_UserInfoViewModel_State_Loaded$stableprop[0]
 final val fr.outadoc.justchatting.feature.chat.presentation/fr_outadoc_justchatting_feature_chat_presentation_UserInfoViewModel_State_Loading$stableprop // fr.outadoc.justchatting.feature.chat.presentation/fr_outadoc_justchatting_feature_chat_presentation_UserInfoViewModel_State_Loading$stableprop|#static{}fr_outadoc_justchatting_feature_chat_presentation_UserInfoViewModel_State_Loading$stableprop[0]
+final val fr.outadoc.justchatting.feature.chat.presentation/minFollowDurationSeconds // fr.outadoc.justchatting.feature.chat.presentation/minFollowDurationSeconds|@fr.outadoc.justchatting.feature.chat.presentation.RoomState{}minFollowDurationSeconds[0]
+    final fun (fr.outadoc.justchatting.feature.chat.presentation/RoomState).<get-minFollowDurationSeconds>(): kotlin/Double // fr.outadoc.justchatting.feature.chat.presentation/minFollowDurationSeconds.<get-minFollowDurationSeconds>|<get-minFollowDurationSeconds>@fr.outadoc.justchatting.feature.chat.presentation.RoomState(){}[0]
+final val fr.outadoc.justchatting.feature.chat.presentation/slowModeDurationSeconds // fr.outadoc.justchatting.feature.chat.presentation/slowModeDurationSeconds|@fr.outadoc.justchatting.feature.chat.presentation.MessagePostConstraint{}slowModeDurationSeconds[0]
+    final fun (fr.outadoc.justchatting.feature.chat.presentation/MessagePostConstraint).<get-slowModeDurationSeconds>(): kotlin/Double // fr.outadoc.justchatting.feature.chat.presentation/slowModeDurationSeconds.<get-slowModeDurationSeconds>|<get-slowModeDurationSeconds>@fr.outadoc.justchatting.feature.chat.presentation.MessagePostConstraint(){}[0]
+final val fr.outadoc.justchatting.feature.chat.presentation/slowModeDurationSeconds // fr.outadoc.justchatting.feature.chat.presentation/slowModeDurationSeconds|@fr.outadoc.justchatting.feature.chat.presentation.RoomState{}slowModeDurationSeconds[0]
+    final fun (fr.outadoc.justchatting.feature.chat.presentation/RoomState).<get-slowModeDurationSeconds>(): kotlin/Double // fr.outadoc.justchatting.feature.chat.presentation/slowModeDurationSeconds.<get-slowModeDurationSeconds>|<get-slowModeDurationSeconds>@fr.outadoc.justchatting.feature.chat.presentation.RoomState(){}[0]
 final val fr.outadoc.justchatting.feature.deeplink/fr_outadoc_justchatting_feature_deeplink_Deeplink$stableprop // fr.outadoc.justchatting.feature.deeplink/fr_outadoc_justchatting_feature_deeplink_Deeplink$stableprop|#static{}fr_outadoc_justchatting_feature_deeplink_Deeplink$stableprop[0]
 final val fr.outadoc.justchatting.feature.deeplink/fr_outadoc_justchatting_feature_deeplink_DeeplinkDefinitions$stableprop // fr.outadoc.justchatting.feature.deeplink/fr_outadoc_justchatting_feature_deeplink_DeeplinkDefinitions$stableprop|#static{}fr_outadoc_justchatting_feature_deeplink_DeeplinkDefinitions$stableprop[0]
 final val fr.outadoc.justchatting.feature.deeplink/fr_outadoc_justchatting_feature_deeplink_Deeplink_Authenticated$stableprop // fr.outadoc.justchatting.feature.deeplink/fr_outadoc_justchatting_feature_deeplink_Deeplink_Authenticated$stableprop|#static{}fr_outadoc_justchatting_feature_deeplink_Deeplink_Authenticated$stableprop[0]

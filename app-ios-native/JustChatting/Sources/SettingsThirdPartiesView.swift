@@ -21,7 +21,7 @@ struct SettingsThirdPartiesView: View {
                         isOn: Binding(
                             get: { prefs.enableRecentMessages },
                             set: { newValue in
-                                viewModel.updatePreferences(appPreferences: updatedPrefs(prefs, enableRecentMessages: newValue))
+                                viewModel.updatePreferences(appPreferences: prefs.with(enableRecentMessages: newValue))
                             }
                         )
                     )
@@ -37,7 +37,7 @@ struct SettingsThirdPartiesView: View {
                         isOn: Binding(
                             get: { prefs.enablePronouns },
                             set: { newValue in
-                                viewModel.updatePreferences(appPreferences: updatedPrefs(prefs, enablePronouns: newValue))
+                                viewModel.updatePreferences(appPreferences: prefs.with(enablePronouns: newValue))
                             }
                         )
                     )
@@ -66,7 +66,7 @@ struct SettingsThirdPartiesView: View {
                         isOn: Binding(
                             get: { prefs.enableBttvEmotes },
                             set: { newValue in
-                                viewModel.updatePreferences(appPreferences: updatedPrefs(prefs, enableBttvEmotes: newValue))
+                                viewModel.updatePreferences(appPreferences: prefs.with(enableBttvEmotes: newValue))
                             }
                         )
                     )
@@ -75,7 +75,7 @@ struct SettingsThirdPartiesView: View {
                         isOn: Binding(
                             get: { prefs.enableFfzEmotes },
                             set: { newValue in
-                                viewModel.updatePreferences(appPreferences: updatedPrefs(prefs, enableFfzEmotes: newValue))
+                                viewModel.updatePreferences(appPreferences: prefs.with(enableFfzEmotes: newValue))
                             }
                         )
                     )
@@ -84,7 +84,7 @@ struct SettingsThirdPartiesView: View {
                         isOn: Binding(
                             get: { prefs.enableStvEmotes },
                             set: { newValue in
-                                viewModel.updatePreferences(appPreferences: updatedPrefs(prefs, enableStvEmotes: newValue))
+                                viewModel.updatePreferences(appPreferences: prefs.with(enableStvEmotes: newValue))
                             }
                         )
                     )
@@ -96,25 +96,5 @@ struct SettingsThirdPartiesView: View {
             }
             .navigationTitle("Third-party integrations")
         }
-    }
-
-    private func updatedPrefs(
-        _ prefs: AppPreferences,
-        enableRecentMessages: Bool? = nil,
-        enablePronouns: Bool? = nil,
-        enableBttvEmotes: Bool? = nil,
-        enableFfzEmotes: Bool? = nil,
-        enableStvEmotes: Bool? = nil
-    ) -> AppPreferences {
-        AppPreferences(
-            apiToken: prefs.apiToken,
-            showTimestamps: prefs.showTimestamps,
-            enableRecentMessages: enableRecentMessages ?? prefs.enableRecentMessages,
-            enableFfzEmotes: enableFfzEmotes ?? prefs.enableFfzEmotes,
-            enableStvEmotes: enableStvEmotes ?? prefs.enableStvEmotes,
-            enableBttvEmotes: enableBttvEmotes ?? prefs.enableBttvEmotes,
-            enablePronouns: enablePronouns ?? prefs.enablePronouns,
-            enableNotifications: prefs.enableNotifications
-        )
     }
 }

@@ -87,6 +87,14 @@ jobs:
         run: tuist build
         working-directory: app-ios
 
+      - name: Install Mise dependencies (native iOS app)
+        run: mise install
+        working-directory: app-ios-native
+
+      - name: Build native iOS app
+        run: tuist build
+        working-directory: app-ios-native
+
   build-desktop:
     name: Build desktop app
     runs-on: ubuntu-latest

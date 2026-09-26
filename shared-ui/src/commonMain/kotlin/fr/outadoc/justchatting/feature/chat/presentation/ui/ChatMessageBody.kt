@@ -372,7 +372,7 @@ private fun AnnotatedString.Builder.appendMention(
     withStyle(
         getMentionStyle(
             // TODO also check for userDisplayName
-            mentioned = mention.contentEquals(appUser.userLogin, ignoreCase = true),
+            mentioned = isMentionOf(mention = mention, login = appUser.userLogin),
             mentionBackground = mentionBackground,
             mentionColor = mentionColor,
         ),

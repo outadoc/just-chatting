@@ -12,7 +12,6 @@
       }
     },
     "%lld seconds remaining" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -22,9 +21,11 @@
         }
       }
     },
+    "7TV" : {
+
+    },
     "About" : {
       "comment" : "Settings section header for app information",
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -36,7 +37,6 @@
     },
     "Appearance" : {
       "comment" : "Settings section label and navigation title for appearance settings",
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -47,7 +47,6 @@
       }
     },
     "Based on Xtra for Twitch" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -57,9 +56,11 @@
         }
       }
     },
+    "BetterTTV" : {
+
+    },
     "Cancel" : {
       "comment" : "Generic cancel button label",
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -70,7 +71,6 @@
       }
     },
     "Cancel reply" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -92,7 +92,6 @@
       }
     },
     "Chat" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -103,7 +102,6 @@
       }
     },
     "Clear message" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -124,7 +122,6 @@
       }
     },
     "Contribute to the project" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -145,7 +142,6 @@
       }
     },
     "Copies the emote name" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -156,7 +152,6 @@
       }
     },
     "Copy message" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -188,7 +183,6 @@
       }
     },
     "Emote" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -240,7 +234,6 @@
       }
     },
     "Failed to load chat" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -262,7 +255,6 @@
       }
     },
     "Followers" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -273,7 +265,6 @@
       }
     },
     "Followers %@" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -285,7 +276,6 @@
     },
     "Following" : {
       "comment" : "Tab bar label and navigation title for the followed channels screen",
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -306,6 +296,9 @@
         }
       }
     },
+    "FrankerFaceZ" : {
+
+    },
     "In order to browse your followed channels and post in chat, you will need to link your Twitch account." : {
       "localizations" : {
         "fr" : {
@@ -321,7 +314,6 @@
       "shouldTranslate" : false
     },
     "Just Chatting is based on the Xtra for Twitch project." : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -332,7 +324,6 @@
       }
     },
     "Just Chatting is provided under the terms of the GNU Affero General Public License v3.0." : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -343,7 +334,6 @@
       }
     },
     "Licensing" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -355,7 +345,6 @@
     },
     "Live" : {
       "comment" : "Tab bar label for live channels, navigation title for live screen, and live status badge in search results",
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -413,7 +402,6 @@
     },
     "Log out?" : {
       "comment" : "Title of the confirmation alert shown before logging out",
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -424,7 +412,6 @@
       }
     },
     "Logs copied to clipboard" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -444,6 +431,12 @@
         }
       }
     },
+    "No followed channels" : {
+
+    },
+    "No live channels" : {
+
+    },
     "No section selected" : {
       "localizations" : {
         "fr" : {
@@ -453,6 +446,9 @@
           }
         }
       }
+    },
+    "No upcoming streams" : {
+
     },
     "Offline" : {
       "localizations" : {
@@ -465,7 +461,6 @@
       }
     },
     "OK" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -476,7 +471,6 @@
       }
     },
     "Open-source" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -485,6 +479,9 @@
           }
         }
       }
+    },
+    "outadoc/just-chatting" : {
+
     },
     "Pronouns" : {
       "comment" : "Section header for the pronouns integration in third-party settings",
@@ -519,7 +516,6 @@
       }
     },
     "Reconnecting to chat…" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -551,7 +547,6 @@
       }
     },
     "Reply" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -562,7 +557,6 @@
       }
     },
     "Reuse last message" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -574,7 +568,6 @@
     },
     "Schedule" : {
       "comment" : "Tab bar label and navigation title for the upcoming stream schedule screen",
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -585,7 +578,6 @@
       }
     },
     "Scroll to latest messages" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -597,7 +589,6 @@
     },
     "Search" : {
       "comment" : "Tab bar label and navigation title for the channel search screen",
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -609,7 +600,6 @@
     },
     "Search channels" : {
       "comment" : "Placeholder text displayed in the search bar",
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -618,6 +608,9 @@
           }
         }
       }
+    },
+    "Search for channels" : {
+
     },
     "Select a channel to open its chat." : {
       "localizations" : {
@@ -630,7 +623,6 @@
       }
     },
     "Send" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -641,7 +633,6 @@
       }
     },
     "Send a message" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -664,7 +655,6 @@
     },
     "Settings" : {
       "comment" : "Tab bar label and navigation title for the settings screen",
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -675,7 +665,6 @@
       }
     },
     "Show emotes" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -686,7 +675,6 @@
       }
     },
     "Show keyboard" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -698,7 +686,6 @@
     },
     "Show pronouns" : {
       "comment" : "Toggle label to enable displaying pronouns next to usernames in chat",
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -710,7 +697,6 @@
     },
     "Show timestamps" : {
       "comment" : "Toggle label to show timestamps on chat messages",
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -732,7 +718,6 @@
       }
     },
     "Shows website" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -755,7 +740,6 @@
       }
     },
     "Slow %@" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -766,7 +750,6 @@
       }
     },
     "Slow mode" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -777,7 +760,6 @@
       }
     },
     "Stream" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -798,7 +780,6 @@
       }
     },
     "Subs" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -821,7 +802,6 @@
     },
     "Third-party integrations" : {
       "comment" : "Settings section label and navigation title for third-party service integrations",
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -832,7 +812,6 @@
       }
     },
     "Try the demo" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -843,7 +822,6 @@
       }
     },
     "Unique" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -864,7 +842,6 @@
       }
     },
     "Watch live" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {

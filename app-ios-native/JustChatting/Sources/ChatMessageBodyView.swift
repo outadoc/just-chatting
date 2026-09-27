@@ -34,14 +34,8 @@ struct ChatMessageBodyView: View {
 
             FlowLayout(spacing: 3) {
                 if let roomId = messageBody.sourceRoomId, let sourceChannel = context.sourceChannels[roomId] {
-                    AsyncImage(url: URL(string: sourceChannel.profileImageUrl)) { image in
-                        image.resizable().scaledToFill()
-                    } placeholder: {
-                        Color.secondary.opacity(0.3)
-                    }
-                    .frame(width: badgeHeight, height: badgeHeight)
-                    .clipShape(Circle())
-                    .accessibilityLabel(sourceChannel.displayName)
+                    AvatarView(url: sourceChannel.profileImageUrl, size: badgeHeight)
+                        .accessibilityLabel(sourceChannel.displayName)
                 }
 
                 if let pronoun = context.pronouns[messageBody.chatter] {

@@ -83,17 +83,11 @@ struct SettingsAboutView: View {
     }
 
     private func externalLink(url: URL, title: LocalizedStringKey, subtitle: LocalizedStringKey) -> some View {
-        Link(destination: url) {
-            HStack {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
-                        .foregroundStyle(.primary)
-                    Text(subtitle)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer()
-                Image(systemName: "arrow.up.right.square")
+        ExternalLink(destination: url) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                Text(subtitle)
+                    .font(.caption)
                     .foregroundStyle(.secondary)
             }
         }

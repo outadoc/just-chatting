@@ -9,6 +9,8 @@ import SwiftUI
 struct SettingsAppearanceView: View {
     let viewModel: SettingsViewModel
 
+    private static let appSettingsUrl = URL(string: UIApplication.openSettingsURLString)!
+
     var body: some View {
         Observing(viewModel.state) { state in
             let prefs = state.appPreferences
@@ -26,19 +28,7 @@ struct SettingsAppearanceView: View {
                 }
 
                 Section {
-                    Button {
-                        if let url = URL(string: UIApplication.openSettingsURLString) {
-                            UIApplication.shared.open(url)
-                        }
-                    } label: {
-                        HStack {
-                            Text("System animations")
-                                .foregroundStyle(.primary)
-                            Spacer()
-                            Image(systemName: "arrow.up.right.square")
-                                .foregroundStyle(.secondary)
-                        }
-                    }
+                    ExternalLink("System animations", destination: Self.appSettingsUrl)
                 } footer: {
                     Text("Reduce motion in chat using iOS accessibility settings.")
                 }

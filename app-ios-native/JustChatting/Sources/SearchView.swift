@@ -76,14 +76,8 @@ struct SearchView: View {
         }
     }
 
-    @ViewBuilder
     private var searchResultsView: some View {
-        if isLoading && items.isEmpty {
-            ProgressView()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-        } else if items.isEmpty {
-            ContentUnavailableView.search(text: query)
-        } else {
+        LoadableContent(isLoading: isLoading, isEmpty: items.isEmpty) {
             List(selection: $selectedChannelId) {
                 ForEach(Array(items.enumerated()), id: \.offset) { index, result in
                     NavigationLink(value: result.user.id) {
@@ -97,26 +91,15 @@ struct SearchView: View {
                 }
             }
             .listStyle(.plain)
+        } empty: {
+            ContentUnavailableView.search(text: query)
         }
     }
 
     @ViewBuilder
     private func recentChannelRow(user: User) -> some View {
         HStack(spacing: 12) {
-            AsyncImage(url: URL(string: user.profileImageUrl)) { phase in
-                switch phase {
-                case .success(let img):
-                    img.resizable().scaledToFill()
-                case .failure, .empty:
-                    Image(systemName: "person.circle.fill")
-                        .resizable()
-                        .foregroundStyle(.secondary)
-                @unknown default:
-                    EmptyView()
-                }
-            }
-            .frame(width: 44, height: 44)
-            .clipShape(Circle())
+            AvatarView(url: user.profileImageUrl, size: 44)
 
             Text(user.displayName)
                 .font(.body.weight(.semibold))

@@ -60,21 +60,11 @@ struct MessageActionsSheet: View {
                 }
 
                 Section {
-                    if messageBody.canBeRepliedTo {
-                        Button {
-                            onReply(message)
-                            dismiss()
-                        } label: {
-                            Label("Reply", systemImage: "arrowshape.turn.up.left")
-                        }
-                    }
-
-                    Button {
-                        onCopy(message)
-                        dismiss()
-                    } label: {
-                        Label("Copy message", systemImage: "doc.on.doc")
-                    }
+                    MessageActionButtons(
+                        message: message,
+                        onReply: { onReply($0); dismiss() },
+                        onCopy: { onCopy($0); dismiss() }
+                    )
                 }
             }
             .onAppear {
@@ -89,23 +79,7 @@ struct MessageActionsSheet: View {
         case .loaded(let loaded):
             let user = loaded.user
             VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 12) {
-                    AsyncImage(url: URL(string: user.profileImageUrl)) { image in
-                        image.resizable().scaledToFill()
-                    } placeholder: {
-                        Color.secondary.opacity(0.3)
-                    }
-                    .frame(width: 52, height: 52)
-                    .clipShape(Circle())
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(user.displayName)
-                            .font(.title3.weight(.semibold))
-                        Text(verbatim: "@\(user.login)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
+                UserHeaderView(user: user, size: .large)
 
                 if !user.description_.isEmpty {
                     Text(user.description_)

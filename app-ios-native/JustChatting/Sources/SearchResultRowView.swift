@@ -11,28 +11,15 @@ struct SearchResultRowView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            AsyncImage(url: URL(string: result.user.profileImageUrl)) { phase in
-                switch phase {
-                case .success(let img):
-                    img.resizable().scaledToFill()
-                case .failure, .empty:
-                    Image(systemName: "person.circle.fill")
-                        .resizable()
-                        .foregroundStyle(.secondary)
-                @unknown default:
-                    EmptyView()
+            AvatarView(url: result.user.profileImageUrl, size: 44)
+                .overlay(alignment: .bottomTrailing) {
+                    if result.isLive {
+                        Circle()
+                            .fill(Color.live)
+                            .frame(width: 12, height: 12)
+                            .offset(x: 2, y: 2)
+                    }
                 }
-            }
-            .frame(width: 44, height: 44)
-            .clipShape(Circle())
-            .overlay(alignment: .bottomTrailing) {
-                if result.isLive {
-                    Circle()
-                        .fill(Color.live)
-                        .frame(width: 12, height: 12)
-                        .offset(x: 2, y: 2)
-                }
-            }
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(result.user.displayName)

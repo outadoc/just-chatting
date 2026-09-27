@@ -195,33 +195,19 @@ struct ChatView: View {
             .background(rowBackground)
             .blur(radius: message.isRedacted(by: context.removedContent) ? 6 : 0)
 
-        if let messageBody = message.body {
+        if message.body != nil {
+            let actions = MessageActionButtons(
+                message: message,
+                onReply: { viewModel.onReplyToMessage(entry: $0) },
+                onCopy: copyToClipboard
+            )
             row
                 .contentShape(Rectangle())
                 .onTapGesture {
                     viewModel.onShowMessageActions(message: message)
                 }
-                .contextMenu {
-                    if messageBody.canBeRepliedTo {
-                        Button {
-                            viewModel.onReplyToMessage(entry: message)
-                        } label: {
-                            Label("Reply", systemImage: "arrowshape.turn.up.left")
-                        }
-                    }
-                    Button {
-                        copyToClipboard(message)
-                    } label: {
-                        Label("Copy message", systemImage: "doc.on.doc")
-                    }
-                }
-                .accessibilityActions {
-                    if messageBody.canBeRepliedTo {
-                        Button("Reply") {
-                            viewModel.onReplyToMessage(entry: message)
-                        }
-                    }
-                }
+                .contextMenu { actions }
+                .accessibilityActions { actions }
         } else {
             row
         }

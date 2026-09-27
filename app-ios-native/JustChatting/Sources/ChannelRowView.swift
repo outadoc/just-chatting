@@ -17,20 +17,7 @@ struct ChannelRowView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            AsyncImage(url: URL(string: channelFollow.user.profileImageUrl)) { phase in
-                switch phase {
-                case .success(let img):
-                    img.resizable().scaledToFill()
-                case .failure, .empty:
-                    Image(systemName: "person.circle.fill")
-                        .resizable()
-                        .foregroundStyle(.secondary)
-                @unknown default:
-                    EmptyView()
-                }
-            }
-            .frame(width: 44, height: 44)
-            .clipShape(Circle())
+            AvatarView(url: channelFollow.user.profileImageUrl, size: 44)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(channelFollow.user.displayName)

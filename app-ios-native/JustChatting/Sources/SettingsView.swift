@@ -77,31 +77,8 @@ struct SettingsView: View {
     private func accountSection(state: SettingsViewModel.State) -> some View {
         Section {
             if let user = state.user {
-                HStack(spacing: 12) {
-                    AsyncImage(url: URL(string: user.profileImageUrl)) { phase in
-                        switch phase {
-                        case .success(let img):
-                            img.resizable().scaledToFill()
-                        case .failure, .empty:
-                            Image(systemName: "person.circle.fill")
-                                .resizable()
-                                .foregroundStyle(.secondary)
-                        @unknown default:
-                            EmptyView()
-                        }
-                    }
-                    .frame(width: 44, height: 44)
-                    .clipShape(Circle())
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(user.displayName)
-                            .font(.body.weight(.semibold))
-                        Text(verbatim: "@\(user.login)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .padding(.vertical, 4)
+                UserHeaderView(user: user)
+                    .padding(.vertical, 4)
             } else {
                 HStack(spacing: 12) {
                     Circle()

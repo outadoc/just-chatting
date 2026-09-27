@@ -22,30 +22,17 @@ struct LiveStreamRowView: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            AsyncImage(url: URL(string: userStream.user.profileImageUrl)) { phase in
-                switch phase {
-                case .success(let img):
-                    img.resizable().scaledToFill()
-                case .failure, .empty:
-                    Image(systemName: "person.circle.fill")
-                        .resizable()
-                        .foregroundStyle(.secondary)
-                @unknown default:
-                    EmptyView()
+            AvatarView(url: userStream.user.profileImageUrl, size: 52)
+                .overlay(alignment: .bottom) {
+                    Text("LIVE")
+                        .font(.system(size: 9, weight: .bold))
+                        .foregroundStyle(Color.onTint)
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 2)
+                        .background(Color.live, in: Capsule())
+                        .offset(y: 8)
                 }
-            }
-            .frame(width: 52, height: 52)
-            .clipShape(Circle())
-            .overlay(alignment: .bottom) {
-                Text("LIVE")
-                    .font(.system(size: 9, weight: .bold))
-                    .foregroundStyle(Color.onTint)
-                    .padding(.horizontal, 4)
-                    .padding(.vertical, 2)
-                    .background(Color.live, in: Capsule())
-                    .offset(y: 8)
-            }
-            .padding(.bottom, 8)
+                .padding(.bottom, 8)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(userStream.user.displayName)
@@ -81,15 +68,8 @@ struct LiveStreamRowView: View {
                 }
 
                 if !tags.isEmpty {
-                    FlowLayout(spacing: 4) {
-                        ForEach(tags, id: \.self) { tag in
-                            Text(tag)
-                                .font(.caption2)
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(.quaternary, in: Capsule())
-                        }
-                    }
+                    TagList(tags: tags)
+                        .font(.caption2)
                 }
             }
         }

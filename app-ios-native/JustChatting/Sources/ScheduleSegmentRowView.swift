@@ -38,21 +38,8 @@ struct ScheduleSegmentRowView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            AsyncImage(url: URL(string: segment.user.profileImageUrl)) { phase in
-                switch phase {
-                case .success(let img):
-                    img.resizable().scaledToFill()
-                case .failure, .empty:
-                    Image(systemName: "person.circle.fill")
-                        .resizable()
-                        .foregroundStyle(.secondary)
-                @unknown default:
-                    EmptyView()
-                }
-            }
-            .frame(width: 44, height: 44)
-            .clipShape(Circle())
-            .opacity(isCanceled ? 0.4 : 1.0)
+            AvatarView(url: segment.user.profileImageUrl, size: 44)
+                .opacity(isCanceled ? 0.4 : 1.0)
 
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 6) {

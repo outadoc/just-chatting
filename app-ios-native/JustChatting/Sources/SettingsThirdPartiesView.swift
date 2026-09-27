@@ -9,7 +9,7 @@ import SwiftUI
 struct SettingsThirdPartiesView: View {
     let viewModel: SettingsViewModel
 
-    @Environment(\.openURL) private var openURL
+    private static let pronounsUrl = URL(string: "https://pronouns.alejo.io")!
 
     var body: some View {
         Observing(viewModel.state) { state in
@@ -41,19 +41,7 @@ struct SettingsThirdPartiesView: View {
                             }
                         )
                     )
-                    Button {
-                        if let url = URL(string: "https://pronouns.alejo.io") {
-                            openURL(url)
-                        }
-                    } label: {
-                        HStack {
-                            Text("Set your pronouns")
-                                .foregroundStyle(.primary)
-                            Spacer()
-                            Image(systemName: "arrow.up.right.square")
-                                .foregroundStyle(.secondary)
-                        }
-                    }
+                    ExternalLink("Set your pronouns", destination: Self.pronounsUrl)
                 } header: {
                     Text("Pronouns")
                 } footer: {

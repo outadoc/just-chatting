@@ -16,23 +16,7 @@ struct StreamInfoSheet: View {
     var body: some View {
         List {
             Section {
-                HStack(spacing: 12) {
-                    AsyncImage(url: URL(string: user.profileImageUrl)) { image in
-                        image.resizable().scaledToFill()
-                    } placeholder: {
-                        Color.secondary.opacity(0.3)
-                    }
-                    .frame(width: 56, height: 56)
-                    .clipShape(Circle())
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(user.displayName)
-                            .font(.title3.weight(.semibold))
-                        Text(verbatim: "@\(user.login)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
+                UserHeaderView(user: user, size: .large)
 
                 if !user.description_.isEmpty {
                     Text(user.description_)
@@ -65,17 +49,9 @@ struct StreamInfoSheet: View {
                         Image(systemName: "clock")
                     }
 
-                    let tags = Array(stream.tags)
-                    if !tags.isEmpty {
-                        FlowLayout(spacing: 4) {
-                            ForEach(tags, id: \.self) { tag in
-                                Text(tag)
-                                    .font(.caption)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 3)
-                                    .background(.quaternary, in: Capsule())
-                            }
-                        }
+                    if !stream.tags.isEmpty {
+                        TagList(tags: Array(stream.tags))
+                            .font(.caption)
                     }
                 }
             }

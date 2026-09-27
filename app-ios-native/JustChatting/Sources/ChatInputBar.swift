@@ -54,7 +54,7 @@ struct ChatInputBar: View {
                 .buttonStyle(GlassButtonStyle())
                 .accessibilityLabel(isEmotePickerOpen ? "Show keyboard" : "Show emotes")
 
-                HStack(alignment: .bottom, spacing: 4) {
+                HStack(alignment: .center, spacing: 4) {
                     TextField("Send a message", text: $text, selection: $selection, axis: .vertical)
                         .textFieldStyle(.plain)
                         .lineLimit(1...5)

@@ -738,17 +738,6 @@
         }
       }
     },
-    "Stream Info" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Infos du stream"
-          }
-        }
-      }
-    },
     "Subs" : {
       "extractionState" : "stale",
       "localizations" : {

@@ -247,12 +247,10 @@ private struct ChatAutoCompleteRow: View {
                         Button {
                             onEmoteClick(emote.emote)
                         } label: {
-                            HStack(spacing: 6) {
-                                EmoteView(emote: emote.emote, height: emoteHeight)
-                            }
-                            .padding(.horizontal, 8)
-                            .frame(height: emoteHeight + 8)
-                            .background(Color(.secondarySystemBackground), in: Capsule())
+                            EmoteView(emote: emote.emote, height: emoteHeight)
+                                .padding(.horizontal, 8)
+                                .frame(height: emoteHeight + 8)
+                                .background(Color(.secondarySystemBackground), in: Capsule())
                         }
                         .buttonStyle(.plain)
                     }

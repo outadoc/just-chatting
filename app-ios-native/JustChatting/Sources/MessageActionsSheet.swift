@@ -20,62 +20,60 @@ struct MessageActionsSheet: View {
 
     var body: some View {
         if let messageBody = message.body {
-            NavigationStack {
-                List {
-                    Section {
-                        Observing(userInfoViewModel.state) { state in
-                            userHeader(state: state, chatter: messageBody.chatter)
-                        }
+            List {
+                Section {
+                    Observing(userInfoViewModel.state) { state in
+                        userHeader(state: state, chatter: messageBody.chatter)
                     }
+                }
 
+                Section {
+                    ChatMessageRow(message: message, context: context.withoutTimestamps)
+                } footer: {
+                    Text(message.date, format: .dateTime.day().month().year().hour().minute().second())
+                }
+
+                let emotes = usedEmotes(in: messageBody)
+                if !emotes.isEmpty {
                     Section {
-                        ChatMessageRow(message: message, context: context.withoutTimestamps)
-                    } footer: {
-                        Text(message.date, format: .dateTime.day().month().year().hour().minute().second())
-                    }
-
-                    let emotes = usedEmotes(in: messageBody)
-                    if !emotes.isEmpty {
-                        Section {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 12) {
-                                    ForEach(emotes, id: \.name) { emote in
-                                        Button {
-                                            UIPasteboard.general.string = emote.name
-                                        } label: {
-                                            VStack(spacing: 4) {
-                                                EmoteView(emote: emote, height: emoteHeight)
-                                                Text(emote.name)
-                                                    .font(.caption2)
-                                                    .lineLimit(1)
-                                            }
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 12) {
+                                ForEach(emotes, id: \.name) { emote in
+                                    Button {
+                                        UIPasteboard.general.string = emote.name
+                                    } label: {
+                                        VStack(spacing: 4) {
+                                            EmoteView(emote: emote, height: emoteHeight)
+                                            Text(emote.name)
+                                                .font(.caption2)
+                                                .lineLimit(1)
                                         }
-                                        .buttonStyle(.plain)
-                                        .accessibilityHint("Copies the emote name")
                                     }
+                                    .buttonStyle(.plain)
+                                    .accessibilityHint("Copies the emote name")
                                 }
                             }
-                        } header: {
-                            Text("Emotes in this message")
+                        }
+                    } header: {
+                        Text("Emotes in this message")
+                    }
+                }
+
+                Section {
+                    if messageBody.canBeRepliedTo {
+                        Button {
+                            onReply(message)
+                            dismiss()
+                        } label: {
+                            Label("Reply", systemImage: "arrowshape.turn.up.left")
                         }
                     }
 
-                    Section {
-                        if messageBody.canBeRepliedTo {
-                            Button {
-                                onReply(message)
-                                dismiss()
-                            } label: {
-                                Label("Reply", systemImage: "arrowshape.turn.up.left")
-                            }
-                        }
-
-                        Button {
-                            onCopy(message)
-                            dismiss()
-                        } label: {
-                            Label("Copy message", systemImage: "doc.on.doc")
-                        }
+                    Button {
+                        onCopy(message)
+                        dismiss()
+                    } label: {
+                        Label("Copy message", systemImage: "doc.on.doc")
                     }
                 }
             }

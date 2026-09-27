@@ -4,6 +4,7 @@
 //
 
 import JCShared
+import NukeUI
 import SwiftUI
 
 struct ChatRichEmbed: View {
@@ -18,10 +19,12 @@ struct ChatRichEmbed: View {
             }
         } label: {
             HStack(spacing: 8) {
-                AsyncImage(url: URL(string: embed.thumbnailUrl)) { image in
-                    image.resizable().scaledToFill()
-                } placeholder: {
-                    Color.secondary.opacity(0.2)
+                LazyImage(url: URL(string: embed.thumbnailUrl)) { state in
+                    if let image = state.image {
+                        image.resizable().scaledToFill()
+                    } else {
+                        Color.secondary.opacity(0.2)
+                    }
                 }
                 .frame(width: 96, height: 54)
                 .clipShape(RoundedRectangle(cornerRadius: 6))

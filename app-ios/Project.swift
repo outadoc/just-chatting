@@ -1,6 +1,13 @@
 import ProjectDescription
 
-import ProjectDescription
+/// Build settings of the app target. Signing is manual, with the certificates and profiles that
+/// fastlane match installs.
+func targetSettings(identity: String, provisioningProfile: String) -> SettingsDictionary {
+    SettingsDictionary()
+        .otherLinkerFlags(["$(inherited)", "-lsqlite3"])
+        .manualCodeSigning(identity: identity, provisioningProfileSpecifier: provisioningProfile)
+        .merging(["DEVELOPMENT_TEAM": "C38RDC5QNT"])
+}
 
 let project = Project(
     name: "JustChatting",
@@ -42,7 +49,6 @@ let project = Project(
                     "CADisableMinimumFrameDurationOnPhone": true,
                     "ITSAppUsesNonExemptEncryption": false,
                     "LSApplicationCategoryType": "public.app-category.social-networking",
-                    "LSMinimumSystemVersion": "15.0",
                     "UILaunchStoryboardName": "Launch Screen",
                 ]
             ),
@@ -62,23 +68,17 @@ let project = Project(
                 configurations: [
                     .debug(
                         name: "Debug",
-                        settings: SettingsDictionary()
-                            .otherLinkerFlags(["$(inherited)", "-lsqlite3"])
-                            .automaticCodeSigning(devTeam: "C38RDC5QNT")
-                            .manualCodeSigning(
-                                identity: "Apple Development",
-                                provisioningProfileSpecifier: "match Development fr.outadoc.justchatting"
-                            )
+                        settings: targetSettings(
+                            identity: "Apple Development",
+                            provisioningProfile: "match Development fr.outadoc.justchatting"
+                        )
                     ),
                     .release(
                         name: "Release",
-                        settings: SettingsDictionary()
-                            .otherLinkerFlags(["$(inherited)", "-lsqlite3"])
-                            .automaticCodeSigning(devTeam: "C38RDC5QNT")
-                            .manualCodeSigning(
-                                identity: "Apple Distribution",
-                                provisioningProfileSpecifier: "match AppStore fr.outadoc.justchatting"
-                            )
+                        settings: targetSettings(
+                            identity: "Apple Distribution",
+                            provisioningProfile: "match AppStore fr.outadoc.justchatting"
+                        )
                     )
                 ],
                 defaultSettings: .recommended

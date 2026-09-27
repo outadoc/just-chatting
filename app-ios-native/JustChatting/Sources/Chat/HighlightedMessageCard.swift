@@ -60,22 +60,24 @@ struct HighlightedMessageCard: View {
         }
     }
 
+    // Exhaustive on purpose: an icon added on the Kotlin side must fail the build here.
     private func symbolName(forIcon icon: Icon) -> String {
         switch icon {
-        case .callReceived:      return "phone.arrow.down.left"
-        case .campaign:          return "megaphone.fill"
-        case .cancel:            return "xmark.circle.fill"
-        case .fastForward:       return "forward.fill"
-        case .gavel:             return "hammer.fill"
-        case .highlight:         return "star.fill"
-        case .redeem:            return "gift.fill"
-        case .reply:             return "arrowshape.turn.up.left.fill"
-        case .send:              return "paperplane.fill"
-        case .star:              return "star.fill"
-        case .toll:              return "bell.fill"
-        case .volunteerActivism: return "heart.fill"
-        case .wavingHand:        return "hand.wave.fill"
-        default:                 return "info.circle.fill"
+        case .callReceived:         return "phone.arrow.down.left"
+        case .campaign:             return "megaphone.fill"
+        case .cancel:               return "xmark.circle.fill"
+        case .fastForward:          return "forward.fill"
+        case .gavel:                return "hammer.fill"
+        case .highlight:            return "star.fill"
+        case .localFireDepartment:  return "flame.fill"
+        case .redeem:               return "gift.fill"
+        case .reply:                return "arrowshape.turn.up.left.fill"
+        case .send:                 return "paperplane.fill"
+        case .shield:               return "shield.fill"
+        case .star:                 return "star.fill"
+        case .toll:                 return "bell.fill"
+        case .volunteerActivism:    return "heart.fill"
+        case .wavingHand:           return "hand.wave.fill"
         }
     }
 }

@@ -4,6 +4,7 @@
 //
 
 import JCShared
+import NukeUI
 import SwiftUI
 
 /// Grid of every emote usable in the current chat, grouped by emote set (recent emotes first).
@@ -53,10 +54,12 @@ struct EmotePicker: View {
     private func sectionHeader(_ header: EmoteSetItem.Header) -> some View {
         HStack(spacing: 8) {
             if let iconUrl = header.iconUrl, let url = URL(string: iconUrl) {
-                AsyncImage(url: url) { image in
-                    image.resizable().scaledToFill()
-                } placeholder: {
-                    Color.secondary.opacity(0.3)
+                LazyImage(url: url) { state in
+                    if let image = state.image {
+                        image.resizable().scaledToFill()
+                    } else {
+                        Color.secondary.opacity(0.3)
+                    }
                 }
                 .frame(width: 20, height: 20)
                 .clipShape(Circle())

@@ -44,7 +44,7 @@ internal class LoggedInChatWebSocket(
         chatEventFlow {
             Session(
                 onConnected = {
-                    sendCommand("PASS oauth:${appUser.token}")
+                    sendCommand("PASS oauth:${appUser.token.value}")
                     sendCommand("NICK ${appUser.userLogin}")
                     sendCommand("CAP REQ :twitch.tv/tags twitch.tv/commands")
                     sendCommand("JOIN #$channelLogin")

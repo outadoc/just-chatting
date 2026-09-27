@@ -78,7 +78,7 @@ internal class LoggedInChatWebSocketTest {
 
             val connection = server.awaitConnection()
 
-            assertEquals("PASS oauth:${testAppUser.token}", connection.awaitLine())
+            assertEquals("PASS oauth:${testAppUser.token.value}", connection.awaitLine())
             assertEquals("NICK ${testAppUser.userLogin}", connection.awaitLine())
             assertEquals("CAP REQ :twitch.tv/tags twitch.tv/commands", connection.awaitLine())
             assertEquals("JOIN #$TEST_CHANNEL_LOGIN", connection.awaitLine())

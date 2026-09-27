@@ -9,8 +9,6 @@ import SwiftUI
 struct OnboardingView: View {
     let viewModel: MainRouterViewModel
 
-    private let twitchPurple = Color(red: 0x77 / 255.0, green: 0x18 / 255.0, blue: 0xAD / 255.0)
-
     var body: some View {
         VStack(spacing: 32) {
             Spacer()
@@ -43,13 +41,11 @@ struct OnboardingView: View {
                 viewModel.onLoginClick()
             } label: {
                 Text("Continue with Twitch")
-                    .font(.headline)
-                    .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(twitchPurple, in: RoundedRectangle(cornerRadius: 12))
+                    .padding(.vertical, 8)
             }
             .padding(.horizontal, 32)
+            .buttonStyle(.borderedProminent)
 
             Button("Try the demo") {
                 viewModel.onDemoModeClick()

@@ -22,7 +22,8 @@
       }
     },
     "7TV" : {
-
+      "comment" : "Third-party emote provider name, do not translate",
+      "shouldTranslate" : false
     },
     "About" : {
       "comment" : "Settings section header for app information",
@@ -57,7 +58,8 @@
       }
     },
     "BetterTTV" : {
-
+      "comment" : "Third-party emote provider name, do not translate",
+      "shouldTranslate" : false
     },
     "Cancel" : {
       "comment" : "Generic cancel button label",
@@ -297,7 +299,8 @@
       }
     },
     "FrankerFaceZ" : {
-
+      "comment" : "Third-party emote provider name, do not translate",
+      "shouldTranslate" : false
     },
     "In order to browse your followed channels and post in chat, you will need to link your Twitch account." : {
       "localizations" : {
@@ -355,7 +358,14 @@
       }
     },
     "LIVE" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DIRECT"
+          }
+        }
+      }
     },
     "Live since %@" : {
       "localizations" : {
@@ -432,10 +442,24 @@
       }
     },
     "No followed channels" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune chaîne suivie"
+          }
+        }
+      }
     },
     "No live channels" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune chaîne en direct"
+          }
+        }
+      }
     },
     "No section selected" : {
       "localizations" : {
@@ -448,7 +472,14 @@
       }
     },
     "No upcoming streams" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun stream à venir"
+          }
+        }
+      }
     },
     "Offline" : {
       "localizations" : {
@@ -481,7 +512,8 @@
       }
     },
     "outadoc/just-chatting" : {
-
+      "comment" : "GitHub repository name, do not translate",
+      "shouldTranslate" : false
     },
     "Pronouns" : {
       "comment" : "Section header for the pronouns integration in third-party settings",
@@ -610,7 +642,14 @@
       }
     },
     "Search for channels" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher des chaînes"
+          }
+        }
+      }
     },
     "Select a channel to open its chat." : {
       "localizations" : {
@@ -706,35 +745,12 @@
         }
       }
     },
-    "Shows stream info" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Affiche les infos du stream"
-          }
-        }
-      }
-    },
     "Shows website" : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Voir le site web"
-          }
-        }
-      }
-    },
-    "Sign in with Twitch" : {
-      "comment" : "Button label on the onboarding screen to start the Twitch authentication flow",
-      "extractionState" : "stale",
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continuer avec Twitch"
           }
         }
       }

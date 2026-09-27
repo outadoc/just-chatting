@@ -51,6 +51,7 @@ struct ChatInputBar: View {
                         .font(.title3)
                         .frame(width: 32, height: 32)
                 }
+                .buttonStyle(GlassButtonStyle())
                 .accessibilityLabel(isEmotePickerOpen ? "Show keyboard" : "Show emotes")
 
                 HStack(alignment: .bottom, spacing: 4) {
@@ -72,15 +73,12 @@ struct ChatInputBar: View {
                 .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 18))
 
                 Button(action: submit) {
-                    Image(systemName: "arrow.up")
+                    Image(systemName: "paperplane")
                         .fontWeight(.semibold)
                         .foregroundStyle(.white)
                         .frame(width: 32, height: 32)
-                        .background(
-                            text.isEmpty ? Color(.systemGray3) : Color.accentColor,
-                            in: Circle()
-                        )
                 }
+                .buttonStyle(GlassButtonStyle())
                 .disabled(text.isEmpty)
                 .accessibilityLabel("Send")
                 .padding(.bottom, 2)

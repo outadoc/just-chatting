@@ -12,6 +12,7 @@
       }
     },
     "%lld seconds remaining" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -23,6 +24,7 @@
     },
     "About" : {
       "comment" : "Settings section header for app information",
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -45,6 +47,7 @@
       }
     },
     "Based on Xtra for Twitch" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -67,6 +70,7 @@
       }
     },
     "Cancel reply" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -88,6 +92,7 @@
       }
     },
     "Chat" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -98,6 +103,7 @@
       }
     },
     "Clear message" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -118,6 +124,7 @@
       }
     },
     "Contribute to the project" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -138,6 +145,7 @@
       }
     },
     "Copies the emote name" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -148,6 +156,7 @@
       }
     },
     "Copy message" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -179,6 +188,7 @@
       }
     },
     "Emote" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -230,6 +240,7 @@
       }
     },
     "Failed to load chat" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -251,6 +262,7 @@
       }
     },
     "Followers" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -261,6 +273,7 @@
       }
     },
     "Followers %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -308,6 +321,7 @@
       "shouldTranslate" : false
     },
     "Just Chatting is based on the Xtra for Twitch project." : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -318,6 +332,7 @@
       }
     },
     "Just Chatting is provided under the terms of the GNU Affero General Public License v3.0." : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -328,6 +343,7 @@
       }
     },
     "Licensing" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -337,7 +353,6 @@
         }
       }
     },
-    "LIVE" : {},
     "Live" : {
       "comment" : "Tab bar label for live channels, navigation title for live screen, and live status badge in search results",
       "extractionState" : "stale",
@@ -349,6 +364,9 @@
           }
         }
       }
+    },
+    "LIVE" : {
+
     },
     "Live since %@" : {
       "localizations" : {
@@ -406,6 +424,7 @@
       }
     },
     "Logs copied to clipboard" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -416,6 +435,7 @@
       }
     },
     "OK" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -426,6 +446,7 @@
       }
     },
     "Open-source" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -458,6 +479,7 @@
       }
     },
     "Reconnecting to chat…" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -479,6 +501,7 @@
       }
     },
     "Reply" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -489,6 +512,7 @@
       }
     },
     "Reuse last message" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -511,6 +535,7 @@
       }
     },
     "Scroll to latest messages" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -545,6 +570,7 @@
       }
     },
     "Select a channel" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -555,6 +581,7 @@
       }
     },
     "Send" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -565,6 +592,7 @@
       }
     },
     "Send a message" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -598,6 +626,7 @@
       }
     },
     "Show emotes" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -608,6 +637,7 @@
       }
     },
     "Show keyboard" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -642,6 +672,7 @@
       }
     },
     "Shows stream info" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -652,6 +683,7 @@
       }
     },
     "Shows website" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -663,6 +695,7 @@
     },
     "Sign in with Twitch" : {
       "comment" : "Button label on the onboarding screen to start the Twitch authentication flow",
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -673,6 +706,7 @@
       }
     },
     "Slow %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -683,6 +717,7 @@
       }
     },
     "Slow mode" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -693,6 +728,7 @@
       }
     },
     "Stream" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -703,6 +739,7 @@
       }
     },
     "Stream Info" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -713,6 +750,7 @@
       }
     },
     "Subs" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -746,6 +784,7 @@
       }
     },
     "Try the demo" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -756,6 +795,7 @@
       }
     },
     "Unique" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -776,6 +816,7 @@
       }
     },
     "Watch live" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {

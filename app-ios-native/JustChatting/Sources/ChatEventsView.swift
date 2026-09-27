@@ -39,8 +39,7 @@ private struct SlimBanner<Content: View>: View {
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
-        .background(tint.opacity(0.15), in: Capsule())
-        .foregroundStyle(tint)
+        .background(tint, in: Capsule())
     }
 }
 

@@ -59,6 +59,8 @@ struct ChatInputBar: View {
                         .textFieldStyle(.plain)
                         .lineLimit(1...5)
                         .focused($isFocused)
+                        // Emote names and usernames aren't dictionary words.
+                        .autocorrectionDisabled()
                         .submitLabel(.send)
                         .onKeyPress(.tab) {
                             viewModel.onTriggerAutoComplete()

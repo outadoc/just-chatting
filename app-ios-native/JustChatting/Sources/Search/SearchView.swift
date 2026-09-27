@@ -79,7 +79,7 @@ struct SearchView: View {
     private var searchResultsView: some View {
         LoadableContent(isLoading: isLoading, isEmpty: items.isEmpty) {
             List(selection: $selectedChannelId) {
-                ForEach(Array(items.enumerated()), id: \.offset) { index, result in
+                ForEach(Array(items.enumerated()), id: \.element.user.id) { index, result in
                     NavigationLink(value: result.user.id) {
                         SearchResultRowView(result: result)
                     }

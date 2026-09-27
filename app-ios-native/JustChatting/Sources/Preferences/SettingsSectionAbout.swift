@@ -10,6 +10,7 @@ struct SettingsSectionAbout: View {
     let viewModel: SettingsViewModel
 
     @State private var showLogsCopied = false
+    @State private var sharedLogs: SharedLogs?
 
     private static let repoUrl = URL(string: "https://github.com/outadoc/just-chatting")!
     private static let licenseUrl = URL(string: "https://www.gnu.org/licenses/agpl-3.0.en.html")!
@@ -70,15 +71,17 @@ struct SettingsSectionAbout: View {
                 UIPasteboard.general.string = e.text
                 showLogsCopied = true
             case .shareLogs(let e):
-                if let url = URL(string: (e.uri as AnyObject).description) {
-                    presentShareSheet(for: url)
-                }
+                sharedLogs = URL(string: (e.uri as AnyObject).description).map(SharedLogs.init)
             case .navigateToDetail:
                 break
             }
         }
         .alert("Logs copied to clipboard", isPresented: $showLogsCopied) {
             Button("OK", role: .cancel) {}
+        }
+        .sheet(item: $sharedLogs) { logs in
+            ActivityView(items: [logs.url])
+                .presentationDetents([.medium, .large])
         }
     }
 
@@ -92,16 +95,10 @@ struct SettingsSectionAbout: View {
             }
         }
     }
+}
 
-    private func presentShareSheet(for url: URL) {
-        guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let root = scene.keyWindow?.rootViewController else { return }
-        var presenter = root
-        while let presented = presenter.presentedViewController {
-            presenter = presented
-        }
-        let controller = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-        controller.popoverPresentationController?.sourceView = presenter.view
-        presenter.present(controller, animated: true)
-    }
+/// Exported log file waiting to be shared.
+private struct SharedLogs: Identifiable {
+    let url: URL
+    var id: URL { url }
 }

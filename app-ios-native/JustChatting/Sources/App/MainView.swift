@@ -49,7 +49,13 @@ struct MainView: View {
                         callbackURLScheme: "justchatting"
                     )
                     viewModel.onDeeplinkReceived(uriString: callback.absoluteString)
-                } catch {}
+                } catch ASWebAuthenticationSessionError.canceledLogin {
+                    // The user closed the login page; they can try again from onboarding.
+                } catch {
+                    Logger.shared.println(level: .error, tag: "MainView") {
+                        "Twitch authentication failed: \(error)"
+                    }
+                }
             }
         case .navigateToTab(let e):
             router.selectedTab = AppTab(screen: e.screen)

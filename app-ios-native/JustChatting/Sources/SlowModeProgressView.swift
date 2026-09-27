@@ -29,3 +29,8 @@ struct SlowModeProgressView: View {
         }
     }
 }
+
+#Preview {
+    SlowModeProgressView(constraint: PreviewData.messagePostConstraint)
+        .padding()
+}

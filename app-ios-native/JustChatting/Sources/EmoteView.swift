@@ -32,3 +32,12 @@ struct EmoteView: View {
         .accessibilityLabel(([emote] + overlays).map(\.name).joined(separator: " "))
     }
 }
+
+#Preview {
+    HStack(spacing: 12) {
+        EmoteView(emote: PreviewData.kappa, height: 28)
+        EmoteView(emote: PreviewData.kappa, overlays: [PreviewData.lul], height: 28)
+        EmoteView(emote: PreviewData.lul, height: 56)
+    }
+    .padding()
+}

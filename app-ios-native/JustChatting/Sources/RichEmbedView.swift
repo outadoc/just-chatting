@@ -44,3 +44,8 @@ struct RichEmbedView: View {
         .accessibilityAddTraits(.isLink)
     }
 }
+
+#Preview {
+    RichEmbedView(embed: PreviewData.richEmbed)
+        .padding()
+}

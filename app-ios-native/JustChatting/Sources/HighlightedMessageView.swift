@@ -79,3 +79,12 @@ struct HighlightedMessageView: View {
         }
     }
 }
+
+#Preview {
+    VStack(spacing: 8) {
+        ForEach(PreviewData.highlightedMessages, id: \.self) { highlighted in
+            HighlightedMessageView(highlighted: highlighted, context: PreviewData.chatContext)
+        }
+    }
+    .padding()
+}

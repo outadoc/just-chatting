@@ -78,3 +78,16 @@ struct FlowLayout: Layout {
         return rows
     }
 }
+
+#Preview {
+    FlowLayout(spacing: 4) {
+        ForEach(Array(PreviewData.stream.tags), id: \.self) { tag in
+            Text(tag)
+                .font(.caption)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 3)
+                .background(.quaternary, in: Capsule())
+        }
+    }
+    .padding()
+}

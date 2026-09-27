@@ -139,3 +139,14 @@ struct ChatMessageBodyView: View {
         }
     }
 }
+
+#Preview {
+    VStack(alignment: .leading, spacing: 12) {
+        ForEach(PreviewData.simpleMessages, id: \.self) { message in
+            if let body = message.body {
+                ChatMessageBodyView(messageBody: body, context: PreviewData.chatContext)
+            }
+        }
+    }
+    .padding()
+}

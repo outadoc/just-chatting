@@ -19,3 +19,15 @@ struct InReplyToView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
+
+#Preview {
+    VStack(spacing: 12) {
+        InReplyToView(mentions: ["djessy728"], message: "Salut Antoine, est tu encore en contact avec Mathieu?")
+        InReplyToView(
+            mentions: ["djessy728", "hiccoz"],
+            message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin."
+        )
+        InReplyToView(mentions: ["djessy728"], message: nil)
+    }
+    .padding()
+}

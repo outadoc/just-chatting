@@ -34,3 +34,25 @@ struct ChatMessageRow: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
+
+#Preview("Messages") {
+    ScrollView {
+        VStack(spacing: 0) {
+            ForEach(PreviewData.messages, id: \.self) { message in
+                ChatMessageRow(message: message, context: PreviewData.chatContext)
+                    .padding(.horizontal, 12)
+            }
+        }
+    }
+}
+
+#Preview("Without timestamps") {
+    ScrollView {
+        VStack(spacing: 0) {
+            ForEach(PreviewData.messages, id: \.self) { message in
+                ChatMessageRow(message: message, context: PreviewData.chatContext.withoutTimestamps)
+                    .padding(.horizontal, 12)
+            }
+        }
+    }
+}

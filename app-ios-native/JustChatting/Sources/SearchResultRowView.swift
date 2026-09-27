@@ -65,3 +65,10 @@ struct SearchResultRowView: View {
         .padding(.vertical, 4)
     }
 }
+
+#Preview {
+    List(PreviewData.searchResults, id: \.self) { result in
+        SearchResultRowView(result: result)
+    }
+    .listStyle(.plain)
+}

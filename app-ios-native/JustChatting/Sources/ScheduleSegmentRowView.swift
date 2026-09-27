@@ -95,3 +95,10 @@ struct ScheduleSegmentRowView: View {
         .padding(.vertical, 4)
     }
 }
+
+#Preview {
+    List(PreviewData.scheduleSegments, id: \.self) { segment in
+        ScheduleSegmentRowView(segment: segment)
+    }
+    .listStyle(.plain)
+}

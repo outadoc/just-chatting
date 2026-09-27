@@ -96,3 +96,10 @@ struct LiveStreamRowView: View {
         .padding(.vertical, 8)
     }
 }
+
+#Preview {
+    List {
+        LiveStreamRowView(userStream: PreviewData.userStream)
+    }
+    .listStyle(.plain)
+}

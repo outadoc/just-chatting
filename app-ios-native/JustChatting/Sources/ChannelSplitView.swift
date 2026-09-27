@@ -27,3 +27,13 @@ struct ChannelSplitView<Content: View>: View {
         }
     }
 }
+
+#Preview {
+    ChannelSplitView(selectedChannelId: .constant(nil)) {
+        List {
+            LiveStreamRowView(userStream: PreviewData.userStream)
+        }
+        .listStyle(.plain)
+        .navigationTitle("Live")
+    }
+}

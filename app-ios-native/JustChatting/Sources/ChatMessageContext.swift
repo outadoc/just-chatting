@@ -18,6 +18,28 @@ struct ChatMessageContext {
     let appUserLogin: String
     var showTimestamps: Bool
 
+    init(
+        emotesByName: [String: Emote] = [:],
+        badges: [String: TwitchBadge] = [:],
+        sourceChannelBadges: [String: [String: TwitchBadge]] = [:],
+        sourceChannels: [String: User] = [:],
+        pronouns: [Chatter: Pronoun] = [:],
+        richEmbeds: [String: ChatListItemRichEmbed] = [:],
+        removedContent: [ChatListItemRemoveContent] = [],
+        appUserLogin: String,
+        showTimestamps: Bool = true
+    ) {
+        self.emotesByName = emotesByName
+        self.badges = badges
+        self.sourceChannelBadges = sourceChannelBadges
+        self.sourceChannels = sourceChannels
+        self.pronouns = pronouns
+        self.richEmbeds = richEmbeds
+        self.removedContent = removedContent
+        self.appUserLogin = appUserLogin
+        self.showTimestamps = showTimestamps
+    }
+
     init(chatting: ChatViewModel.StateChatting, showTimestamps: Bool) {
         emotesByName = chatting.allEmotesMap
             .merging(chatting.cheerEmotes) { _, cheer in cheer }

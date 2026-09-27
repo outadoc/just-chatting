@@ -92,3 +92,11 @@ struct StreamInfoSheet: View {
         }
     }
 }
+
+#Preview("Live") {
+    StreamInfoSheet(user: PreviewData.user, stream: PreviewData.stream)
+}
+
+#Preview("Offline") {
+    StreamInfoSheet(user: PreviewData.longNameUser, stream: nil)
+}

@@ -47,3 +47,12 @@ struct ChatAutoCompleteRow: View {
         .frame(height: emoteHeight + 8)
     }
 }
+
+#Preview {
+    ChatAutoCompleteRow(
+        items: PreviewData.autoCompleteItems,
+        onChatterClick: { _ in },
+        onEmoteClick: { _ in }
+    )
+    .padding()
+}

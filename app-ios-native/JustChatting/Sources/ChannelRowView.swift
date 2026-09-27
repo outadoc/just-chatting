@@ -46,3 +46,10 @@ struct ChannelRowView: View {
         .padding(.vertical, 4)
     }
 }
+
+#Preview {
+    List {
+        ChannelRowView(channelFollow: PreviewData.channelFollow)
+    }
+    .listStyle(.plain)
+}

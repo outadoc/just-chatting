@@ -22,3 +22,12 @@ struct NoticeMessageView: View {
         .padding(.vertical, 4)
     }
 }
+
+#Preview {
+    VStack(spacing: 8) {
+        ForEach(PreviewData.noticeMessages, id: \.self) { notice in
+            NoticeMessageView(notice: notice)
+        }
+    }
+    .padding()
+}

@@ -21,3 +21,17 @@ struct SlimBanner<Content: View>: View {
         .foregroundStyle(Color.onTint)
     }
 }
+
+#Preview {
+    VStack(spacing: 8) {
+        SlimBanner {
+            Text("Emote")
+            Text("Followers")
+            Text("Unique")
+        }
+        SlimBanner(tint: .warning) {
+            Label("Reconnecting to chat…", systemImage: "wifi.exclamationmark")
+        }
+    }
+    .padding()
+}

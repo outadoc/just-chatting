@@ -93,3 +93,8 @@ struct EmotePickerView: View {
         return sections.filter { !$0.emotes.isEmpty }
     }
 }
+
+#Preview {
+    EmotePickerView(items: PreviewData.emoteSetItems) { _ in }
+        .frame(height: 300)
+}

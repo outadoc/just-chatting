@@ -58,3 +58,8 @@ struct AnimatedImageView: UIViewRepresentable {
         uiView.prepareForReuse()
     }
 }
+
+#Preview {
+    AnimatedImageView(url: URL(string: "https://static-cdn.jtvnw.net/emoticons/v2/25/default/dark/3.0"))
+        .frame(width: 56, height: 56)
+}

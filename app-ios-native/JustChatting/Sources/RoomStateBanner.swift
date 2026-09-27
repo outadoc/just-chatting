@@ -48,3 +48,12 @@ struct RoomStateBanner: View {
         Duration.seconds(seconds).formatted(.units(allowed: [.days, .hours, .minutes, .seconds], width: .narrow))
     }
 }
+
+#Preview {
+    VStack(spacing: 8) {
+        ForEach(PreviewData.roomStates, id: \.self) { roomState in
+            RoomStateBanner(roomState: roomState)
+        }
+    }
+    .padding()
+}

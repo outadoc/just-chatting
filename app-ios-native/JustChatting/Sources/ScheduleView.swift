@@ -7,7 +7,7 @@ import JCShared
 import SwiftUI
 
 struct ScheduleView: View {
-    @State private var viewModel = KoinHelper().getFutureTimelineViewModel()
+    @SharedViewModel(\.futureTimelineViewModel) private var viewModel
 
     var body: some View {
         Observing(viewModel.state) { state in

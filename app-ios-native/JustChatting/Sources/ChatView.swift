@@ -9,8 +9,8 @@ import SwiftUI
 struct ChatView: View {
     let userId: String
 
-    @State private var viewModel = KoinHelper().getChatViewModel()
-    @State private var preferenceRepository = KoinHelper().getPreferenceRepository()
+    @SharedViewModel(\.chatViewModel) private var viewModel
+    private let preferenceRepository = KoinHelper().getPreferenceRepository()
     @State private var showTimestamps = true
     @State private var isEmotePickerOpen = false
     @State private var isAtBottom = true

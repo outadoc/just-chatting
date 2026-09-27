@@ -8,7 +8,7 @@ import SwiftUI
 
 struct SearchView: View {
     @Binding var selectedChannelId: String?
-    @State private var viewModel = KoinHelper().getChannelSearchViewModel()
+    @SharedViewModel(\.channelSearchViewModel) private var viewModel
     @State private var pager = SearchResultsPager()
     @State private var query: String = ""
     @State private var items: [ChannelSearchResult] = []

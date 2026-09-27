@@ -8,7 +8,7 @@ import SwiftUI
 
 struct FollowedChannelsView: View {
     @Binding var selectedChannelId: String?
-    @State private var viewModel = KoinHelper().getFollowedChannelsViewModel()
+    @SharedViewModel(\.followedChannelsViewModel) private var viewModel
 
     var body: some View {
         Observing(viewModel.state) { state in

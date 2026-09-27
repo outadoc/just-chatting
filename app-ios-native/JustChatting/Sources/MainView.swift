@@ -12,7 +12,7 @@ import SwiftUI
 
 struct MainView: View {
     @Environment(\.webAuthenticationSession) private var webAuthenticationSession
-    @State private var viewModel = KoinHelper().getMainRouterViewModel()
+    private let viewModel = KoinHelper().getMainRouterViewModel()
     @State private var router = AppRouter()
 
     var body: some View {

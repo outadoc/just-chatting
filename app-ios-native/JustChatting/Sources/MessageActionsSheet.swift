@@ -14,7 +14,7 @@ struct MessageActionsSheet: View {
     let onReply: (ChatListItemMessage) -> Void
     let onCopy: (ChatListItemMessage) -> Void
 
-    @State private var userInfoViewModel = KoinHelper().getUserInfoViewModel()
+    @SharedViewModel(\.userInfoViewModel) private var userInfoViewModel
     @Environment(\.dismiss) private var dismiss
     @ScaledMetric(relativeTo: .body) private var emoteHeight: CGFloat = 32
 

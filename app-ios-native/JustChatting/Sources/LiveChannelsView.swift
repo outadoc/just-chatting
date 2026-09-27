@@ -8,7 +8,7 @@ import SwiftUI
 
 struct LiveChannelsView: View {
     @Binding var selectedChannelId: String?
-    @State private var viewModel = KoinHelper().getLiveTimelineViewModel()
+    @SharedViewModel(\.liveTimelineViewModel) private var viewModel
 
     var body: some View {
         Observing(viewModel.state) { state in

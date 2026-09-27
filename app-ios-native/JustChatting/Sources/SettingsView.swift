@@ -13,7 +13,7 @@ enum SettingsPage: Hashable {
 }
 
 struct SettingsView: View {
-    @State private var viewModel = KoinHelper().getSettingsViewModel()
+    @SharedViewModel(\.settingsViewModel) private var viewModel
     @State private var selectedPage: SettingsPage?
     @State private var showLogoutConfirmation = false
 

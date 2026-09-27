@@ -2022,7 +2022,7 @@ final class fr.outadoc.justchatting.feature.timeline.domain.model/FullSchedule {
 }
 
 final class fr.outadoc.justchatting.feature.timeline.domain.model/Stream { // fr.outadoc.justchatting.feature.timeline.domain.model/Stream|null[0]
-    constructor <init>(kotlin/String, kotlin/String, fr.outadoc.justchatting.feature.timeline.domain.model/StreamCategory?, kotlin/String, kotlin/Long, kotlin.time/Instant, kotlinx.collections.immutable/ImmutableSet<kotlin/String> = ...) // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.<init>|<init>(kotlin.String;kotlin.String;fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory?;kotlin.String;kotlin.Long;kotlin.time.Instant;kotlinx.collections.immutable.ImmutableSet<kotlin.String>){}[0]
+    constructor <init>(kotlin/String, kotlin/String, fr.outadoc.justchatting.feature.timeline.domain.model/StreamCategory?, kotlin/String, kotlin/Long, kotlin.time/Instant, kotlinx.collections.immutable/ImmutableList<kotlin/String> = ...) // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.<init>|<init>(kotlin.String;kotlin.String;fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory?;kotlin.String;kotlin.Long;kotlin.time.Instant;kotlinx.collections.immutable.ImmutableList<kotlin.String>){}[0]
 
     final val category // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.category|{}category[0]
         final fun <get-category>(): fr.outadoc.justchatting.feature.timeline.domain.model/StreamCategory? // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.category.<get-category>|<get-category>(){}[0]
@@ -2031,7 +2031,7 @@ final class fr.outadoc.justchatting.feature.timeline.domain.model/Stream { // fr
     final val startedAt // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.startedAt|{}startedAt[0]
         final fun <get-startedAt>(): kotlin.time/Instant // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.startedAt.<get-startedAt>|<get-startedAt>(){}[0]
     final val tags // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.tags|{}tags[0]
-        final fun <get-tags>(): kotlinx.collections.immutable/ImmutableSet<kotlin/String> // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.tags.<get-tags>|<get-tags>(){}[0]
+        final fun <get-tags>(): kotlinx.collections.immutable/ImmutableList<kotlin/String> // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.tags.<get-tags>|<get-tags>(){}[0]
     final val title // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.title|{}title[0]
         final fun <get-title>(): kotlin/String // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.title.<get-title>|<get-title>(){}[0]
     final val userId // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.userId|{}userId[0]
@@ -2045,8 +2045,8 @@ final class fr.outadoc.justchatting.feature.timeline.domain.model/Stream { // fr
     final fun component4(): kotlin/String // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.component4|component4(){}[0]
     final fun component5(): kotlin/Long // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.component5|component5(){}[0]
     final fun component6(): kotlin.time/Instant // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.component6|component6(){}[0]
-    final fun component7(): kotlinx.collections.immutable/ImmutableSet<kotlin/String> // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.component7|component7(){}[0]
-    final fun copy(kotlin/String = ..., kotlin/String = ..., fr.outadoc.justchatting.feature.timeline.domain.model/StreamCategory? = ..., kotlin/String = ..., kotlin/Long = ..., kotlin.time/Instant = ..., kotlinx.collections.immutable/ImmutableSet<kotlin/String> = ...): fr.outadoc.justchatting.feature.timeline.domain.model/Stream // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.copy|copy(kotlin.String;kotlin.String;fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory?;kotlin.String;kotlin.Long;kotlin.time.Instant;kotlinx.collections.immutable.ImmutableSet<kotlin.String>){}[0]
+    final fun component7(): kotlinx.collections.immutable/ImmutableList<kotlin/String> // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.component7|component7(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., fr.outadoc.justchatting.feature.timeline.domain.model/StreamCategory? = ..., kotlin/String = ..., kotlin/Long = ..., kotlin.time/Instant = ..., kotlinx.collections.immutable/ImmutableList<kotlin/String> = ...): fr.outadoc.justchatting.feature.timeline.domain.model/Stream // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.copy|copy(kotlin.String;kotlin.String;fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory?;kotlin.String;kotlin.Long;kotlin.time.Instant;kotlinx.collections.immutable.ImmutableList<kotlin.String>){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // fr.outadoc.justchatting.feature.timeline.domain.model/Stream.toString|toString(){}[0]

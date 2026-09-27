@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.chat.presentation.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.android.tools.screenshot.PreviewTest
+import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.preview.PreviewFixtures
 import fr.outadoc.justchatting.utils.presentation.AppTheme
@@ -18,7 +19,7 @@ internal fun PinnedMessageCardScreenshotTest() {
                 AppUser.LoggedIn(
                     userId = "",
                     userLogin = "",
-                    token = "",
+                    token = ApiToken(""),
                 ),
         )
     }

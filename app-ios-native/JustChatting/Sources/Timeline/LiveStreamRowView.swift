@@ -22,7 +22,7 @@ struct LiveStreamRowView: View {
                 ChannelRowCategoryLine(category: stream.category?.name, detail: uptime(at: context.date))
             }
 
-            TagLine(tags: Array(stream.tags))
+            TagLine(tags: stream.tags)
                 .font(.caption)
                 .padding(.top, 4)
         }

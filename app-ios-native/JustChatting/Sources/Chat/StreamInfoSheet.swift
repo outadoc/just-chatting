@@ -44,7 +44,7 @@ struct StreamInfoSheet: View {
                     }
 
                     if !stream.tags.isEmpty {
-                        TagList(tags: Array(stream.tags))
+                        TagList(tags: stream.tags)
                             .font(.caption)
                     }
                 }

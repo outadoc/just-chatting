@@ -4,6 +4,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
+import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
@@ -54,7 +55,7 @@ internal object PreviewFixtures {
         AppUser.LoggedIn(
             userId = "123",
             userLogin = "outadoc",
-            token = "",
+            token = ApiToken(""),
         )
 
     val sampleChatMessage: ChatListItem.Message.Simple =

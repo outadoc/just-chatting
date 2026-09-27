@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 import com.android.tools.screenshot.PreviewTest
 import fr.outadoc.justchatting.preview.PreviewFixtures
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import kotlinx.collections.immutable.persistentSetOf
+import kotlinx.collections.immutable.persistentListOf
 
 @PreviewTest
 @Preview
@@ -26,7 +26,7 @@ internal fun LiveStreamScreenshotTest() {
             profileImageUrl = null,
             clock = PreviewFixtures.fixedClock,
             tags =
-                persistentSetOf(
+                persistentListOf(
                     "French",
                     "Test",
                     "Sponsored",

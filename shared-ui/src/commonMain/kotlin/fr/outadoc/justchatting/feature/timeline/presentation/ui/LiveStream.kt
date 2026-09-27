@@ -38,8 +38,8 @@ import fr.outadoc.justchatting.shared.internal.chat_open_action
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 import fr.outadoc.justchatting.utils.presentation.formatTimeSince
-import kotlinx.collections.immutable.ImmutableSet
-import kotlinx.collections.immutable.persistentSetOf
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
 import kotlin.time.Instant
@@ -53,7 +53,7 @@ public fun LiveStreamCard(
     category: StreamCategory? = null,
     startedAt: Instant? = null,
     profileImageUrl: String? = null,
-    tags: ImmutableSet<String> = persistentSetOf(),
+    tags: ImmutableList<String> = persistentListOf(),
     isSelected: Boolean = false,
     clock: Clock = Clock.System,
     onUserClick: () -> Unit = {},
@@ -251,7 +251,7 @@ internal fun LiveStreamPreview() {
             startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
             profileImageUrl = null,
             tags =
-                persistentSetOf(
+                persistentListOf(
                     "French",
                     "Test",
                     "Sponsored",

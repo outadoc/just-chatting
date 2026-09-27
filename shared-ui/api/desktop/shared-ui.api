@@ -583,7 +583,7 @@ public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/Futu
 }
 
 public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/LiveStreamKt {
-	public static final fun LiveStreamCard (Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Lfr/outadoc/justchatting/feature/timeline/domain/model/StreamCategory;Lkotlin/time/Instant;Ljava/lang/String;Lkotlinx/collections/immutable/ImmutableSet;ZLkotlin/time/Clock;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;III)V
+	public static final fun LiveStreamCard (Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Lfr/outadoc/justchatting/feature/timeline/domain/model/StreamCategory;Lkotlin/time/Instant;Ljava/lang/String;Lkotlinx/collections/immutable/ImmutableList;ZLkotlin/time/Clock;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;III)V
 }
 
 public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/LiveTimelineContentKt {

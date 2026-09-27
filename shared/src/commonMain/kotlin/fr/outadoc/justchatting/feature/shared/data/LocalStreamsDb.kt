@@ -12,7 +12,7 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.timeline.domain.model.Video
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logDebug
-import kotlinx.collections.immutable.toPersistentSet
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -109,7 +109,13 @@ internal class LocalStreamsDb(
                             } else {
                                 null
                             },
-                        tags = stream.tags.split(',').toPersistentSet(),
+                        tags =
+                            stream.tags
+                                .split(',')
+                                // Streams without tags are stored as an empty string
+                                .filter { tag -> tag.isNotEmpty() }
+                                .distinct()
+                                .toPersistentList(),
                     )
                 }
             }.flowOn(dispatchersProvider.io)

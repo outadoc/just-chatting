@@ -77,23 +77,26 @@ struct SettingsView: View {
     private func accountSection(state: SettingsViewModel.State) -> some View {
         Section {
             if let user = state.user {
-                UserHeaderView(user: user)
-                    .padding(.vertical, 4)
+                ChannelRow(user: user) {
+                    ChannelRowCategoryLine(category: nil, detail: Text(verbatim: "@\(user.login)"))
+                }
             } else {
+                // Same size as the account's ChannelRow, so that the list doesn't jump once loaded.
                 HStack(spacing: 12) {
                     Circle()
-                        .fill(.secondary.opacity(0.3))
-                        .frame(width: 44, height: 44)
-                    VStack(alignment: .leading, spacing: 4) {
+                        .fill(.fill.tertiary)
+                        .frame(width: 56, height: 56)
+                    VStack(alignment: .leading, spacing: 6) {
                         RoundedRectangle(cornerRadius: 4)
-                            .fill(.secondary.opacity(0.3))
+                            .fill(.fill.tertiary)
                             .frame(width: 100, height: 14)
                         RoundedRectangle(cornerRadius: 4)
-                            .fill(.secondary.opacity(0.3))
+                            .fill(.fill.tertiary)
                             .frame(width: 70, height: 11)
                     }
                 }
-                .padding(.vertical, 4)
+                .padding(.vertical, 8)
+                .accessibilityHidden(true)
             }
 
             Button(role: .destructive) {

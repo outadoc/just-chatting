@@ -60,7 +60,7 @@ struct SearchView: View {
                 Section("Recent channels") {
                     ForEach(state.recentChannels, id: \.id) { user in
                         NavigationLink(value: user.id) {
-                            recentChannelRow(user: user)
+                            ChannelRow(user: user)
                         }
                         .swipeActions {
                             Button(role: .destructive) {
@@ -94,16 +94,5 @@ struct SearchView: View {
         } empty: {
             ContentUnavailableView.search(text: query)
         }
-    }
-
-    @ViewBuilder
-    private func recentChannelRow(user: User) -> some View {
-        HStack(spacing: 12) {
-            AvatarView(url: user.profileImageUrl, size: 44)
-
-            Text(user.displayName)
-                .font(.body.weight(.semibold))
-        }
-        .padding(.vertical, 4)
     }
 }

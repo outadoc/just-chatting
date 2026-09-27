@@ -79,7 +79,7 @@ struct MessageActionsSheet: View {
         case .loaded(let loaded):
             let user = loaded.user
             VStack(alignment: .leading, spacing: 8) {
-                UserHeaderView(user: user, size: .large)
+                UserHeaderView(user: user)
 
                 if !user.description_.isEmpty {
                     Text(user.description_)

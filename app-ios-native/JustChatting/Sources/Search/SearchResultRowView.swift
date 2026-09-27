@@ -10,45 +10,16 @@ struct SearchResultRowView: View {
     let result: ChannelSearchResult
 
     var body: some View {
-        HStack(spacing: 12) {
-            AvatarView(url: result.user.profileImageUrl, size: 44)
-                .overlay(alignment: .bottomTrailing) {
-                    if result.isLive {
-                        Circle()
-                            .fill(Color.live)
-                            .frame(width: 12, height: 12)
-                            .offset(x: 2, y: 2)
-                    }
-                }
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(result.user.displayName)
-                    .font(.body.weight(.semibold))
-
-                if let gameName = result.gameName {
-                    Text(gameName)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                }
-
-                if !result.title.isEmpty {
-                    Text(result.title)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                }
+        ChannelRow(user: result.user, isLive: result.isLive) {
+            if !result.title.isEmpty {
+                ChannelRowTitle(text: result.title)
             }
 
-            Spacer()
-
-            if result.isLive {
-                Label("Live", systemImage: "dot.radiowaves.left.and.right")
-                    .font(.caption2.weight(.semibold))
-                    .foregroundStyle(Color.live)
-                    .labelStyle(.iconOnly)
+            if result.gameName != nil {
+                ChannelRowCategoryLine(category: result.gameName)
             }
         }
-        .padding(.vertical, 4)
+        // The avatar's ring is the only visual cue.
+        .accessibilityValue(result.isLive ? Text("Live") : Text(verbatim: ""))
     }
 }

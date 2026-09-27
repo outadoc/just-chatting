@@ -22,48 +22,19 @@ struct ScheduleSegmentRowView: View {
     }
 
     var body: some View {
-        HStack(spacing: 12) {
-            AvatarView(url: segment.user.profileImageUrl, size: 44)
-                .opacity(isCanceled ? 0.4 : 1.0)
+        ChannelRow(user: segment.user, isDimmed: isCanceled) {
+            Text(verbatim: timeRangeText)
+                .strikethrough(isCanceled)
+        } details: {
+            ChannelRowTitle(text: segment.title)
+                .strikethrough(isCanceled)
 
-            VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: 6) {
-                    Text(segment.user.displayName)
-                        .font(.body.weight(.semibold))
-
-                    if isCanceled {
-                        Text("Canceled")
-                            .font(.caption2.weight(.semibold))
-                            .foregroundStyle(Color.onTint)
-                            .padding(.horizontal, 5)
-                            .padding(.vertical, 2)
-                            .background(Color.warning, in: Capsule())
-                    }
-                }
-
-                Text(segment.title)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .strikethrough(isCanceled)
-
-                HStack(spacing: 4) {
-                    if let category = segment.category {
-                        Text(category.name)
-                            .font(.caption2)
-                            .foregroundStyle(.tertiary)
-                    }
-
-                    Spacer()
-
-                    Text(timeRangeText)
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
-                }
-            }
-
-            Spacer()
+            ChannelRowCategoryLine(
+                category: segment.category?.name,
+                detail: isCanceled
+                    ? Text("Canceled").fontWeight(.semibold).foregroundStyle(Color.warning)
+                    : nil
+            )
         }
-        .padding(.vertical, 4)
     }
 }

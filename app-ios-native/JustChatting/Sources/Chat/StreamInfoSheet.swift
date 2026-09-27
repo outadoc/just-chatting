@@ -14,7 +14,7 @@ struct StreamInfoSheet: View {
     var body: some View {
         List {
             Section {
-                UserHeaderView(user: user, size: .large)
+                UserHeaderView(user: user)
 
                 if !user.description_.isEmpty {
                     Text(user.description_)

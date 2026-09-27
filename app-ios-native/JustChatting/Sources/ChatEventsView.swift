@@ -15,7 +15,7 @@ struct ChatEventsView: View {
             RoomStateBanner(roomState: chatting.roomState)
 
             if !chatting.connectionStatus.isAlive {
-                SlimBanner(tint: .red) {
+                SlimBanner(tint: .warning) {
                     Label("Reconnecting to chat…", systemImage: "wifi.exclamationmark")
                 }
             }
@@ -40,7 +40,7 @@ private struct SlimBanner<Content: View>: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
         .background(tint, in: Capsule())
-        .foregroundStyle(.white)
+        .foregroundStyle(Color.onTint)
     }
 }
 

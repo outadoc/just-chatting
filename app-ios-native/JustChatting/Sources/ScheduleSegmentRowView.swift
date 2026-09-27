@@ -62,10 +62,10 @@ struct ScheduleSegmentRowView: View {
                     if isCanceled {
                         Text("Canceled")
                             .font(.caption2.weight(.semibold))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.onTint)
                             .padding(.horizontal, 5)
                             .padding(.vertical, 2)
-                            .background(.red, in: Capsule())
+                            .background(Color.warning, in: Capsule())
                     }
                 }
 

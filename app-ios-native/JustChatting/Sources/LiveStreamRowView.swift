@@ -39,10 +39,10 @@ struct LiveStreamRowView: View {
             .overlay(alignment: .bottom) {
                 Text("LIVE")
                     .font(.system(size: 9, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.onTint)
                     .padding(.horizontal, 4)
                     .padding(.vertical, 2)
-                    .background(.red, in: Capsule())
+                    .background(Color.live, in: Capsule())
                     .offset(y: 8)
             }
             .padding(.bottom, 8)

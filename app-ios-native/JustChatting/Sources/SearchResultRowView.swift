@@ -28,7 +28,7 @@ struct SearchResultRowView: View {
             .overlay(alignment: .bottomTrailing) {
                 if result.isLive {
                     Circle()
-                        .fill(.red)
+                        .fill(Color.live)
                         .frame(width: 12, height: 12)
                         .offset(x: 2, y: 2)
                 }
@@ -58,7 +58,7 @@ struct SearchResultRowView: View {
             if result.isLive {
                 Label("Live", systemImage: "dot.radiowaves.left.and.right")
                     .font(.caption2.weight(.semibold))
-                    .foregroundStyle(.red)
+                    .foregroundStyle(Color.live)
                     .labelStyle(.iconOnly)
             }
         }

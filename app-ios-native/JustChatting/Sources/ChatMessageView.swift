@@ -117,16 +117,16 @@ private struct HighlightedMessageView: View {
     private func color(forLevel level: ChatListItemMessage.HighlightedLevel) -> Color {
         switch level {
         case .base:  return .accentColor
-        case .one:   return Color(red: 0x6b/255, green: 0x81/255, blue: 0x6e/255)
-        case .two:   return Color(red: 0x32/255, green: 0x84/255, blue: 0x3b/255)
-        case .three: return Color(red: 0x00/255, green: 0x7a/255, blue: 0x6c/255)
-        case .four:  return Color(red: 0x00/255, green: 0x80/255, blue: 0xa9/255)
-        case .five:  return Color(red: 0x00/255, green: 0x70/255, blue: 0xdb/255)
-        case .six:   return Color(red: 0x01/255, green: 0x6c/255, blue: 0xd9/255)
-        case .seven: return Color(red: 0x73/255, green: 0x1a/255, blue: 0xcb/255)
-        case .eight: return Color(red: 0xbe/255, green: 0x0b/255, blue: 0xb7/255)
-        case .nine:  return Color(red: 0xab/255, green: 0x20/255, blue: 0x78/255)
-        case .ten:   return Color(red: 0xc9/255, green: 0x02/255, blue: 0x16/255)
+        case .one:   return .highlightLevel(1)
+        case .two:   return .highlightLevel(2)
+        case .three: return .highlightLevel(3)
+        case .four:  return .highlightLevel(4)
+        case .five:  return .highlightLevel(5)
+        case .six:   return .highlightLevel(6)
+        case .seven: return .highlightLevel(7)
+        case .eight: return .highlightLevel(8)
+        case .nine:  return .highlightLevel(9)
+        case .ten:   return .highlightLevel(10)
         }
     }
 
@@ -177,7 +177,7 @@ struct ChatMessageBodyView: View {
     @ScaledMetric(relativeTo: .callout) private var badgeHeight: CGFloat = 18
 
     var body: some View {
-        let chatterColor = ChatterColors.color(for: messageBody.chatter, hex: messageBody.color, colorScheme: colorScheme)
+        let chatterColor = ChatterColors.color(for: messageBody.chatter, hex: messageBody.color)
         let embeddedEmotes = Dictionary(
             messageBody.embeddedEmotes.map { ($0.name, $0) }
         ) { _, last in last }

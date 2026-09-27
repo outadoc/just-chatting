@@ -73,31 +73,16 @@ extension ChatListItemMessage {
     }
 }
 
-/// Fallback colors for chatters who haven't picked a color, mirroring `CustomColors.kt`.
 enum ChatterColors {
-    private static let dark: [UInt32] = [
-        0xEF5350, 0xEC407A, 0xAB47BC, 0x7E57C2, 0x5C6BC0, 0x42A5F5, 0x29B6F6, 0x26C6DA,
-        0x26A69A, 0x66BB6A, 0x9CCC65, 0xD4E157, 0xFFCA28, 0xFFA726, 0xFF7043,
-    ]
-
-    private static let light: [UInt32] = [
-        0xC62828, 0xAD1457, 0x6A1B9A, 0x4527A0, 0x283593, 0x1565C0, 0x0277BD, 0x00838F,
-        0x00695C, 0x2E7D32, 0x558B2F, 0x9E9D24, 0xF9A825, 0xFF8F00, 0xEF6C00,
-    ]
-
-    static func color(for chatter: Chatter, hex: String?, colorScheme: ColorScheme) -> Color {
+    /// The chatter's own color, or a fallback from the palette if they haven't picked one.
+    static func color(for chatter: Chatter, hex: String?) -> Color {
         if let color = Color(hex: hex) {
             return color
         }
-        let palette = colorScheme == .dark ? dark : light
+        let palette = Color.chatterPalette
         // Stable per-chatter pick; String.hashValue is randomized per launch, so hash manually.
         let seed = chatter.id.unicodeScalars.reduce(UInt32(5381)) { ($0 &* 33) &+ $1.value }
-        let rgb = palette[Int(seed % UInt32(palette.count))]
-        return Color(
-            red: Double((rgb >> 16) & 0xFF) / 255,
-            green: Double((rgb >> 8) & 0xFF) / 255,
-            blue: Double(rgb & 0xFF) / 255
-        )
+        return palette[Int(seed % UInt32(palette.count))]
     }
 }
 

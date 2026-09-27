@@ -141,11 +141,3 @@ struct MessageActionsSheet: View {
         return candidates.filter { seen.insert($0.name).inserted }
     }
 }
-
-extension ChatMessageContext {
-    var withoutTimestamps: ChatMessageContext {
-        var copy = self
-        copy.showTimestamps = false
-        return copy
-    }
-}

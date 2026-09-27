@@ -11,6 +11,46 @@
         }
       }
     },
+    "%lld more tags" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld more tag"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld more tags"
+                }
+              }
+            }
+          }
+        },
+        "fr" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld autre tag"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld autres tags"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld seconds remaining" : {
       "localizations" : {
         "fr" : {
@@ -353,16 +393,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "En direct"
-          }
-        }
-      }
-    },
-    "LIVE" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "DIRECT"
           }
         }
       }

@@ -9,63 +9,77 @@ import SwiftUI
 struct LiveStreamRowView: View {
     let userStream: UserStream
 
-    private var tags: [String] {
-        Array(userStream.stream.tags)
-    }
+    private var stream: JCShared.Stream { userStream.stream }
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            AvatarView(url: userStream.user.profileImageUrl, size: 52)
-                .overlay(alignment: .bottom) {
-                    Text("LIVE")
-                        .font(.system(size: 9, weight: .bold))
-                        .foregroundStyle(Color.onTint)
-                        .padding(.horizontal, 4)
-                        .padding(.vertical, 2)
-                        .background(Color.live, in: Capsule())
-                        .offset(y: 8)
-                }
-                .padding(.bottom, 8)
+            // The ring marks the channel as live.
+            AvatarView(url: userStream.user.profileImageUrl, size: 50)
+                .padding(3)
+                .overlay(Circle().strokeBorder(Color.live, lineWidth: 2))
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(userStream.user.displayName)
-                    .font(.body.weight(.semibold))
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    Text(userStream.user.displayName)
+                        .font(.headline)
+                        .lineLimit(1)
 
-                Text(userStream.stream.title)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    Spacer(minLength: 0)
+
+                    viewerCount
+                }
+
+                Text(stream.title)
+                    .font(.subheadline)
                     .lineLimit(2)
 
                 HStack(spacing: 4) {
-                    if let category = userStream.stream.category {
+                    if let category = stream.category {
                         Text(category.name)
-                            .font(.caption2)
-                            .foregroundStyle(.tertiary)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.tint)
                             .lineLimit(1)
+                        Text(verbatim: "·")
+                            .foregroundStyle(.secondary)
+                            .accessibilityHidden(true)
                     }
-
-                    Spacer()
-
-                    HStack(spacing: 2) {
-                        Image(systemName: "person.2.fill")
-                        Text(userStream.stream.viewerCount.formatted())
-                    }
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
-
-                    Text(userStream.stream.startedAt.date, style: .relative)
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
-                        .monospacedDigit()
-                        .padding(.leading, 6)
+                    uptime
                 }
+                .font(.footnote)
 
-                if !tags.isEmpty {
-                    TagList(tags: tags)
-                        .font(.caption2)
-                }
+                TagLine(tags: Array(stream.tags))
+                    .font(.caption)
+                    .padding(.top, 4)
             }
         }
         .padding(.vertical, 8)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var viewerCount: some View {
+        let count = stream.viewerCount.formatted(.number.notation(.compactName).precision(.fractionLength(0...1)))
+        return HStack(spacing: 4) {
+            Circle()
+                .fill(Color.live)
+                .frame(width: 6, height: 6)
+            Text(verbatim: count)
+                .font(.subheadline.weight(.semibold))
+                .monospacedDigit()
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("\(count) viewers"))
+    }
+
+    /// How long the stream has been live, like "1h 27m". Refreshed every minute.
+    private var uptime: some View {
+        TimelineView(.everyMinute) { context in
+            let elapsed = Duration.seconds(max(0, context.date.timeIntervalSince(stream.startedAt.date)))
+            Text(elapsed.formatted(.units(allowed: [.days, .hours, .minutes], width: .narrow, maximumUnitCount: 2)))
+                .foregroundStyle(.secondary)
+                .monospacedDigit()
+                .accessibilityLabel(
+                    elapsed.formatted(.units(allowed: [.days, .hours, .minutes], width: .wide, maximumUnitCount: 2))
+                )
+        }
     }
 }

@@ -92,13 +92,6 @@ struct StreamInfoSheet: View {
                     }
                 }
             }
-            .navigationTitle("Stream Info")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button(role: .close) { dismiss() }
-                }
-            }
         }
     }
 }

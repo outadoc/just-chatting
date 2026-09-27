@@ -78,12 +78,6 @@ struct MessageActionsSheet: View {
                         }
                     }
                 }
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button(role: .close) { dismiss() }
-                    }
-                }
             }
             .onAppear {
                 userInfoViewModel.load(userId: messageBody.chatter.id)

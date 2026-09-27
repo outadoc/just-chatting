@@ -203,6 +203,7 @@ struct ChatView: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 2)
             .background(rowBackground)
+            .blur(radius: message.isRedacted(by: context.removedContent) ? 6 : 0)
 
         if let messageBody = message.body {
             row

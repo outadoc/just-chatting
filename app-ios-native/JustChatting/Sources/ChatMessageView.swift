@@ -73,7 +73,6 @@ struct ChatMessageRow: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .blur(radius: message.isRedacted(by: context.removedContent) ? 6 : 0)
     }
 }
 

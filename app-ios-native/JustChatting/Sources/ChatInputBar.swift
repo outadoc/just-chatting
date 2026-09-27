@@ -64,10 +64,10 @@ struct ChatInputBar: View {
                             viewModel.onTriggerAutoComplete()
                             return .handled
                         }
-                        .padding(.vertical, 6)
 
                     trailingButton
                 }
+                .frame(maxHeight: .infinity)
                 .padding(.leading, 12)
                 .padding(.trailing, 4)
                 .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 18))
@@ -83,6 +83,7 @@ struct ChatInputBar: View {
                 .accessibilityLabel("Send")
                 .padding(.bottom, 2)
             }
+            .fixedSize(horizontal: false, vertical: true)
         }
         .animation(.default, value: inputState.replyingTo)
         .animation(.default, value: inputState.autoCompleteItems.isEmpty)

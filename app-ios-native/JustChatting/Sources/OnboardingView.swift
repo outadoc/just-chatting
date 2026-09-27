@@ -15,11 +15,12 @@ struct OnboardingView: View {
         VStack(spacing: 32) {
             Spacer()
 
-            Image(systemName: "bubble.left.and.bubble.right")
+            Image("LogoForeground")
+                .renderingMode(.template)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 80, height: 80)
-                .foregroundStyle(twitchPurple)
+                .frame(width: 90, height: 90)
+                .foregroundStyle(.primary)
 
             VStack(spacing: 8) {
                 Text("Welcome to")

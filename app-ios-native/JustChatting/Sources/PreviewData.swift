@@ -64,7 +64,7 @@ enum PreviewData {
         id: "1",
         login: "maghla",
         displayName: "Maghla",
-        description_: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
         profileImageUrl: defaultAvatarUrl,
         createdAt: instant(epochSeconds(fromNow: -5 * 365 * 86_400)),
         usedAt: nil
@@ -74,7 +74,7 @@ enum PreviewData {
         id: "2",
         login: "lorem",
         displayName: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        description_: "",
+        description: "",
         profileImageUrl: "",
         createdAt: instant(epochSeconds(fromNow: -365 * 86_400)),
         usedAt: nil

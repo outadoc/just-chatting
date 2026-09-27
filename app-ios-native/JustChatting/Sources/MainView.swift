@@ -13,6 +13,7 @@ import SwiftUI
 struct MainView: View {
     @Environment(\.webAuthenticationSession) private var webAuthenticationSession
     @State private var viewModel = KoinHelper().getMainRouterViewModel()
+    @State private var router = AppRouter()
 
     var body: some View {
         Observing(viewModel.state) { state in
@@ -23,7 +24,7 @@ struct MainView: View {
             case .loggedOut:
                 OnboardingView(viewModel: viewModel)
             case .loggedIn:
-                HomeTabView(viewModel: viewModel)
+                HomeTabView(router: router)
             }
         }
         .onAppear {
@@ -50,8 +51,10 @@ struct MainView: View {
                     viewModel.onDeeplinkReceived(uriString: callback.absoluteString)
                 } catch {}
             }
-        case .navigateToTab, .viewChannel:
-            break
+        case .navigateToTab(let e):
+            router.selectedTab = AppTab(screen: e.screen)
+        case .viewChannel(let e):
+            router.openChannel(userId: e.userId)
         }
     }
 }

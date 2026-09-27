@@ -7,7 +7,7 @@ import JCShared
 import SwiftUI
 
 struct SearchView: View {
-    var navigateToChannel: (String) -> Void
+    @Binding var selectedChannelId: String?
     @State private var viewModel = KoinHelper().getChannelSearchViewModel()
     @State private var pager = SearchResultsPager()
     @State private var query: String = ""
@@ -15,15 +15,17 @@ struct SearchView: View {
     @State private var isLoading = false
 
     var body: some View {
-        Observing(viewModel.state) { state in
-            if query.isEmpty {
-                recentChannelsView(state: state)
-            } else {
-                searchResultsView
+        ChannelSplitView(selectedChannelId: $selectedChannelId) {
+            Observing(viewModel.state) { state in
+                if query.isEmpty {
+                    recentChannelsView(state: state)
+                } else {
+                    searchResultsView
+                }
             }
+            .navigationTitle("Search")
         }
         .searchable(text: $query, prompt: "Search channels")
-        .navigationTitle("Search")
         .onAppear {
             viewModel.onStart()
         }
@@ -43,12 +45,6 @@ struct SearchView: View {
                 isLoading = false
             }
         }
-        .collect(flow: viewModel.events) { event in
-            switch onEnum(of: event) {
-            case .navigateToChannel(let e):
-                navigateToChannel(e.userId)
-            }
-        }
     }
 
     @ViewBuilder
@@ -60,13 +56,21 @@ struct SearchView: View {
                 description: Text("Find Twitch channels by name")
             )
         } else {
-            List(state.recentChannels, id: \.id) { user in
-                Button {
-                    viewModel.onChannelClick(userId: user.id)
-                } label: {
-                    recentChannelRow(user: user)
+            List(selection: $selectedChannelId) {
+                Section("Recent channels") {
+                    ForEach(state.recentChannels, id: \.id) { user in
+                        NavigationLink(value: user.id) {
+                            recentChannelRow(user: user)
+                        }
+                        .swipeActions {
+                            Button(role: .destructive) {
+                                viewModel.onRemoveRecentChannel(user: user)
+                            } label: {
+                                Label("Remove", systemImage: "trash")
+                            }
+                        }
+                    }
                 }
-                .buttonStyle(.plain)
             }
             .listStyle(.plain)
         }
@@ -80,14 +84,11 @@ struct SearchView: View {
         } else if items.isEmpty {
             ContentUnavailableView.search(text: query)
         } else {
-            List {
+            List(selection: $selectedChannelId) {
                 ForEach(Array(items.enumerated()), id: \.offset) { index, result in
-                    Button {
-                        viewModel.onChannelClick(userId: result.user.id)
-                    } label: {
+                    NavigationLink(value: result.user.id) {
                         SearchResultRowView(result: result)
                     }
-                    .buttonStyle(.plain)
                     .onAppear {
                         if index >= items.count - 5 {
                             _ = pager.getItem(index: Int32(index))
@@ -119,16 +120,6 @@ struct SearchView: View {
 
             Text(user.displayName)
                 .font(.body.weight(.semibold))
-
-            Spacer()
-
-            Button(role: .destructive) {
-                viewModel.onRemoveRecentChannel(user: user)
-            } label: {
-                Image(systemName: "xmark.circle.fill")
-                    .foregroundStyle(.secondary)
-            }
-            .buttonStyle(.plain)
         }
         .padding(.vertical, 4)
     }

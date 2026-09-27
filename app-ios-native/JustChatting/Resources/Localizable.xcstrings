@@ -434,6 +434,36 @@
         }
       }
     },
+    "No chat selected" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun tchat sélectionné"
+          }
+        }
+      }
+    },
+    "No section selected" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune section sélectionnée"
+          }
+        }
+      }
+    },
+    "Offline" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hors ligne"
+          }
+        }
+      }
+    },
     "OK" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -467,6 +497,16 @@
         }
       }
     },
+    "Recent channels" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chaînes récentes"
+          }
+        }
+      }
+    },
     "Recent messages" : {
       "comment" : "Toggle label and section header for loading recent chat messages on join",
       "localizations" : {
@@ -496,6 +536,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vous pouvez désactiver l'animation des émotes en activant l'option « Suppression des animations » dans les réglages de votre appareil."
+          }
+        }
+      }
+    },
+    "Remove" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer"
           }
         }
       }
@@ -569,13 +619,12 @@
         }
       }
     },
-    "Select a channel" : {
-      "extractionState" : "stale",
+    "Select a channel to open its chat." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sélectionnez une chaîne"
+            "value" : "Sélectionnez une chaîne pour ouvrir son tchat."
           }
         }
       }
@@ -734,6 +783,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stream"
+          }
+        }
+      }
+    },
+    "Stream info" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Infos du stream"
           }
         }
       }

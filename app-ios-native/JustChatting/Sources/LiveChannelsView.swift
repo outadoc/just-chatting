@@ -7,7 +7,7 @@ import JCShared
 import SwiftUI
 
 struct LiveChannelsView: View {
-    var navigateToChannel: (String) -> Void
+    @Binding var selectedChannelId: String?
     @State private var viewModel = KoinHelper().getLiveTimelineViewModel()
 
     var body: some View {
@@ -19,13 +19,10 @@ struct LiveChannelsView: View {
                 } else if state.live.isEmpty {
                     ContentUnavailableView("No live channels", systemImage: "tv.slash")
                 } else {
-                    List(state.live, id: \.user.id) { userStream in
-                        Button {
-                            viewModel.onChannelClick(userId: userStream.user.id)
-                        } label: {
+                    List(state.live, id: \.user.id, selection: $selectedChannelId) { userStream in
+                        NavigationLink(value: userStream.user.id) {
                             LiveStreamRowView(userStream: userStream)
                         }
-                        .buttonStyle(.plain)
                     }
                     .listStyle(.plain)
                     .refreshable {
@@ -37,12 +34,6 @@ struct LiveChannelsView: View {
         .navigationTitle("Live")
         .onAppear {
             viewModel.syncLiveStreamsPeriodically()
-        }
-        .collect(flow: viewModel.events) { event in
-            switch onEnum(of: event) {
-            case .navigateToChannel(let e):
-                navigateToChannel(e.userId)
-            }
         }
     }
 }

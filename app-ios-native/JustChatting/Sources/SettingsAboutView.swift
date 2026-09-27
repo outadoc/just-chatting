@@ -62,6 +62,7 @@ struct SettingsAboutView: View {
                 }
             }
             .navigationTitle("About")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .collect(flow: viewModel.events) { event in
             switch onEnum(of: event) {
@@ -126,6 +127,7 @@ private struct SettingsDependenciesView: View {
             }
         }
         .navigationTitle("Open-source")
+        .navigationBarTitleDisplayMode(.inline)
         .task {
             dependencies = (try? await KoinHelper().getReadExternalDependenciesList().invoke()) ?? []
         }

@@ -95,6 +95,7 @@ struct SettingsThirdPartiesView: View {
                 }
             }
             .navigationTitle("Third-party integrations")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

@@ -44,6 +44,7 @@ struct SettingsAppearanceView: View {
                 }
             }
             .navigationTitle("Appearance")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

@@ -7,7 +7,7 @@ import JCShared
 import SwiftUI
 
 struct FollowedChannelsView: View {
-    var navigateToChannel: (String) -> Void
+    @Binding var selectedChannelId: String?
     @State private var viewModel = KoinHelper().getFollowedChannelsViewModel()
 
     var body: some View {
@@ -19,13 +19,10 @@ struct FollowedChannelsView: View {
                 } else if state.data.isEmpty {
                     ContentUnavailableView("No followed channels", systemImage: "heart.slash")
                 } else {
-                    List(state.data, id: \.user.id) { follow in
-                        Button {
-                            viewModel.onChannelClick(userId: follow.user.id)
-                        } label: {
+                    List(state.data, id: \.user.id, selection: $selectedChannelId) { follow in
+                        NavigationLink(value: follow.user.id) {
                             ChannelRowView(channelFollow: follow)
                         }
-                        .buttonStyle(.plain)
                     }
                     .listStyle(.plain)
                     .refreshable {
@@ -37,12 +34,6 @@ struct FollowedChannelsView: View {
         .navigationTitle("Following")
         .onAppear {
             viewModel.synchronize()
-        }
-        .collect(flow: viewModel.events) { event in
-            switch onEnum(of: event) {
-            case .navigateToChannel(let e):
-                navigateToChannel(e.userId)
-            }
         }
     }
 }

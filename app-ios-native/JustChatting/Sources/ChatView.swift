@@ -16,6 +16,8 @@ struct ChatView: View {
     @State private var isAtBottom = true
     @State private var showCopiedToast = false
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     var body: some View {
         Observing(viewModel.state) { state in
             switch onEnum(of: state) {
@@ -23,17 +25,18 @@ struct ChatView: View {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .navigationTitle("Chat")
-                    .navigationBarTitleDisplayMode(.inline)
 
             case .failed:
                 ContentUnavailableView("Failed to load chat", systemImage: "exclamationmark.triangle")
                     .navigationTitle("Chat")
-                    .navigationBarTitleDisplayMode(.inline)
 
             case .chatting(let chatting):
                 chattingView(chatting: chatting)
             }
         }
+        .navigationBarTitleDisplayMode(.inline)
+        // The tab bar would sit below the message input on iPhone.
+        .toolbarVisibility(horizontalSizeClass == .compact ? .hidden : .automatic, for: .tabBar)
         .onAppear {
             viewModel.loadChat(userId: userId)
         }
@@ -156,40 +159,27 @@ struct ChatView: View {
             }
         }
         .navigationTitle(chatting.user.displayName)
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationSubtitle(liveSubtitle(stream: chatting.stream))
         .toolbar {
-            ToolbarItem(placement: .principal) {
-                Button {
-                    viewModel.onShowStreamInfo()
-                } label: {
-                    VStack(spacing: 0) {
-                        Text(chatting.user.displayName)
-                            .font(.headline)
-                        if let stream = chatting.stream {
-                            HStack(spacing: 4) {
-                                Circle()
-                                    .fill(.red)
-                                    .frame(width: 6, height: 6)
-                                Text("\(Int(stream.viewerCount).formatted()) viewers")
-                            }
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                        }
-                    }
-                    .foregroundStyle(.primary)
-                }
-                .accessibilityHint("Shows stream info")
-            }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItemGroup(placement: .primaryAction) {
                 if chatting.stream != nil,
                    let url = URL(string: "https://twitch.tv/\(chatting.user.login)") {
                     Link(destination: url) {
-                        Image(systemName: "play.tv")
+                        Label("Watch live", systemImage: "play.tv")
                     }
-                    .accessibilityLabel("Watch live")
+                }
+                Button {
+                    viewModel.onShowStreamInfo()
+                } label: {
+                    Label("Stream info", systemImage: "info.circle")
                 }
             }
         }
+    }
+
+    private func liveSubtitle(stream: JCShared.Stream?) -> Text {
+        guard let stream else { return Text("Offline") }
+        return Text("\(Int(stream.viewerCount).formatted()) viewers")
     }
 
     @ViewBuilder

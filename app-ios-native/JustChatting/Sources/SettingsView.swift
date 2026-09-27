@@ -6,44 +6,62 @@
 import JCShared
 import SwiftUI
 
+enum SettingsPage: Hashable {
+    case thirdParties
+    case appearance
+    case about
+}
+
 struct SettingsView: View {
     @State private var viewModel = KoinHelper().getSettingsViewModel()
+    @State private var selectedPage: SettingsPage?
     @State private var showLogoutConfirmation = false
 
     var body: some View {
-        Observing(viewModel.state) { state in
-            List {
-                accountSection(state: state)
+        NavigationSplitView {
+            Observing(viewModel.state) { state in
+                List(selection: $selectedPage) {
+                    accountSection(state: state)
 
-                Section {
-                    NavigationLink {
-                        SettingsThirdPartiesView(viewModel: viewModel)
-                    } label: {
-                        Label("Third-party integrations", systemImage: "puzzlepiece.extension")
+                    Section {
+                        NavigationLink(value: SettingsPage.thirdParties) {
+                            Label("Third-party integrations", systemImage: "puzzlepiece.extension")
+                        }
+
+                        NavigationLink(value: SettingsPage.appearance) {
+                            Label("Appearance", systemImage: "paintpalette")
+                        }
                     }
 
-                    NavigationLink {
-                        SettingsAppearanceView(viewModel: viewModel)
-                    } label: {
-                        Label("Appearance", systemImage: "paintpalette")
-                    }
-                }
-
-                Section {
-                    NavigationLink {
-                        SettingsAboutView(viewModel: viewModel)
-                    } label: {
-                        LabeledContent {
-                            if let version = state.appVersionName {
-                                Text(version)
+                    Section {
+                        NavigationLink(value: SettingsPage.about) {
+                            LabeledContent {
+                                if let version = state.appVersionName {
+                                    Text(version)
+                                }
+                            } label: {
+                                Label("About", systemImage: "info.circle")
                             }
-                        } label: {
-                            Label("About", systemImage: "info.circle")
                         }
                     }
                 }
             }
             .navigationTitle("Settings")
+        } detail: {
+            // Own stack so that pages can push further details, like the open-source licences.
+            NavigationStack {
+                switch selectedPage {
+                case .thirdParties:
+                    SettingsThirdPartiesView(viewModel: viewModel)
+                case .appearance:
+                    SettingsAppearanceView(viewModel: viewModel)
+                case .about:
+                    SettingsAboutView(viewModel: viewModel)
+                case nil:
+                    ContentUnavailableView("No section selected", systemImage: "gearshape")
+                }
+            }
+            .id(selectedPage)
         }
         .alert("Log out?", isPresented: $showLogoutConfirmation) {
             Button("Log out", role: .destructive) {

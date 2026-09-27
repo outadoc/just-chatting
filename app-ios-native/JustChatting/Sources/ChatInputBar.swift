@@ -75,7 +75,6 @@ struct ChatInputBar: View {
                 Button(action: submit) {
                     Image(systemName: "paperplane")
                         .fontWeight(.semibold)
-                        .foregroundStyle(.white)
                         .frame(width: 32, height: 32)
                 }
                 .buttonStyle(GlassButtonStyle())

@@ -40,6 +40,7 @@ private struct SlimBanner<Content: View>: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
         .background(tint, in: Capsule())
+        .foregroundStyle(.white)
     }
 }
 

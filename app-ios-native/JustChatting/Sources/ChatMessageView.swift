@@ -52,7 +52,7 @@ struct ChatMessageRow: View {
     let context: ChatMessageContext
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 6) {
+        HStack(alignment: .center, spacing: 12) {
             if context.showTimestamps {
                 Text(message.date, format: .dateTime.hour().minute())
                     .font(.caption)
@@ -128,7 +128,6 @@ private struct HighlightedMessageView: View {
         case .eight: return Color(red: 0xbe/255, green: 0x0b/255, blue: 0xb7/255)
         case .nine:  return Color(red: 0xab/255, green: 0x20/255, blue: 0x78/255)
         case .ten:   return Color(red: 0xc9/255, green: 0x02/255, blue: 0x16/255)
-        default:     return .accentColor
         }
     }
 

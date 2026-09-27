@@ -13,7 +13,7 @@ struct ChatMessage: View {
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
             if context.showTimestamps {
-                Text(message.date, format: .dateTime.hour().minute())
+                Text(message.timestamp.date, format: .dateTime.hour().minute())
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .monospacedDigit()

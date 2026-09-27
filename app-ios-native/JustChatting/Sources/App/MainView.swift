@@ -41,7 +41,7 @@ struct MainView: View {
     private func handleEvent(_ event: MainRouterViewModel.Event) {
         switch onEnum(of: event) {
         case .showAuthPage(let e):
-            guard let url = URL(string: (e.uri as AnyObject).description) else { return }
+            guard let url = e.url else { return }
             Task {
                 do {
                     let callback = try await webAuthenticationSession.authenticate(

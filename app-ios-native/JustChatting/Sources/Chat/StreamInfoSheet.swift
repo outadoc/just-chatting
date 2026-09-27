@@ -11,8 +11,6 @@ struct StreamInfoSheet: View {
     let user: User
     let stream: JCShared.Stream?
 
-    @Environment(\.openURL) private var openURL
-
     var body: some View {
         List {
             Section {
@@ -40,11 +38,7 @@ struct StreamInfoSheet: View {
                     }
 
                     Label {
-                        let startedAt = Date(
-                            epochSeconds: stream.startedAt.epochSeconds,
-                            nanosecondsOfSecond: stream.startedAt.nanosecondsOfSecond
-                        )
-                        Text("Live since \(startedAt.formatted(date: .omitted, time: .shortened))")
+                        Text("Live since \(stream.startedAt.date.formatted(date: .omitted, time: .shortened))")
                     } icon: {
                         Image(systemName: "clock")
                     }
@@ -56,13 +50,11 @@ struct StreamInfoSheet: View {
                 }
             }
 
-            Section {
-                Button {
-                    if let url = URL(string: "https://twitch.tv/\(user.login)") {
-                        openURL(url)
+            if let url = user.channelUrl {
+                Section {
+                    Link(destination: url) {
+                        Label("Watch live", systemImage: "play.tv")
                     }
-                } label: {
-                    Label("Watch live", systemImage: "play.tv")
                 }
             }
         }

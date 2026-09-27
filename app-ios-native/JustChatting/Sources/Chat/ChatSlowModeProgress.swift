@@ -11,12 +11,8 @@ struct ChatSlowModeProgress: View {
     let constraint: MessagePostConstraint
 
     var body: some View {
-        let lastSent = Date(
-            epochSeconds: constraint.lastMessageSentAt.epochSeconds,
-            nanosecondsOfSecond: constraint.lastMessageSentAt.nanosecondsOfSecond
-        )
         let duration = constraint.slowModeDurationSeconds
-        let end = lastSent.addingTimeInterval(duration)
+        let end = constraint.lastMessageSentAt.date.addingTimeInterval(duration)
 
         TimelineView(.animation(minimumInterval: 0.1, paused: Date() >= end)) { timeline in
             let remaining = end.timeIntervalSince(timeline.date)

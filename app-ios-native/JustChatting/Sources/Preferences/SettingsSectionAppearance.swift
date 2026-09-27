@@ -18,12 +18,7 @@ struct SettingsSectionAppearance: View {
                 Section {
                     Toggle(
                         "Show timestamps",
-                        isOn: Binding(
-                            get: { prefs.showTimestamps },
-                            set: { newValue in
-                                viewModel.updatePreferences(appPreferences: prefs.with(showTimestamps: newValue))
-                            }
-                        )
+                        isOn: viewModel.binding(prefs, \.showTimestamps) { $0.with(showTimestamps: $1) }
                     )
                 }
 

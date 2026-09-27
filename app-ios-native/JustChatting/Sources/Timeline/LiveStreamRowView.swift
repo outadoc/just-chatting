@@ -9,13 +9,6 @@ import SwiftUI
 struct LiveStreamRowView: View {
     let userStream: UserStream
 
-    private var startedAtDate: Date {
-        Date(
-            timeIntervalSince1970: Double(userStream.stream.startedAt.epochSeconds)
-                + Double(userStream.stream.startedAt.nanosecondsOfSecond) / 1_000_000_000
-        )
-    }
-
     private var tags: [String] {
         Array(userStream.stream.tags)
     }
@@ -60,7 +53,7 @@ struct LiveStreamRowView: View {
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
 
-                    Text(startedAtDate, style: .relative)
+                    Text(userStream.stream.startedAt.date, style: .relative)
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
                         .monospacedDigit()

@@ -71,7 +71,7 @@ struct SettingsSectionAbout: View {
                 UIPasteboard.general.string = e.text
                 showLogsCopied = true
             case .shareLogs(let e):
-                sharedLogs = URL(string: (e.uri as AnyObject).description).map(SharedLogs.init)
+                sharedLogs = e.url.map(SharedLogs.init)
             case .navigateToDetail:
                 break
             }

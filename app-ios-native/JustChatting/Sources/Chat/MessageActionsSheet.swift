@@ -30,7 +30,7 @@ struct MessageActionsSheet: View {
                 Section {
                     ChatMessage(message: message, context: context.withoutTimestamps)
                 } footer: {
-                    Text(message.date, format: .dateTime.day().month().year().hour().minute().second())
+                    Text(message.timestamp.date, format: .dateTime.day().month().year().hour().minute().second())
                 }
 
                 let emotes = usedEmotes(in: messageBody)
@@ -86,12 +86,8 @@ struct MessageActionsSheet: View {
                         .font(.callout)
                 }
 
-                let createdAt = Date(
-                    epochSeconds: user.createdAt.epochSeconds,
-                    nanosecondsOfSecond: user.createdAt.nanosecondsOfSecond
-                )
                 Label {
-                    Text("Created on \(createdAt.formatted(date: .long, time: .omitted))")
+                    Text("Created on \(user.createdAt.date.formatted(date: .long, time: .omitted))")
                 } icon: {
                     Image(systemName: "calendar")
                 }

@@ -121,8 +121,7 @@ struct ChatView: View {
         .navigationSubtitle(liveSubtitle(stream: chatting.stream))
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
-                if chatting.stream != nil,
-                   let url = URL(string: "https://twitch.tv/\(chatting.user.login)") {
+                if chatting.stream != nil, let url = chatting.user.channelUrl {
                     Link(destination: url) {
                         Label("Watch live", systemImage: "play.tv")
                     }

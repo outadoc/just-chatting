@@ -18,12 +18,7 @@ struct SettingsSectionThirdParties: View {
                 Section {
                     Toggle(
                         "Recent messages",
-                        isOn: Binding(
-                            get: { prefs.enableRecentMessages },
-                            set: { newValue in
-                                viewModel.updatePreferences(appPreferences: prefs.with(enableRecentMessages: newValue))
-                            }
-                        )
+                        isOn: viewModel.binding(prefs, \.enableRecentMessages) { $0.with(enableRecentMessages: $1) }
                     )
                 } header: {
                     Text("Recent messages")
@@ -34,12 +29,7 @@ struct SettingsSectionThirdParties: View {
                 Section {
                     Toggle(
                         "Show pronouns",
-                        isOn: Binding(
-                            get: { prefs.enablePronouns },
-                            set: { newValue in
-                                viewModel.updatePreferences(appPreferences: prefs.with(enablePronouns: newValue))
-                            }
-                        )
+                        isOn: viewModel.binding(prefs, \.enablePronouns) { $0.with(enablePronouns: $1) }
                     )
                     ExternalLink("Set your pronouns", destination: Self.pronounsUrl)
                 } header: {
@@ -51,30 +41,15 @@ struct SettingsSectionThirdParties: View {
                 Section {
                     Toggle(
                         "BetterTTV",
-                        isOn: Binding(
-                            get: { prefs.enableBttvEmotes },
-                            set: { newValue in
-                                viewModel.updatePreferences(appPreferences: prefs.with(enableBttvEmotes: newValue))
-                            }
-                        )
+                        isOn: viewModel.binding(prefs, \.enableBttvEmotes) { $0.with(enableBttvEmotes: $1) }
                     )
                     Toggle(
                         "FrankerFaceZ",
-                        isOn: Binding(
-                            get: { prefs.enableFfzEmotes },
-                            set: { newValue in
-                                viewModel.updatePreferences(appPreferences: prefs.with(enableFfzEmotes: newValue))
-                            }
-                        )
+                        isOn: viewModel.binding(prefs, \.enableFfzEmotes) { $0.with(enableFfzEmotes: $1) }
                     )
                     Toggle(
                         "7TV",
-                        isOn: Binding(
-                            get: { prefs.enableStvEmotes },
-                            set: { newValue in
-                                viewModel.updatePreferences(appPreferences: prefs.with(enableStvEmotes: newValue))
-                            }
-                        )
+                        isOn: viewModel.binding(prefs, \.enableStvEmotes) { $0.with(enableStvEmotes: $1) }
                     )
                 } header: {
                     Text("Emotes")

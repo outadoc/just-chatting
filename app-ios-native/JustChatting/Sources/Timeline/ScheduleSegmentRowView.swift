@@ -13,24 +13,9 @@ struct ScheduleSegmentRowView: View {
         segment.canceledUntil != nil
     }
 
-    private var startDate: Date {
-        Date(
-            timeIntervalSince1970: Double(segment.startTime.epochSeconds)
-                + Double(segment.startTime.nanosecondsOfSecond) / 1_000_000_000
-        )
-    }
-
-    private var endDate: Date? {
-        guard let endTime = segment.endTime else { return nil }
-        return Date(
-            timeIntervalSince1970: Double(endTime.epochSeconds)
-                + Double(endTime.nanosecondsOfSecond) / 1_000_000_000
-        )
-    }
-
     private var timeRangeText: String {
-        let start = startDate.formatted(.dateTime.hour().minute())
-        if let end = endDate {
+        let start = segment.startTime.date.formatted(.dateTime.hour().minute())
+        if let end = segment.endTime?.date {
             return "\(start) – \(end.formatted(.dateTime.hour().minute()))"
         }
         return start

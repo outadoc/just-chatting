@@ -20,15 +20,10 @@ extension ChatListItemMessage {
         return "\(timestamp.epochSeconds).\(timestamp.nanosecondsOfSecond)-\(hash)"
     }
 
-    var date: Date {
-        Date(epochSeconds: timestamp.epochSeconds, nanosecondsOfSecond: timestamp.nanosecondsOfSecond)
-    }
-
     /// Whether this message was deleted by a moderator, or its author timed out / banned.
     func isRedacted(by removedContent: [ChatListItemRemoveContent]) -> Bool {
         removedContent.contains { rule in
-            let upUntil = Date(epochSeconds: rule.upUntil.epochSeconds, nanosecondsOfSecond: rule.upUntil.nanosecondsOfSecond)
-            guard upUntil > date else { return false }
+            guard rule.upUntil.date > timestamp.date else { return false }
             if let messageId = rule.matchingMessageId, messageId != body?.messageId { return false }
             if let userId = rule.matchingUserId, userId != body?.chatter.id { return false }
             return true

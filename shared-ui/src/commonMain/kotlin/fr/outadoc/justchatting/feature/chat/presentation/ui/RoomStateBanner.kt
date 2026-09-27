@@ -3,7 +3,9 @@ package fr.outadoc.justchatting.feature.chat.presentation.ui
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import fr.outadoc.justchatting.feature.chat.presentation.RoomMode
 import fr.outadoc.justchatting.feature.chat.presentation.RoomState
+import fr.outadoc.justchatting.feature.chat.presentation.activeModes
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.room_emote
 import fr.outadoc.justchatting.shared.internal.room_followers
@@ -21,46 +23,35 @@ internal fun RoomStateBanner(
     roomState: RoomState,
 ) {
     SlimSnackbar(modifier = modifier) {
-        with(roomState) {
-            if (isEmoteOnly) {
-                Text(text = stringResource(Res.string.room_emote))
-            }
+        roomState.activeModes.forEach { mode ->
+            Text(
+                text =
+                    when (mode) {
+                        RoomMode.EmoteOnly -> {
+                            stringResource(Res.string.room_emote)
+                        }
 
-            if (!minFollowDuration.isNegative()) {
-                Text(
-                    text =
-                        when (minFollowDuration) {
-                            Duration.ZERO -> {
+                        is RoomMode.FollowersOnly -> {
+                            if (mode.minFollowDuration == Duration.ZERO) {
                                 stringResource(Res.string.room_followers)
+                            } else {
+                                stringResource(Res.string.room_followers_min, mode.minFollowDuration.format())
                             }
+                        }
 
-                            else -> {
-                                stringResource(
-                                    Res.string.room_followers_min,
-                                    minFollowDuration.format(),
-                                )
-                            }
-                        },
-                )
-            }
+                        RoomMode.UniqueMessages -> {
+                            stringResource(Res.string.room_unique)
+                        }
 
-            if (uniqueMessagesOnly) {
-                Text(text = stringResource(Res.string.room_unique))
-            }
+                        is RoomMode.Slow -> {
+                            stringResource(Res.string.room_slow, mode.delay.format())
+                        }
 
-            if (slowModeDuration.isPositive()) {
-                Text(
-                    text =
-                        stringResource(
-                            Res.string.room_slow,
-                            slowModeDuration.format(),
-                        ),
-                )
-            }
-
-            if (isSubOnly) {
-                Text(text = stringResource(Res.string.room_subs))
-            }
+                        RoomMode.SubscribersOnly -> {
+                            stringResource(Res.string.room_subs)
+                        }
+                    },
+            )
         }
     }
 }

@@ -692,6 +692,12 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/BubblePermi
 	public static fun values ()[Lfr/outadoc/justchatting/feature/chat/presentation/BubblePermission;
 }
 
+public final class fr/outadoc/justchatting/feature/chat/presentation/ChatListItemMessageExtKt {
+	public static final fun getDisplayedBadges (Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$Message$Body;)Lfr/outadoc/justchatting/feature/chat/presentation/DisplayedBadges;
+	public static final fun isRedacted (Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$Message;Ljava/util/List;)Z
+	public static final fun usedEmotes (Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$Message$Body;Ljava/util/Map;)Ljava/util/List;
+}
+
 public abstract interface class fr/outadoc/justchatting/feature/chat/presentation/ChatNotifier {
 	public abstract fun getAreNotificationsEnabled ()Z
 	public abstract fun getBubblePermission ()Lfr/outadoc/justchatting/feature/chat/presentation/BubblePermission;
@@ -856,8 +862,29 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/ChatViewMod
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class fr/outadoc/justchatting/feature/chat/presentation/ChatterColors {
+	public static final field $stable I
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ChatterColors;
+	public final fun accessibleColor (Ljava/lang/String;I)Ljava/lang/Integer;
+	public final fun fallbackIndex (Lfr/outadoc/justchatting/feature/chat/domain/model/Chatter;I)I
+}
+
 public abstract interface class fr/outadoc/justchatting/feature/chat/presentation/CreateShortcutForChannelUseCase {
 	public abstract fun invoke (Lfr/outadoc/justchatting/feature/shared/domain/model/User;)V
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/DisplayedBadges {
+	public static final field $stable I
+	public fun <init> (Ljava/util/List;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/util/List;Ljava/lang/String;)Lfr/outadoc/justchatting/feature/chat/presentation/DisplayedBadges;
+	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/chat/presentation/DisplayedBadges;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/chat/presentation/DisplayedBadges;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBadges ()Ljava/util/List;
+	public final fun getSourceRoomId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class fr/outadoc/justchatting/feature/chat/presentation/EmoteUrlsExtKt {
@@ -877,6 +904,71 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/MessagePost
 	public final fun getSlowModeDuration-UwyO8pc ()J
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class fr/outadoc/justchatting/feature/chat/presentation/MessageToken {
+	public abstract fun getText ()Ljava/lang/String;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/MessageToken$Emote : fr/outadoc/justchatting/feature/chat/presentation/MessageToken {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lfr/outadoc/justchatting/feature/emotes/domain/model/Emote;Ljava/util/List;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lfr/outadoc/justchatting/feature/emotes/domain/model/Emote;
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Lfr/outadoc/justchatting/feature/emotes/domain/model/Emote;Ljava/util/List;)Lfr/outadoc/justchatting/feature/chat/presentation/MessageToken$Emote;
+	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/chat/presentation/MessageToken$Emote;Ljava/lang/String;Lfr/outadoc/justchatting/feature/emotes/domain/model/Emote;Ljava/util/List;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/chat/presentation/MessageToken$Emote;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEmote ()Lfr/outadoc/justchatting/feature/emotes/domain/model/Emote;
+	public final fun getOverlays ()Ljava/util/List;
+	public fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/MessageToken$Link : fr/outadoc/justchatting/feature/chat/presentation/MessageToken {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lfr/outadoc/justchatting/feature/chat/presentation/MessageToken$Link;
+	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/chat/presentation/MessageToken$Link;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/chat/presentation/MessageToken$Link;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getText ()Ljava/lang/String;
+	public final fun getUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/MessageToken$Mention : fr/outadoc/justchatting/feature/chat/presentation/MessageToken {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Z)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Z
+	public final fun copy (Ljava/lang/String;Z)Lfr/outadoc/justchatting/feature/chat/presentation/MessageToken$Mention;
+	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/chat/presentation/MessageToken$Mention;Ljava/lang/String;ZILjava/lang/Object;)Lfr/outadoc/justchatting/feature/chat/presentation/MessageToken$Mention;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isMentionOfAppUser ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/MessageToken$Word : fr/outadoc/justchatting/feature/chat/presentation/MessageToken {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lfr/outadoc/justchatting/feature/chat/presentation/MessageToken$Word;
+	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/chat/presentation/MessageToken$Word;Ljava/lang/String;ILjava/lang/Object;)Lfr/outadoc/justchatting/feature/chat/presentation/MessageToken$Word;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/MessageTokenKt {
+	public static final fun isMentionOf (Ljava/lang/String;Ljava/lang/String;)Z
+	public static final fun tokenize (Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$Message$Body;Ljava/util/Map;Ljava/util/Map;Ljava/lang/String;)Ljava/util/List;
 }
 
 public final class fr/outadoc/justchatting/feature/chat/presentation/OngoingEvents {
@@ -911,6 +1003,61 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/OngoingEven
 	public final fun getMessage ()Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$Message;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class fr/outadoc/justchatting/feature/chat/presentation/RoomMode {
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/RoomMode$EmoteOnly : fr/outadoc/justchatting/feature/chat/presentation/RoomMode {
+	public static final field $stable I
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/RoomMode$EmoteOnly;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/RoomMode$FollowersOnly : fr/outadoc/justchatting/feature/chat/presentation/RoomMode {
+	public static final field $stable I
+	public synthetic fun <init> (JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-UwyO8pc ()J
+	public final fun copy-LRDsOJo (J)Lfr/outadoc/justchatting/feature/chat/presentation/RoomMode$FollowersOnly;
+	public static synthetic fun copy-LRDsOJo$default (Lfr/outadoc/justchatting/feature/chat/presentation/RoomMode$FollowersOnly;JILjava/lang/Object;)Lfr/outadoc/justchatting/feature/chat/presentation/RoomMode$FollowersOnly;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMinFollowDuration-UwyO8pc ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/RoomMode$Slow : fr/outadoc/justchatting/feature/chat/presentation/RoomMode {
+	public static final field $stable I
+	public synthetic fun <init> (JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-UwyO8pc ()J
+	public final fun copy-LRDsOJo (J)Lfr/outadoc/justchatting/feature/chat/presentation/RoomMode$Slow;
+	public static synthetic fun copy-LRDsOJo$default (Lfr/outadoc/justchatting/feature/chat/presentation/RoomMode$Slow;JILjava/lang/Object;)Lfr/outadoc/justchatting/feature/chat/presentation/RoomMode$Slow;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDelay-UwyO8pc ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/RoomMode$SubscribersOnly : fr/outadoc/justchatting/feature/chat/presentation/RoomMode {
+	public static final field $stable I
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/RoomMode$SubscribersOnly;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/RoomMode$UniqueMessages : fr/outadoc/justchatting/feature/chat/presentation/RoomMode {
+	public static final field $stable I
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/RoomMode$UniqueMessages;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class fr/outadoc/justchatting/feature/chat/presentation/RoomModeKt {
+	public static final fun getActiveModes (Lfr/outadoc/justchatting/feature/chat/presentation/RoomState;)Ljava/util/List;
 }
 
 public final class fr/outadoc/justchatting/feature/chat/presentation/RoomState {
@@ -1983,6 +2130,12 @@ public final class fr/outadoc/justchatting/utils/logging/LoggerExtKt {
 }
 
 public abstract interface class fr/outadoc/justchatting/utils/parcel/Parcelable {
+}
+
+public final class fr/outadoc/justchatting/utils/presentation/ColorContrastKt {
+	public static final fun ensureColorIsAccessible (IID)Ljava/lang/Integer;
+	public static synthetic fun ensureColorIsAccessible$default (IIDILjava/lang/Object;)Ljava/lang/Integer;
+	public static final fun parseHexColorArgb (Ljava/lang/String;)Ljava/lang/Integer;
 }
 
 public final class fr/outadoc/justchatting/utils/presentation/NumberExt_desktopKt {

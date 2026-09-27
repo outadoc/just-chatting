@@ -1,10 +1,10 @@
-package fr.outadoc.justchatting.feature.chat.presentation.ui
+package fr.outadoc.justchatting.feature.chat.presentation
 
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class MentionStyleTest {
+internal class MentionTest {
     @Test
     fun `mention with prefix matches login`() {
         assertTrue(isMentionOf(mention = "@outadoc", login = "outadoc"))

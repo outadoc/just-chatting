@@ -33,7 +33,7 @@ struct MessageActionsSheet: View {
                     Text(message.timestamp.date, format: .dateTime.day().month().year().hour().minute().second())
                 }
 
-                let emotes = usedEmotes(in: messageBody)
+                let emotes = messageBody.usedEmotes(emotes: context.emotes)
                 if !emotes.isEmpty {
                     Section {
                         ScrollView(.horizontal, showsIndicators: false) {
@@ -100,14 +100,5 @@ struct MessageActionsSheet: View {
             Text(chatter.displayName)
                 .font(.title3.weight(.semibold))
         }
-    }
-
-    // `embeddedEmotes` only covers first-party Twitch emotes; third-party emotes are plain words
-    // that match an emote name, so look those up too.
-    private func usedEmotes(in messageBody: ChatListItemMessage.Body) -> [Emote] {
-        var seen = Set<String>()
-        let words = messageBody.message?.split(separator: " ").map(String.init) ?? []
-        let candidates = Array(messageBody.embeddedEmotes) + words.compactMap { context.emotesByName[$0] }
-        return candidates.filter { seen.insert($0.name).inserted }
     }
 }

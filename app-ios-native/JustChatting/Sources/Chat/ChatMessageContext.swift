@@ -8,7 +8,8 @@ import SwiftUI
 
 /// Everything a chat message needs to render, precomputed once per chat state update.
 struct ChatMessageContext {
-    let emotesByName: [String: Emote]
+    let emotes: [String: Emote]
+    let cheerEmotes: [String: Emote]
     let badges: [String: TwitchBadge]
     let sourceChannelBadges: [String: [String: TwitchBadge]]
     let sourceChannels: [String: User]
@@ -19,8 +20,8 @@ struct ChatMessageContext {
     var showTimestamps: Bool
 
     init(chatting: ChatViewModel.StateChatting, showTimestamps: Bool) {
-        emotesByName = chatting.allEmotesMap
-            .merging(chatting.cheerEmotes) { _, cheer in cheer }
+        emotes = chatting.allEmotesMap
+        cheerEmotes = chatting.cheerEmotes
         badges = Self.index(badges: Array(chatting.globalBadges) + Array(chatting.channelBadges))
         sourceChannelBadges = chatting.sourceChannelBadges.mapValues { Self.index(badges: Array($0)) }
         sourceChannels = chatting.sourceChannels

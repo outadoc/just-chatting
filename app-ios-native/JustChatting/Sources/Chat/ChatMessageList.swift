@@ -68,7 +68,7 @@ struct ChatMessageList: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 2)
             .background(isAlternate ? Color(.secondarySystemBackground).opacity(0.5) : Color(.systemBackground))
-            .blur(radius: message.isRedacted(by: context.removedContent) ? 6 : 0)
+            .blur(radius: message.isRedacted(removedContent: context.removedContent) ? 6 : 0)
 
         if message.body != nil {
             let actions = MessageActionButtons(message: message, onReply: onReply, onCopy: onCopy)

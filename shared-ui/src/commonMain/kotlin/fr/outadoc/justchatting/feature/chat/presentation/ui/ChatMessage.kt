@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
+import fr.outadoc.justchatting.feature.chat.presentation.isRedacted
 import fr.outadoc.justchatting.feature.chat.presentation.ui.preview.ChatMessagePreviewProvider
 import fr.outadoc.justchatting.feature.chat.presentation.ui.preview.previewBadges
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
@@ -63,6 +64,7 @@ public fun ChatMessage(
     message: ChatListItem.Message,
     inlineContent: ImmutableMap<String, InlineTextContent> = persistentMapOf(),
     emotes: ImmutableMap<String, Emote> = persistentMapOf(),
+    cheerEmotes: ImmutableMap<String, Emote> = persistentMapOf(),
     removedContent: ImmutableList<ChatListItem.RemoveContent> = persistentListOf(),
     pronouns: ImmutableMap<Chatter, Pronoun> = persistentMapOf(),
     richEmbed: ChatListItem.RichEmbed? = null,
@@ -74,10 +76,7 @@ public fun ChatMessage(
 ) {
     val shouldRedactContents: Boolean =
         remember(message, removedContent) {
-            removedContent
-                .filter { rule -> rule.upUntil > message.timestamp }
-                .filter { rule -> rule.matchingMessageId == null || rule.matchingMessageId == message.body?.messageId }
-                .any { rule -> rule.matchingUserId == null || rule.matchingUserId == message.body?.chatter?.id }
+            message.isRedacted(removedContent)
         }
 
     Row(
@@ -118,6 +117,7 @@ public fun ChatMessage(
                             body = data,
                             inlineContent = inlineContent,
                             emotes = emotes,
+                            cheerEmotes = cheerEmotes,
                             pronouns = pronouns,
                             appUser = appUser,
                             backgroundHint = backgroundHint,
@@ -147,6 +147,7 @@ public fun ChatMessage(
                         body = message.body,
                         inlineContent = inlineContent,
                         emotes = emotes,
+                        cheerEmotes = cheerEmotes,
                         pronouns = pronouns,
                         appUser = appUser,
                         backgroundHint = backgroundHint,

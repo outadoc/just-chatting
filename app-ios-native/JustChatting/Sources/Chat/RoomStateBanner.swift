@@ -10,38 +10,32 @@ struct RoomStateBanner: View {
     let roomState: RoomState
 
     var body: some View {
-        let modes = activeModes
+        let modes = roomState.activeModes
         if !modes.isEmpty {
             SlimBanner {
-                ForEach(modes, id: \.self) { mode in
-                    Text(mode)
+                ForEach(Array(modes.enumerated()), id: \.offset) { _, mode in
+                    Text(label(for: mode))
                 }
             }
             .accessibilityElement(children: .combine)
         }
     }
 
-    private var activeModes: [String] {
-        var modes: [String] = []
-        if roomState.isEmoteOnly {
-            modes.append(String(localized: "Emote"))
+    private func label(for mode: RoomMode) -> String {
+        switch onEnum(of: mode) {
+        case .emoteOnly:
+            String(localized: "Emote")
+        case .followersOnly(let followersOnly):
+            followersOnly.minFollowDurationSeconds == 0
+                ? String(localized: "Followers")
+                : String(localized: "Followers \(formatDuration(followersOnly.minFollowDurationSeconds))")
+        case .uniqueMessages:
+            String(localized: "Unique")
+        case .slow(let slow):
+            String(localized: "Slow \(formatDuration(slow.delaySeconds))")
+        case .subscribersOnly:
+            String(localized: "Subs")
         }
-        let minFollow = roomState.minFollowDurationSeconds
-        if minFollow == 0 {
-            modes.append(String(localized: "Followers"))
-        } else if minFollow > 0 {
-            modes.append(String(localized: "Followers \(formatDuration(minFollow))"))
-        }
-        if roomState.uniqueMessagesOnly {
-            modes.append(String(localized: "Unique"))
-        }
-        if roomState.slowModeDurationSeconds > 0 {
-            modes.append(String(localized: "Slow \(formatDuration(roomState.slowModeDurationSeconds))"))
-        }
-        if roomState.isSubOnly {
-            modes.append(String(localized: "Subs"))
-        }
-        return modes
     }
 
     private func formatDuration(_ seconds: Double) -> String {

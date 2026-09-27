@@ -11,18 +11,17 @@ struct ChatMessageBody: View {
     let context: ChatMessageContext
 
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.displayScale) private var displayScale
     @Environment(\.openURL) private var openURL
     @ScaledMetric(relativeTo: .callout) private var emoteHeight: CGFloat = 29
     @ScaledMetric(relativeTo: .callout) private var badgeHeight: CGFloat = 18
 
     var body: some View {
-        let chatterColor = ChatterColors.color(for: messageBody.chatter, hex: messageBody.color)
-        let embeddedEmotes = Dictionary(
-            messageBody.embeddedEmotes.map { ($0.name, $0) }
-        ) { _, last in last }
-        let tokens = ChatMessageTokenizer.tokenize(message: messageBody.message) { word in
-            embeddedEmotes[word] ?? context.emotesByName[word]
-        }
+        let tokens = messageBody.tokenize(
+            emotes: context.emotes,
+            cheerEmotes: context.cheerEmotes,
+            appUserLogin: context.appUserLogin
+        )
 
         VStack(alignment: .leading, spacing: 4) {
             if let inReplyTo = messageBody.inReplyTo {
@@ -45,14 +44,20 @@ struct ChatMessageBody: View {
                 }
 
                 ForEach(resolvedBadges, id: \.self) { badge in
-                    AnimatedImageView(url: badge.urls.url(for: colorScheme))
+                    AnimatedImageView(url: badge.urls.url(colorScheme: colorScheme, displayScale: displayScale))
                         .frame(width: badgeHeight, height: badgeHeight)
                         .accessibilityLabel(badge.title ?? badge.setId)
                 }
 
                 Text(chatterName)
                     .fontWeight(.bold)
-                    .foregroundStyle(chatterColor)
+                    .foregroundStyle(
+                        ChatterColors.shared.color(
+                            for: messageBody.chatter,
+                            hex: messageBody.color,
+                            colorScheme: colorScheme
+                        )
+                    )
                     .font(.callout)
 
                 ForEach(Array(tokens.enumerated()), id: \.offset) { _, token in
@@ -83,52 +88,49 @@ struct ChatMessageBody: View {
         return messageBody.isAction ? name : "\(name):"
     }
 
+    /// Which badges to show is decided in `shared`; this looks up how to draw them.
     private var resolvedBadges: [TwitchBadge] {
-        // Messages relayed from another channel in a shared chat carry that channel's badges.
-        if let roomId = messageBody.sourceRoomId, !messageBody.sourceBadges.isEmpty {
-            let sourceBadges = context.sourceChannelBadges[roomId] ?? [:]
-            return Array(messageBody.sourceBadges).compactMap { badge in
-                sourceBadges[ChatMessageContext.key(setId: badge.id, version: badge.version)]
-            }
-        }
-        return Array(messageBody.badges).compactMap { badge in
-            context.badges[ChatMessageContext.key(setId: badge.id, version: badge.version)]
+        let displayed = messageBody.displayedBadges
+        let available = displayed.sourceRoomId.map { context.sourceChannelBadges[$0] ?? [:] } ?? context.badges
+        return displayed.badges.compactMap { badge in
+            available[ChatMessageContext.key(setId: badge.id, version: badge.version)]
         }
     }
 
     @ViewBuilder
-    private func tokenView(_ token: ChatMessageToken) -> some View {
-        switch token {
-        case .text(let word):
-            Text(word)
+    private func tokenView(_ token: MessageToken) -> some View {
+        switch onEnum(of: token) {
+        case .word(let word):
+            Text(word.text)
                 .font(.callout)
                 .italic(messageBody.isAction)
 
-        case .emote(let emote, let overlays):
+        case .emote(let emote):
             EmoteView(
-                emote: emote,
-                overlays: overlays,
+                emote: emote.emote,
+                overlays: emote.overlays,
                 height: messageBody.isGigantifiedEmote ? emoteHeight * 4.5 : emoteHeight
             )
 
         case .mention(let mention):
-            let isMentioningMe = mention
-                .dropFirst()
-                .trimmingCharacters(in: .punctuationCharacters)
-                .caseInsensitiveCompare(context.appUserLogin) == .orderedSame
-            Text(mention)
+            let isMentioningMe = mention.isMentionOfAppUser
+            Text(mention.text)
                 .font(.callout)
                 .fontWeight(.bold)
                 .foregroundStyle(isMentioningMe ? Color(.systemBackground) : .primary)
                 .padding(.horizontal, isMentioningMe ? 3 : 0)
                 .background(isMentioningMe ? Color.primary : .clear, in: RoundedRectangle(cornerRadius: 3))
 
-        case .link(let text, let url):
-            Text(text)
+        case .link(let link):
+            Text(link.text)
                 .font(.callout)
                 .foregroundStyle(Color.accentColor)
                 .underline()
-                .onTapGesture { openURL(url) }
+                .onTapGesture {
+                    if let url = URL(string: link.url) {
+                        openURL(url)
+                    }
+                }
                 .accessibilityAddTraits(.isLink)
         }
     }

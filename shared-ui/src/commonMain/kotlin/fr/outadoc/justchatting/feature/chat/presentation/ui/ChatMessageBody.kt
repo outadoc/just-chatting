@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
@@ -38,7 +39,10 @@ import com.materialkolor.ktx.harmonizeWithPrimary
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
-import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
+import fr.outadoc.justchatting.feature.chat.presentation.ChatterColors
+import fr.outadoc.justchatting.feature.chat.presentation.MessageToken
+import fr.outadoc.justchatting.feature.chat.presentation.displayedBadges
+import fr.outadoc.justchatting.feature.chat.presentation.tokenize
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
@@ -46,14 +50,10 @@ import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.chat_message_actionSeparator
 import fr.outadoc.justchatting.shared.internal.chat_message_standardSeparator
 import fr.outadoc.justchatting.utils.presentation.customColors
-import fr.outadoc.justchatting.utils.presentation.ensureColorIsAccessible
-import fr.outadoc.justchatting.utils.presentation.isValidWebUrl
-import fr.outadoc.justchatting.utils.presentation.parseHexColor
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentHashMap
 import org.jetbrains.compose.resources.stringResource
-import kotlin.random.Random
 
 @Composable
 internal fun ChatMessageBody(
@@ -61,6 +61,7 @@ internal fun ChatMessageBody(
     body: ChatListItem.Message.Body,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     emotes: ImmutableMap<String, Emote>,
+    cheerEmotes: ImmutableMap<String, Emote>,
     pronouns: ImmutableMap<Chatter, Pronoun>,
     appUser: AppUser.LoggedIn,
     backgroundHint: Color,
@@ -85,16 +86,19 @@ internal fun ChatMessageBody(
                     }.toImmutableMap(),
             )
 
-    val emotesByName: ImmutableMap<String, Emote> =
-        emotes
-            .toPersistentHashMap()
-            .putAll(body.embeddedEmotes.associateBy { emote -> emote.name })
+    val tokens: List<MessageToken> =
+        remember(body, emotes, cheerEmotes, appUser) {
+            body.tokenize(
+                emotes = emotes,
+                cheerEmotes = cheerEmotes,
+                appUserLogin = appUser.userLogin,
+            )
+        }
 
     val annotatedMessage =
         body.toAnnotatedString(
-            appUser = appUser,
+            tokens = tokens,
             inlineContent = fullInlineContent,
-            emotesByName = emotesByName,
             pronouns = pronouns,
             backgroundHint = backgroundHint,
         )
@@ -157,9 +161,8 @@ internal data class AnnotatedChatMessage(
 @Stable
 @Composable
 internal fun ChatListItem.Message.Body.toAnnotatedString(
-    appUser: AppUser.LoggedIn,
+    tokens: List<MessageToken>,
     inlineContent: ImmutableMap<String, InlineTextContent>,
-    emotesByName: ImmutableMap<String, Emote>,
     pronouns: ImmutableMap<Chatter, Pronoun>,
     urlColor: Color = MaterialTheme.colorScheme.primary,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
@@ -167,15 +170,15 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
     mentionColor: Color = MaterialTheme.colorScheme.background,
 ): AnnotatedChatMessage {
     val accessibleChatterColor: Color? =
-        color?.parseHexColor()?.let { rawColor ->
-            ensureColorIsAccessible(rawColor, backgroundHint)
-        }
+        ChatterColors
+            .accessibleColor(hexColor = color, background = backgroundHint.toArgb())
+            ?.let { argb -> Color(argb) }
 
-    val randomChatColors = MaterialTheme.customColors.fallbackChatColors
+    val fallbackChatColors = MaterialTheme.customColors.fallbackChatColors
     val fallbackColor =
-        remember(chatter) {
-            randomChatColors.random(Random(chatter.hashCode()))
-        }
+        fallbackChatColors.elementAt(
+            ChatterColors.fallbackIndex(chatter = chatter, paletteSize = fallbackChatColors.size),
+        )
 
     val pronoun: String? = pronouns[chatter]?.displayPronoun
 
@@ -201,13 +204,12 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
                 }
             }
 
-            val effectiveBadges = sourceBadges.takeIf { it.isNotEmpty() } ?: badges
-            val effectiveSourceRoomId = sourceRoomId
+            val (shownBadges, badgesRoomId) = displayedBadges
 
-            effectiveBadges.forEach { badge ->
+            shownBadges.forEach { badge ->
                 val badgeId =
-                    if (sourceBadges.isNotEmpty() && effectiveSourceRoomId != null) {
-                        badge.sourceInlineContentId(effectiveSourceRoomId)
+                    if (badgesRoomId != null) {
+                        badge.sourceInlineContentId(badgesRoomId)
                     } else {
                         badge.inlineContentId
                     }
@@ -251,84 +253,51 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
                 )
             }
 
-            val words = message?.split(' ') ?: emptyList()
-            var wordIndex = 0
-
-            while (wordIndex < words.size) {
-                val word = words[wordIndex]
-
-                when {
-                    word.isValidWebUrl() -> {
-                        // This is a URL
-                        appendUrl(url = word, urlColor = urlColor)
-                        wordIndex++
+            tokens.forEach { token ->
+                when (token) {
+                    is MessageToken.Link -> {
+                        appendUrl(text = token.text, url = token.url, urlColor = urlColor)
                     }
 
-                    word in inlineContent -> {
-                        // This is an emote, possibly followed by zero-width overlay emotes
-                        val baseEmote = emotesByName[word]
-
-                        val overlays: List<Emote> =
-                            if (baseEmote != null && !baseEmote.isZeroWidth) {
-                                buildList {
-                                    var overlayIndex = wordIndex + 1
-                                    while (overlayIndex < words.size) {
-                                        val overlayEmote = emotesByName[words[overlayIndex]]
-                                        if (overlayEmote != null && overlayEmote.isZeroWidth) {
-                                            add(overlayEmote)
-                                            overlayIndex++
-                                        } else {
-                                            break
-                                        }
-                                    }
-                                }
-                            } else {
-                                emptyList()
-                            }
-
-                        if (baseEmote != null && overlays.isNotEmpty()) {
-                            val groupWords = words.subList(wordIndex, wordIndex + 1 + overlays.size)
-                            val groupId = zeroWidthGroupInlineContentId(groupWords)
+                    is MessageToken.Emote -> {
+                        if (token.overlays.isEmpty()) {
+                            appendInlineContent(
+                                id = token.text,
+                                alternateText = token.text,
+                            )
+                        } else {
+                            // Zero-width emotes are drawn on top of the emote they follow
+                            val groupId = zeroWidthGroupInlineContentId(token.text.split(' '))
 
                             extraInlineContent.getOrPut(groupId) {
                                 zeroWidthEmoteTextContent(
-                                    base = baseEmote,
-                                    overlays = overlays,
+                                    base = token.emote,
+                                    overlays = token.overlays,
                                     isGigantified = isGigantifiedEmote,
                                 )
                             }
 
                             appendInlineContent(
                                 id = groupId,
-                                alternateText = groupWords.joinToString(separator = " "),
+                                alternateText = token.text,
                             )
-
-                            wordIndex += 1 + overlays.size
-                        } else {
-                            appendInlineContent(
-                                id = word,
-                                alternateText = word,
-                            )
-
-                            wordIndex++
                         }
                     }
 
-                    word.startsWith(ChatPrefixConstants.ChatterPrefix) -> {
-                        // This is a user mention
-                        appendMention(
-                            mention = word,
-                            appUser = appUser,
-                            mentionBackground = mentionBackground,
-                            mentionColor = mentionColor,
-                        )
-                        wordIndex++
+                    is MessageToken.Mention -> {
+                        withStyle(
+                            getMentionStyle(
+                                mentioned = token.isMentionOfAppUser,
+                                mentionBackground = mentionBackground,
+                                mentionColor = mentionColor,
+                            ),
+                        ) {
+                            append(token.text)
+                        }
                     }
 
-                    else -> {
-                        // Just a normal word living in a normal world
-                        append(word)
-                        wordIndex++
+                    is MessageToken.Word -> {
+                        append(token.text)
                     }
                 }
 
@@ -343,13 +312,13 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
 }
 
 private fun AnnotatedString.Builder.appendUrl(
+    text: String,
     url: String,
     urlColor: Color,
 ) {
-    val validUrl: String = if (url.startsWith("http")) url else "https://$url"
     withLink(
         LinkAnnotation.Url(
-            validUrl,
+            url,
             TextLinkStyles(
                 style =
                     SpanStyle(
@@ -359,25 +328,7 @@ private fun AnnotatedString.Builder.appendUrl(
             ),
         ),
     ) {
-        append(url)
-    }
-}
-
-private fun AnnotatedString.Builder.appendMention(
-    mention: String,
-    appUser: AppUser.LoggedIn,
-    mentionBackground: Color,
-    mentionColor: Color,
-) {
-    withStyle(
-        getMentionStyle(
-            // TODO also check for userDisplayName
-            mentioned = isMentionOf(mention = mention, login = appUser.userLogin),
-            mentionBackground = mentionBackground,
-            mentionColor = mentionColor,
-        ),
-    ) {
-        append(mention)
+        append(text)
     }
 }
 

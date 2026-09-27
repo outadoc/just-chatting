@@ -28,6 +28,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.chat.presentation.UserInfoViewModel
+import fr.outadoc.justchatting.feature.chat.presentation.usedEmotes
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
@@ -86,18 +87,9 @@ internal fun MessageActionsBottomSheet(
                 )
         }
 
-    // `body.embeddedEmotes` only covers first-party Twitch emotes, resolved from the IRC
-    // `emotes` tag. Third-party emotes (BTTV/FFZ/7TV) are just plain words that happen to
-    // match a name in the channel's emote set, so they need to be matched the same way.
     val usedEmotes: ImmutableList<Emote> =
-        remember(body.message, body.embeddedEmotes, emotes) {
-            (
-                body.embeddedEmotes +
-                    body.message
-                        ?.split(' ')
-                        ?.mapNotNull { word -> emotes[word] }
-                        .orEmpty()
-            ).toImmutableList()
+        remember(body, emotes) {
+            body.usedEmotes(emotes).toImmutableList()
         }
 
     ActionBottomSheet(
@@ -128,6 +120,7 @@ internal fun MessageActionsBottomSheet(
                         message = message,
                         inlineContent = inlineContent,
                         emotes = emotes,
+                        cheerEmotes = cheerEmotes,
                         pronouns = pronouns,
                         richEmbed = body.messageId?.let { messageId -> richEmbeds[messageId] },
                         showTimestamps = false,

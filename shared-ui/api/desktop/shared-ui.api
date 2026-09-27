@@ -33,7 +33,7 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ChatList
 }
 
 public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ChatMessageKt {
-	public static final fun ChatMessage-owtK_Bk (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$Message;Lkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/ImmutableList;Lkotlinx/collections/immutable/ImmutableMap;Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$RichEmbed;ZJJLfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;ILandroidx/compose/runtime/Composer;III)V
+	public static final fun ChatMessage-R3CKDEk (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$Message;Lkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/ImmutableList;Lkotlinx/collections/immutable/ImmutableMap;Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$RichEmbed;ZJJLfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;ILandroidx/compose/runtime/Composer;III)V
 }
 
 public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ChatRichEmbedKt {
@@ -69,8 +69,8 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/ui/Composab
 public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatEventsKt {
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatEventsKt;
 	public fun <init> ()V
-	public final fun getLambda$-884945735$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$649860232$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-468468999$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1610665480$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatInlineTextContentKt {
@@ -185,7 +185,7 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/ui/NoticeMe
 }
 
 public final class fr/outadoc/justchatting/feature/chat/presentation/ui/PinnedMessageCardKt {
-	public static final fun PinnedMessageCard-fWhpE4E (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$Message;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;JLkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/ImmutableList;Landroidx/compose/runtime/Composer;II)V
+	public static final fun PinnedMessageCard-8r3B23s (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$Message;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;JLkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/ImmutableMap;Lkotlinx/collections/immutable/ImmutableList;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class fr/outadoc/justchatting/feature/chat/presentation/ui/PollCardKt {

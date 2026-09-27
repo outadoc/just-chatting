@@ -25,10 +25,12 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Raid
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.chat.presentation.OngoingEvents
 import fr.outadoc.justchatting.feature.chat.presentation.RoomState
+import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.connectionLost_error
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentMap
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
@@ -44,6 +46,8 @@ internal fun ChatEvents(
     ongoingEvents: OngoingEvents,
     clock: Clock,
     inlineContent: PersistentMap<String, InlineTextContent>,
+    emotes: ImmutableMap<String, Emote>,
+    cheerEmotes: ImmutableMap<String, Emote>,
     removedContent: ImmutableList<ChatListItem.RemoveContent>,
     appUser: AppUser.LoggedIn,
     badges: ImmutableList<TwitchBadge>,
@@ -96,6 +100,8 @@ internal fun ChatEvents(
                     message = pinnedMessage.message,
                     appUser = appUser,
                     inlineContent = inlineContent,
+                    emotes = emotes,
+                    cheerEmotes = cheerEmotes,
                     removedContent = removedContent,
                 )
             }

@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.presentation.ui.preview.ChatMessagePreviewProvider
+import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.internal.Res
@@ -44,6 +45,8 @@ public fun PinnedMessageCard(
     appUser: AppUser.LoggedIn,
     color: Color = MaterialTheme.colorScheme.secondaryContainer,
     inlineContent: ImmutableMap<String, InlineTextContent> = persistentMapOf(),
+    emotes: ImmutableMap<String, Emote> = persistentMapOf(),
+    cheerEmotes: ImmutableMap<String, Emote> = persistentMapOf(),
     removedContent: ImmutableList<ChatListItem.RemoveContent> = persistentListOf(),
 ) {
     var isExpanded: Boolean by remember { mutableStateOf(false) }
@@ -73,6 +76,8 @@ public fun PinnedMessageCard(
                         .weight(1f, fill = true),
                 message = message,
                 inlineContent = inlineContent,
+                emotes = emotes,
+                cheerEmotes = cheerEmotes,
                 removedContent = removedContent,
                 showTimestamps = false,
                 background = color,

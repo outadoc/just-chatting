@@ -249,8 +249,6 @@ private struct ChatAutoCompleteRow: View {
                         } label: {
                             HStack(spacing: 6) {
                                 EmoteView(emote: emote.emote, height: emoteHeight)
-                                Text(emote.emote.name)
-                                    .font(.callout)
                             }
                             .padding(.horizontal, 8)
                             .frame(height: emoteHeight + 8)

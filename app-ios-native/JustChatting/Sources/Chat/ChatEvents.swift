@@ -1,5 +1,5 @@
 //
-//  ChatEventsView.swift
+//  ChatEvents.swift
 //  JustChatting
 //
 
@@ -7,7 +7,7 @@ import JCShared
 import SwiftUI
 
 /// Banners pinned to the top of the chat: room modes and connection status.
-struct ChatEventsView: View {
+struct ChatEvents: View {
     let chatting: ChatViewModel.StateChatting
 
     var body: some View {

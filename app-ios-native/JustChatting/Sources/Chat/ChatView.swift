@@ -13,8 +13,7 @@ struct ChatView: View {
     private let preferenceRepository = KoinHelper().getPreferenceRepository()
     @State private var showTimestamps = true
     @State private var isEmotePickerOpen = false
-    @State private var isAtBottom = true
-    @State private var showCopiedToast = false
+    @State private var copyCount = 0
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
@@ -52,65 +51,25 @@ struct ChatView: View {
     @ViewBuilder
     private func chattingView(chatting: ChatViewModel.StateChatting) -> some View {
         let context = ChatMessageContext(chatting: chatting, showTimestamps: showTimestamps)
-        let messages = Array(chatting.chatMessages.reversed())
 
-        ScrollViewReader { proxy in
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 0) {
-                    ForEach(Array(messages.enumerated()), id: \.element.stableId) { index, message in
-                        messageRow(message: message, context: context, index: index)
-                    }
-                    Color.clear
-                        .frame(height: 1)
-                        .id("bottom")
-                        .onAppear { isAtBottom = true }
-                        .onDisappear { isAtBottom = false }
-                }
-                .padding(.vertical, 4)
-            }
-            .defaultScrollAnchor(.bottom)
-            .scrollDismissesKeyboard(.interactively)
-            .onChange(of: messages.last?.stableId) { _, _ in
-                guard isAtBottom else { return }
-                proxy.scrollTo("bottom", anchor: .bottom)
-            }
-            .overlay(alignment: .bottomTrailing) {
-                if !isAtBottom {
-                    Button {
-                        withAnimation { proxy.scrollTo("bottom", anchor: .bottom) }
-                    } label: {
-                        Image(systemName: "arrow.down")
-                            .fontWeight(.semibold)
-                            .frame(width: 40, height: 40)
-                    }
-                    .buttonStyle(.glass)
-                    .clipShape(Circle())
-                    .padding(12)
-                    .accessibilityLabel("Scroll to latest messages")
-                }
-            }
-            .overlay(alignment: .top) {
-                if showCopiedToast {
-                    Text("Copied to clipboard")
-                        .font(.callout)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 8)
-                        .glassEffect()
-                        .padding(.top, 8)
-                        .transition(.move(edge: .top).combined(with: .opacity))
-                }
-            }
-        }
+        ChatMessageList(
+            messages: chatting.chatMessages,
+            context: context,
+            onShowActions: { viewModel.onShowMessageActions(message: $0) },
+            onReply: { viewModel.onReplyToMessage(entry: $0) },
+            onCopy: copyToClipboard
+        )
+        .toast("Copied to clipboard", trigger: copyCount)
         .safeAreaInset(edge: .top) {
-            ChatEventsView(chatting: chatting)
+            ChatEvents(chatting: chatting)
         }
         .safeAreaInset(edge: .bottom) {
             VStack(spacing: 0) {
                 if let constraint = chatting.messagePostConstraint {
-                    SlowModeProgressView(constraint: constraint)
+                    ChatSlowModeProgress(constraint: constraint)
                 }
                 Observing(viewModel.inputState) { inputState in
-                    ChatInputBar(
+                    ChatInput(
                         viewModel: viewModel,
                         inputState: inputState,
                         isEmotePickerOpen: $isEmotePickerOpen
@@ -119,7 +78,7 @@ struct ChatView: View {
                     .padding(.vertical, 8)
                 }
                 if isEmotePickerOpen {
-                    EmotePickerView(items: Array(chatting.pickableEmotesWithRecent)) { emote in
+                    EmotePicker(items: Array(chatting.pickableEmotesWithRecent)) { emote in
                         viewModel.appendEmote(emote: emote, autocomplete: true)
                     }
                     .frame(height: 300)
@@ -182,44 +141,9 @@ struct ChatView: View {
         return Text("\(Int(stream.viewerCount).formatted()) viewers")
     }
 
-    @ViewBuilder
-    private func messageRow(message: ChatListItemMessage, context: ChatMessageContext, index: Int) -> some View {
-        // Messages are trimmed from the top in pairs, so parity by index stays stable per message.
-        let rowBackground: Color = index.isMultiple(of: 2)
-            ? Color(.systemBackground)
-            : Color(.secondarySystemBackground).opacity(0.5)
-
-        let row = ChatMessageRow(message: message, context: context)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 2)
-            .background(rowBackground)
-            .blur(radius: message.isRedacted(by: context.removedContent) ? 6 : 0)
-
-        if message.body != nil {
-            let actions = MessageActionButtons(
-                message: message,
-                onReply: { viewModel.onReplyToMessage(entry: $0) },
-                onCopy: copyToClipboard
-            )
-            row
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    viewModel.onShowMessageActions(message: message)
-                }
-                .contextMenu { actions }
-                .accessibilityActions { actions }
-        } else {
-            row
-        }
-    }
-
     private func copyToClipboard(_ message: ChatListItemMessage) {
         guard let text = message.body?.message else { return }
         UIPasteboard.general.string = text
-        withAnimation { showCopiedToast = true }
-        Task {
-            try? await Task.sleep(for: .seconds(2))
-            withAnimation { showCopiedToast = false }
-        }
+        copyCount += 1
     }
 }

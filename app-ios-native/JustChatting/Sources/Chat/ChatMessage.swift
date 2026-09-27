@@ -1,12 +1,12 @@
 //
-//  ChatMessageRow.swift
+//  ChatMessage.swift
 //  JustChatting
 //
 
 import JCShared
 import SwiftUI
 
-struct ChatMessageRow: View {
+struct ChatMessage: View {
     let message: ChatListItemMessage
     let context: ChatMessageContext
 
@@ -21,14 +21,14 @@ struct ChatMessageRow: View {
 
             switch onEnum(of: message) {
             case .simple(let simple):
-                ChatMessageBodyView(messageBody: simple.body, context: context)
+                ChatMessageBody(messageBody: simple.body, context: context)
                     .padding(.vertical, 4)
 
             case .highlighted(let highlighted):
-                HighlightedMessageView(highlighted: highlighted, context: context)
+                HighlightedMessageCard(highlighted: highlighted, context: context)
 
             case .notice(let notice):
-                NoticeMessageView(notice: notice)
+                NoticeMessage(notice: notice)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

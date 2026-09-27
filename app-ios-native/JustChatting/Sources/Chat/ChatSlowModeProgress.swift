@@ -1,5 +1,5 @@
 //
-//  SlowModeProgressView.swift
+//  ChatSlowModeProgress.swift
 //  JustChatting
 //
 
@@ -7,7 +7,7 @@ import JCShared
 import SwiftUI
 
 /// Thin bar showing how long until the user can send another message in slow mode.
-struct SlowModeProgressView: View {
+struct ChatSlowModeProgress: View {
     let constraint: MessagePostConstraint
 
     var body: some View {

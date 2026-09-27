@@ -52,11 +52,11 @@ struct SettingsView: View {
             NavigationStack {
                 switch selectedPage {
                 case .thirdParties:
-                    SettingsThirdPartiesView(viewModel: viewModel)
+                    SettingsSectionThirdParties(viewModel: viewModel)
                 case .appearance:
-                    SettingsAppearanceView(viewModel: viewModel)
+                    SettingsSectionAppearance(viewModel: viewModel)
                 case .about:
-                    SettingsAboutView(viewModel: viewModel)
+                    SettingsSectionAbout(viewModel: viewModel)
                 case nil:
                     ContentUnavailableView("No section selected", systemImage: "gearshape")
                 }

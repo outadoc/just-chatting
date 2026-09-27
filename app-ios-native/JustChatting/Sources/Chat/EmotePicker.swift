@@ -1,5 +1,5 @@
 //
-//  EmotePickerView.swift
+//  EmotePicker.swift
 //  JustChatting
 //
 
@@ -7,7 +7,7 @@ import JCShared
 import SwiftUI
 
 /// Grid of every emote usable in the current chat, grouped by emote set (recent emotes first).
-struct EmotePickerView: View {
+struct EmotePicker: View {
     let items: [EmoteSetItem]
     let onEmoteClick: (Emote) -> Void
 

@@ -1,12 +1,12 @@
 //
-//  ChatMessageBodyView.swift
+//  ChatMessageBody.swift
 //  JustChatting
 //
 
 import JCShared
 import SwiftUI
 
-struct ChatMessageBodyView: View {
+struct ChatMessageBody: View {
     let messageBody: ChatListItemMessage.Body
     let context: ChatMessageContext
 
@@ -26,7 +26,7 @@ struct ChatMessageBodyView: View {
 
         VStack(alignment: .leading, spacing: 4) {
             if let inReplyTo = messageBody.inReplyTo {
-                InReplyToView(
+                InReplyToMessage(
                     mentions: Array(inReplyTo.mentions),
                     message: inReplyTo.message
                 )
@@ -69,7 +69,7 @@ struct ChatMessageBodyView: View {
             }
 
             if let messageId = messageBody.messageId, let embed = context.richEmbeds[messageId] {
-                RichEmbedView(embed: embed)
+                ChatRichEmbed(embed: embed)
             }
         }
     }

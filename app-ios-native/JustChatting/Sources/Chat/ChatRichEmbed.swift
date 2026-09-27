@@ -1,12 +1,12 @@
 //
-//  RichEmbedView.swift
+//  ChatRichEmbed.swift
 //  JustChatting
 //
 
 import JCShared
 import SwiftUI
 
-struct RichEmbedView: View {
+struct ChatRichEmbed: View {
     let embed: ChatListItemRichEmbed
 
     @Environment(\.openURL) private var openURL

@@ -1,12 +1,12 @@
 //
-//  SettingsAppearanceView.swift
+//  SettingsSectionAppearance.swift
 //  JustChatting
 //
 
 import JCShared
 import SwiftUI
 
-struct SettingsAppearanceView: View {
+struct SettingsSectionAppearance: View {
     let viewModel: SettingsViewModel
 
     private static let appSettingsUrl = URL(string: UIApplication.openSettingsURLString)!

@@ -1,12 +1,12 @@
 //
-//  SettingsThirdPartiesView.swift
+//  SettingsSectionThirdParties.swift
 //  JustChatting
 //
 
 import JCShared
 import SwiftUI
 
-struct SettingsThirdPartiesView: View {
+struct SettingsSectionThirdParties: View {
     let viewModel: SettingsViewModel
 
     private static let pronounsUrl = URL(string: "https://pronouns.alejo.io")!

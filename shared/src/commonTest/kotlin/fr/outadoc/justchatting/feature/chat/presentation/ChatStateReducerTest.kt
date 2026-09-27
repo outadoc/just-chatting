@@ -10,6 +10,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Raid
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
+import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
@@ -32,7 +33,7 @@ internal class ChatStateReducerTest {
         AppUser.LoggedIn(
             userId = "app-user-id",
             userLogin = "appuser",
-            token = "token123",
+            token = ApiToken("token123"),
         )
 
     private val testUser =
@@ -391,6 +392,27 @@ internal class ChatStateReducerTest {
         val result = reducer.reduce(action, ChatViewModel.State.Initial)
 
         assertIs<ChatViewModel.State.Initial>(result)
+    }
+
+    @Test
+    fun `AddMessages keeps each message's row background as old messages are trimmed`() {
+        var state: ChatViewModel.State = testChattingState.copy(maxAdapterCount = 5)
+        val backgrounds = mutableMapOf<String, Boolean>()
+        var nextId = 0
+
+        // Batches of varying parity, well past the buffer limit.
+        repeat(10) { round ->
+            val batch = List(round % 3 + 1) { createMessage(messageId = "msg-${nextId++}") }
+            state = reducer.reduce(ChatViewModel.Action.AddMessages(messages = batch), state)
+
+            val messages = assertIs<ChatViewModel.State.Chatting>(state).chatMessages
+            messages.forEachIndexed { index, message ->
+                val messageId = message.body?.messageId!!
+                val isAlternate = ChatRowBackground.isAlternate(index = index, messageCount = messages.size)
+                val expected = backgrounds.getOrPut(messageId) { isAlternate }
+                assertEquals(expected, isAlternate, "Background of $messageId changed")
+            }
+        }
     }
 
     // endregion

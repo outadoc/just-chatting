@@ -1,5 +1,5 @@
 //
-//  ChatInputBar.swift
+//  ChatInput.swift
 //  JustChatting
 //
 
@@ -9,7 +9,7 @@ import SwiftUI
 /// Message composer. `ChatViewModel.inputState` is the source of truth; the local text and
 /// selection mirror it so that SwiftUI's TextField can be driven both by the user and by the
 /// view model (autocomplete, reusing the last message, clearing after send).
-struct ChatInputBar: View {
+struct ChatInput: View {
     let viewModel: ChatViewModel
     let inputState: ChatViewModel.InputState
     @Binding var isEmotePickerOpen: Bool
@@ -142,7 +142,7 @@ struct ChatInputBar: View {
 
     private func replyBanner(replyingTo: ChatListItemMessage.Body) -> some View {
         HStack(spacing: 8) {
-            InReplyToView(
+            InReplyToMessage(
                 mentions: [replyingTo.chatter.displayName],
                 message: replyingTo.message
             )

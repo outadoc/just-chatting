@@ -117,6 +117,7 @@ internal class ChatStateReducer {
                 .distinctBy { message -> message.body?.messageId ?: message }
                 .toPersistentList()
 
+        // Always trim an even number of messages, to keep ChatRowBackground stable.
         val maxCount =
             state.maxAdapterCount.roundUpOddToEven() + if (newMessages.size.isOdd) 1 else 0
 

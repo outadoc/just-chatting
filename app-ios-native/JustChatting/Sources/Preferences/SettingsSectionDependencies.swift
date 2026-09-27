@@ -1,12 +1,12 @@
 //
-//  SettingsDependenciesView.swift
+//  SettingsSectionDependencies.swift
 //  JustChatting
 //
 
 import JCShared
 import SwiftUI
 
-struct SettingsDependenciesView: View {
+struct SettingsSectionDependencies: View {
     @State private var dependencies: [Dependency]?
 
     var body: some View {

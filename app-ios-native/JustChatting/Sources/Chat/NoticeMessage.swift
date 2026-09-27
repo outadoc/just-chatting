@@ -1,12 +1,12 @@
 //
-//  NoticeMessageView.swift
+//  NoticeMessage.swift
 //  JustChatting
 //
 
 import JCShared
 import SwiftUI
 
-struct NoticeMessageView: View {
+struct NoticeMessage: View {
     let notice: ChatListItemMessage.Notice
 
     var body: some View {

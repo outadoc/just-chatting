@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
+import fr.outadoc.justchatting.feature.chat.presentation.ChatRowBackground
 import fr.outadoc.justchatting.feature.chat.presentation.OngoingEvents
 import fr.outadoc.justchatting.feature.chat.presentation.RoomState
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
@@ -45,8 +46,6 @@ import fr.outadoc.justchatting.feature.shared.presentation.ui.ContextualActionBo
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.chat_copyToClipboard
 import fr.outadoc.justchatting.shared.internal.chat_replyTo
-import fr.outadoc.justchatting.utils.core.isEven
-import fr.outadoc.justchatting.utils.core.isOdd
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentMap
@@ -215,11 +214,8 @@ internal fun ChatList(
                     }
                 },
             ) { index, item ->
-                // Alternate the background of each chat row.
-                // We want the colors to keep consistent for every message, so we alternate the
-                // logic every time we add a new message to the list.
                 val background: Color =
-                    if ((entries.size.isOdd && index.isOdd) || (entries.size.isEven && index.isEven)) {
+                    if (ChatRowBackground.isAlternate(index = index, messageCount = entries.size)) {
                         MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
                     } else {
                         MaterialTheme.colorScheme.surface

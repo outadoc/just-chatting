@@ -117,7 +117,7 @@ internal class ChatViewModelTest {
         AppUser.LoggedIn(
             userId = "app-user-id",
             userLogin = "appuser",
-            token = "valid-token",
+            token = ApiToken("valid-token"),
         )
 
     private val pickableEmote =
@@ -922,7 +922,7 @@ private class FakeChatRepository : ChatRepository {
 }
 
 private class FakePreferenceRepository(
-    apiToken: String? = "valid-token",
+    apiToken: ApiToken? = ApiToken("valid-token"),
 ) : PreferenceRepository {
     private val preferences = MutableStateFlow(AppPreferences(apiToken = apiToken))
 
@@ -952,7 +952,7 @@ private class FakeAuthApi : AuthApi {
 
     override suspend fun revokeToken(
         clientId: String,
-        token: String,
+        token: ApiToken,
     ): Result<Unit> = Result.success(Unit)
 
     override fun getExternalAuthorizeUrl(

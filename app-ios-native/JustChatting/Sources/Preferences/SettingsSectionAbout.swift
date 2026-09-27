@@ -1,12 +1,12 @@
 //
-//  SettingsAboutView.swift
+//  SettingsSectionAbout.swift
 //  JustChatting
 //
 
 import JCShared
 import SwiftUI
 
-struct SettingsAboutView: View {
+struct SettingsSectionAbout: View {
     let viewModel: SettingsViewModel
 
     @State private var showLogsCopied = false
@@ -43,7 +43,7 @@ struct SettingsAboutView: View {
                         subtitle: "Just Chatting is based on the Xtra for Twitch project."
                     )
                     NavigationLink("Open-source") {
-                        SettingsDependenciesView()
+                        SettingsSectionDependencies()
                     }
                 }
 

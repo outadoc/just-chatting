@@ -28,7 +28,7 @@ struct MessageActionsSheet: View {
                 }
 
                 Section {
-                    ChatMessageRow(message: message, context: context.withoutTimestamps)
+                    ChatMessage(message: message, context: context.withoutTimestamps)
                 } footer: {
                     Text(message.date, format: .dateTime.day().month().year().hour().minute().second())
                 }

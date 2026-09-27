@@ -1,11 +1,11 @@
 //
-//  InReplyToView.swift
+//  InReplyToMessage.swift
 //  JustChatting
 //
 
 import SwiftUI
 
-struct InReplyToView: View {
+struct InReplyToMessage: View {
     let mentions: [String]
     let message: String?
 

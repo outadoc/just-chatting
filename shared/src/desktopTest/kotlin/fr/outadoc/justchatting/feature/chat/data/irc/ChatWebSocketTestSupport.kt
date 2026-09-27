@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.chat.data.irc
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesApi
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesResponse
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
@@ -26,7 +27,7 @@ internal val testAppUser =
     AppUser.LoggedIn(
         userId = "app-user-id",
         userLogin = "appuser",
-        token = "valid-token",
+        token = ApiToken("valid-token"),
     )
 
 internal const val TEST_CHANNEL_ID = "channel-id"

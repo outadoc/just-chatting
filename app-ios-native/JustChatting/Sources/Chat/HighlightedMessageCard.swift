@@ -1,12 +1,12 @@
 //
-//  HighlightedMessageView.swift
+//  HighlightedMessageCard.swift
 //  JustChatting
 //
 
 import JCShared
 import SwiftUI
 
-struct HighlightedMessageView: View {
+struct HighlightedMessageCard: View {
     let highlighted: ChatListItemMessage.Highlighted
     let context: ChatMessageContext
 
@@ -33,7 +33,7 @@ struct HighlightedMessageView: View {
                 }
 
                 if let body = highlighted.body {
-                    ChatMessageBodyView(messageBody: body, context: context)
+                    ChatMessageBody(messageBody: body, context: context)
                 }
             }
             .padding(8)

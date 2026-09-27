@@ -66,7 +66,7 @@ struct ChatMessageList: View {
 
         let row = ChatMessage(message: message, context: context)
             .padding(.horizontal, 12)
-            .padding(.vertical, 2)
+            .padding(.vertical, 4)
             .background(isAlternate ? Color(.secondarySystemBackground).opacity(0.5) : Color(.systemBackground))
             .blur(radius: message.isRedacted(removedContent: context.removedContent) ? 6 : 0)
 

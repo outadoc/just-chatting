@@ -71,7 +71,6 @@ compose-components-resources = { module = "org.jetbrains.compose.components:comp
 compose-material-adaptive-core = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "material-adaptive" }
 compose-material-adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version.ref = "material-adaptive" }
 compose-material-adaptive-navigation3 = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation3", version.ref = "material-adaptive" }
-compose-material-adaptive-navigation-suite = { module = "org.jetbrains.compose.material3:material3-adaptive-navigation-suite", version.ref = "material3" }
 compose-material-windowSizeClass = { module = "org.jetbrains.compose.material3:material3-window-size-class", version.ref = "material3" }
 compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
 compose-materialIcons = { module = "org.jetbrains.compose.material:material-icons-extended", version = "1.7.3" }

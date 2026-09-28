@@ -472,11 +472,7 @@ public final class fr/outadoc/justchatting/feature/shared/presentation/ui/Compos
 public final class fr/outadoc/justchatting/feature/shared/presentation/ui/ComposableSingletons$MainNavigationKt {
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/shared/presentation/ui/ComposableSingletons$MainNavigationKt;
 	public fun <init> ()V
-	public final fun getLambda$-1180219060$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$-1821570711$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-1864179766$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-655701933$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$625284235$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class fr/outadoc/justchatting/feature/shared/presentation/ui/ComposableSingletons$MainRouterKt {

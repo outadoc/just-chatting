@@ -20,3 +20,19 @@ internal fun MainNavigationScreenshotTest() {
         }
     }
 }
+
+// A wide but short window, e.g. a landscape phone or a small desktop window, should still use
+// the navigation rail.
+@PreviewTest
+@Preview(widthDp = 900, heightDp = 400)
+@Composable
+internal fun MainNavigationWideShortScreenshotTest() {
+    AppTheme {
+        MainNavigation(
+            selectedScreen = Screen.Future,
+            onSelectedTabChange = {},
+        ) {
+            Text("Content")
+        }
+    }
+}

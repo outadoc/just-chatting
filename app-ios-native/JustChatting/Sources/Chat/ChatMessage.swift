@@ -22,7 +22,7 @@ struct ChatMessage: View {
             switch onEnum(of: message) {
             case .simple(let simple):
                 ChatMessageBody(messageBody: simple.body, context: context)
-                    .padding(.vertical, 4)
+                    .padding(.vertical, 6)
 
             case .highlighted(let highlighted):
                 HighlightedMessageCard(highlighted: highlighted, context: context)

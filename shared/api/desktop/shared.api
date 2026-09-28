@@ -1601,6 +1601,7 @@ public final class fr/outadoc/justchatting/feature/search/presentation/ChannelSe
 	public final fun getPagingData ()Lkotlinx/coroutines/flow/Flow;
 	public final fun getState ()Lkotlinx/coroutines/flow/StateFlow;
 	public final fun onChannelClick (Ljava/lang/String;)V
+	public final fun onClearRecentChannels ()V
 	public final fun onClearSearchBar ()V
 	public final fun onDismissSearchBar ()V
 	public final fun onQueryChange (Ljava/lang/String;)V

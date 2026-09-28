@@ -59,6 +59,7 @@
     <string name="chat_watchStreak_header">watched %1$s in a row, sparking a watch streak!</string>
     <string name="connectionLost_error">Reconnecting to chat…</string>
     <string name="created_at">Created on %1$s</string>
+    <string name="date_today">Today</string>
     <string name="date_today_earlier">Earlier today</string>
     <string name="date_today_later">Later today</string>
     <string name="date_tomorrow">Tomorrow</string>
@@ -255,6 +256,7 @@
     <string name="prediction_status_points">%1$s points spent</string>
     <string name="prediction_status_progress">Prediction in progress</string>
     <string name="prediction_status_winner_cd">Winning outcome</string>
+    <string name="profile_settings_cd">Profile and settings</string>
     <string name="raid_go_action">Join the raid</string>
     <string name="raid_go_message">Everybody join %1$s!</string>
     <string name="raid_go_title">Raid has begun</string>
@@ -272,6 +274,8 @@
     <string name="search">Search</string>
     <string name="search_clear_cd">Clear query</string>
     <string name="search_hint">Search for someone…</string>
+    <string name="search_recentChannels_clearAll_action">Clear all</string>
+    <string name="search_recentChannels_header">Recent</string>
     <string name="search_recentChannels_remove_action">Forget recent visit</string>
     <string name="settings">Settings</string>
     <string name="settings_about_header">About</string>
@@ -328,6 +332,7 @@
     <string name="stream_info">Stream Info</string>
     <string name="timeline_future">Up Next</string>
     <string name="timeline_live">Live</string>
+    <string name="timeline_now">Happening now</string>
     <string name="timeline_openVod_action">Watch video</string>
     <string name="timeline_refresh_action_cd">Refresh data</string>
     <string name="timeline_today_action_cd">Jump to live content</string>

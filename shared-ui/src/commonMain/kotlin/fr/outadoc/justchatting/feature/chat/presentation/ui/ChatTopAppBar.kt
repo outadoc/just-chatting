@@ -3,18 +3,11 @@ package fr.outadoc.justchatting.feature.chat.presentation.ui
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.LiveTv
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,19 +19,16 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import fr.outadoc.justchatting.feature.shared.domain.model.User
+import fr.outadoc.justchatting.feature.shared.presentation.ui.UserAvatar
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.all_goBack
 import fr.outadoc.justchatting.shared.internal.stream_info
-import fr.outadoc.justchatting.shared.internal.watch_live
-import fr.outadoc.justchatting.utils.core.createChannelExternalLink
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
+import fr.outadoc.justchatting.utils.presentation.formatNumber
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,109 +42,79 @@ internal fun ChatTopAppBar(
     showBackButton: Boolean,
     onNavigateUp: () -> Unit = {},
 ) {
-    val uriHandler = LocalUriHandler.current
-
-    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
-        val isCompact = maxWidth < 400.dp
-
-        TopAppBar(
-            modifier = Modifier.fillMaxWidth(),
-            colors = colors,
-            title = {
-                Column {
-                    AnimatedVisibility(visible = user != null) {
-                        if (user != null) {
-                            Text(
-                                text = user.displayName,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
-                    }
-
-                    AnimatedVisibility(visible = stream?.category != null) {
-                        stream?.category?.let { category ->
-                            Text(
-                                text = category.name,
-                                style = MaterialTheme.typography.titleSmall,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
-                    }
-                }
-            },
-            navigationIcon = {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+    TopAppBar(
+        modifier = modifier,
+        colors = colors,
+        title = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                AnimatedVisibility(
+                    visible = user != null,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
                 ) {
-                    if (showBackButton) {
-                        AccessibleIconButton(
-                            onClick = onNavigateUp,
-                            onClickLabel = stringResource(Res.string.all_goBack),
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = null,
-                            )
-                        }
+                    UserAvatar(
+                        modifier = Modifier.padding(end = 12.dp),
+                        profileImageUrl = user?.profileImageUrl,
+                    )
+                }
+
+                Column {
+                    if (user != null) {
+                        Text(
+                            text = user.displayName,
+                            style = MaterialTheme.typography.titleLarge,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
                     }
 
-                    AnimatedVisibility(
-                        visible = user?.profileImageUrl != null,
-                        enter = fadeIn() + slideInHorizontally(),
-                        exit = slideOutHorizontally() + fadeOut(),
-                    ) {
-                        user?.profileImageUrl?.let { imageUrl ->
-                            Row(
-                                modifier =
-                                    Modifier
-                                        .size(56.dp)
-                                        .padding(horizontal = 8.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                AsyncImage(
-                                    modifier =
-                                        Modifier
-                                            .clip(MaterialTheme.shapes.medium)
-                                            .background(MaterialTheme.colorScheme.surfaceVariant),
-                                    model = imageUrl,
-                                    contentDescription = null,
-                                )
-                            }
+                    val subtitle: String? =
+                        stream?.let {
+                            listOfNotNull(
+                                stream.category?.name?.takeIf { it.isNotEmpty() },
+                                stream.viewerCount.toInt().formatNumber(),
+                            ).joinToString(separator = " · ")
                         }
-                    }
-                }
-            },
-            actions = {
-                if (!isCompact) {
-                    user?.let { user ->
-                        AccessibleIconButton(
-                            onClick = {
-                                uriHandler.openUri(
-                                    createChannelExternalLink(user),
-                                )
-                            },
-                            onClickLabel = stringResource(Res.string.watch_live),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.LiveTv,
-                                contentDescription = null,
+
+                    AnimatedVisibility(visible = subtitle != null) {
+                        if (subtitle != null) {
+                            Text(
+                                text = subtitle,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
                             )
                         }
                     }
                 }
-
+            }
+        },
+        navigationIcon = {
+            if (showBackButton) {
                 AccessibleIconButton(
-                    onClick = { onStreamInfoClicked() },
-                    onClickLabel = stringResource(Res.string.stream_info),
+                    onClick = onNavigateUp,
+                    onClickLabel = stringResource(Res.string.all_goBack),
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.Info,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = null,
                     )
                 }
-            },
-        )
-    }
+            }
+        },
+        actions = {
+            AccessibleIconButton(
+                onClick = { onStreamInfoClicked() },
+                onClickLabel = stringResource(Res.string.stream_info),
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Info,
+                    contentDescription = null,
+                )
+            }
+        },
+    )
 }

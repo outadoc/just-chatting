@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DockedSearchBar
@@ -45,6 +45,7 @@ internal fun SearchScreenBar(
     onSearchActiveChange: (Boolean) -> Unit,
     onClearSearchBar: () -> Unit,
     onDismissSearchBar: () -> Unit,
+    collapsedTrailingIcon: @Composable () -> Unit = {},
 ) {
     val sizeClass = currentWindowAdaptiveInfoV2().windowSizeClass
     if (sizeClass.isHeightAtLeastBreakpoint(900)) {
@@ -58,6 +59,7 @@ internal fun SearchScreenBar(
             onSearchExpandedChange = onSearchActiveChange,
             onClearSearchBar = onClearSearchBar,
             onDismissSearchBar = onDismissSearchBar,
+            collapsedTrailingIcon = collapsedTrailingIcon,
         )
     } else {
         FullHeightSearchBar(
@@ -70,6 +72,7 @@ internal fun SearchScreenBar(
             onSearchExpandedChange = onSearchActiveChange,
             onClearSearchBar = onClearSearchBar,
             onDismissSearchBar = onDismissSearchBar,
+            collapsedTrailingIcon = collapsedTrailingIcon,
         )
     }
 }
@@ -86,6 +89,7 @@ private fun CompactSearchBar(
     onSearchExpandedChange: (Boolean) -> Unit,
     onClearSearchBar: () -> Unit,
     onDismissSearchBar: () -> Unit,
+    collapsedTrailingIcon: @Composable () -> Unit = {},
 ) {
     DockedSearchBar(
         inputField = {
@@ -141,10 +145,14 @@ private fun CompactSearchBar(
                                 onClickLabel = stringResource(Res.string.search_clear_cd),
                             ) {
                                 Icon(
-                                    Icons.Filled.Cancel,
+                                    Icons.Filled.Close,
                                     contentDescription = null,
                                 )
                             }
+                        }
+
+                        if (!isSearchExpanded && query.isEmpty()) {
+                            collapsedTrailingIcon()
                         }
                     }
                 },
@@ -176,6 +184,7 @@ private fun FullHeightSearchBar(
     onSearchExpandedChange: (Boolean) -> Unit,
     onClearSearchBar: () -> Unit,
     onDismissSearchBar: () -> Unit,
+    collapsedTrailingIcon: @Composable () -> Unit = {},
 ) {
     val padding by animateDpAsState(
         targetValue = if (isSearchExpanded) 0.dp else 16.dp,
@@ -221,15 +230,23 @@ private fun FullHeightSearchBar(
                     }
                 },
                 trailingIcon = {
-                    AnimatedVisibility(visible = query.isNotEmpty()) {
-                        AccessibleIconButton(
-                            onClick = onClearSearchBar,
-                            onClickLabel = stringResource(Res.string.search_clear_cd),
-                        ) {
-                            Icon(
-                                Icons.Filled.Cancel,
-                                contentDescription = null,
-                            )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        AnimatedVisibility(visible = query.isNotEmpty()) {
+                            AccessibleIconButton(
+                                onClick = onClearSearchBar,
+                                onClickLabel = stringResource(Res.string.search_clear_cd),
+                            ) {
+                                Icon(
+                                    Icons.Filled.Close,
+                                    contentDescription = null,
+                                )
+                            }
+                        }
+
+                        if (!isSearchExpanded && query.isEmpty()) {
+                            collapsedTrailingIcon()
                         }
                     }
                 },

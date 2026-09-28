@@ -22,6 +22,7 @@ internal fun SearchBar(
     onSearchActiveChange: (Boolean) -> Unit,
     onClear: () -> Unit,
     onDismiss: () -> Unit,
+    collapsedTrailingIcon: @Composable () -> Unit = {},
 ) {
     // Talkback focus order sorts based on x and y position before considering z-index. The
     // extra Box with semantics and fillMaxWidth is a workaround to get the search bar to focus
@@ -45,6 +46,7 @@ internal fun SearchBar(
             onSearchActiveChange = onSearchActiveChange,
             onClearSearchBar = onClear,
             onDismissSearchBar = onDismiss,
+            collapsedTrailingIcon = collapsedTrailingIcon,
         )
     }
 }

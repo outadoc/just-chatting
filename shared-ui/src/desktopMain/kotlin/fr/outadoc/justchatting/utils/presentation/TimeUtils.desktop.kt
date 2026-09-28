@@ -59,3 +59,10 @@ internal actual fun LocalDate.formatWithYear(): String =
         .format(
             DateTimeFormatter.ofPattern("d MMM uuuu", Locale.getDefault()),
         )
+
+@Stable
+internal actual fun LocalDate.formatShortDay(): String =
+    toJavaLocalDate()
+        .format(
+            DateTimeFormatter.ofPattern("eee d MMM", Locale.getDefault()),
+        )

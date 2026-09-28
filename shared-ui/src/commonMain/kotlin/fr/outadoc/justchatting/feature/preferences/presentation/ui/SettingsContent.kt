@@ -1,6 +1,10 @@
 package fr.outadoc.justchatting.feature.preferences.presentation.ui
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -13,10 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import fr.outadoc.justchatting.feature.shared.presentation.DetailScreen
-import fr.outadoc.justchatting.feature.shared.presentation.Screen
-import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
 import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.all_goBack
 import fr.outadoc.justchatting.shared.internal.settings
+import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -24,13 +28,13 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun SettingsContent(
     modifier: Modifier = Modifier,
-    onNavigate: (Screen) -> Unit,
+    onNavigateUp: () -> Unit,
     onNavigateDetails: (DetailScreen) -> Unit,
 ) {
     val viewModel: SettingsViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
@@ -48,19 +52,29 @@ internal fun SettingsContent(
         }
     }
 
-    MainNavigation(
+    Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        selectedScreen = Screen.Settings,
-        onSelectedTabChange = onNavigate,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(Res.string.settings)) },
+                navigationIcon = {
+                    AccessibleIconButton(
+                        onClick = onNavigateUp,
+                        onClickLabel = stringResource(Res.string.all_goBack),
+                    ) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null,
+                        )
+                    }
+                },
                 scrollBehavior = scrollBehavior,
             )
         },
         content = { insets ->
             SettingsList(
                 loggedInUser = state.user,
+                appVersionName = state.appVersionName,
                 onLogoutClick = viewModel::logout,
                 onOpenDependencyCredits = { viewModel.onNavigateToDetail(DetailScreen.DependencyCredits) },
                 onOpenThirdPartiesSection = { viewModel.onNavigateToDetail(DetailScreen.ThirdParties) },

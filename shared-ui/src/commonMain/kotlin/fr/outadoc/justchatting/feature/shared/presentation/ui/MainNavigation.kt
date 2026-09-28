@@ -4,11 +4,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Upcoming
+import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
@@ -23,7 +26,6 @@ import fr.outadoc.justchatting.feature.shared.presentation.Screen
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.channels
 import fr.outadoc.justchatting.shared.internal.search
-import fr.outadoc.justchatting.shared.internal.settings
 import fr.outadoc.justchatting.shared.internal.timeline_future
 import fr.outadoc.justchatting.shared.internal.timeline_live
 import org.jetbrains.compose.resources.stringResource
@@ -50,7 +52,12 @@ public fun MainNavigation(
                 onClick = { onSelectedTabChange(Screen.Live) },
                 icon = {
                     Icon(
-                        imageVector = Icons.Filled.Home,
+                        imageVector =
+                            if (selectedScreen == Screen.Live) {
+                                Icons.Filled.Home
+                            } else {
+                                Icons.Outlined.Home
+                            },
                         contentDescription = null,
                     )
                 },
@@ -62,7 +69,12 @@ public fun MainNavigation(
                 onClick = { onSelectedTabChange(Screen.Future) },
                 icon = {
                     Icon(
-                        imageVector = Icons.Filled.Upcoming,
+                        imageVector =
+                            if (selectedScreen == Screen.Future) {
+                                Icons.Filled.CalendarMonth
+                            } else {
+                                Icons.Outlined.CalendarMonth
+                            },
                         contentDescription = null,
                     )
                 },
@@ -74,7 +86,12 @@ public fun MainNavigation(
                 onClick = { onSelectedTabChange(Screen.Followed) },
                 icon = {
                     Icon(
-                        imageVector = Icons.Filled.Favorite,
+                        imageVector =
+                            if (selectedScreen == Screen.Followed) {
+                                Icons.Filled.Favorite
+                            } else {
+                                Icons.Outlined.FavoriteBorder
+                            },
                         contentDescription = null,
                     )
                 },
@@ -86,23 +103,16 @@ public fun MainNavigation(
                 onClick = { onSelectedTabChange(Screen.Search) },
                 icon = {
                     Icon(
-                        imageVector = Icons.Filled.Search,
+                        imageVector =
+                            if (selectedScreen == Screen.Search) {
+                                Icons.Filled.Search
+                            } else {
+                                Icons.Outlined.Search
+                            },
                         contentDescription = null,
                     )
                 },
                 label = { Text(stringResource(Res.string.search)) },
-            )
-
-            item(
-                selected = selectedScreen == Screen.Settings,
-                onClick = { onSelectedTabChange(Screen.Settings) },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.AccountCircle,
-                        contentDescription = null,
-                    )
-                },
-                label = { Text(stringResource(Res.string.settings)) },
             )
         },
         content = {

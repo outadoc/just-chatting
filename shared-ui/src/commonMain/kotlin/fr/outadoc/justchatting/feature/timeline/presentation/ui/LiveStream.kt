@@ -1,7 +1,5 @@
 package fr.outadoc.justchatting.feature.timeline.presentation.ui
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,28 +7,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Timelapse
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import fr.outadoc.justchatting.feature.chat.presentation.ui.TagList
-import fr.outadoc.justchatting.feature.chat.presentation.ui.remoteImageModel
+import fr.outadoc.justchatting.feature.shared.presentation.ui.SegmentedListDefaults
+import fr.outadoc.justchatting.feature.shared.presentation.ui.SegmentedListItem
+import fr.outadoc.justchatting.feature.shared.presentation.ui.UserAvatar
+import fr.outadoc.justchatting.feature.shared.presentation.ui.UserAvatarDefaults
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.all_showDetails_cd
@@ -55,6 +47,7 @@ public fun LiveStreamCard(
     profileImageUrl: String? = null,
     tags: ImmutableList<String> = persistentListOf(),
     isSelected: Boolean = false,
+    shape: Shape = SegmentedListDefaults.StandaloneShape,
     clock: Clock = Clock.System,
     onUserClick: () -> Unit = {},
     onClick: () -> Unit = {},
@@ -62,63 +55,33 @@ public fun LiveStreamCard(
 ) {
     val haptic = LocalHapticFeedback.current
 
-    OutlinedCard(
+    SegmentedListItem(
         modifier = modifier,
-        colors =
-            if (isSelected) {
-                CardDefaults.outlinedCardColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                )
-            } else {
-                CardDefaults.outlinedCardColors()
-            },
-        border =
-            if (isSelected) {
-                BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
-            } else {
-                CardDefaults.outlinedCardBorder()
-            },
+        shape = shape,
+        isSelected = isSelected,
     ) {
-        Column {
-            Card(
-                modifier =
-                    Modifier
-                        .combinedClickable(
-                            onClick = onClick,
-                            onClickLabel = stringResource(Res.string.chat_open_action),
-                            onLongClick = {
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                onLongClick()
-                            },
-                            onLongClickLabel = stringResource(Res.string.all_showDetails_cd),
-                        ),
-            ) {
-                LiveStream(
-                    modifier = Modifier.padding(8.dp),
-                    title = title,
-                    userName = userName,
-                    viewerCount = viewerCount,
-                    category = category,
-                    startedAt = startedAt,
-                    profileImageUrl = profileImageUrl,
-                    clock = clock,
-                    onUserClick = onUserClick,
-                )
-            }
-
-            if (tags.isNotEmpty()) {
-                TagList(
-                    modifier =
-                        Modifier.padding(
-                            start = 8.dp,
-                            end = 8.dp,
-                            top = 4.dp,
-                            bottom = 8.dp,
-                        ),
-                    tags = tags,
-                )
-            }
-        }
+        LiveStream(
+            modifier =
+                Modifier
+                    .combinedClickable(
+                        onClick = onClick,
+                        onClickLabel = stringResource(Res.string.chat_open_action),
+                        onLongClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onLongClick()
+                        },
+                        onLongClickLabel = stringResource(Res.string.all_showDetails_cd),
+                    ).padding(horizontal = 16.dp, vertical = 12.dp),
+            title = title,
+            userName = userName,
+            viewerCount = viewerCount,
+            category = category,
+            startedAt = startedAt,
+            profileImageUrl = profileImageUrl,
+            tags = tags,
+            clock = clock,
+            onUserClick = onUserClick,
+        )
     }
 }
 
@@ -131,104 +94,85 @@ private fun LiveStream(
     category: StreamCategory?,
     startedAt: Instant?,
     profileImageUrl: String?,
+    tags: ImmutableList<String>,
     clock: Clock = Clock.System,
     onUserClick: () -> Unit = {},
 ) {
-    Column(
+    Row(
         modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            AsyncImage(
-                modifier =
-                    Modifier
-                        .padding(end = 8.dp)
-                        .size(56.dp)
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(MaterialTheme.colorScheme.surface)
-                        .clickable(onClick = onUserClick),
-                model = remoteImageModel(profileImageUrl),
-                contentDescription = null,
-            )
+        UserAvatar(
+            modifier = Modifier.clickable(onClick = onUserClick),
+            profileImageUrl = profileImageUrl,
+            size = UserAvatarDefaults.LargeSize,
+            shape = UserAvatarDefaults.LargeShape,
+        )
 
-            Column {
-                title?.let { title ->
-                    Text(
-                        text = title,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                }
+        Column(modifier = Modifier.weight(1f)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = userName.orEmpty(),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleMedium,
+                )
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    userName?.let { userName ->
-                        Text(
-                            modifier =
-                                Modifier
-                                    .weight(1f, fill = true)
-                                    .alignByBaseline(),
-                            text = userName,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                    }
-
-                    viewerCount?.let { viewerCount ->
+                viewerCount?.let { viewerCount ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
                         LiveIndicator()
 
                         Text(
-                            modifier = Modifier.alignByBaseline(),
                             text = viewerCount.toInt().formatNumber(),
                             maxLines = 1,
                             style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
+            }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    category?.let { category ->
-                        Text(
-                            modifier =
-                                Modifier
-                                    .weight(1f, fill = true)
-                                    .alignByBaseline(),
-                            text = category.name,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                    }
+            title?.let { title ->
+                Text(
+                    text = title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
 
-                    startedAt
-                        ?.formatTimeSince(clock = clock, showSeconds = false)
-                        ?.let { streamDuration ->
-                            Icon(
-                                modifier =
-                                    Modifier
-                                        .size(12.dp)
-                                        .align(Alignment.CenterVertically),
-                                imageVector = Icons.Default.Timelapse,
-                                contentDescription = null,
-                            )
+            val streamDuration: String? =
+                startedAt?.formatTimeSince(clock = clock, showSeconds = false)
 
-                            Text(
-                                modifier = Modifier.alignByBaseline(),
-                                text = streamDuration,
-                                maxLines = 1,
-                                style = MaterialTheme.typography.labelMedium,
-                            )
-                        }
-                }
+            val subtitle: String =
+                listOfNotNull(category?.name, streamDuration)
+                    .filter { it.isNotEmpty() }
+                    .joinToString(separator = " · ")
+
+            if (subtitle.isNotEmpty()) {
+                Text(
+                    text = subtitle,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
+            if (tags.isNotEmpty()) {
+                SingleLineTagList(
+                    modifier = Modifier.padding(top = 8.dp),
+                    tags = tags,
+                )
             }
         }
     }
@@ -250,14 +194,7 @@ internal fun LiveStreamPreview() {
             viewerCount = 5_305,
             startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
             profileImageUrl = null,
-            tags =
-                persistentListOf(
-                    "French",
-                    "Test",
-                    "Sponsored",
-                    "Label 1",
-                    "Super long label with too much text, you can't really argue otherwise",
-                ),
+            tags = persistentListOf("French", "Test", "Sponsored", "Label 1", "Label 2", "Label 3"),
         )
     }
 }

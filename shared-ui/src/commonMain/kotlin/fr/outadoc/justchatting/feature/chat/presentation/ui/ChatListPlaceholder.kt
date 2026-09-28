@@ -44,7 +44,7 @@ public fun ChatListPlaceholder(
                         .fillMaxWidth()
                         .background(
                             if (index.isOdd) {
-                                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+                                MaterialTheme.colorScheme.surfaceContainerLow
                             } else {
                                 MaterialTheme.colorScheme.surface
                             },

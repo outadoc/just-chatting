@@ -113,7 +113,7 @@ public fun ChatMessage(
                             modifier =
                                 Modifier
                                     .fillMaxWidth()
-                                    .padding(4.dp),
+                                    .padding(top = 2.dp),
                             body = data,
                             inlineContent = inlineContent,
                             emotes = emotes,

@@ -1,16 +1,16 @@
 package fr.outadoc.justchatting.feature.chat.presentation.ui
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandHorizontally
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -19,9 +19,7 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Mood
 import androidx.compose.material.icons.filled.SubdirectoryArrowLeft
-import androidx.compose.material3.BottomAppBarDefaults
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -70,6 +68,7 @@ public fun ChatInput(
     appUser: AppUser.LoggedIn? = null,
     message: TextFieldValue = TextFieldValue(),
     autoCompleteItems: ImmutableList<AutoCompleteItem> = persistentListOf(),
+    recentEmotes: ImmutableList<Emote> = persistentListOf(),
     replyingTo: ChatListItem.Message? = null,
     onEmoteClick: (Emote) -> Unit = {},
     onChatterClick: (Chatter) -> Unit = {},
@@ -145,6 +144,15 @@ public fun ChatInput(
                 )
             }
 
+            AnimatedVisibility(visible = autoCompleteItems.isEmpty() && recentEmotes.isNotEmpty()) {
+                RecentEmotesRow(
+                    modifier = Modifier.padding(top = 8.dp),
+                    emotes = recentEmotes,
+                    onEmoteClick = onEmoteClick,
+                    contentPadding = PaddingValues(horizontal = contentPadding),
+                )
+            }
+
             Row(
                 modifier =
                     Modifier.padding(
@@ -166,15 +174,11 @@ public fun ChatInput(
                     onSubmit = onSubmit,
                 )
 
-                AnimatedVisibility(
-                    visible = isSubmitVisible && message.text.isNotEmpty(),
-                    enter = fadeIn() + expandHorizontally(expandFrom = Alignment.Start),
-                    exit = shrinkHorizontally(shrinkTowards = Alignment.Start) + fadeOut(),
-                ) {
-                    FloatingActionButton(
-                        modifier = Modifier.size(56.0.dp),
-                        containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-                        elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
+                if (isSubmitVisible) {
+                    FilledIconButton(
+                        modifier = Modifier.size(56.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        enabled = message.text.isNotBlank(),
                         onClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             onSubmit()
@@ -186,6 +190,34 @@ public fun ChatInput(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun RecentEmotesRow(
+    modifier: Modifier = Modifier,
+    emotes: ImmutableList<Emote>,
+    onEmoteClick: (Emote) -> Unit,
+    contentPadding: PaddingValues,
+) {
+    LazyRow(
+        modifier = modifier,
+        contentPadding = contentPadding,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(emotes) { emote ->
+            Surface(
+                modifier = Modifier.size(48.dp),
+                shape = RoundedCornerShape(14.dp),
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                onClick = { onEmoteClick(emote) },
+            ) {
+                EmoteItem(
+                    modifier = Modifier.padding(9.dp),
+                    emote = emote,
+                )
             }
         }
     }
@@ -231,8 +263,8 @@ internal fun ChatTextField(
         value = message,
         singleLine = false,
         onValueChange = onMessageChange,
-        shape = FloatingActionButtonDefaults.shape,
-        textStyle = MaterialTheme.typography.bodyMedium,
+        shape = CircleShape,
+        textStyle = MaterialTheme.typography.bodyLarge,
         keyboardOptions =
             KeyboardOptions(
                 imeAction = ImeAction.Send,
@@ -247,8 +279,12 @@ internal fun ChatTextField(
         },
         colors =
             TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
             ),
         leadingIcon = {
             AccessibleIconButton(

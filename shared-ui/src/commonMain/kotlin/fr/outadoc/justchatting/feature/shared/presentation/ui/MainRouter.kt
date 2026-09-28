@@ -85,6 +85,10 @@ internal fun MainRouter(
         mainRouterViewModel.onTabSelected(screen)
     }
 
+    val onOpenSettings: () -> Unit = {
+        backStack.openSettings()
+    }
+
     val detailPlaceholder: @Composable ThreePaneScaffoldScope.() -> Unit = {
         DetailPaneContent(isTwoPane) {
             NoContent(modifier = Modifier.fillMaxSize())
@@ -103,6 +107,7 @@ internal fun MainRouter(
                 ) {
                     FollowedChannelsList(
                         onNavigate = onNavigate,
+                        onOpenSettings = onOpenSettings,
                         onItemClick = onChannelClick,
                     )
                 }
@@ -113,6 +118,7 @@ internal fun MainRouter(
                     LiveTimelineScreen(
                         selectedChannelId = (backStack.lastOrNull() as? DetailScreen.Chat)?.id,
                         onNavigate = onNavigate,
+                        onOpenSettings = onOpenSettings,
                         onChannelClick = onChannelClick,
                     )
                 }
@@ -122,6 +128,7 @@ internal fun MainRouter(
                 ) {
                     FutureTimelineScreen(
                         onNavigate = onNavigate,
+                        onOpenSettings = onOpenSettings,
                     )
                 }
 
@@ -130,6 +137,7 @@ internal fun MainRouter(
                 ) {
                     SearchScreen(
                         onNavigate = onNavigate,
+                        onOpenSettings = onOpenSettings,
                         onChannelClick = onChannelClick,
                     )
                 }
@@ -138,7 +146,7 @@ internal fun MainRouter(
                     metadata = ListDetailSceneStrategy.listPane(detailPlaceholder = detailPlaceholder),
                 ) {
                     SettingsContent(
-                        onNavigate = onNavigate,
+                        onNavigateUp = { backStack.closeSettings() },
                         onNavigateDetails = { screen -> backStack.navigateToDetail(screen) },
                     )
                 }

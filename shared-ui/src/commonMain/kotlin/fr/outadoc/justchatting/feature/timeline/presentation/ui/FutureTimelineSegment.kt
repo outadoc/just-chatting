@@ -1,49 +1,53 @@
 package fr.outadoc.justchatting.feature.timeline.presentation.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.Timelapse
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.feature.chat.presentation.ui.BasicUserInfo
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
 import fr.outadoc.justchatting.feature.shared.presentation.ui.ContextualActionBox
+import fr.outadoc.justchatting.feature.shared.presentation.ui.SegmentedListDefaults
+import fr.outadoc.justchatting.feature.shared.presentation.ui.SegmentedListItem
+import fr.outadoc.justchatting.feature.shared.presentation.ui.UserAvatar
 import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.stream_info
-import fr.outadoc.justchatting.utils.presentation.format
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * @param progress If the segment is currently ongoing, how far along it is, from 0 to 1.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FutureTimelineSegment(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
+    shape: Shape = SegmentedListDefaults.StandaloneShape,
+    progress: Float? = null,
     onUserClick: () -> Unit = {},
 ) {
     val haptic = LocalHapticFeedback.current
@@ -58,75 +62,82 @@ internal fun FutureTimelineSegment(
             )
         },
     ) {
-        OutlinedCard(
+        SegmentedListItem(
             modifier = modifier,
+            shape = shape,
         ) {
-            Column {
-                Card(
-                    modifier =
-                        Modifier
-                            .combinedClickable(
-                                onClick = { showDetailsDialog = true },
-                                onLongClick = {
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    showDetailsDialog = true
-                                },
-                            ),
-                ) {
-                    TimelineSegmentContent(
-                        modifier = Modifier.padding(8.dp),
-                        title = segment.title,
-                        userName = segment.user.displayName,
-                        category = segment.category,
-                        profileImageUrl = segment.user.profileImageUrl,
-                        onUserClick = onUserClick,
-                    )
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .combinedClickable(
+                            onClick = { showDetailsDialog = true },
+                            onLongClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                showDetailsDialog = true
+                            },
+                        ).padding(horizontal = 16.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Column(modifier = Modifier.widthIn(min = 48.dp)) {
+                    segment.startTime.formatHourMinute()?.let { startTime ->
+                        Text(
+                            text = startTime,
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 1,
+                        )
+                    }
+
+                    segment.endTime?.formatHourMinute()?.let { endTime ->
+                        Text(
+                            text = endTime,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                        )
+                    }
                 }
 
-                Row(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    Icon(
-                        modifier = Modifier.size(16.dp),
-                        imageVector = Icons.Default.AccessTime,
-                        contentDescription = null,
-                    )
+                UserAvatar(
+                    modifier = Modifier.clickable(onClick = onUserClick),
+                    profileImageUrl = segment.user.profileImageUrl,
+                )
 
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        modifier = Modifier.alignByBaseline(),
-                        text =
-                            buildAnnotatedString {
-                                append(segment.startTime.formatHourMinute())
-
-                                segment.endTime?.let { endTime ->
-                                    append(" - ")
-                                    append(endTime.formatHourMinute())
-                                }
-                            },
-                        style = MaterialTheme.typography.bodyMedium,
+                        text = segment.user.displayName,
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
 
-                    Spacer(
-                        modifier = Modifier.weight(1f, fill = true),
-                    )
-
-                    Icon(
-                        modifier = Modifier.size(16.dp),
-                        imageVector = Icons.Default.Timelapse,
-                        contentDescription = null,
-                    )
-
-                    segment.endTime?.let { endTime ->
-                        val duration = endTime - segment.startTime
+                    if (segment.title.isNotEmpty()) {
                         Text(
-                            modifier = Modifier.alignByBaseline(),
-                            text = duration.format(showSeconds = false),
+                            text = segment.title,
                             style = MaterialTheme.typography.bodyMedium,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+
+                    segment.category?.let { category ->
+                        Text(
+                            text = category.name,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+
+                    if (progress != null) {
+                        LinearProgressIndicator(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp),
+                            progress = { progress },
                         )
                     }
                 }
@@ -138,7 +149,7 @@ internal fun FutureTimelineSegment(
         ActionBottomSheet(
             onDismissRequest = { showDetailsDialog = false },
             header = {
-                BasicUserInfo(user = segment.user)
+                ChannelDetailsHeader(user = segment.user)
             },
             content = {
                 TimelineSegmentDetails(segment = segment)

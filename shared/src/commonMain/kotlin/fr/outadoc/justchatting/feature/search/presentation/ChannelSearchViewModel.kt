@@ -126,4 +126,13 @@ public class ChannelSearchViewModel internal constructor(
             twitchRepository.forgetRecentChannel(user.id)
         }
     }
+
+    public fun onClearRecentChannels() {
+        val recentChannels = _state.value.recentChannels
+        viewModelScope.launch {
+            recentChannels.forEach { user ->
+                twitchRepository.forgetRecentChannel(user.id)
+            }
+        }
+    }
 }

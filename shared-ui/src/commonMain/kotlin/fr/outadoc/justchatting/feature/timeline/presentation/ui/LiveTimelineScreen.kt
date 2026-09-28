@@ -7,10 +7,6 @@ import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -20,6 +16,8 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.shared.presentation.Screen
 import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
+import fr.outadoc.justchatting.feature.shared.presentation.ui.MainTopAppBar
+import fr.outadoc.justchatting.feature.shared.presentation.ui.ProfileButton
 import fr.outadoc.justchatting.feature.timeline.presentation.LiveTimelineViewModel
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.timeline_live
@@ -36,6 +34,7 @@ internal fun LiveTimelineScreen(
     modifier: Modifier = Modifier,
     selectedChannelId: String? = null,
     onNavigate: (Screen) -> Unit,
+    onOpenSettings: () -> Unit,
     onChannelClick: (userId: String) -> Unit,
 ) {
     val viewModel: LiveTimelineViewModel = koinViewModel()
@@ -65,32 +64,31 @@ internal fun LiveTimelineScreen(
         selectedScreen = Screen.Live,
         onSelectedTabChange = onNavigate,
         topBar = {
-            Surface(
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
-            ) {
-                TopAppBar(
-                    title = { Text(stringResource(Res.string.timeline_live)) },
-                    actions = {
-                        if (hasMouse) {
-                            AccessibleIconButton(
-                                onClickLabel = stringResource(Res.string.timeline_refresh_action_cd),
-                                onClick = { viewModel.syncLiveStreamsNow() },
-                            ) {
-                                if (state.isLoading) {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier.size(20.dp),
-                                    )
-                                } else {
-                                    Icon(
-                                        imageVector = Icons.Default.Sync,
-                                        contentDescription = null,
-                                    )
-                                }
+            MainTopAppBar(
+                title = stringResource(Res.string.timeline_live),
+                actions = {
+                    if (hasMouse) {
+                        AccessibleIconButton(
+                            onClickLabel = stringResource(Res.string.timeline_refresh_action_cd),
+                            onClick = { viewModel.syncLiveStreamsNow() },
+                        ) {
+                            if (state.isLoading) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(20.dp),
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.Sync,
+                                    contentDescription = null,
+                                )
                             }
                         }
-                    },
-                )
-            }
+                    }
+                },
+                profileButton = {
+                    ProfileButton(onClick = onOpenSettings)
+                },
+            )
         },
         content = { insets ->
             LiveTimelineContent(

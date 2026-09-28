@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
@@ -20,11 +20,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.feature.chat.presentation.ui.BasicUserInfo
-import fr.outadoc.justchatting.feature.chat.presentation.ui.ExtraUserInfo
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.ui.NoContent
+import fr.outadoc.justchatting.feature.shared.presentation.ui.SegmentedListDefaults
 import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
 import kotlinx.collections.immutable.ImmutableList
 import kotlin.time.Clock
@@ -95,10 +94,13 @@ public fun LiveTimelineContent(
         ActionBottomSheet(
             onDismissRequest = { showUserDetails = null },
             header = {
-                BasicUserInfo(user = user)
+                ChannelDetailsHeader(user = user)
             },
             content = {
-                ExtraUserInfo(user = user)
+                ChannelDetailsContent(
+                    user = user,
+                    stream = null,
+                )
             },
         )
     }
@@ -134,15 +136,16 @@ private fun LiveTimelineList(
                 PaddingValues(
                     start = 16.dp,
                     end = 16.dp,
+                    top = 8.dp,
                     bottom = 16.dp,
                 ),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(SegmentedListDefaults.ItemSpacing),
         ) {
-            items(
+            itemsIndexed(
                 live,
-                key = { userStream -> userStream.stream.id },
-                contentType = { "stream" },
-            ) { userStream ->
+                key = { _, userStream -> userStream.stream.id },
+                contentType = { _, _ -> "stream" },
+            ) { index, userStream ->
                 LiveTimelineSegment(
                     modifier =
                         Modifier
@@ -150,6 +153,7 @@ private fun LiveTimelineList(
                             .fillMaxWidth(),
                     userStream = userStream,
                     isSelected = userStream.user.id == selectedChannelId,
+                    shape = SegmentedListDefaults.shape(index = index, count = live.size),
                     clock = clock,
                     onOpenChat = {
                         onChannelClick(userStream.user)

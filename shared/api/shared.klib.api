@@ -1750,6 +1750,7 @@ final class fr.outadoc.justchatting.feature.search.presentation/ChannelSearchVie
         final fun <get-state>(): kotlinx.coroutines.flow/StateFlow<fr.outadoc.justchatting.feature.search.presentation/ChannelSearchViewModel.State> // fr.outadoc.justchatting.feature.search.presentation/ChannelSearchViewModel.state.<get-state>|<get-state>(){}[0]
 
     final fun onChannelClick(kotlin/String) // fr.outadoc.justchatting.feature.search.presentation/ChannelSearchViewModel.onChannelClick|onChannelClick(kotlin.String){}[0]
+    final fun onClearRecentChannels() // fr.outadoc.justchatting.feature.search.presentation/ChannelSearchViewModel.onClearRecentChannels|onClearRecentChannels(){}[0]
     final fun onClearSearchBar() // fr.outadoc.justchatting.feature.search.presentation/ChannelSearchViewModel.onClearSearchBar|onClearSearchBar(){}[0]
     final fun onDismissSearchBar() // fr.outadoc.justchatting.feature.search.presentation/ChannelSearchViewModel.onDismissSearchBar|onDismissSearchBar(){}[0]
     final fun onQueryChange(kotlin/String) // fr.outadoc.justchatting.feature.search.presentation/ChannelSearchViewModel.onQueryChange|onQueryChange(kotlin.String){}[0]

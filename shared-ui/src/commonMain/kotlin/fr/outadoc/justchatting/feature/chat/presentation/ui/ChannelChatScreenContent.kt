@@ -22,7 +22,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -57,6 +56,7 @@ import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.chat_copiedToClipboard
 import fr.outadoc.justchatting.utils.core.filterValuesNotNull
 import fr.outadoc.justchatting.utils.presentation.AppTheme
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
@@ -129,15 +129,12 @@ public fun ChannelChatScreenContent(
             ),
         topBar = {
             ChatTopAppBar(
-                modifier =
-                    Modifier
-                        .hazeEffect(
-                            state = hazeState,
-                            style = HazeMaterials.regular(),
-                        ),
                 user = user,
                 stream = stream,
-                colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    ),
                 onStreamInfoClicked = onShowStreamInfo,
                 showBackButton = showBackButton,
                 onNavigateUp = onNavigateUp,
@@ -178,10 +175,7 @@ public fun ChannelChatScreenContent(
                         Modifier
                             .hazeEffect(
                                 state = hazeState,
-                                style =
-                                    HazeMaterials.regular(
-                                        MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
-                                    ),
+                                style = HazeMaterials.thick(MaterialTheme.colorScheme.surface),
                             ),
                     color = Color.Transparent,
                 ) {
@@ -206,6 +200,11 @@ public fun ChannelChatScreenContent(
                                     ),
                             ),
                         autoCompleteItems = inputState.autoCompleteItems,
+                        recentEmotes =
+                            (state as? ChatViewModel.State.Chatting)
+                                ?.recentEmotes
+                                .orEmpty()
+                                .toImmutableList(),
                         replyingTo = inputState.replyingTo,
                         onEmoteClick = onEmoteClick,
                         onChatterClick = onChatterClick,
@@ -223,7 +222,7 @@ public fun ChannelChatScreenContent(
                         onReuseLastMessageClicked = onReuseLastMessageClicked,
                         onSubmit = onSubmit,
                         isSubmitVisible = state is ChatViewModel.State.Chatting,
-                        contentPadding = 8.dp,
+                        contentPadding = 12.dp,
                     )
                 }
 

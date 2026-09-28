@@ -23,4 +23,10 @@
         <item quantity="other">%1$s a obtenu %2$s pour %3$,d points</item>
         <item quantity="many">%1$s a obtenu %2$s pour %3$,d de points</item>
     </plurals>
+
+    <plurals name="tags_more_cd">
+        <item quantity="one">%1$s autre tag</item>
+        <item quantity="many">%1$s autres tags</item>
+        <item quantity="other">%1$s autres tags</item>
+    </plurals>
 </resources>

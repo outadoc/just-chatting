@@ -18,3 +18,9 @@ internal expect fun LocalDate.formatWithoutYear(): String
 
 @Stable
 internal expect fun LocalDate.formatWithYear(): String
+
+/**
+ * Formats a date as a short day label, e.g. "Wed 30 Sep".
+ */
+@Stable
+internal expect fun LocalDate.formatShortDay(): String

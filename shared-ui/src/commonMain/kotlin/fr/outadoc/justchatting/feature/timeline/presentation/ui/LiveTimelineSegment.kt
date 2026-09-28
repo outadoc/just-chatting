@@ -9,9 +9,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import fr.outadoc.justchatting.feature.shared.presentation.ui.ContextualActionBox
+import fr.outadoc.justchatting.feature.shared.presentation.ui.SegmentedListDefaults
 import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.stream_info
@@ -23,6 +25,7 @@ internal fun LiveTimelineSegment(
     modifier: Modifier = Modifier,
     userStream: UserStream,
     isSelected: Boolean = false,
+    shape: Shape = SegmentedListDefaults.StandaloneShape,
     clock: Clock = Clock.System,
     onUserClick: () -> Unit = {},
     onOpenChat: () -> Unit = {},
@@ -50,6 +53,7 @@ internal fun LiveTimelineSegment(
             tags = userStream.stream.tags,
             profileImageUrl = userStream.user.profileImageUrl,
             isSelected = isSelected,
+            shape = shape,
             clock = clock,
             onUserClick = onUserClick,
             onClick = onOpenChat,

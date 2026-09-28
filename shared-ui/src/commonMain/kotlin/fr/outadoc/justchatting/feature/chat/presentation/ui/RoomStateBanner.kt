@@ -1,8 +1,20 @@
 package fr.outadoc.justchatting.feature.chat.presentation.ui
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.EmojiEmotions
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Fingerprint
+import androidx.compose.material.icons.filled.HourglassTop
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.presentation.RoomMode
 import fr.outadoc.justchatting.feature.chat.presentation.RoomState
 import fr.outadoc.justchatting.feature.chat.presentation.activeModes
@@ -24,34 +36,52 @@ internal fun RoomStateBanner(
 ) {
     SlimSnackbar(modifier = modifier) {
         roomState.activeModes.forEach { mode ->
-            Text(
-                text =
-                    when (mode) {
-                        RoomMode.EmoteOnly -> {
-                            stringResource(Res.string.room_emote)
-                        }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                Icon(
+                    modifier = Modifier.size(18.dp),
+                    imageVector =
+                        when (mode) {
+                            RoomMode.EmoteOnly -> Icons.Filled.EmojiEmotions
+                            is RoomMode.FollowersOnly -> Icons.Filled.Favorite
+                            RoomMode.UniqueMessages -> Icons.Filled.Fingerprint
+                            is RoomMode.Slow -> Icons.Filled.HourglassTop
+                            RoomMode.SubscribersOnly -> Icons.Filled.Star
+                        },
+                    contentDescription = null,
+                )
 
-                        is RoomMode.FollowersOnly -> {
-                            if (mode.minFollowDuration == Duration.ZERO) {
-                                stringResource(Res.string.room_followers)
-                            } else {
-                                stringResource(Res.string.room_followers_min, mode.minFollowDuration.format())
+                Text(
+                    text =
+                        when (mode) {
+                            RoomMode.EmoteOnly -> {
+                                stringResource(Res.string.room_emote)
                             }
-                        }
 
-                        RoomMode.UniqueMessages -> {
-                            stringResource(Res.string.room_unique)
-                        }
+                            is RoomMode.FollowersOnly -> {
+                                if (mode.minFollowDuration == Duration.ZERO) {
+                                    stringResource(Res.string.room_followers)
+                                } else {
+                                    stringResource(Res.string.room_followers_min, mode.minFollowDuration.format())
+                                }
+                            }
 
-                        is RoomMode.Slow -> {
-                            stringResource(Res.string.room_slow, mode.delay.format())
-                        }
+                            RoomMode.UniqueMessages -> {
+                                stringResource(Res.string.room_unique)
+                            }
 
-                        RoomMode.SubscribersOnly -> {
-                            stringResource(Res.string.room_subs)
-                        }
-                    },
-            )
+                            is RoomMode.Slow -> {
+                                stringResource(Res.string.room_slow, mode.delay.format())
+                            }
+
+                            RoomMode.SubscribersOnly -> {
+                                stringResource(Res.string.room_subs)
+                            }
+                        },
+                )
+            }
         }
     }
 }

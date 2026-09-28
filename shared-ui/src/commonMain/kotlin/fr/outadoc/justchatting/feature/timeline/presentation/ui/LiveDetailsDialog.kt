@@ -2,12 +2,11 @@ package fr.outadoc.justchatting.feature.timeline.presentation.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChatBubble
-import androidx.compose.material.icons.filled.LiveTv
-import androidx.compose.material.icons.filled.PictureInPictureAlt
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.automirrored.outlined.Chat
+import androidx.compose.material.icons.outlined.LiveTv
+import androidx.compose.material.icons.outlined.PictureInPictureAlt
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -19,7 +18,8 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ui.BasicUserInfo
 import fr.outadoc.justchatting.feature.chat.presentation.ui.ExtraUserInfo
-import fr.outadoc.justchatting.feature.chat.presentation.ui.StreamInfo
+import fr.outadoc.justchatting.feature.chat.presentation.ui.StreamInfoCard
+import fr.outadoc.justchatting.feature.chat.presentation.ui.UserCreatedAt
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
@@ -58,72 +58,124 @@ internal fun LiveDetailsDialog(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
         header = {
-            BasicUserInfo(user = user)
+            ChannelDetailsHeader(user = user)
         },
         content = {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(20.dp),
-            ) {
-                ExtraUserInfo(user = user)
-
-                if (stream != null) {
-                    Card {
-                        StreamInfo(
-                            modifier = Modifier.padding(16.dp),
-                            stream = stream,
-                        )
-                    }
-                }
-            }
+            ChannelDetailsContent(
+                user = user,
+                stream = stream,
+            )
         },
         actions = {
-            if (onOpenChat != null) {
-                ContextualButton(
-                    onClick = {
-                        onOpenChat()
-                        onDismissRequest()
+            ChannelDetailsActions(
+                onOpenChat =
+                    onOpenChat?.let {
+                        {
+                            onOpenChat()
+                            onDismissRequest()
+                        }
                     },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.ChatBubble,
-                            contentDescription = null,
-                        )
+                onOpenInBubble =
+                    if (canOpenInBubble) {
+                        {
+                            onOpenInBubble()
+                            onDismissRequest()
+                        }
+                    } else {
+                        null
                     },
-                    text = stringResource(Res.string.chat_open_action),
-                )
-            }
-
-            if (canOpenInBubble) {
-                ContextualButton(
-                    onClick = {
-                        onOpenInBubble()
-                        onDismissRequest()
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.PictureInPictureAlt,
-                            contentDescription = null,
-                        )
-                    },
-                    text = stringResource(Res.string.chat_openBubble_action),
-                )
-            }
-
-            ContextualButton(
-                onClick = {
+                onWatchLive = {
                     uriHandler.openUri(
                         createChannelExternalLink(user),
                     )
                     onDismissRequest()
                 },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.LiveTv,
-                        contentDescription = null,
-                    )
-                },
-                text = stringResource(Res.string.watch_live),
             )
         },
     )
+}
+
+/**
+ * Actions for a channel's details sheet. Actions with a null callback are hidden.
+ */
+@Composable
+public fun ChannelDetailsActions(
+    onOpenChat: (() -> Unit)? = null,
+    onOpenInBubble: (() -> Unit)? = null,
+    onWatchLive: () -> Unit,
+) {
+    if (onOpenChat != null) {
+        ContextualButton(
+            onClick = onOpenChat,
+            icon = {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.Chat,
+                    contentDescription = null,
+                )
+            },
+            text = stringResource(Res.string.chat_open_action),
+        )
+    }
+
+    if (onOpenInBubble != null) {
+        ContextualButton(
+            onClick = onOpenInBubble,
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.PictureInPictureAlt,
+                    contentDescription = null,
+                )
+            },
+            text = stringResource(Res.string.chat_openBubble_action),
+        )
+    }
+
+    ContextualButton(
+        onClick = onWatchLive,
+        icon = {
+            Icon(
+                imageVector = Icons.Outlined.LiveTv,
+                contentDescription = null,
+            )
+        },
+        text = stringResource(Res.string.watch_live),
+    )
+}
+
+@Composable
+public fun ChannelDetailsHeader(
+    modifier: Modifier = Modifier,
+    user: User,
+) {
+    BasicUserInfo(
+        modifier = modifier,
+        user = user,
+        subtitle = {
+            UserCreatedAt(user = user)
+        },
+    )
+}
+
+@Composable
+public fun ChannelDetailsContent(
+    modifier: Modifier = Modifier,
+    user: User,
+    stream: Stream?,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        ExtraUserInfo(
+            user = user,
+            showCreatedAt = false,
+        )
+
+        if (stream != null) {
+            StreamInfoCard(
+                modifier = Modifier.fillMaxWidth(),
+                stream = stream,
+            )
+        }
+    }
 }

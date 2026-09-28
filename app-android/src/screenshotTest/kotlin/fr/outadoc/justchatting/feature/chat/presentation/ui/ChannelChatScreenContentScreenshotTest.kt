@@ -1,14 +1,18 @@
 package fr.outadoc.justchatting.feature.chat.presentation.ui
 
+import android.content.res.Configuration
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.android.tools.screenshot.PreviewTest
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
+import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
+import fr.outadoc.justchatting.feature.chat.presentation.RoomState
 import fr.outadoc.justchatting.preview.PreviewFixtures
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.collections.immutable.persistentListOf
+import kotlin.time.Duration
 import kotlin.time.Instant
 
 @PreviewTest
@@ -56,6 +60,37 @@ internal fun ChannelChatScreenChattingScreenshotTest() {
                                     ),
                                 timestamp = Instant.fromEpochMilliseconds(1664399217864),
                             ),
+                            PreviewFixtures.sampleChatMessageAlternate,
+                        ),
+                ),
+            inputState = ChatViewModel.InputState(),
+            showTimestamps = true,
+        )
+    }
+}
+
+@PreviewTest
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+internal fun ChannelChatScreenChattingDarkScreenshotTest() {
+    AppTheme(isDarkTheme = true) {
+        ChannelChatScreenContent(
+            state =
+                ChatViewModel.State.Chatting(
+                    user = PreviewFixtures.sampleUser,
+                    appUser = PreviewFixtures.sampleLoggedInUser,
+                    stream = PreviewFixtures.sampleStream,
+                    maxAdapterCount = 100,
+                    connectionStatus =
+                        ConnectionStatus(
+                            isAlive = true,
+                            registeredListeners = 1,
+                            aliveConnections = 1,
+                        ),
+                    roomState = RoomState(minFollowDuration = Duration.ZERO),
+                    chatMessages =
+                        persistentListOf(
+                            PreviewFixtures.sampleChatMessage,
                             PreviewFixtures.sampleChatMessageAlternate,
                         ),
                 ),

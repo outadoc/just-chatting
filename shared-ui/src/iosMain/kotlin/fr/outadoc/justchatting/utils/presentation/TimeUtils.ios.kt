@@ -74,3 +74,17 @@ internal actual fun LocalDate.formatWithYear(): String {
 
     return formatter.stringFromDate(date)
 }
+
+@Stable
+internal actual fun LocalDate.formatShortDay(): String {
+    val formatter =
+        NSDateFormatter().apply {
+            dateFormat = "eee d MMM"
+            locale = NSLocale.currentLocale
+        }
+
+    val instant: Instant = this.atStartOfDayIn(TimeZone.currentSystemDefault())
+    val date = instant.toNSDate()
+
+    return formatter.stringFromDate(date)
+}

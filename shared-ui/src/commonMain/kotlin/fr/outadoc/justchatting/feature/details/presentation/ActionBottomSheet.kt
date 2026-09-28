@@ -51,11 +51,11 @@ private fun DetailsDialogContent(
     header: @Composable () -> Unit = {},
     content: (@Composable () -> Unit)? = null,
     actions: (@Composable () -> Unit)? = null,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 32.dp),
+    contentPadding: PaddingValues = PaddingValues(horizontal = 24.dp),
 ) {
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Box(
             modifier = Modifier.padding(contentPadding),
@@ -73,13 +73,17 @@ private fun DetailsDialogContent(
 
         if (actions != null) {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(contentPadding),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(contentPadding)
+                        .padding(top = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 actions()
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }

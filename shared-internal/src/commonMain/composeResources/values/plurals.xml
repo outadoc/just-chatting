@@ -19,4 +19,9 @@
         <item quantity="one">%1$s redeemed %2$s for %3$,d point</item>
         <item quantity="other">%1$s redeemed %2$s for %3$,d points</item>
     </plurals>
+
+    <plurals name="tags_more_cd">
+        <item quantity="one">%1$s more tag</item>
+        <item quantity="other">%1$s more tags</item>
+    </plurals>
 </resources>

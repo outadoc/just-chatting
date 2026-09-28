@@ -13,10 +13,10 @@ import androidx.paging.LoadState
 import app.cash.paging.compose.LazyPagingItems
 import fr.outadoc.justchatting.feature.search.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.shared.presentation.ui.NoContent
+import fr.outadoc.justchatting.feature.shared.presentation.ui.SegmentedListDefaults
 import fr.outadoc.justchatting.feature.shared.presentation.ui.UserItemCard
 import fr.outadoc.justchatting.feature.shared.presentation.ui.UserItemCardPlaceholder
 import fr.outadoc.justchatting.utils.presentation.plus
-import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun SearchResultsList(
@@ -29,14 +29,22 @@ internal fun SearchResultsList(
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        contentPadding = insets + PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding =
+            insets +
+                PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 12.dp,
+                    bottom = 16.dp,
+                ),
+        verticalArrangement = Arrangement.spacedBy(SegmentedListDefaults.ItemSpacing),
     ) {
         if (searchResults.itemCount == 0) {
             if (isRefreshing) {
-                items(50) {
+                items(PlaceholderCount) { index ->
                     UserItemCardPlaceholder(
                         modifier = Modifier.fillMaxWidth(),
+                        shape = SegmentedListDefaults.shape(index = index, count = PlaceholderCount),
                     )
                 }
             } else {
@@ -49,6 +57,12 @@ internal fun SearchResultsList(
                 count = searchResults.itemCount,
                 key = { index -> searchResults[index]?.user?.id ?: index },
             ) { index ->
+                val shape =
+                    SegmentedListDefaults.shape(
+                        index = index,
+                        count = searchResults.itemCount,
+                    )
+
                 Box(modifier = Modifier.animateItem()) {
                     val item: ChannelSearchResult? = searchResults[index]
                     if (item != null) {
@@ -56,12 +70,13 @@ internal fun SearchResultsList(
                             modifier = Modifier.fillMaxWidth(),
                             displayName = item.user.displayName,
                             profileImageUrl = item.user.profileImageUrl,
-                            tags = item.tags.toImmutableList(),
+                            shape = shape,
                             onClick = { onItemClick(item) },
                         )
                     } else {
                         UserItemCardPlaceholder(
                             modifier = Modifier.fillMaxWidth(),
+                            shape = shape,
                         )
                     }
                 }
@@ -69,3 +84,5 @@ internal fun SearchResultsList(
         }
     }
 }
+
+private const val PlaceholderCount = 50

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -30,6 +31,7 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.shared.presentation.Screen
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.channels
@@ -106,6 +108,7 @@ public fun MainNavigation(
                 destinations.forEach { destination ->
                     val isSelected = selectedScreen == destination.screen
                     NavigationRailItem(
+                        modifier = Modifier.padding(vertical = 4.dp),
                         selected = isSelected,
                         onClick = { onSelectedTabChange(destination.screen) },
                         icon = { DestinationIcon(destination, isSelected) },

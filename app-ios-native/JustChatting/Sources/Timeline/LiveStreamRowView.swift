@@ -12,7 +12,7 @@ struct LiveStreamRowView: View {
     private var stream: JCShared.Stream { userStream.stream }
 
     var body: some View {
-        ChannelRow(user: userStream.user, isLive: true) {
+        ChannelRow(user: userStream.user) {
             viewerCount
         } details: {
             ChannelRowTitle(text: stream.title)
@@ -23,17 +23,17 @@ struct LiveStreamRowView: View {
             }
 
             TagLine(tags: stream.tags)
-                .font(.caption)
+                .font(.footnote)
                 .padding(.top, 4)
         }
     }
 
     private var viewerCount: some View {
         let count = stream.viewerCount.formatted(.number.notation(.compactName).precision(.fractionLength(0...1)))
-        return HStack(spacing: 4) {
+        return HStack(spacing: 5) {
             Circle()
                 .fill(Color.live)
-                .frame(width: 6, height: 6)
+                .frame(width: 7, height: 7)
             Text(verbatim: count)
         }
         .accessibilityElement(children: .ignore)

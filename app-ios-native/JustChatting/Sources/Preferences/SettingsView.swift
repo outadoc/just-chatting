@@ -12,16 +12,19 @@ enum SettingsPage: Hashable {
     case about
 }
 
+/// Settings, presented as a sheet from the profile button of any tab.
 struct SettingsView: View {
     @SharedViewModel(\.settingsViewModel) private var viewModel
-    @State private var selectedPage: SettingsPage?
     @State private var showLogoutConfirmation = false
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        NavigationSplitView {
+        NavigationStack {
             Observing(viewModel.state) { state in
-                List(selection: $selectedPage) {
-                    accountSection(state: state)
+                List {
+                    Section {
+                        ProfileCard(user: state.user)
+                    }
 
                     Section {
                         NavigationLink(value: SettingsPage.thirdParties) {
@@ -44,24 +47,36 @@ struct SettingsView: View {
                             }
                         }
                     }
+
+                    Section {
+                        Button(role: .destructive) {
+                            showLogoutConfirmation = true
+                        } label: {
+                            Text("Log out")
+                                .frame(maxWidth: .infinity)
+                        }
+                    }
                 }
             }
             .navigationTitle("Settings")
-        } detail: {
-            // Own stack so that pages can push further details, like the open-source licences.
-            NavigationStack {
-                switch selectedPage {
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: SettingsPage.self) { page in
+                switch page {
                 case .thirdParties:
                     SettingsSectionThirdParties(viewModel: viewModel)
                 case .appearance:
                     SettingsSectionAppearance(viewModel: viewModel)
                 case .about:
                     SettingsSectionAbout(viewModel: viewModel)
-                case nil:
-                    ContentUnavailableView("No section selected", systemImage: "gearshape")
                 }
             }
-            .id(selectedPage)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(role: .close) {
+                        dismiss()
+                    }
+                }
+            }
         }
         .alert("Log out?", isPresented: $showLogoutConfirmation) {
             Button("Log out", role: .destructive) {
@@ -72,38 +87,60 @@ struct SettingsView: View {
             Text("You will need to log in again to use the app.")
         }
     }
+}
 
-    @ViewBuilder
-    private func accountSection(state: SettingsViewModel.State) -> some View {
-        Section {
-            if let user = state.user {
-                ChannelRow(user: user) {
-                    ChannelRowCategoryLine(category: nil, detail: Text(verbatim: "@\(user.login)"))
-                }
-            } else {
-                // Same size as the account's ChannelRow, so that the list doesn't jump once loaded.
-                HStack(spacing: 12) {
-                    Circle()
-                        .fill(.fill.tertiary)
-                        .frame(width: 56, height: 56)
-                    VStack(alignment: .leading, spacing: 6) {
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(.fill.tertiary)
-                            .frame(width: 100, height: 14)
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(.fill.tertiary)
-                            .frame(width: 70, height: 11)
+/// The logged-in user's avatar, names, description and account creation date.
+private struct ProfileCard: View {
+    let user: User?
+
+    private static var avatarSize: CGFloat { 60 }
+
+    var body: some View {
+        if let user {
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(spacing: 14) {
+                    AvatarView(url: user.profileImageUrl, size: Self.avatarSize)
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(user.displayName)
+                            .font(.title3.weight(.semibold))
+                        Text(verbatim: "@\(user.login)")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
                     }
                 }
-                .padding(.vertical, 8)
-                .accessibilityHidden(true)
-            }
 
-            Button(role: .destructive) {
-                showLogoutConfirmation = true
-            } label: {
-                Text("Log out")
+                if !user.description_.isEmpty {
+                    Text(user.description_)
+                }
+
+                Label {
+                    Text("Created on \(user.createdAt.date.formatted(date: .abbreviated, time: .omitted))")
+                } icon: {
+                    Image(systemName: "birthday.cake")
+                }
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
             }
+            .padding(.vertical, 6)
+            .accessibilityElement(children: .combine)
+        } else {
+            // Same size as the loaded card's first row, so that the list doesn't jump too much.
+            HStack(spacing: 14) {
+                Circle()
+                    .fill(.fill.tertiary)
+                    .frame(width: Self.avatarSize, height: Self.avatarSize)
+                VStack(alignment: .leading, spacing: 6) {
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(.fill.tertiary)
+                        .frame(width: 100, height: 16)
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(.fill.tertiary)
+                        .frame(width: 70, height: 12)
+                }
+            }
+            .padding(.vertical, 6)
+            .accessibilityHidden(true)
         }
     }
 }

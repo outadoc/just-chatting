@@ -11,6 +11,16 @@
         }
       }
     },
+    "%@ · since %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · depuis %2$@"
+          }
+        }
+      }
+    },
     "%lld more tags" : {
       "localizations" : {
         "en" : {
@@ -139,6 +149,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tchat"
+          }
+        }
+      }
+    },
+    "Clear" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer"
           }
         }
       }
@@ -342,6 +362,16 @@
       "comment" : "Third-party emote provider name, do not translate",
       "shouldTranslate" : false
     },
+    "Happening now" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En ce moment"
+          }
+        }
+      }
+    },
     "In order to browse your followed channels and post in chat, you will need to link your Twitch account." : {
       "localizations" : {
         "fr" : {
@@ -372,6 +402,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Just Chatting est distribuée sous les termes de la licence GNU Affero General Public License v3.0."
+          }
+        }
+      }
+    },
+    "Later today" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus tard aujourd'hui"
           }
         }
       }
@@ -491,22 +531,22 @@
         }
       }
     },
-    "No section selected" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune section sélectionnée"
-          }
-        }
-      }
-    },
     "No upcoming streams" : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucun stream à venir"
+          }
+        }
+      }
+    },
+    "Nothing scheduled" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rien de prévu"
           }
         }
       }
@@ -545,6 +585,16 @@
       "comment" : "GitHub repository name, do not translate",
       "shouldTranslate" : false
     },
+    "Profile and settings" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil et réglages"
+          }
+        }
+      }
+    },
     "Pronouns" : {
       "comment" : "Section header for the pronouns integration in third-party settings",
       "localizations" : {
@@ -556,12 +606,12 @@
         }
       }
     },
-    "Recent channels" : {
+    "Recent" : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chaînes récentes"
+            "value" : "Récents"
           }
         }
       }
@@ -805,16 +855,6 @@
         }
       }
     },
-    "Stream" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stream"
-          }
-        }
-      }
-    },
     "Stream info" : {
       "localizations" : {
         "fr" : {
@@ -853,6 +893,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Intégrations tierces"
+          }
+        }
+      }
+    },
+    "Today" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aujourd'hui"
           }
         }
       }

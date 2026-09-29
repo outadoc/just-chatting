@@ -14,8 +14,8 @@ struct TagChip: View {
             .lineLimit(1)
             .foregroundStyle(.secondary)
             .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(.fill.tertiary, in: RoundedRectangle(cornerRadius: 6))
+            .padding(.vertical, 3)
+            .background(.fill.tertiary, in: RoundedRectangle(cornerRadius: 8))
     }
 }
 
@@ -32,17 +32,16 @@ struct TagList: View {
     }
 }
 
-/// Stream tags on a single line: the first few that fit, then how many were left out. Uses the
+/// Stream tags on a single line: as many as fit, then how many were left out. Uses the
 /// environment's font.
 struct TagLine: View {
     let tags: [String]
-    var maxVisibleCount: Int = 3
 
     var body: some View {
         if !tags.isEmpty {
-            // Try showing as many tags as allowed, then fewer until they fit.
+            // Try showing every tag, then fewer until they fit.
             ViewThatFits(in: .horizontal) {
-                ForEach((1...min(tags.count, maxVisibleCount)).reversed(), id: \.self) { count in
+                ForEach((1...tags.count).reversed(), id: \.self) { count in
                     line(showing: count)
                 }
             }

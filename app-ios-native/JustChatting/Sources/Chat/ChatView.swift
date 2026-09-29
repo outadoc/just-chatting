@@ -60,10 +60,11 @@ struct ChatView: View {
             onCopy: copyToClipboard
         )
         .toast("Copied to clipboard", trigger: copyCount)
-        .safeAreaInset(edge: .top) {
+        .safeAreaBar(edge: .top) {
             ChatEvents(chatting: chatting)
         }
-        .safeAreaInset(edge: .bottom) {
+        // A bar rather than an inset, so that messages fade out behind the composer.
+        .safeAreaBar(edge: .bottom) {
             VStack(spacing: 0) {
                 if let constraint = chatting.messagePostConstraint {
                     ChatSlowModeProgress(constraint: constraint)
@@ -86,7 +87,6 @@ struct ChatView: View {
                 }
             }
             .animation(.snappy, value: isEmotePickerOpen)
-            .background(.bar)
         }
         .sheet(
             isPresented: Binding(

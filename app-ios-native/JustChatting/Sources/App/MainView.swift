@@ -58,7 +58,7 @@ struct MainView: View {
                 }
             }
         case .navigateToTab(let e):
-            router.selectedTab = AppTab(screen: e.screen)
+            router.navigate(to: e.screen)
         case .viewChannel(let e):
             router.openChannel(userId: e.userId)
         }

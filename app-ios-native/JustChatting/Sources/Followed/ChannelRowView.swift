@@ -10,11 +10,8 @@ struct ChannelRowView: View {
     let channelFollow: ChannelFollow
 
     var body: some View {
-        ChannelRow(user: channelFollow.user) {
-            ChannelRowCategoryLine(
-                category: nil,
-                detail: Text("Following since \(channelFollow.followedAt.date.formatted(.relative(presentation: .named)))")
-            )
+        UserRow(user: channelFollow.user) {
+            Text("Following since \(channelFollow.followedAt.date.formatted(date: .abbreviated, time: .omitted))")
         }
     }
 }

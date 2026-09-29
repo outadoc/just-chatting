@@ -14,7 +14,7 @@ struct RoomStateBanner: View {
         if !modes.isEmpty {
             SlimBanner {
                 ForEach(Array(modes.enumerated()), id: \.offset) { _, mode in
-                    Text(label(for: mode))
+                    Label(label(for: mode), systemImage: symbolName(for: mode))
                 }
             }
             .accessibilityElement(children: .combine)
@@ -35,6 +35,16 @@ struct RoomStateBanner: View {
             String(localized: "Slow \(formatDuration(slow.delaySeconds))")
         case .subscribersOnly:
             String(localized: "Subs")
+        }
+    }
+
+    private func symbolName(for mode: RoomMode) -> String {
+        switch onEnum(of: mode) {
+        case .emoteOnly: "face.smiling"
+        case .followersOnly: "heart.fill"
+        case .uniqueMessages: "text.badge.checkmark"
+        case .slow: "hourglass"
+        case .subscribersOnly: "star.fill"
         }
     }
 

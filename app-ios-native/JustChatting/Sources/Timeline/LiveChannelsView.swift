@@ -27,6 +27,9 @@ struct LiveChannelsView: View {
             }
         }
         .navigationTitle("Live")
+        .toolbar {
+            ProfileToolbarItem()
+        }
         .onAppear {
             viewModel.syncLiveStreamsPeriodically()
         }

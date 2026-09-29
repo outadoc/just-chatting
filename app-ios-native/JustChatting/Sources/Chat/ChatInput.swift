@@ -41,48 +41,9 @@ struct ChatInput: View {
                 .transition(.opacity)
             }
 
-            HStack(alignment: .bottom, spacing: 8) {
-                Button {
-                    isEmotePickerOpen.toggle()
-                    // Swap between the emote picker and the keyboard.
-                    isFocused = !isEmotePickerOpen
-                } label: {
-                    Image(systemName: isEmotePickerOpen ? "keyboard" : "face.smiling")
-                        .font(.title3)
-                        .frame(width: 32, height: 32)
-                }
-                .buttonStyle(GlassButtonStyle())
-                .accessibilityLabel(isEmotePickerOpen ? "Show keyboard" : "Show emotes")
-
-                HStack(alignment: .center, spacing: 4) {
-                    TextField("Send a message", text: $text, selection: $selection, axis: .vertical)
-                        .textFieldStyle(.plain)
-                        .lineLimit(1...5)
-                        .focused($isFocused)
-                        .submitLabel(.send)
-                        .onKeyPress(.tab) {
-                            viewModel.onTriggerAutoComplete()
-                            return .handled
-                        }
-
-                    trailingButton
-                }
-                .frame(maxHeight: .infinity)
-                .padding(.leading, 12)
-                .padding(.trailing, 4)
-                .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 18))
-
-                Button(action: submit) {
-                    Image(systemName: "paperplane")
-                        .fontWeight(.semibold)
-                        .frame(width: 32, height: 32)
-                }
-                .buttonStyle(GlassButtonStyle())
-                .disabled(text.isEmpty)
-                .accessibilityLabel("Send")
-                .padding(.bottom, 2)
+            GlassEffectContainer {
+                composer
             }
-            .fixedSize(horizontal: false, vertical: true)
         }
         .animation(.default, value: inputState.replyingTo)
         .animation(.default, value: inputState.autoCompleteItems.isEmpty)
@@ -110,6 +71,54 @@ struct ChatInput: View {
                 isEmotePickerOpen = false
             }
         }
+    }
+
+    /// Emote button, text field and send button.
+    private var composer: some View {
+        HStack(alignment: .bottom, spacing: 8) {
+            Button {
+                isEmotePickerOpen.toggle()
+                // Swap between the emote picker and the keyboard.
+                isFocused = !isEmotePickerOpen
+            } label: {
+                Image(systemName: isEmotePickerOpen ? "keyboard" : "face.smiling")
+                    .font(.title3)
+                    .frame(width: 36, height: 36)
+            }
+            .buttonStyle(.glass)
+            .buttonBorderShape(.circle)
+            .accessibilityLabel(isEmotePickerOpen ? "Show keyboard" : "Show emotes")
+
+            HStack(alignment: .center, spacing: 4) {
+                TextField("Send a message", text: $text, selection: $selection, axis: .vertical)
+                    .textFieldStyle(.plain)
+                    .lineLimit(1...5)
+                    .focused($isFocused)
+                    .submitLabel(.send)
+                    .onKeyPress(.tab) {
+                        viewModel.onTriggerAutoComplete()
+                        return .handled
+                    }
+
+                trailingButton
+            }
+            .frame(maxHeight: .infinity)
+            .padding(.leading, 16)
+            .padding(.trailing, 6)
+            .frame(minHeight: 48)
+            .glassEffect(.regular.interactive(), in: RoundedRectangle(cornerRadius: 24))
+
+            Button(action: submit) {
+                Image(systemName: "arrow.up")
+                    .fontWeight(.semibold)
+                    .frame(width: 36, height: 36)
+            }
+            .buttonStyle(.glassProminent)
+            .buttonBorderShape(.circle)
+            .disabled(text.isEmpty)
+            .accessibilityLabel("Send")
+        }
+        .fixedSize(horizontal: false, vertical: true)
     }
 
     @ViewBuilder

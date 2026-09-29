@@ -12,35 +12,31 @@ struct HighlightedMessageCard: View {
 
     var body: some View {
         let accentColor = color(forLevel: highlighted.metadata.level)
-        HStack(spacing: 0) {
-            accentColor.frame(width: 4)
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 4) {
-                    if let icon = highlighted.metadata.titleIcon {
-                        Image(systemName: symbolName(forIcon: icon))
-                            .font(.callout)
-                    }
-                    Text(highlighted.metadata.title.localizedString())
-                        .font(.callout)
-                        .fontWeight(.semibold)
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                if let icon = highlighted.metadata.titleIcon {
+                    Image(systemName: symbolName(forIcon: icon))
                 }
-                .foregroundStyle(accentColor)
-
-                if let subtitle = highlighted.metadata.subtitle {
-                    Text(subtitle.localizedString())
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-
-                if let body = highlighted.body {
-                    ChatMessageBody(messageBody: body, context: context)
-                }
+                Text(highlighted.metadata.title.localizedString())
+                    .fontWeight(.semibold)
             }
-            .padding(8)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(.secondarySystemBackground))
+            .font(.subheadline)
+            .foregroundStyle(accentColor)
+
+            if let subtitle = highlighted.metadata.subtitle {
+                Text(subtitle.localizedString())
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+
+            if let body = highlighted.body {
+                ChatMessageBody(messageBody: body, context: context)
+            }
         }
-        .clipShape(RoundedRectangle(cornerRadius: 4))
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 18))
         .padding(.vertical, 4)
     }
 

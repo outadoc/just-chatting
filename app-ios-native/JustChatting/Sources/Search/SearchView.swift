@@ -24,6 +24,9 @@ struct SearchView: View {
                 }
             }
             .navigationTitle("Search")
+            .toolbar {
+                ProfileToolbarItem()
+            }
         }
         .searchable(text: $query, prompt: "Search channels")
         .onAppear {
@@ -57,10 +60,10 @@ struct SearchView: View {
             )
         } else {
             List(selection: $selectedChannelId) {
-                Section("Recent channels") {
+                Section {
                     ForEach(state.recentChannels, id: \.id) { user in
                         NavigationLink(value: user.id) {
-                            ChannelRow(user: user)
+                            UserRow(user: user)
                         }
                         .swipeActions {
                             Button(role: .destructive) {
@@ -70,9 +73,19 @@ struct SearchView: View {
                             }
                         }
                     }
+                } header: {
+                    HStack(alignment: .firstTextBaseline) {
+                        Text("Recent")
+                        Spacer()
+                        Button("Clear") {
+                            viewModel.onClearRecentChannels()
+                        }
+                        .font(.subheadline)
+                    }
                 }
             }
             .listStyle(.plain)
+            .headerProminence(.increased)
         }
     }
 
@@ -81,7 +94,7 @@ struct SearchView: View {
             List(selection: $selectedChannelId) {
                 ForEach(Array(items.enumerated()), id: \.element.user.id) { index, result in
                     NavigationLink(value: result.user.id) {
-                        SearchResultRowView(result: result)
+                        UserRow(user: result.user)
                     }
                     .onAppear {
                         if index >= items.count - 5 {

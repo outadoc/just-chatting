@@ -11,15 +11,15 @@ enum AppTab: String, Hashable {
     case schedule
     case followed
     case search
-    case settings
 
-    init(screen: any Screen) {
-        self = switch onEnum(of: screen) {
-        case .live: .live
-        case .future: .schedule
-        case .followed: .followed
-        case .search: .search
-        case .settings: .settings
+    /// The tab showing `screen`, or nil for screens that aren't tabs, like the settings.
+    init?(screen: any Screen) {
+        switch onEnum(of: screen) {
+        case .live: self = .live
+        case .future: self = .schedule
+        case .followed: self = .followed
+        case .search: self = .search
+        case .settings: return nil
         }
     }
 }
@@ -32,6 +32,17 @@ final class AppRouter {
     var liveChannelId: String?
     var followedChannelId: String?
     var searchChannelId: String?
+    /// The settings are a sheet, opened from the profile button of any tab.
+    var isSettingsPresented = false
+
+    /// Shows `screen`, whether it's a tab or the settings.
+    func navigate(to screen: any Screen) {
+        if let tab = AppTab(screen: screen) {
+            selectedTab = tab
+        } else {
+            isSettingsPresented = true
+        }
+    }
 
     /// Opens a channel's chat in the current tab, or in the Live tab if the current one doesn't
     /// list channels.
@@ -41,7 +52,7 @@ final class AppRouter {
             followedChannelId = userId
         case .search:
             searchChannelId = userId
-        case .live, .schedule, .settings:
+        case .live, .schedule:
             selectedTab = .live
             liveChannelId = userId
         }

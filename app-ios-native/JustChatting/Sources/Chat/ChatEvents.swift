@@ -22,7 +22,7 @@ struct ChatEvents: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 8)
-        .padding(.top, 4)
+        .padding(.top, 8)
         .animation(.default, value: chatting.roomState)
         .animation(.default, value: chatting.connectionStatus.isAlive)
     }

@@ -16,7 +16,6 @@ enum SettingsPage: Hashable {
 struct SettingsView: View {
     @SharedViewModel(\.settingsViewModel) private var viewModel
     @State private var showLogoutConfirmation = false
-    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         NavigationStack {
@@ -68,13 +67,6 @@ struct SettingsView: View {
                     SettingsSectionAppearance(viewModel: viewModel)
                 case .about:
                     SettingsSectionAbout(viewModel: viewModel)
-                }
-            }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(role: .close) {
-                        dismiss()
-                    }
                 }
             }
         }

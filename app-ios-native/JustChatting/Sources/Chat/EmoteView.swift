@@ -13,16 +13,24 @@ struct EmoteView: View {
 
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.displayScale) private var displayScale
-    @State private var loadedRatio: CGFloat?
+    @State private var loadedRatio: LoadedRatio?
+
+    /// Aspect ratio of the image loaded from `url`. Keeping the URL means that a view reused for
+    /// another emote doesn't keep the previous one's ratio.
+    private struct LoadedRatio: Equatable {
+        let url: URL?
+        let ratio: CGFloat
+    }
 
     var body: some View {
+        let url = emote.urls.url(colorScheme: colorScheme, displayScale: displayScale)
         // Emote.ratio is set explicitly for known non-square emotes; otherwise fall back to the
         // loaded image's aspect ratio.
-        let ratio = loadedRatio ?? CGFloat(emote.ratio)
+        let ratio = loadedRatio.flatMap { $0.url == url ? $0.ratio : nil } ?? CGFloat(emote.ratio)
         ZStack {
-            AnimatedImageView(url: emote.urls.url(colorScheme: colorScheme, displayScale: displayScale)) { size in
+            AnimatedImageView(url: url) { size in
                 guard size.height > 0, emote.ratio == 1 else { return }
-                loadedRatio = size.width / size.height
+                loadedRatio = LoadedRatio(url: url, ratio: size.width / size.height)
             }
             // Zero-width emotes are drawn on top of the preceding emote.
             ForEach(Array(overlays.enumerated()), id: \.offset) { _, overlay in

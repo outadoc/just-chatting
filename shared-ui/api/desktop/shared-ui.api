@@ -519,7 +519,7 @@ public final class fr/outadoc/justchatting/feature/shared/presentation/ui/UserIt
 public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$FutureTimelineContentKt {
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$FutureTimelineContentKt;
 	public fun <init> ()V
-	public final fun getLambda$-1036061947$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1198051722$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/ComposableSingletons$FutureTimelineScreenKt {
@@ -563,7 +563,7 @@ public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/Comp
 }
 
 public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/FutureTimelineContentKt {
-	public static final fun FutureTimelineContent (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/layout/PaddingValues;Lkotlinx/collections/immutable/ImmutableList;ZLkotlin/jvm/functions/Function0;ZLandroidx/compose/foundation/lazy/LazyListState;Lkotlinx/datetime/LocalDate;Lkotlin/jvm/functions/Function1;Lkotlin/time/Clock;Lkotlinx/datetime/TimeZone;Landroidx/compose/runtime/Composer;III)V
+	public static final fun FutureTimelineContent (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/layout/PaddingValues;Lkotlinx/collections/immutable/ImmutableList;ZLkotlin/jvm/functions/Function0;ZLandroidx/compose/foundation/lazy/LazyListState;Lkotlinx/datetime/LocalDate;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/LiveDetailsDialogKt {

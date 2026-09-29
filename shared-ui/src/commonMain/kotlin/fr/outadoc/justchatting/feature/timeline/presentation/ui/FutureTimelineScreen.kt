@@ -105,7 +105,7 @@ internal fun FutureTimelineScreen(
             FutureTimelineContent(
                 modifier = modifier,
                 insets = insets,
-                future = state.future,
+                days = state.days,
                 isRefreshing = state.isLoading,
                 onRefresh = { viewModel.syncEverythingNow() },
                 showRefreshIndicator = !hasMouse,
@@ -117,7 +117,6 @@ internal fun FutureTimelineScreen(
                         listState.scrollToItem(index = 0)
                     }
                 },
-                timeZone = state.timeZone,
             )
         },
     )

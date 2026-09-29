@@ -24,7 +24,6 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,8 +36,7 @@ import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
 import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.shared.presentation.ui.NoContent
 import fr.outadoc.justchatting.feature.shared.presentation.ui.SegmentedListDefaults
-import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegment
-import fr.outadoc.justchatting.feature.timeline.domain.model.DaySchedule
+import fr.outadoc.justchatting.feature.timeline.presentation.ScheduleDay
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.date_today
 import fr.outadoc.justchatting.shared.internal.date_today_later
@@ -46,49 +44,27 @@ import fr.outadoc.justchatting.shared.internal.date_tomorrow
 import fr.outadoc.justchatting.shared.internal.timeline_now
 import fr.outadoc.justchatting.utils.presentation.formatShortDay
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.plus
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 public fun FutureTimelineContent(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
-    future: ImmutableList<DaySchedule>,
+    days: ImmutableList<ScheduleDay>,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     showRefreshIndicator: Boolean,
     listState: LazyListState,
     selectedDate: LocalDate? = null,
     onSelectedDateChange: (LocalDate) -> Unit = {},
-    clock: Clock = Clock.System,
-    timeZone: TimeZone = TimeZone.currentSystemDefault(),
 ) {
     var showUserDetails: User? by remember { mutableStateOf(null) }
 
-    var now: Instant by remember { mutableStateOf(clock.now()) }
-
-    LaunchedEffect(clock) {
-        while (isActive) {
-            now = clock.now()
-            delay(1.minutes)
-        }
-    }
-
-    val today: LocalDate = now.toLocalDateTime(timeZone).date
-
-    val selectedDay: DaySchedule? =
-        future.firstOrNull { day -> day.date.localDate == selectedDate }
-            ?: future.firstOrNull()
+    val selectedDay: ScheduleDay? =
+        days.firstOrNull { day -> day.date.localDate == selectedDate }
+            ?: days.firstOrNull()
 
     Column(
         modifier =
@@ -96,12 +72,11 @@ public fun FutureTimelineContent(
                 .padding(top = insets.calculateTopPadding())
                 .fillMaxSize(),
     ) {
-        if (future.isNotEmpty()) {
+        if (days.isNotEmpty()) {
             DayChipsRow(
                 modifier = Modifier.fillMaxWidth(),
-                days = future,
+                days = days,
                 selectedDate = selectedDay?.date?.localDate,
-                today = today,
                 onSelectedDateChange = onSelectedDateChange,
             )
         }
@@ -128,8 +103,6 @@ public fun FutureTimelineContent(
                     modifier = Modifier.fillMaxSize(),
                     insets = listInsets,
                     day = selectedDay,
-                    isToday = selectedDay?.date?.localDate == today,
-                    now = now,
                     listState = listState,
                     onUserClick = { showUserDetails = it },
                 )
@@ -139,8 +112,6 @@ public fun FutureTimelineContent(
                 modifier = Modifier.fillMaxSize(),
                 insets = listInsets,
                 day = selectedDay,
-                isToday = selectedDay?.date?.localDate == today,
-                now = now,
                 listState = listState,
                 onUserClick = { showUserDetails = it },
             )
@@ -166,9 +137,8 @@ public fun FutureTimelineContent(
 @Composable
 private fun DayChipsRow(
     modifier: Modifier = Modifier,
-    days: ImmutableList<DaySchedule>,
+    days: ImmutableList<ScheduleDay>,
     selectedDate: LocalDate?,
-    today: LocalDate,
     onSelectedDateChange: (LocalDate) -> Unit,
 ) {
     LazyRow(
@@ -188,9 +158,9 @@ private fun DayChipsRow(
                 onClick = { onSelectedDateChange(date) },
                 label = {
                     Text(
-                        when (date) {
-                            today -> stringResource(Res.string.date_today)
-                            today + DatePeriod(days = 1) -> stringResource(Res.string.date_tomorrow)
+                        when (day.daysFromToday) {
+                            0 -> stringResource(Res.string.date_today)
+                            1 -> stringResource(Res.string.date_tomorrow)
                             else -> date.formatShortDay()
                         },
                     )
@@ -219,33 +189,11 @@ private fun DayChipsRow(
 private fun FutureTimelineList(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
-    day: DaySchedule?,
-    isToday: Boolean,
-    now: Instant,
+    day: ScheduleDay?,
     listState: LazyListState,
     onUserClick: (User) -> Unit,
 ) {
-    val ongoing: List<ChannelScheduleSegment>
-    val upcoming: List<ChannelScheduleSegment>
-
-    when {
-        day == null -> {
-            ongoing = emptyList()
-            upcoming = emptyList()
-        }
-
-        isToday -> {
-            ongoing = day.schedule.filter { segment -> segment.isOngoing(now) }
-            upcoming = day.schedule.filter { segment -> segment.startTime > now }
-        }
-
-        else -> {
-            ongoing = emptyList()
-            upcoming = day.schedule
-        }
-    }
-
-    if (ongoing.isEmpty() && upcoming.isEmpty()) {
+    if (day == null || (day.ongoing.isEmpty() && day.upcoming.isEmpty())) {
         NoContent(
             modifier =
                 modifier
@@ -264,34 +212,59 @@ private fun FutureTimelineList(
                 ),
             verticalArrangement = Arrangement.spacedBy(SegmentedListDefaults.ItemSpacing),
         ) {
-            if (ongoing.isNotEmpty()) {
+            if (day.ongoing.isNotEmpty()) {
                 sectionHeader(
                     key = "header-now",
                     title = { stringResource(Res.string.timeline_now) },
                     isFirst = true,
                 )
 
-                segments(
-                    segments = ongoing,
-                    now = now,
-                    onUserClick = onUserClick,
-                )
+                itemsIndexed(
+                    items = day.ongoing,
+                    key = { _, ongoing -> ongoing.segment.id },
+                    contentType = { _, _ -> "segment" },
+                ) { index, ongoing ->
+                    FutureTimelineSegment(
+                        modifier =
+                            Modifier
+                                .animateItem()
+                                .fillMaxWidth(),
+                        segment = ongoing.segment,
+                        shape = SegmentedListDefaults.shape(index = index, count = day.ongoing.size),
+                        progress = ongoing.progress,
+                        onUserClick = {
+                            onUserClick(ongoing.segment.user)
+                        },
+                    )
+                }
             }
 
-            if (upcoming.isNotEmpty()) {
-                if (isToday) {
+            if (day.upcoming.isNotEmpty()) {
+                if (day.isToday) {
                     sectionHeader(
                         key = "header-later",
                         title = { stringResource(Res.string.date_today_later) },
-                        isFirst = ongoing.isEmpty(),
+                        isFirst = day.ongoing.isEmpty(),
                     )
                 }
 
-                segments(
-                    segments = upcoming,
-                    now = now,
-                    onUserClick = onUserClick,
-                )
+                itemsIndexed(
+                    items = day.upcoming,
+                    key = { _, segment -> segment.id },
+                    contentType = { _, _ -> "segment" },
+                ) { index, segment ->
+                    FutureTimelineSegment(
+                        modifier =
+                            Modifier
+                                .animateItem()
+                                .fillMaxWidth(),
+                        segment = segment,
+                        shape = SegmentedListDefaults.shape(index = index, count = day.upcoming.size),
+                        onUserClick = {
+                            onUserClick(segment.user)
+                        },
+                    )
+                }
             }
         }
     }
@@ -322,42 +295,4 @@ private fun LazyListScope.sectionHeader(
             color = MaterialTheme.colorScheme.primary,
         )
     }
-}
-
-private fun LazyListScope.segments(
-    segments: List<ChannelScheduleSegment>,
-    now: Instant,
-    onUserClick: (User) -> Unit,
-) {
-    itemsIndexed(
-        items = segments,
-        key = { _, segment -> segment.id },
-        contentType = { _, _ -> "segment" },
-    ) { index, segment ->
-        FutureTimelineSegment(
-            modifier =
-                Modifier
-                    .animateItem()
-                    .fillMaxWidth(),
-            segment = segment,
-            shape = SegmentedListDefaults.shape(index = index, count = segments.size),
-            progress = segment.progressAt(now),
-            onUserClick = {
-                onUserClick(segment.user)
-            },
-        )
-    }
-}
-
-private fun ChannelScheduleSegment.isOngoing(now: Instant): Boolean {
-    val endTime = endTime
-    return startTime <= now && (endTime == null || now < endTime)
-}
-
-private fun ChannelScheduleSegment.progressAt(now: Instant): Float? {
-    val endTime = endTime ?: return null
-    if (!isOngoing(now)) return null
-    val total = endTime - startTime
-    val elapsed = now - startTime
-    return (elapsed / total).toFloat().coerceIn(0f, 1f)
 }

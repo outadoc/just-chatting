@@ -102,8 +102,10 @@ import fr.outadoc.justchatting.feature.timeline.presentation.LiveTimelineViewMod
 import fr.outadoc.justchatting.utils.core.ConnectivityNetworkStateObserver
 import fr.outadoc.justchatting.utils.core.DefaultDispatchersProvider
 import fr.outadoc.justchatting.utils.core.DefaultJson
+import fr.outadoc.justchatting.utils.core.DefaultTimeZoneProvider
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
+import fr.outadoc.justchatting.utils.core.TimeZoneProvider
 import fr.outadoc.justchatting.utils.http.BaseHttpClientProvider
 import fr.outadoc.justchatting.utils.http.TwitchHttpClientProvider
 import kotlinx.serialization.json.Json
@@ -118,6 +120,7 @@ internal val sharedModule: Module
         module {
             single<Clock> { Clock.System }
             single<DispatchersProvider> { DefaultDispatchersProvider() }
+            single<TimeZoneProvider> { DefaultTimeZoneProvider() }
             single<DemoModeRepository> { InMemoryDemoModeRepository() }
             single { DemoChatBus() }
             single { DemoTwitchRepository(get(), get()) }
@@ -147,7 +150,7 @@ internal val sharedModule: Module
             viewModel { FollowedChannelsViewModel(get(), get(), get()) }
             viewModel { RecentChannelsViewModel(get()) }
             viewModel { LiveTimelineViewModel(get(), get(), get()) }
-            viewModel { FutureTimelineViewModel(get(), get(), get(), get()) }
+            viewModel { FutureTimelineViewModel(get(), get(), get(), get(), get()) }
             viewModel { UserInfoViewModel(get()) }
             viewModel {
                 ChatViewModel(

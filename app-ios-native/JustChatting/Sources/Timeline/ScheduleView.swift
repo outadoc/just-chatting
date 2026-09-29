@@ -16,12 +16,13 @@ struct ScheduleView: View {
     private static let visibleDayCount = 7
 
     var body: some View {
-        // Refreshes what's happening now, and the current day, every minute.
+        // Keeps the week strip starting on the current day. What's happening now is kept up to
+        // date by the view model.
         TimelineView(.everyMinute) { context in
             Observing(viewModel.state) { state in
                 let today = Calendar.current.startOfDay(for: context.date)
                 let day = selectedDay ?? today
-                let schedules = schedulesByDay(state.future)
+                let schedules = schedulesByDay(state.days)
 
                 VStack(spacing: 0) {
                     WeekStrip(
@@ -32,13 +33,8 @@ struct ScheduleView: View {
 
                     Divider()
 
-                    LoadableContent(isLoading: state.isLoading, isEmpty: state.future.isEmpty) {
-                        dayContent(
-                            segments: schedules[day] ?? [],
-                            day: day,
-                            isToday: day == today,
-                            now: context.date
-                        )
+                    LoadableContent(isLoading: state.isLoading, isEmpty: state.days.isEmpty) {
+                        dayContent(schedule: schedules[day], day: day)
                     } empty: {
                         ContentUnavailableView(
                             "No upcoming streams",
@@ -65,16 +61,11 @@ struct ScheduleView: View {
         }
     }
 
+    /// `schedule` is already split by the view model into what's happening now and what's to come.
     @ViewBuilder
-    private func dayContent(
-        segments: [ChannelScheduleSegment],
-        day: Date,
-        isToday: Bool,
-        now: Date
-    ) -> some View {
-        // Today, only show what's ongoing or yet to come.
-        let ongoing = isToday ? segments.filter { $0.isOngoing(at: now) } : []
-        let upcoming = isToday ? segments.filter { $0.startTime.date > now } : segments
+    private func dayContent(schedule: ScheduleDay?, day: Date) -> some View {
+        let ongoing = schedule?.ongoing ?? []
+        let upcoming = schedule?.upcoming ?? []
 
         if ongoing.isEmpty && upcoming.isEmpty {
             ContentUnavailableView("Nothing scheduled", systemImage: "calendar")
@@ -83,8 +74,8 @@ struct ScheduleView: View {
             List {
                 if !ongoing.isEmpty {
                     Section("Happening now") {
-                        ForEach(ongoing, id: \.id) { segment in
-                            ScheduleSegmentRowView(segment: segment, progress: segment.progress(at: now))
+                        ForEach(ongoing, id: \.segment.id) { item in
+                            ScheduleSegmentRowView(segment: item.segment, progress: item.progress?.doubleValue)
                         }
                     }
                 }
@@ -95,7 +86,7 @@ struct ScheduleView: View {
                             ScheduleSegmentRowView(segment: segment)
                         }
                     } header: {
-                        if isToday {
+                        if schedule?.isToday == true {
                             Text("Later today")
                         } else {
                             Text(day, format: .dateTime.weekday(.wide).month().day())
@@ -117,13 +108,13 @@ struct ScheduleView: View {
         }
     }
 
-    /// Scheduled segments, by start of their day.
-    private func schedulesByDay(_ future: [DaySchedule]) -> [Date: [ChannelScheduleSegment]] {
-        var result: [Date: [ChannelScheduleSegment]] = [:]
-        for daySchedule in future {
-            let components = daySchedule.date.toNSDateComponents() as DateComponents
+    /// The schedule of each day, by start of that day.
+    private func schedulesByDay(_ days: [ScheduleDay]) -> [Date: ScheduleDay] {
+        var result: [Date: ScheduleDay] = [:]
+        for scheduleDay in days {
+            let components = scheduleDay.date.toNSDateComponents() as DateComponents
             guard let date = Calendar.current.date(from: components) else { continue }
-            result[Calendar.current.startOfDay(for: date), default: []] += daySchedule.schedule
+            result[Calendar.current.startOfDay(for: date)] = scheduleDay
         }
         return result
     }
@@ -168,21 +159,5 @@ private struct WeekStrip: View {
         }
         .padding(.horizontal, 12)
         .padding(.bottom, 12)
-    }
-}
-
-private extension ChannelScheduleSegment {
-    func isOngoing(at now: Date) -> Bool {
-        let start = startTime.date
-        guard let end = endTime?.date else { return start <= now && Calendar.current.isDate(start, inSameDayAs: now) }
-        return start <= now && now < end
-    }
-
-    /// How far along the segment is at `now`, from 0 to 1, if its end is known.
-    func progress(at now: Date) -> Double? {
-        guard let end = endTime?.date, end > startTime.date else { return nil }
-        let elapsed = now.timeIntervalSince(startTime.date)
-        let total = end.timeIntervalSince(startTime.date)
-        return min(max(elapsed / total, 0), 1)
     }
 }

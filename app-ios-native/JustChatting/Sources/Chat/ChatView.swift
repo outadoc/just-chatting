@@ -60,7 +60,9 @@ struct ChatView: View {
             onCopy: copyToClipboard
         )
         .toast("Copied to clipboard", trigger: copyCount)
-        .safeAreaBar(edge: .top) {
+        // An inset rather than a bar, so that the banners float below the navigation bar
+        // instead of becoming part of it.
+        .safeAreaInset(edge: .top) {
             ChatEvents(chatting: chatting)
         }
         // A bar rather than an inset, so that messages fade out behind the composer.

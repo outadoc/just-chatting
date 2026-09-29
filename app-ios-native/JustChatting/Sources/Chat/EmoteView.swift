@@ -32,6 +32,8 @@ struct EmoteView: View {
                 guard size.height > 0, emote.ratio == 1 else { return }
                 loadedRatio = LoadedRatio(url: url, ratio: size.width / size.height)
             }
+            // A new image view for every image, so that one is never reused to show another.
+            .id(url)
             // Zero-width emotes are drawn on top of the preceding emote.
             ForEach(Array(overlays.enumerated()), id: \.offset) { _, overlay in
                 AnimatedImageView(url: overlay.urls.url(colorScheme: colorScheme, displayScale: displayScale))

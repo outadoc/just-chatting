@@ -17,7 +17,15 @@ struct EmotePicker: View {
     private struct EmoteSection: Identifiable {
         let id: Int
         let header: EmoteSetItem.Header?
-        var emotes: [Emote]
+        var emotes: [PickerEmote]
+    }
+
+    /// An emote at a given place in the picker. Its identity must be unique across the whole
+    /// grid, not just within its section: lazy grids otherwise mix up cells from different
+    /// sections that share the same identity, and show the wrong emote after scrolling.
+    private struct PickerEmote: Identifiable {
+        let id: String
+        let emote: Emote
     }
 
     var body: some View {
@@ -30,11 +38,11 @@ struct EmotePicker: View {
             ) {
                 ForEach(sections) { section in
                     Section {
-                        ForEach(Array(section.emotes.enumerated()), id: \.offset) { _, emote in
+                        ForEach(section.emotes) { item in
                             Button {
-                                onEmoteClick(emote)
+                                onEmoteClick(item.emote)
                             } label: {
-                                EmoteView(emote: emote, height: emoteHeight)
+                                EmoteView(emote: item.emote, height: emoteHeight)
                                     .frame(maxWidth: .infinity, minHeight: emoteHeight + 12)
                                     .contentShape(Rectangle())
                             }
@@ -90,7 +98,10 @@ struct EmotePicker: View {
                 if sections.isEmpty {
                     sections.append(EmoteSection(id: 0, header: nil, emotes: []))
                 }
-                sections[sections.count - 1].emotes.append(emote.emote)
+                let section = sections.count - 1
+                // Includes the position, since the same emote can appear twice in a set.
+                let id = "\(section)/\(sections[section].emotes.count)/\(emote.emote.name)"
+                sections[section].emotes.append(PickerEmote(id: id, emote: emote.emote))
             }
         }
         return sections.filter { !$0.emotes.isEmpty }

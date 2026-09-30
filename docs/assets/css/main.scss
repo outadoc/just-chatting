@@ -455,12 +455,17 @@ p {
 
     @include below($phone) {
       inset: 0;
-      border-radius: 32px;
+      border-radius: 26px;
     }
   }
 
+  // The backdrop's radius is the screenshot's plus the space around it, so both curves stay
+  // parallel.
   @include below($phone) {
-    padding: 24px 16px;
+    width: 100%;
+    max-width: 340px + 2 * 16px;
+    margin: 0 auto;
+    padding: 16px;
   }
 }
 
@@ -468,14 +473,14 @@ p {
   position: relative;
   width: auto;
   height: min(640px, 80vh);
-  border-radius: 32px;
+  border-radius: 16px;
   box-shadow: var(--screenshot-shadow);
 
   @include below($phone) {
     width: 100%;
     height: auto;
     max-width: 340px;
-    border-radius: 24px;
+    border-radius: 10px;
   }
 }
 

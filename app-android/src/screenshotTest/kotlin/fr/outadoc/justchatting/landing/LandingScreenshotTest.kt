@@ -8,6 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.outlined.CalendarToday
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,10 +29,16 @@ import fr.outadoc.justchatting.feature.chat.presentation.ui.ChatMessage
 import fr.outadoc.justchatting.feature.shared.presentation.Screen
 import fr.outadoc.justchatting.feature.shared.presentation.ui.DetailPaneCard
 import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
+import fr.outadoc.justchatting.feature.shared.presentation.ui.MainTopAppBar
+import fr.outadoc.justchatting.feature.shared.presentation.ui.ProfileButton
 import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
 import fr.outadoc.justchatting.feature.timeline.presentation.ui.FutureTimelineContent
 import fr.outadoc.justchatting.feature.timeline.presentation.ui.LiveTimelineContent
+import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.timeline_future
+import fr.outadoc.justchatting.shared.internal.timeline_live
 import kotlinx.collections.immutable.persistentListOf
+import org.jetbrains.compose.resources.stringResource
 
 // Screenshots for the landing page, one per section of the page. Update them with
 // ./gradlew :app-android:updateDebugScreenshotTest
@@ -46,6 +57,16 @@ internal fun LandingHeroScreenshotTest() {
 }
 
 // Features
+
+@PreviewTest
+@LandingPhonePreviews
+@Composable
+internal fun LandingDynamicColorsYarrowScreenshotTest() {
+    ChannelChat(
+        userStream = LandingFixtures.yarrowStream,
+        seedColor = LandingFixtures.yarrowSeed,
+    )
+}
 
 @PreviewTest
 @LandingPhonePreviews
@@ -126,6 +147,17 @@ internal fun LandingScheduleScreenshotTest() {
         MainNavigation(
             selectedScreen = Screen.Future,
             onSelectedTabChange = {},
+            topBar = {
+                MainTopAppBar(
+                    title = stringResource(Res.string.timeline_future),
+                    actions = {
+                        IconButton(onClick = {}) {
+                            Icon(Icons.Outlined.CalendarToday, contentDescription = null)
+                        }
+                    },
+                    profileButton = { AppUserProfileButton() },
+                )
+            },
         ) { insets ->
             FutureTimelineContent(
                 insets = insets,
@@ -146,11 +178,8 @@ internal fun LandingScheduleScreenshotTest() {
 @Composable
 internal fun LandingPhoneScreenshotTest() {
     LandingTheme {
-        MainNavigation(
-            selectedScreen = Screen.Live,
-            onSelectedTabChange = {},
-        ) { insets ->
-            LiveStreams(insets = insets)
+        WithStatusBar(color = MaterialTheme.colorScheme.surface) {
+            LiveScreen()
         }
     }
 }
@@ -159,14 +188,14 @@ internal fun LandingPhoneScreenshotTest() {
 @LandingTabletPreviews
 @Composable
 internal fun LandingTabletScreenshotTest() {
-    ListAndChat(listWidth = 480.dp)
+    ListAndChat(listWidth = 480.dp, hasMouse = false)
 }
 
 @PreviewTest
 @LandingDesktopPreviews
 @Composable
 internal fun LandingDesktopScreenshotTest() {
-    ListAndChat(listWidth = 560.dp)
+    ListAndChat(listWidth = 560.dp, hasMouse = true)
 }
 
 /**
@@ -195,41 +224,96 @@ private fun ChannelChat(
  * pieces as MainRouter, which is wired to Koin and Navigation3 and can't be used here.
  */
 @Composable
-private fun ListAndChat(listWidth: Dp) {
+private fun ListAndChat(
+    listWidth: Dp,
+    hasMouse: Boolean,
+) {
     LandingTheme {
-        Row(modifier = Modifier.fillMaxSize()) {
-            Box(modifier = Modifier.width(listWidth)) {
-                MainNavigation(
-                    selectedScreen = Screen.Live,
-                    onSelectedTabChange = {},
-                ) { insets ->
-                    LiveStreams(
-                        insets = insets,
-                        selectedChannelId = LandingFixtures.yarrow.id,
-                    )
-                }
-            }
-
-            Box(modifier = Modifier.weight(1f)) {
-                DetailPaneCard {
-                    LandingTheme(seedColor = LandingFixtures.yarrowSeed) {
-                        ChannelChatScreenContent(
-                            state = LandingFixtures.chatting(userStream = LandingFixtures.yarrowStream),
-                            inputState = ChatViewModel.InputState(),
-                            showBackButton = false,
-                            showTimestamps = false,
-                        )
-                    }
-                }
+        if (hasMouse) {
+            ListAndChatContent(listWidth = listWidth, hasMouse = true)
+        } else {
+            // Tablets have a status bar; desktop windows don't.
+            WithStatusBar(color = MaterialTheme.colorScheme.surface) {
+                ListAndChatContent(listWidth = listWidth, hasMouse = false)
             }
         }
     }
 }
 
 @Composable
+private fun ListAndChatContent(
+    listWidth: Dp,
+    hasMouse: Boolean,
+) {
+    Row(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.width(listWidth)) {
+            LiveScreen(
+                selectedChannelId = LandingFixtures.yarrow.id,
+                hasMouse = hasMouse,
+            )
+        }
+
+        Box(modifier = Modifier.weight(1f)) {
+            DetailPaneCard {
+                LandingTheme(seedColor = LandingFixtures.yarrowSeed) {
+                    ChannelChatScreenContent(
+                        state = LandingFixtures.chatting(userStream = LandingFixtures.yarrowStream),
+                        inputState = ChatViewModel.InputState(),
+                        showBackButton = false,
+                        showTimestamps = false,
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * The Live tab, as in LiveTimelineScreen.
+ *
+ * @param hasMouse whether to show the refresh button, as on devices with a mouse.
+ */
+@Composable
+private fun LiveScreen(
+    selectedChannelId: String? = null,
+    hasMouse: Boolean = false,
+) {
+    MainNavigation(
+        selectedScreen = Screen.Live,
+        onSelectedTabChange = {},
+        topBar = {
+            MainTopAppBar(
+                title = stringResource(Res.string.timeline_live),
+                actions = {
+                    if (hasMouse) {
+                        IconButton(onClick = {}) {
+                            Icon(Icons.Default.Sync, contentDescription = null)
+                        }
+                    }
+                },
+                profileButton = { AppUserProfileButton() },
+            )
+        },
+    ) { insets ->
+        LiveStreams(
+            insets = insets,
+            selectedChannelId = selectedChannelId,
+        )
+    }
+}
+
+@Composable
+private fun AppUserProfileButton() {
+    ProfileButton(
+        profileImageUrl = LandingFixtures.appUserAvatar,
+        onClick = {},
+    )
+}
+
+@Composable
 private fun LiveStreams(
     insets: PaddingValues,
-    selectedChannelId: String? = null,
+    selectedChannelId: String?,
 ) {
     LiveTimelineContent(
         insets = insets,

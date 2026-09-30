@@ -508,8 +508,16 @@ public final class fr/outadoc/justchatting/feature/shared/presentation/ui/MainNa
 	public static final fun MainNavigation (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/shared/presentation/Screen;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
 }
 
+public final class fr/outadoc/justchatting/feature/shared/presentation/ui/MainTopAppBarKt {
+	public static final fun MainTopAppBar (Landroidx/compose/ui/Modifier;Ljava/lang/String;Landroidx/compose/material3/TopAppBarScrollBehavior;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class fr/outadoc/justchatting/feature/shared/presentation/ui/NoContentKt {
 	public static final fun NoContent (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class fr/outadoc/justchatting/feature/shared/presentation/ui/ProfileButtonKt {
+	public static final fun ProfileButton (Landroidx/compose/ui/Modifier;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class fr/outadoc/justchatting/feature/shared/presentation/ui/UserItemKt {

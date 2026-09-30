@@ -83,6 +83,8 @@ internal object LandingFixtures {
     val poke = user(id = "demo-poke", displayName = "Poke", avatar = "demo_avatar_poke")
     val pokeSeed = Color(0xFF3B82C4)
 
+    val appUserAvatar: String = drawable("demo_avatar_self")
+
     val appUser: AppUser.LoggedIn =
         AppUser.LoggedIn(
             userId = "demo-self",
@@ -170,6 +172,39 @@ internal object LandingFixtures {
         timestamp = now - minutesAgo.minutes,
     )
 
+    // Older messages, to fill the chat on every screen size. Oldest last.
+    private val history: List<ChatListItem.Message> =
+        listOf(
+            message("Bur", "I found your note, Melorae; kindly count me among this moon's admirers!", minutesAgo = 3),
+            message("Annona", "EEK", minutesAgo = 3, embeddedEmotes = listOf(eek)),
+            message(
+                "Cassava",
+                "I enjoy precision as much as the next Nomai, provided the next Nomai is not @Poke.",
+                minutesAgo = 3,
+            ),
+            message("Idaea", "I almost can't comprehend this is being suggested seriously.", minutesAgo = 4),
+            message("Clary", "o", minutesAgo = 4, embeddedEmotes = listOf(o)),
+            message(
+                "Thatch",
+                "Imagine what rare and profound knowledge it might offer. We must find this Eye of the universe.",
+                minutesAgo = 4,
+                badges = listOf(Badge(id = "moderator", version = "1")),
+            ),
+            message("Spire", "Pog", minutesAgo = 5, embeddedEmotes = listOf(pog)),
+            message(
+                "Coleus",
+                "I'm relieved by our clan's decision to use Timber Hearth's ore only for constructing the shell.",
+                minutesAgo = 5,
+            ),
+            message("Phlox", "We can model the Timber Hearth tower after a geyser mountain!", minutesAgo = 6),
+            message("Privet", "Joel", minutesAgo = 6, embeddedEmotes = listOf(joel)),
+            message(
+                "Mallow",
+                "The thought of concluding our elders' search increases my heart's temperature!",
+                minutesAgo = 7,
+            ),
+        )
+
     private val conoy = message("Conoy", "I believe I have a solution for that problem!", minutesAgo = 2)
     private val filix =
         message("Filix", "Hypothesis: This rock shard's presence is significant. We should study it!", minutesAgo = 2)
@@ -218,7 +253,8 @@ internal object LandingFixtures {
 
     // Newest first, as the chat list expects them.
     val chatMessages: PersistentList<ChatListItem.Message> =
-        persistentListOf(pye, lami, pogMessage, avens, avensSubscription, plume, ramie, filix, conoy)
+        (listOf(pye, lami, pogMessage, avens, avensSubscription, plume, ramie, filix, conoy) + history)
+            .toPersistentList()
 
     fun chatting(
         userStream: UserStream = yarrowStream,

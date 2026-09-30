@@ -1,12 +1,17 @@
-theme: jekyll-theme-minimal
 title: Just Chatting
-description: A mobile app focused on a great Twitch chat experience.
+description: A free and open source app focused on a great Twitch chat experience, for Android, iOS and desktop.
+url: https://just-chatting.app
+repository: outadoc/just-chatting
 
 include: [".well-known"]
-remote_theme: jekyll/minima
+exclude: ["Gemfile", "Gemfile.lock", "vendor", "README.md"]
 
-minima:
-  skin: auto
-  social_links:
-    - { platform: github,  user_url: "https://github.com/outadoc/just-chatting" }
-    - { platform: mastodon, user_url: "https://mastodon.social/@outadoc" }
+plugins:
+  - jekyll-seo-tag
+
+sass:
+  style: compressed
+
+links:
+  github: https://github.com/outadoc/just-chatting
+  releases: https://github.com/outadoc/just-chatting/releases/latest

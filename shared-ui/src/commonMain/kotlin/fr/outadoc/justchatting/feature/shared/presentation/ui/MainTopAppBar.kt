@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun MainTopAppBar(
+public fun MainTopAppBar(
     modifier: Modifier = Modifier,
     title: String,
     scrollBehavior: TopAppBarScrollBehavior? = null,

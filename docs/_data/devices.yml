@@ -1,0 +1,19 @@
+# The devices shown on the home page. screenshot: see _data/features.yml.
+
+- name: Phones
+  platforms: Android and iOS
+  frame: phone
+  screenshot: phone
+  alt: The list of live channels on a phone.
+
+- name: Tablets & foldables
+  platforms: List and chat side by side
+  frame: tablet
+  screenshot: tablet
+  alt: The list of live channels next to an open chat, on a tablet.
+
+- name: Desktop
+  platforms: Windows, macOS and Linux
+  frame: desktop
+  screenshot: desktop
+  alt: The list of live channels next to an open chat, in a desktop window.

@@ -1,0 +1,25 @@
+{%- comment -%} A feature, from _data/features.yml. Parameters: feature. {%- endcomment -%}
+{%- assign feature = include.feature -%}
+{%- assign media = feature.media -%}
+<article class="feature-card{% if feature.wide %} feature-card-wide{% endif %}">
+  <div class="feature-media feature-media-{{ media.align | default: 'center' }} feature-media-{{ media.fit | default: 'contain' }}">
+    {%- if media.illustration -%}
+      {%- include illustration-{{ media.illustration }}.html -%}
+    {%- else -%}
+      {%- for screenshot in media.screenshots -%}
+        {%- if forloop.first -%}{%- assign alt = media.alt -%}{%- else -%}{%- assign alt = "" -%}{%- endif -%}
+        {% include screenshot.html name=screenshot alt=alt %}
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+  <div class="feature-text">
+    <div class="feature-title">
+      {% include icon.html name=feature.icon %}
+      <h3>{{ feature.title }}</h3>
+      {%- if feature.android_only %}
+      <span class="pill">{% include icon.html name="phone" px=14 %}Android only</span>
+      {%- endif %}
+    </div>
+    <p>{{ feature.text }}</p>
+  </div>
+</article>

@@ -1,0 +1,24 @@
+{%- assign home = "/" | relative_url -%}
+<header class="site-header container">
+  <a class="brand" href="{{ home }}">
+    {% include logo.html px=40 %}
+    <span>{{ site.title }}</span>
+  </a>
+
+  {%- capture nav_links -%}
+    <a href="{{ home }}#features">Features</a>
+    <a href="{{ home }}#devices">Devices</a>
+    <a href="{{ home }}#download">Download</a>
+    <a class="button button-outline" href="{{ site.links.github }}">{% include icon.html name="code" px=18 %}Source on GitHub</a>
+  {%- endcapture -%}
+
+  <nav class="site-nav" aria-label="Main">{{ nav_links }}</nav>
+
+  <details class="site-menu">
+    <summary aria-label="Menu">
+      <span class="site-menu-open">{% include icon.html name="menu" px=20 %}</span>
+      <span class="site-menu-close">{% include icon.html name="close" px=20 %}</span>
+    </summary>
+    <nav class="site-menu-panel" aria-label="Main">{{ nav_links }}</nav>
+  </details>
+</header>

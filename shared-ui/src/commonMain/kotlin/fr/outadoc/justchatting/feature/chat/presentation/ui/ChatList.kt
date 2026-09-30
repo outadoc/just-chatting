@@ -50,6 +50,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.toPersistentHashMap
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
 
@@ -66,6 +67,7 @@ internal fun ChatList(
     sourceChannelBadges: ImmutableMap<String, ImmutableList<TwitchBadge>>,
     richEmbeds: ImmutableMap<String, ChatListItem.RichEmbed>,
     showTimestamps: Boolean,
+    timeZone: TimeZone,
     isDisconnected: Boolean,
     listState: LazyListState,
     onMessageClick: (ChatListItem.Message) -> Unit,
@@ -269,6 +271,7 @@ internal fun ChatList(
                         pronouns = pronouns,
                         richEmbed = item.body?.messageId?.let { messageId -> richEmbeds[messageId] },
                         showTimestamps = showTimestamps,
+                        timeZone = timeZone,
                         background = background,
                         appUser = appUser,
                     )
@@ -291,6 +294,7 @@ internal fun ChatList(
             cheerEmotes = cheerEmotes,
             removedContent = removedContent,
             appUser = appUser,
+            timeZone = timeZone,
             badges = badges,
         )
     }

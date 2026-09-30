@@ -15,6 +15,7 @@ import kotlin.time.Instant
 internal fun TimelineSegmentDetailsScreenshotTest() {
     AppTheme {
         TimelineSegmentDetails(
+            timeZone = PreviewFixtures.timeZone,
             segment =
                 ChannelScheduleSegment(
                     id = "1",

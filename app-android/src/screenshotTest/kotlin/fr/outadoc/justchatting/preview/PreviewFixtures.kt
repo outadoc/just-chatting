@@ -12,6 +12,7 @@ import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.datetime.TimeZone
 import kotlin.time.Clock
 import kotlin.time.Instant
 
@@ -27,6 +28,10 @@ internal object PreviewFixtures {
         object : Clock {
             override fun now(): Instant = Instant.parse("2022-01-01T18:00:00Z")
         }
+
+    // A fixed time zone keeps rendered times stable whatever the zone of the machine running
+    // the tests.
+    val timeZone: TimeZone = TimeZone.UTC
 
     const val sampleTextShort: String = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     const val sampleTextLong: String =

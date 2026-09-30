@@ -175,6 +175,7 @@ internal fun LandingScheduleScreenshotTest() {
             },
         ) { insets ->
             FutureTimelineContent(
+                timeZone = LandingFixtures.timeZone,
                 insets = insets,
                 days = LandingFixtures.schedule,
                 isRefreshing = false,
@@ -227,6 +228,7 @@ private fun ChannelChat(
 ) {
     LandingTheme(seedColor = seedColor) {
         ChannelChatScreenContent(
+            timeZone = LandingFixtures.timeZone,
             state = LandingFixtures.chatting(userStream = userStream, recentEmotes = recentEmotes),
             inputState = inputState,
             isEmotePickerOpen = isEmotePickerOpen,
@@ -274,6 +276,7 @@ private fun ListAndChatContent(
             DetailPaneCard {
                 LandingTheme(seedColor = LandingFixtures.yarrowSeed) {
                     ChannelChatScreenContent(
+                        timeZone = LandingFixtures.timeZone,
                         state = LandingFixtures.chatting(userStream = LandingFixtures.yarrowStream),
                         inputState = ChatViewModel.InputState(),
                         showBackButton = false,
@@ -333,6 +336,7 @@ private fun LiveStreams(
     selectedChannelId: String?,
 ) {
     LiveTimelineContent(
+        timeZone = LandingFixtures.timeZone,
         insets = insets,
         live = LandingFixtures.liveStreams,
         isRefreshing = false,
@@ -365,6 +369,7 @@ private fun Messages(vararg messages: ChatListItem.Message.Simple) {
                 )
 
             ChatMessage(
+                timeZone = LandingFixtures.timeZone,
                 // Badges are drawn from the chat's badge list, which only the full chat screen has.
                 message = message.copy(body = message.body.copy(badges = persistentListOf())),
                 pronouns = LandingFixtures.pronouns,

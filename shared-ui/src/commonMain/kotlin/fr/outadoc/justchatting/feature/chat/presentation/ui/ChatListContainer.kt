@@ -35,6 +35,7 @@ import fr.outadoc.justchatting.utils.core.filterValuesNotNull
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -42,6 +43,7 @@ internal fun ChatListContainer(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State.Chatting,
     showTimestamps: Boolean,
+    timeZone: TimeZone,
     onMessageClick: (ChatListItem.Message) -> Unit,
     onMessageLongClick: (ChatListItem.Message) -> Unit,
     onReplyToMessage: (ChatListItem.Message) -> Unit,
@@ -85,6 +87,7 @@ internal fun ChatListContainer(
                     .toImmutableMap(),
             richEmbeds = state.richEmbeds,
             showTimestamps = showTimestamps,
+            timeZone = timeZone,
             isDisconnected = !state.connectionStatus.isAlive,
             listState = listState,
             onMessageClick = onMessageClick,

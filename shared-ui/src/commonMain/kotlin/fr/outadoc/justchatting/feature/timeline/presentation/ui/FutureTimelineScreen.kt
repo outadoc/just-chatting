@@ -27,11 +27,13 @@ import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.timeline_future
 import fr.outadoc.justchatting.shared.internal.timeline_refresh_action_cd
 import fr.outadoc.justchatting.shared.internal.timeline_today_action_cd
+import fr.outadoc.justchatting.utils.core.TimeZoneProvider
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.rememberHasPointingDevice
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,6 +45,8 @@ internal fun FutureTimelineScreen(
 ) {
     val viewModel: FutureTimelineViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
+
+    val timeZoneProvider: TimeZoneProvider = koinInject()
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -117,6 +121,7 @@ internal fun FutureTimelineScreen(
                         listState.scrollToItem(index = 0)
                     }
                 },
+                timeZone = timeZoneProvider.currentTimeZone,
             )
         },
     )

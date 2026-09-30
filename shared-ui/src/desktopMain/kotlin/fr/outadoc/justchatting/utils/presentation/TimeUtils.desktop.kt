@@ -4,8 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaLocalDate
-import java.time.ZoneId
+import kotlinx.datetime.toJavaZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
@@ -14,13 +15,13 @@ import kotlin.time.toJavaInstant
 
 @Composable
 @Stable
-internal actual fun Instant.formatHourMinute(): String? {
+internal actual fun Instant.formatHourMinute(timeZone: TimeZone): String? {
     val formatter =
         DateTimeFormatter
             .ofLocalizedTime(FormatStyle.SHORT)
-            .withZone(ZoneId.systemDefault())
+            .withZone(timeZone.toJavaZoneId())
 
-    return remember(this) {
+    return remember(this, timeZone) {
         try {
             formatter.format(toJavaInstant())
         } catch (e: Exception) {
@@ -31,13 +32,13 @@ internal actual fun Instant.formatHourMinute(): String? {
 
 @Composable
 @Stable
-internal actual fun Instant.formatFullDateTime(): String? {
+internal actual fun Instant.formatFullDateTime(timeZone: TimeZone): String? {
     val formatter =
         DateTimeFormatter
             .ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)
-            .withZone(ZoneId.systemDefault())
+            .withZone(timeZone.toJavaZoneId())
 
-    return remember(this) {
+    return remember(this, timeZone) {
         try {
             formatter.format(toJavaInstant())
         } catch (e: Exception) {

@@ -14,6 +14,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.chat_loadError
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 
 private enum class ChatScreenMode { Error, Placeholder, Content }
@@ -23,6 +24,7 @@ internal fun ChatScreen(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
     showTimestamps: Boolean,
+    timeZone: TimeZone,
     onMessageClick: (ChatListItem.Message) -> Unit,
     onMessageLongClick: (ChatListItem.Message) -> Unit,
     onReplyToMessage: (ChatListItem.Message) -> Unit,
@@ -68,6 +70,7 @@ internal fun ChatScreen(
                         modifier = modifier,
                         state = state,
                         showTimestamps = showTimestamps,
+                        timeZone = timeZone,
                         onMessageClick = onMessageClick,
                         onMessageLongClick = onMessageLongClick,
                         onReplyToMessage = onReplyToMessage,

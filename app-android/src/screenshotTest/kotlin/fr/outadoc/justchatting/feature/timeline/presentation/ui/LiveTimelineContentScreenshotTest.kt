@@ -34,6 +34,7 @@ internal fun LiveTimelineContentDarkScreenshotTest() {
 @Composable
 private fun LiveTimelineContentSample() {
     LiveTimelineContent(
+        timeZone = PreviewFixtures.timeZone,
         live =
             persistentListOf(
                 UserStream(

@@ -45,6 +45,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentHashMap
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -54,6 +55,7 @@ internal fun MessageActionsBottomSheet(
     modifier: Modifier = Modifier,
     message: ChatListItem.Message,
     appUser: AppUser.LoggedIn,
+    timeZone: TimeZone,
     pronouns: ImmutableMap<Chatter, Pronoun> = persistentMapOf(),
     badges: ImmutableList<TwitchBadge> = persistentListOf(),
     emotes: ImmutableMap<String, Emote> = persistentMapOf(),
@@ -124,12 +126,13 @@ internal fun MessageActionsBottomSheet(
                         pronouns = pronouns,
                         richEmbed = body.messageId?.let { messageId -> richEmbeds[messageId] },
                         showTimestamps = false,
+                        timeZone = timeZone,
                         background = MaterialTheme.colorScheme.surfaceVariant,
                         appUser = appUser,
                         maxLines = 10,
                     )
 
-                    message.timestamp.formatFullDateTime()?.let { timestamp ->
+                    message.timestamp.formatFullDateTime(timeZone)?.let { timestamp ->
                         Text(
                             modifier = Modifier.padding(start = 8.dp),
                             text = timestamp,

@@ -21,6 +21,7 @@ import kotlin.time.Instant
 internal fun ChannelChatScreenLoadingScreenshotTest() {
     AppTheme {
         ChannelChatScreenContent(
+            timeZone = PreviewFixtures.timeZone,
             state = ChatViewModel.State.Initial,
             inputState = ChatViewModel.InputState(),
             showTimestamps = true,
@@ -34,6 +35,7 @@ internal fun ChannelChatScreenLoadingScreenshotTest() {
 internal fun ChannelChatScreenChattingScreenshotTest() {
     AppTheme {
         ChannelChatScreenContent(
+            timeZone = PreviewFixtures.timeZone,
             state =
                 ChatViewModel.State.Chatting(
                     user = PreviewFixtures.sampleUser,
@@ -75,6 +77,7 @@ internal fun ChannelChatScreenChattingScreenshotTest() {
 internal fun ChannelChatScreenChattingDarkScreenshotTest() {
     AppTheme(isDarkTheme = true) {
         ChannelChatScreenContent(
+            timeZone = PreviewFixtures.timeZone,
             state =
                 ChatViewModel.State.Chatting(
                     user = PreviewFixtures.sampleUser,

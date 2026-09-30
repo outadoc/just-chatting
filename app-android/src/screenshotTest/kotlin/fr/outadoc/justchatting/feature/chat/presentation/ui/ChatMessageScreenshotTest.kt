@@ -17,6 +17,7 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 internal fun ChatMessageScreenshotTest() {
     AppTheme {
         ChatMessage(
+            timeZone = PreviewFixtures.timeZone,
             message = PreviewFixtures.sampleChatMessage,
             showTimestamps = true,
             appUser = PreviewFixtures.sampleLoggedInUser,
@@ -36,6 +37,7 @@ internal fun ChatMessageGigantifiedEmoteScreenshotTest() {
     ) {
         AppTheme {
             ChatMessage(
+                timeZone = PreviewFixtures.timeZone,
                 message = PreviewFixtures.sampleGigantifiedEmoteMessage,
                 showTimestamps = true,
                 appUser = PreviewFixtures.sampleLoggedInUser,

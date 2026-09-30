@@ -25,6 +25,7 @@ import fr.outadoc.justchatting.shared.internal.uptime
 import fr.outadoc.justchatting.shared.internal.viewers
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import fr.outadoc.justchatting.utils.presentation.formatNumber
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -32,6 +33,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun StreamInfoCard(
     modifier: Modifier = Modifier,
     stream: Stream,
+    timeZone: TimeZone,
 ) {
     Surface(
         modifier = modifier,
@@ -41,6 +43,7 @@ internal fun StreamInfoCard(
         StreamInfo(
             modifier = Modifier.padding(16.dp),
             stream = stream,
+            timeZone = timeZone,
         )
     }
 }
@@ -49,6 +52,7 @@ internal fun StreamInfoCard(
 internal fun StreamInfo(
     modifier: Modifier = Modifier,
     stream: Stream,
+    timeZone: TimeZone,
 ) {
     Column(
         modifier = modifier,
@@ -79,7 +83,7 @@ internal fun StreamInfo(
                 ),
         )
 
-        val startedAt = stream.startedAt.formatHourMinute()
+        val startedAt = stream.startedAt.formatHourMinute(timeZone)
         if (startedAt != null) {
             StreamInfoRow(
                 icon = Icons.Outlined.Schedule,

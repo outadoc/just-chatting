@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.feature.preferences.domain.AuthRepository
 import fr.outadoc.justchatting.feature.shared.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
+import fr.outadoc.justchatting.utils.core.TimeZoneProvider
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.Job
@@ -19,7 +20,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
@@ -28,6 +28,7 @@ public class LiveTimelineViewModel internal constructor(
     private val twitchRepository: TwitchRepository,
     private val clock: Clock,
     private val authRepository: AuthRepository,
+    private val timeZoneProvider: TimeZoneProvider,
 ) : ViewModel() {
     public sealed class Event {
         public data class NavigateToChannel(
@@ -38,7 +39,6 @@ public class LiveTimelineViewModel internal constructor(
     public data class State(
         val isLoading: Boolean = false,
         val live: ImmutableList<UserStream> = persistentListOf(),
-        val timeZone: TimeZone = TimeZone.currentSystemDefault(),
     )
 
     private val _events = MutableSharedFlow<Event>()
@@ -61,7 +61,7 @@ public class LiveTimelineViewModel internal constructor(
         }
 
         viewModelScope.launch {
-            val tz = _state.value.timeZone
+            val tz = timeZoneProvider.currentTimeZone
             val today = clock.now().toLocalDateTime(tz).date
 
             twitchRepository

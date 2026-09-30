@@ -57,6 +57,7 @@ import fr.outadoc.justchatting.shared.internal.chat_copiedToClipboard
 import fr.outadoc.justchatting.utils.core.filterValuesNotNull
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalHazeMaterialsApi::class)
@@ -68,6 +69,7 @@ public fun ChannelChatScreenContent(
     showBackButton: Boolean = true,
     isEmotePickerOpen: Boolean = false,
     showTimestamps: Boolean,
+    timeZone: TimeZone,
     onMessageChange: (TextFieldValue) -> Unit = {},
     onToggleEmotePicker: () -> Unit = {},
     onEmoteClick: (Emote) -> Unit = {},
@@ -147,6 +149,7 @@ public fun ChannelChatScreenContent(
                         .hazeSource(hazeState),
                 state = state,
                 showTimestamps = showTimestamps,
+                timeZone = timeZone,
                 onMessageClick = onShowMessageActions,
                 onMessageLongClick = copyMessageToClipboard,
                 onReplyToMessage = onReplyToMessage,
@@ -270,6 +273,7 @@ public fun ChannelChatScreenContent(
                 MessageActionsBottomSheet(
                     message = message,
                     appUser = state.appUser,
+                    timeZone = timeZone,
                     pronouns = state.pronouns.filterValuesNotNull(),
                     badges = state.globalBadges.addAll(state.channelBadges),
                     emotes = state.allEmotesMap,
@@ -294,6 +298,7 @@ internal fun ChannelChatScreenLoadingPreview() {
             state = ChatViewModel.State.Initial,
             inputState = ChatViewModel.InputState(),
             showTimestamps = true,
+            timeZone = TimeZone.UTC,
         )
     }
 }

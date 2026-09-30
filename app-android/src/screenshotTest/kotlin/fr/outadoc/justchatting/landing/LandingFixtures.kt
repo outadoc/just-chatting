@@ -35,7 +35,13 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.toInstant
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
@@ -51,7 +57,24 @@ import kotlin.time.Instant
  * loads, since screenshot tests can't reach the network.
  */
 internal object LandingFixtures {
-    val now: Instant = Instant.parse("2026-09-30T12:05:00Z")
+    /** The time zone the screenshots show times in, whatever the one of the machine rendering them. */
+    val timeZone: TimeZone = TimeZone.UTC
+
+    private val today = LocalDate(2026, 9, 30)
+
+    /** An instant at a fixed time in [timeZone], [days] after [today]. */
+    private fun at(
+        hour: Int,
+        minute: Int = 0,
+        days: Int = 0,
+    ): Instant =
+        LocalDateTime(
+            date = today.plus(DatePeriod(days = days)),
+            time = LocalTime(hour, minute),
+        ).toInstant(timeZone)
+
+    // Same time as in LandingStatusBar.
+    val now: Instant = at(hour = 12, minute = 5)
 
     val clock: Clock =
         object : Clock {
@@ -342,12 +365,10 @@ internal object LandingFixtures {
 
     // Schedule
 
-    private val today = JCLocalDate(LocalDate(2026, 9, 30))
-
     val schedule: ImmutableList<ScheduleDay> =
         persistentListOf(
             ScheduleDay(
-                date = today,
+                date = JCLocalDate(today),
                 daysFromToday = 0,
                 ongoing =
                     persistentListOf(
@@ -376,8 +397,8 @@ internal object LandingFixtures {
                             id = "demo-segment-yarrow",
                             user = yarrow,
                             title = "Tracking the approaching comet",
-                            startTime = now + 1.days,
-                            endTime = now + 1.days + 2.hours,
+                            startTime = at(hour = 12, minute = 5, days = 1),
+                            endTime = at(hour = 14, minute = 5, days = 1),
                             category = category,
                         ),
                     ),
@@ -392,8 +413,8 @@ internal object LandingFixtures {
                             id = "demo-segment-poke",
                             user = poke,
                             title = "Searching for another way",
-                            startTime = now + 2.days,
-                            endTime = now + 2.days + 3.hours,
+                            startTime = at(hour = 12, minute = 5, days = 2),
+                            endTime = at(hour = 15, minute = 5, days = 2),
                             category = category,
                         ),
                     ),

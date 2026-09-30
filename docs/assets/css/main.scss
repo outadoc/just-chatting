@@ -2,6 +2,7 @@
 ---
 
 // Breakpoints
+$wide: 1400px;
 $tablet: 1100px;
 $phone: 760px;
 
@@ -991,7 +992,7 @@ p {
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 16px;
 
-  @include below($tablet) {
+  @include below($wide) {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -1000,20 +1001,27 @@ p {
   }
 }
 
+// The cards of a row share their rows (icon, text, button, note), so that each part lines up
+// across cards, however their text wraps.
 .download-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+  row-gap: 16px;
+  justify-items: center;
+  align-items: start;
   text-align: center;
   padding: 28px 24px;
   border-radius: 28px;
   background: var(--download-card);
 
+  // Buttons fill their row, so that they keep the same size if a label wraps.
   .button {
+    justify-self: stretch;
     align-self: stretch;
-    padding: 0 16px;
+    padding: 8px 16px;
     font-size: 15px;
+    white-space: normal;
   }
 }
 
@@ -1031,7 +1039,6 @@ p {
 .download-text {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
   gap: 4px;
 
   h3 {

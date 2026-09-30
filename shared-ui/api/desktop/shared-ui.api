@@ -25,7 +25,7 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ChatAuto
 }
 
 public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ChatInputKt {
-	public static final fun ChatInput-uwHujV0 (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;Landroidx/compose/ui/text/input/TextFieldValue;Lkotlinx/collections/immutable/ImmutableList;Lkotlinx/collections/immutable/ImmutableList;Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$Message;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;ZFLandroidx/compose/runtime/Composer;III)V
+	public static final fun ChatInput-A819N5k (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$LoggedIn;Landroidx/compose/ui/text/input/TextFieldValue;Lkotlinx/collections/immutable/ImmutableList;Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$Message;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;ZFLandroidx/compose/runtime/Composer;III)V
 }
 
 public final class fr/outadoc/justchatting/feature/chat/presentation/ui/ChatListPlaceholderKt {
@@ -83,14 +83,14 @@ public final class fr/outadoc/justchatting/feature/chat/presentation/ui/Composab
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/chat/presentation/ui/ComposableSingletons$ChatInputKt;
 	public fun <init> ()V
 	public final fun getLambda$-1111142288$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1245011194$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$-132894148$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$-159943730$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-2076298253$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$-687957849$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$-742271965$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$-784029743$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$-81153958$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$259130322$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1337536743$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$686500621$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
 }
 

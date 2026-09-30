@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -69,7 +68,6 @@ public fun ChatInput(
     appUser: AppUser.LoggedIn? = null,
     message: TextFieldValue = TextFieldValue(),
     autoCompleteItems: ImmutableList<AutoCompleteItem> = persistentListOf(),
-    recentEmotes: ImmutableList<Emote> = persistentListOf(),
     replyingTo: ChatListItem.Message? = null,
     onEmoteClick: (Emote) -> Unit = {},
     onChatterClick: (Chatter) -> Unit = {},
@@ -145,15 +143,6 @@ public fun ChatInput(
                 )
             }
 
-            AnimatedVisibility(visible = autoCompleteItems.isEmpty() && recentEmotes.isNotEmpty()) {
-                RecentEmotesRow(
-                    modifier = Modifier.padding(top = 8.dp),
-                    emotes = recentEmotes,
-                    onEmoteClick = onEmoteClick,
-                    contentPadding = PaddingValues(horizontal = contentPadding),
-                )
-            }
-
             Row(
                 modifier =
                     Modifier.padding(
@@ -191,34 +180,6 @@ public fun ChatInput(
                         )
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun RecentEmotesRow(
-    modifier: Modifier = Modifier,
-    emotes: ImmutableList<Emote>,
-    onEmoteClick: (Emote) -> Unit,
-    contentPadding: PaddingValues,
-) {
-    LazyRow(
-        modifier = modifier,
-        contentPadding = contentPadding,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        items(emotes) { emote ->
-            Surface(
-                modifier = Modifier.size(48.dp),
-                shape = RoundedCornerShape(14.dp),
-                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                onClick = { onEmoteClick(emote) },
-            ) {
-                EmoteItem(
-                    modifier = Modifier.padding(9.dp),
-                    emote = emote,
-                )
             }
         }
     }

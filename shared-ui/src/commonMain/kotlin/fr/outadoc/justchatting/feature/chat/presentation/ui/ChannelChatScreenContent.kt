@@ -56,7 +56,6 @@ import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.chat_copiedToClipboard
 import fr.outadoc.justchatting.utils.core.filterValuesNotNull
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
@@ -200,11 +199,6 @@ public fun ChannelChatScreenContent(
                                     ),
                             ),
                         autoCompleteItems = inputState.autoCompleteItems,
-                        recentEmotes =
-                            (state as? ChatViewModel.State.Chatting)
-                                ?.recentEmotes
-                                .orEmpty()
-                                .toImmutableList(),
                         replyingTo = inputState.replyingTo,
                         onEmoteClick = onEmoteClick,
                         onChatterClick = onChatterClick,

@@ -289,6 +289,12 @@ internal object DemoData {
                 twitchEmote("AmbessaLove", "ambessalove"),
                 twitchEmote("AndTime", "andtime"),
                 twitchEmote("ANELE", "anele"),
+                twitchEmote("AnotherRecord", "anotherrecord"),
+                twitchEmote("ArgieB8", "argieb8"),
+                twitchEmote("ArsonNoSexy", "arsonnosexy", ratio = 54f / 81f),
+                twitchEmote("AsexualPride", "asexualpride"),
+                twitchEmote("AsianGlow", "asianglow", ratio = 72f / 90f),
+                twitchEmote("B)", "cool", ratio = 72f / 54f),
             )
 
     private fun twitchEmote(

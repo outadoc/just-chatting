@@ -155,7 +155,8 @@ internal object LandingFixtures {
         ratio: Float = 1f,
     ) = Emote(name = name, urls = EmoteUrls(url = drawable("demo_emote_twitch_$file")), ratio = ratio)
 
-    // The first global Twitch emotes, like in the demo mode.
+    // The first global Twitch emotes, like in the demo mode: three full rows in the emote picker
+    // of the screenshots.
     private val globalEmotes: List<Emote> =
         listOf(
             twitchEmote(";)", "winky", ratio = 72f / 54f),
@@ -173,6 +174,12 @@ internal object LandingFixtures {
             twitchEmote("AmbessaLove", "ambessalove"),
             twitchEmote("AndTime", "andtime"),
             twitchEmote("ANELE", "anele"),
+            twitchEmote("AnotherRecord", "anotherrecord"),
+            twitchEmote("ArgieB8", "argieb8"),
+            twitchEmote("ArsonNoSexy", "arsonnosexy", ratio = 54f / 81f),
+            twitchEmote("AsexualPride", "asexualpride"),
+            twitchEmote("AsianGlow", "asianglow", ratio = 72f / 90f),
+            twitchEmote("B)", "cool", ratio = 72f / 54f),
         )
 
     val pickableEmotes: ImmutableList<EmoteSetItem> =

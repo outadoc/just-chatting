@@ -1,5 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.presentation.ui
 
+import coil3.request.ImageRequest
+
 internal actual val enableColorTransitions: Boolean
     // Can't enable color transitions with Proguard as of 2025-08-10
     //
@@ -10,3 +12,5 @@ internal actual val enableColorTransitions: Boolean
     //   Reason:
     //     Type top (current frame, locals[64]) is not assignable to long (stack map, locals[64])
     get() = false
+
+internal actual fun ImageRequest.Builder.allowSoftwareRendering(): ImageRequest.Builder = this

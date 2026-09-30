@@ -65,6 +65,11 @@ struct ChatMessageBody: View {
                 }
             }
 
+            // The enlarged emote is drawn on its own line, like a GIF.
+            if let emote = messageBody.gigantifiedEmote {
+                EmoteView(emote: emote, height: emoteHeight * 4.5)
+            }
+
             ForEach(Array(messageBody.gifs), id: \.id) { gif in
                 AnimatedImageView(url: URL(string: gif.url))
                     .frame(maxWidth: .infinity, maxHeight: 200, alignment: .leading)
@@ -109,7 +114,7 @@ struct ChatMessageBody: View {
             EmoteView(
                 emote: emote.emote,
                 overlays: emote.overlays,
-                height: messageBody.isGigantifiedEmote ? emoteHeight * 4.5 : emoteHeight
+                height: emoteHeight
             )
 
         case .mention(let mention):

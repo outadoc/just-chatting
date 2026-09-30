@@ -22,7 +22,11 @@ import fr.outadoc.justchatting.utils.presentation.formatNumber
 
 private const val emoteSizeFloat = 1.8
 internal val emoteSize = emoteSizeFloat.em
-internal val gigantifiedEmoteSize = (emoteSizeFloat * 4.5).em
+
+/**
+ * The height of an enlarged emote, relative to the [fontSize] of the message it belongs to.
+ */
+internal fun gigantifiedEmoteHeight(fontSize: TextUnit): TextUnit = fontSize * (emoteSizeFloat * 4.5)
 
 private fun getEmotePlaceholder(
     ratio: Float = 1f,
@@ -40,15 +44,9 @@ private val badgePlaceholder =
         placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
     )
 
-internal fun emoteTextContent(
-    emote: Emote,
-    isGigantified: Boolean = false,
-): InlineTextContent =
+internal fun emoteTextContent(emote: Emote): InlineTextContent =
     InlineTextContent(
-        getEmotePlaceholder(
-            ratio = emote.ratio,
-            size = if (isGigantified) gigantifiedEmoteSize else emoteSize,
-        ),
+        getEmotePlaceholder(ratio = emote.ratio),
     ) {
         EmoteItem(
             emote = emote,
@@ -58,13 +56,9 @@ internal fun emoteTextContent(
 internal fun zeroWidthEmoteTextContent(
     base: Emote,
     overlays: List<Emote>,
-    isGigantified: Boolean = false,
 ): InlineTextContent =
     InlineTextContent(
-        getEmotePlaceholder(
-            ratio = base.ratio,
-            size = if (isGigantified) gigantifiedEmoteSize else emoteSize,
-        ),
+        getEmotePlaceholder(ratio = base.ratio),
     ) {
         Box(Modifier.fillMaxSize()) {
             EmoteItem(emote = base)

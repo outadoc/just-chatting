@@ -2,6 +2,8 @@ package fr.outadoc.justchatting.feature.chat.presentation.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -78,10 +81,7 @@ internal fun ChatMessageBody(
                     .associate { emote ->
                         Pair(
                             emote.name,
-                            emoteTextContent(
-                                emote = emote,
-                                isGigantified = body.isGigantifiedEmote,
-                            ),
+                            emoteTextContent(emote = emote),
                         )
                     }.toImmutableMap(),
             )
@@ -119,7 +119,7 @@ internal fun ChatMessageBody(
             onTextLayout = { layoutResult.value = it },
             text = annotatedMessage.text,
             inlineContent = finalInlineContent,
-            lineHeight = if (body.isGigantifiedEmote) gigantifiedEmoteSize else emoteSize,
+            lineHeight = emoteSize,
             maxLines = maxLines,
             overflow = TextOverflow.Ellipsis,
             style =
@@ -127,6 +127,22 @@ internal fun ChatMessageBody(
                     hyphens = Hyphens.Auto,
                 ),
         )
+
+        body.gigantifiedEmote?.let { emote ->
+            val emoteHeight =
+                with(LocalDensity.current) {
+                    gigantifiedEmoteHeight(MaterialTheme.typography.bodyMedium.fontSize).toDp()
+                }
+
+            EmoteItem(
+                modifier =
+                    Modifier
+                        .padding(top = 4.dp)
+                        .height(emoteHeight)
+                        .aspectRatio(emote.ratio),
+                emote = emote,
+            )
+        }
 
         body.gifs.forEach { gif ->
             AsyncImage(
@@ -273,7 +289,6 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
                                 zeroWidthEmoteTextContent(
                                     base = token.emote,
                                     overlays = token.overlays,
-                                    isGigantified = isGigantifiedEmote,
                                 )
                             }
 

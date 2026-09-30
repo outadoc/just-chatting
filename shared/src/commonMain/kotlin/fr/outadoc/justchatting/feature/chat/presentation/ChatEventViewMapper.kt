@@ -696,11 +696,36 @@ internal class ChatEventViewMapper {
                 .drop(mentionsLength)
                 .removePrefix(" ")
 
+        // As on Twitch, the last emote of a gigantified emote message is the one that is
+        // enlarged. It is taken out of the text to be drawn on its own, like a GIF.
+        val words = remainingMessage.split(' ')
+        val gigantifiedEmoteIndex =
+            if (isGigantifiedEmote) {
+                words.indexOfLast { word -> embeddedEmotes.any { emote -> emote.name == word } }
+            } else {
+                -1
+            }
+
+        val gigantifiedEmote =
+            words
+                .getOrNull(gigantifiedEmoteIndex)
+                ?.let { word -> embeddedEmotes.first { emote -> emote.name == word } }
+
+        val textMessage =
+            if (gigantifiedEmote != null) {
+                words
+                    .filterIndexed { index, _ -> index != gigantifiedEmoteIndex }
+                    .joinToString(separator = " ")
+                    .ifBlank { null }
+            } else {
+                remainingMessage
+            }
+
         return ChatListItem.Message.Body(
             // The message text of a GIF message is only a bracketed placeholder describing
             // the GIF; suppress it and render the image instead (the description is kept on
             // each Gif). Observed GIFs always span the whole message.
-            message = if (embeddedGifs.isEmpty()) remainingMessage else null,
+            message = if (embeddedGifs.isEmpty()) textMessage else null,
             messageId = id,
             chatter =
                 Chatter(
@@ -715,7 +740,7 @@ internal class ChatEventViewMapper {
             badges = badges.orEmpty().toImmutableList(),
             sourceRoomId = sourceRoomId,
             sourceBadges = sourceBadges.orEmpty().toImmutableList(),
-            isGigantifiedEmote = isGigantifiedEmote,
+            gigantifiedEmote = gigantifiedEmote,
             inReplyTo =
                 if (mentions.isNotEmpty() && remainingMessage.isNotEmpty()) {
                     ChatListItem.Message.Body.InReplyTo(

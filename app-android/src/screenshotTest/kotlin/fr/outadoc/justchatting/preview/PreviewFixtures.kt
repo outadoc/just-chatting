@@ -4,6 +4,8 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
+import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
+import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.shared.domain.model.User
@@ -79,6 +81,29 @@ internal object PreviewFixtures {
                         ),
                 ),
             timestamp = Instant.fromEpochMilliseconds(1664396374382),
+        )
+
+    // A message whose last emote is enlarged, and drawn on its own line.
+    val sampleGigantifiedEmoteMessage: ChatListItem.Message.Simple =
+        ChatListItem.Message.Simple(
+            body =
+                ChatListItem.Message.Body(
+                    chatter =
+                        Chatter(
+                            displayName = "Ala1nPr0ust",
+                            id = "30983168",
+                            login = "ala1npr0ust",
+                        ),
+                    message = "pas de prime dispo mais j'offre un gros panard du coup",
+                    messageId = "fb3ae984-2740-4241-862d-2289e791dae4",
+                    color = "#F7C4CD",
+                    gigantifiedEmote =
+                        Emote(
+                            name = "dfgTimide",
+                            urls = EmoteUrls(url = "https://example.com/dfgTimide.png"),
+                        ),
+                ),
+            timestamp = Instant.fromEpochMilliseconds(1786969269497),
         )
 
     // A second, distinct message so chat-list previews can show more than one item.

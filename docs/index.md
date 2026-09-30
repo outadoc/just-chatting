@@ -1,6 +1,6 @@
 ---
 layout: home
-title: Twitch chat, with room to breathe
+title: Twitch chat, done right
 description: Just Chatting is a free and open source app built for one thing, a great Twitch chat experience. For Android, iOS, Windows, macOS and Linux.
 
 hero:
@@ -10,7 +10,7 @@ hero:
     - { label: Android, icon: phone }
     - { label: iOS, icon: phone }
     - { label: Desktop, icon: monitor }
-  title: Twitch chat, with room to breathe.
+  title: Twitch chat, done right.
   text: >-
     Put the stream on your TV or another screen, and keep the chat right in your hand.
     Just Chatting is built for one thing: a great Twitch chat experience, with emotes one

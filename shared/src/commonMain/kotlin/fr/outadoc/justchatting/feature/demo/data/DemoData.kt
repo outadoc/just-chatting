@@ -106,7 +106,17 @@ internal object DemoData {
             description = "All I can give is my best. And as Annona would say, we will find another way.",
         )
 
-    val channels: List<User> = listOf(solanum, yarrow, poke)
+    /** More live channels, so that the list of live streams fills the screen. */
+    private val pye = user(id = "demo-pye", login = "pye", displayName = "Pye", avatar = "demo_avatar_pye")
+    private val melorae = user(id = "demo-melorae", login = "melorae", displayName = "Melorae", avatar = "demo_avatar_melorae")
+    private val spire = user(id = "demo-spire", login = "spire", displayName = "Spire", avatar = "demo_avatar_spire")
+    private val idaea = user(id = "demo-idaea", login = "idaea", displayName = "Idaea", avatar = "demo_avatar_idaea")
+    private val cassava = user(id = "demo-cassava", login = "cassava", displayName = "Cassava", avatar = "demo_avatar_cassava")
+    private val annona = user(id = "demo-annona", login = "annona", displayName = "Annona", avatar = "demo_avatar_annona")
+    private val mallow = user(id = "demo-mallow", login = "mallow", displayName = "Mallow", avatar = "demo_avatar_mallow")
+    private val filix = user(id = "demo-filix", login = "filix", displayName = "Filix", avatar = "demo_avatar_filix")
+
+    val channels: List<User> = listOf(solanum, yarrow, poke, pye, melorae, spire, idaea, cassava, annona, mallow, filix)
 
     val allUsers: List<User> = channels + currentUser
 
@@ -116,6 +126,28 @@ internal object DemoData {
         }
 
     private val category = StreamCategory(id = "demo-category", name = "Quantum Archaeology")
+    private val astronomy = StreamCategory(id = "demo-category-astronomy", name = "Astronomy")
+    private val engineering = StreamCategory(id = "demo-category-engineering", name = "Engineering")
+    private val justChatting = StreamCategory(id = "demo-category-just-chatting", name = "Just Chatting")
+
+    private fun liveStream(
+        user: User,
+        title: String,
+        category: StreamCategory,
+        viewerCount: Long,
+        startedAt: Instant,
+    ) = UserStream(
+        user = user,
+        stream =
+            Stream(
+                id = "demo-stream-${user.login}",
+                userId = user.id,
+                category = category,
+                title = title,
+                viewerCount = viewerCount,
+                startedAt = startedAt,
+            ),
+    )
 
     val liveStreams: List<UserStream> =
         listOf(
@@ -155,6 +187,14 @@ internal object DemoData {
                         startedAt = now - 20.minutes,
                     ),
             ),
+            liveStream(pye, "Surveying the Hanging City", astronomy, viewerCount = 31, startedAt = now - 2.hours),
+            liveStream(melorae, "Charting the moon's orbit", astronomy, viewerCount = 26, startedAt = now - 75.minutes),
+            liveStream(spire, "Watching the comet approach", astronomy, viewerCount = 23, startedAt = now - 3.hours),
+            liveStream(idaea, "Reading scrolls with chat", justChatting, viewerCount = 14, startedAt = now - 50.minutes),
+            liveStream(cassava, "Precise measurements only", engineering, viewerCount = 12, startedAt = now - 30.minutes),
+            liveStream(annona, "Mapping the quantum moon", category, viewerCount = 9, startedAt = now - 65.minutes),
+            liveStream(mallow, "Building a warp core", engineering, viewerCount = 6, startedAt = now - 15.minutes),
+            liveStream(filix, "Studying rock shards", category, viewerCount = 4, startedAt = now - 10.minutes),
         )
 
     val futureSchedule: List<DaySchedule> =

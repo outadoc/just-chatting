@@ -93,12 +93,16 @@ internal object LandingFixtures {
         )
 
     private val category = StreamCategory(id = "demo-category", name = "Quantum Archaeology")
+    private val astronomy = StreamCategory(id = "demo-category-astronomy", name = "Astronomy")
+    private val engineering = StreamCategory(id = "demo-category-engineering", name = "Engineering")
+    private val justChatting = StreamCategory(id = "demo-category-just-chatting", name = "Just Chatting")
 
     private fun stream(
         user: User,
         title: String,
         viewerCount: Long,
         startedAt: Instant,
+        category: StreamCategory = this.category,
     ) = UserStream(
         user = user,
         stream =
@@ -116,7 +120,23 @@ internal object LandingFixtures {
     val solanumStream = stream(solanum, title = "Exploring the universe", viewerCount = 42, startedAt = now - 90.minutes)
     val pokeStream = stream(poke, title = "Working on my new project", viewerCount = 8, startedAt = now - 20.minutes)
 
-    val liveStreams: ImmutableList<UserStream> = persistentListOf(yarrowStream, solanumStream, pokeStream)
+    // More live channels, like the demo mode's, so that the list fills the screen.
+    private fun channel(name: String) = user(id = "demo-${name.lowercase()}", displayName = name, avatar = "demo_avatar_${name.lowercase()}")
+
+    val liveStreams: ImmutableList<UserStream> =
+        persistentListOf(
+            yarrowStream,
+            solanumStream,
+            pokeStream,
+            stream(channel("Pye"), "Surveying the Hanging City", viewerCount = 31, startedAt = now - 2.hours, category = astronomy),
+            stream(channel("Melorae"), "Charting the moon's orbit", viewerCount = 26, startedAt = now - 75.minutes, category = astronomy),
+            stream(channel("Spire"), "Watching the comet approach", viewerCount = 23, startedAt = now - 3.hours, category = astronomy),
+            stream(channel("Idaea"), "Reading scrolls with chat", viewerCount = 14, startedAt = now - 50.minutes, category = justChatting),
+            stream(channel("Cassava"), "Precise measurements only", viewerCount = 12, startedAt = now - 30.minutes, category = engineering),
+            stream(channel("Annona"), "Mapping the quantum moon", viewerCount = 9, startedAt = now - 65.minutes),
+            stream(channel("Mallow"), "Building a warp core", viewerCount = 6, startedAt = now - 15.minutes, category = engineering),
+            stream(channel("Filix"), "Studying rock shards", viewerCount = 4, startedAt = now - 10.minutes),
+        )
 
     // Emotes and badges
 

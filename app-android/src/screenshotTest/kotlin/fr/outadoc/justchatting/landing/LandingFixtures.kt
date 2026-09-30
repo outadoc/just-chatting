@@ -23,6 +23,8 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
 import fr.outadoc.justchatting.feature.timeline.presentation.OngoingScheduleSegment
 import fr.outadoc.justchatting.feature.timeline.presentation.ScheduleDay
 import fr.outadoc.justchatting.shared.internal.Res
+import fr.outadoc.justchatting.shared.internal.chat_source_stv
+import fr.outadoc.justchatting.shared.internal.chat_source_twitch
 import fr.outadoc.justchatting.shared.internal.chat_sub_header_withDurationAndStreak
 import fr.outadoc.justchatting.shared.internal.chat_sub_tier1
 import fr.outadoc.justchatting.shared.internal.months
@@ -147,14 +149,43 @@ internal object LandingFixtures {
 
     val recentEmotes: List<Emote> = listOf(pog, joel, eek, o)
 
-    val pickableEmotes: ImmutableList<EmoteSetItem> =
-        persistentListOf(
-            EmoteSetItem.Header(title = "Yarrow".desc(), source = "7TV".desc()),
-            EmoteSetItem.Emote(pog),
-            EmoteSetItem.Emote(joel),
-            EmoteSetItem.Emote(eek),
-            EmoteSetItem.Emote(o),
+    private fun twitchEmote(
+        name: String,
+        file: String,
+        ratio: Float = 1f,
+    ) = Emote(name = name, urls = EmoteUrls(url = drawable("demo_emote_twitch_$file")), ratio = ratio)
+
+    // The first global Twitch emotes, like in the demo mode.
+    private val globalEmotes: List<Emote> =
+        listOf(
+            twitchEmote(";)", "winky", ratio = 72f / 54f),
+            twitchEmote(";P", "winky_tongue", ratio = 72f / 54f),
+            twitchEmote(":(", "frown", ratio = 72f / 54f),
+            twitchEmote(":)", "smile", ratio = 72f / 54f),
+            twitchEmote(":/", "slant", ratio = 72f / 54f),
+            twitchEmote(":D", "grin", ratio = 72f / 54f),
+            twitchEmote(":O", "surprised", ratio = 72f / 54f),
+            twitchEmote(":P", "tongue", ratio = 72f / 54f),
+            twitchEmote(":z", "zipped", ratio = 72f / 54f),
+            twitchEmote("<3", "heart"),
+            twitchEmote(">(", "angry", ratio = 72f / 54f),
+            twitchEmote("4Head", "4head", ratio = 60f / 90f),
+            twitchEmote("AmbessaLove", "ambessalove"),
+            twitchEmote("AndTime", "andtime"),
+            twitchEmote("ANELE", "anele"),
         )
+
+    val pickableEmotes: ImmutableList<EmoteSetItem> =
+        (
+            listOf(
+                EmoteSetItem.Header(title = "Yarrow".desc(), source = Res.string.chat_source_stv.desc()),
+                EmoteSetItem.Emote(pog),
+                EmoteSetItem.Emote(joel),
+                EmoteSetItem.Emote(eek),
+                EmoteSetItem.Emote(o),
+                EmoteSetItem.Header(title = "Global".desc(), source = Res.string.chat_source_twitch.desc()),
+            ) + globalEmotes.map { emote -> EmoteSetItem.Emote(emote) }
+        ).toPersistentList()
 
     private val channelBadges: PersistentList<TwitchBadge> =
         persistentListOf(
@@ -279,6 +310,7 @@ internal object LandingFixtures {
     fun chatting(
         userStream: UserStream = yarrowStream,
         chatMessages: PersistentList<ChatListItem.Message> = this.chatMessages,
+        recentEmotes: List<Emote> = this.recentEmotes,
     ) = ChatViewModel.State.Chatting(
         user = userStream.user,
         appUser = appUser,

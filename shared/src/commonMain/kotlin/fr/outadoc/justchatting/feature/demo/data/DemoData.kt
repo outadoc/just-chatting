@@ -270,6 +270,33 @@ internal object DemoData {
 
     val setEmotes: List<Emote> = listOf(joelEmote, eekEmote, pogEmote, oEmote)
 
+    /** The first global Twitch emotes, bundled as static assets. `ratio` mirrors each source image's width/height. */
+    val globalEmotes: List<Emote>
+        get() =
+            listOf(
+                twitchEmote(";)", "winky", ratio = 72f / 54f),
+                twitchEmote(";P", "winky_tongue", ratio = 72f / 54f),
+                twitchEmote(":(", "frown", ratio = 72f / 54f),
+                twitchEmote(":)", "smile", ratio = 72f / 54f),
+                twitchEmote(":/", "slant", ratio = 72f / 54f),
+                twitchEmote(":D", "grin", ratio = 72f / 54f),
+                twitchEmote(":O", "surprised", ratio = 72f / 54f),
+                twitchEmote(":P", "tongue", ratio = 72f / 54f),
+                twitchEmote(":z", "zipped", ratio = 72f / 54f),
+                twitchEmote("<3", "heart"),
+                twitchEmote(">(", "angry", ratio = 72f / 54f),
+                twitchEmote("4Head", "4head", ratio = 60f / 90f),
+                twitchEmote("AmbessaLove", "ambessalove"),
+                twitchEmote("AndTime", "andtime"),
+                twitchEmote("ANELE", "anele"),
+            )
+
+    private fun twitchEmote(
+        name: String,
+        file: String,
+        ratio: Float = 1f,
+    ) = Emote(name = name, urls = EmoteUrls(url = drawableUri("demo_emote_twitch_$file")), ratio = ratio)
+
     /** Fixed so the follow-up [ChatEvent.Command.ClearMessage] entry can target the exact same message. */
     private const val REMOVED_MESSAGE_ID = "demo-removed-message"
 

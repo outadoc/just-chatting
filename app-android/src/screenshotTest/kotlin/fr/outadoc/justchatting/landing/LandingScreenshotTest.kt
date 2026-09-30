@@ -26,6 +26,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.ui.ChannelChatScreenContent
 import fr.outadoc.justchatting.feature.chat.presentation.ui.ChatInput
 import fr.outadoc.justchatting.feature.chat.presentation.ui.ChatMessage
+import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.shared.presentation.Screen
 import fr.outadoc.justchatting.feature.shared.presentation.ui.DetailPaneCard
 import fr.outadoc.justchatting.feature.shared.presentation.ui.MainNavigation
@@ -127,6 +128,8 @@ internal fun LandingCustomEmotesScreenshotTest() {
         userStream = LandingFixtures.yarrowStream,
         seedColor = LandingFixtures.yarrowSeed,
         isEmotePickerOpen = true,
+        // The recent emotes would only repeat the channel's.
+        recentEmotes = emptyList(),
     )
 }
 
@@ -207,10 +210,11 @@ private fun ChannelChat(
     seedColor: Color,
     inputState: ChatViewModel.InputState = ChatViewModel.InputState(),
     isEmotePickerOpen: Boolean = false,
+    recentEmotes: List<Emote> = LandingFixtures.recentEmotes,
 ) {
     LandingTheme(seedColor = seedColor) {
         ChannelChatScreenContent(
-            state = LandingFixtures.chatting(userStream = userStream),
+            state = LandingFixtures.chatting(userStream = userStream, recentEmotes = recentEmotes),
             inputState = inputState,
             isEmotePickerOpen = isEmotePickerOpen,
             showBackButton = true,

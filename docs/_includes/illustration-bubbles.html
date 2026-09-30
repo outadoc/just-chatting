@@ -1,17 +1,16 @@
 {%- comment -%}
-  Chat bubbles float over other apps, which the screenshot tests can't capture, so this
-  one is drawn. The colors are the demo channels' avatars.
+  An open chat bubble, as on an Android phone: the row of bubbles at the top of the screen,
+  and below it, the chat of the selected one. Bubbles float over other apps, which the
+  screenshot tests can't capture, so the row is drawn; the chat is a screenshot. The colors
+  are the demo channels' avatars.
 {%- endcomment -%}
-<div class="bubbles" role="img" aria-label="An open chat bubble, with two more chat bubbles next to it.">
-  <div class="bubbles-heads">
-    <span style="background: #e06437"></span>
-    <span style="background: #2ea059"></span>
+<div class="bubbles">
+  <div class="bubbles-heads" aria-hidden="true">
     <span style="background: #3b82c4"></span>
+    <span style="background: #2ea059"></span>
+    <span class="bubbles-head-selected" style="background: #e06437"></span>
   </div>
-  <div class="bubbles-chat">
-    <div class="bubbles-chat-header"><span style="background: #e06437"></span><b>Solanum</b></div>
-    <p><b class="chatter-pink">Pye</b> This is beyond extraordinary!</p>
-    <p><b class="chatter-orange">Ramie</b> Hypothesis confirmed!</p>
-    <div class="bubbles-chat-input">Send a message</div>
+  <div class="bubbles-window">
+    {% include screenshot.html name="bubble" alt="Solanum's chat, open in a chat bubble, with two more chat bubbles above it." %}
   </div>
 </div>

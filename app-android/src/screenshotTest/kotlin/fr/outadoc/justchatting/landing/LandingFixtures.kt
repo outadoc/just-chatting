@@ -305,8 +305,8 @@ internal object LandingFixtures {
 
     val pronouns =
         persistentMapOf(
-            solanumMessage.body.chatter to Pronoun(id = "sheher", nominative = "she", objective = "her", isSingular = true),
-            avens.body.chatter to Pronoun(id = "hehim", nominative = "he", objective = "him", isSingular = true),
+            solanumMessage.body.chatter to Pronoun(id = "sheher", nominative = "She", objective = "Her", isSingular = true),
+            avens.body.chatter to Pronoun(id = "hehim", nominative = "He", objective = "Him", isSingular = true),
         )
 
     // Newest first, as the chat list expects them.

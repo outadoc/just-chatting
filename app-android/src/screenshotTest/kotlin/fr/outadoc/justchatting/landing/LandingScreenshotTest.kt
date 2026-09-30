@@ -123,6 +123,18 @@ internal fun LandingReplyScreenshotTest() {
 @PreviewTest
 @LandingPhonePreviews
 @Composable
+internal fun LandingBubbleScreenshotTest() {
+    // A chat open in a bubble is standalone: there is nowhere to go back to.
+    ChannelChat(
+        userStream = LandingFixtures.solanumStream,
+        seedColor = LandingFixtures.solanumSeed,
+        showBackButton = false,
+    )
+}
+
+@PreviewTest
+@LandingPhonePreviews
+@Composable
 internal fun LandingCustomEmotesScreenshotTest() {
     ChannelChat(
         userStream = LandingFixtures.yarrowStream,
@@ -211,13 +223,14 @@ private fun ChannelChat(
     inputState: ChatViewModel.InputState = ChatViewModel.InputState(),
     isEmotePickerOpen: Boolean = false,
     recentEmotes: List<Emote> = LandingFixtures.recentEmotes,
+    showBackButton: Boolean = true,
 ) {
     LandingTheme(seedColor = seedColor) {
         ChannelChatScreenContent(
             state = LandingFixtures.chatting(userStream = userStream, recentEmotes = recentEmotes),
             inputState = inputState,
             isEmotePickerOpen = isEmotePickerOpen,
-            showBackButton = true,
+            showBackButton = showBackButton,
             showTimestamps = false,
         )
     }

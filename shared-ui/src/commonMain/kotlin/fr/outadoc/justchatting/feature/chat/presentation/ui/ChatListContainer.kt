@@ -53,7 +53,8 @@ internal fun ChatListContainer(
     val haptic = LocalHapticFeedback.current
     val imeController = LocalSoftwareKeyboardController.current
 
-    var isListAtBottom by remember { mutableStateOf(false) }
+    // The list opens at its bottom, so don't flash the "scroll to bottom" button on open
+    var isListAtBottom by remember { mutableStateOf(true) }
 
     LaunchedEffect(isListAtBottom) {
         // Hide the keyboard when scrolling up

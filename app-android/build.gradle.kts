@@ -104,7 +104,10 @@ dependencies {
     implementation(libs.compose.runtime)
 
     screenshotTestImplementation(project(":shared-ui"))
+    screenshotTestImplementation(project(":shared-internal"))
     screenshotTestImplementation(libs.coil.compose)
+    screenshotTestImplementation(libs.compose.components.resources)
+    screenshotTestImplementation(libs.material.kolor)
     screenshotTestImplementation(libs.compose.ui)
     screenshotTestImplementation(libs.compose.ui.tooling)
     screenshotTestImplementation(libs.compose.ui.tooling.preview)

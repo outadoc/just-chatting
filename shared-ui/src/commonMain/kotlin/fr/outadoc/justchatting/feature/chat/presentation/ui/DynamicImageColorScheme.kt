@@ -2,8 +2,11 @@ package fr.outadoc.justchatting.feature.chat.presentation.ui
 
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
 import com.eygraber.uri.Uri
 import com.kmpalette.rememberPainterDominantColorState
 import com.materialkolor.DynamicMaterialTheme
@@ -19,11 +22,21 @@ internal fun DynamicImageColorTheme(
 ) {
     val dominantColorState = rememberPainterDominantColorState()
     val scope = rememberCoroutineScope()
+    val context = LocalPlatformContext.current
+
+    val request =
+        remember(context, imageUrl) {
+            ImageRequest
+                .Builder(context)
+                .data(imageUrl?.toString())
+                .allowSoftwareRendering()
+                .build()
+        }
 
     // Loaded through Coil so that any scheme it supports (http, local resources, etc.)
     // can feed the palette, instead of being limited to plain network URLs.
     rememberAsyncImagePainter(
-        model = imageUrl?.toString(),
+        model = request,
         onSuccess = { state ->
             scope.launch {
                 dominantColorState.updateFrom(state.painter)
@@ -45,3 +58,10 @@ internal fun DynamicImageColorTheme(
  * Configurable in order to fix a desktop bug.
  */
 internal expect val enableColorTransitions: Boolean
+
+/**
+ * Makes sure the loaded image can be drawn to an off-screen, software-backed canvas, which is
+ * what the palette extraction does. Hardware bitmaps can't be drawn there, which would make
+ * palette generation fail silently and fall back to the default theme colors.
+ */
+internal expect fun ImageRequest.Builder.allowSoftwareRendering(): ImageRequest.Builder

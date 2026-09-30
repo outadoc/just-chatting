@@ -40,6 +40,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -275,7 +276,11 @@ internal fun ChatTextField(
                 onSend = { onSubmit() },
             ),
         placeholder = {
-            Text(text = stringResource(Res.string.chat_input_hint))
+            Text(
+                text = stringResource(Res.string.chat_input_hint),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
         },
         colors =
             TextFieldDefaults.colors(

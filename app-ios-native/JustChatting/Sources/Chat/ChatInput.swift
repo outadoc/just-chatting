@@ -90,9 +90,22 @@ struct ChatInput: View {
             .accessibilityLabel(isEmotePickerOpen ? "Show keyboard" : "Show emotes")
 
             HStack(alignment: .center, spacing: 4) {
-                TextField("Send a message", text: $text, selection: $selection, axis: .vertical)
+                // The built-in placeholder wraps like the text it stands for; draw our own so that
+                // it stays on a single line, truncated if needed.
+                TextField("", text: $text, selection: $selection, axis: .vertical)
                     .textFieldStyle(.plain)
                     .lineLimit(1...5)
+                    .overlay(alignment: .leading) {
+                        if text.isEmpty {
+                            Text("Send a message")
+                                .lineLimit(1)
+                                .truncationMode(.tail)
+                                .foregroundStyle(Color(uiColor: .placeholderText))
+                                .allowsHitTesting(false)
+                                .accessibilityHidden(true)
+                        }
+                    }
+                    .accessibilityLabel("Send a message")
                     .focused($isFocused)
                     .submitLabel(.send)
                     .onKeyPress(.tab) {

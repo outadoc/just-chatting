@@ -41,6 +41,16 @@ internal fun ChatInputEmptyScreenshotTest() {
     }
 }
 
+// The placeholder must stay on a single line, even when there is little room for it.
+@PreviewTest
+@Preview(widthDp = 220, locale = "fr")
+@Composable
+internal fun ChatInputEmptyNarrowScreenshotTest() {
+    AppTheme {
+        ChatInput()
+    }
+}
+
 @PreviewTest
 @Preview
 @Composable

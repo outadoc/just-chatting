@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 internal class DemoLocalPronounsApi : LocalPronounsApi {
-    private val shePronoun = Pronoun(id = "she", nominative = "she", objective = "her", isSingular = true)
-    private val hePronoun = Pronoun(id = "he", nominative = "he", objective = "him", isSingular = true)
+    private val shePronoun = Pronoun(id = "she", nominative = "She", objective = "Her", isSingular = true)
+    private val hePronoun = Pronoun(id = "he", nominative = "He", objective = "Him", isSingular = true)
 
     private val pronounsByUserId =
         mapOf(

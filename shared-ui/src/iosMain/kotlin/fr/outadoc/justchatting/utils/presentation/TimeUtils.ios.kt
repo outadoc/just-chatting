@@ -7,6 +7,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toNSDate
+import kotlinx.datetime.toNSTimeZone
 import platform.Foundation.NSDateFormatter
 import platform.Foundation.NSDateFormatterLongStyle
 import platform.Foundation.NSDateFormatterShortStyle
@@ -16,33 +17,35 @@ import kotlin.time.Instant
 
 @Stable
 @Composable
-internal actual fun Instant.formatHourMinute(): String? {
+internal actual fun Instant.formatHourMinute(timeZone: TimeZone): String? {
     val formatter =
-        remember {
+        remember(timeZone) {
             NSDateFormatter().apply {
                 dateFormat = "HH:mm"
                 locale = NSLocale.currentLocale
+                this.timeZone = timeZone.toNSTimeZone()
             }
         }
 
-    return remember(this) {
+    return remember(this, formatter) {
         formatter.stringFromDate(this.toNSDate())
     }
 }
 
 @Stable
 @Composable
-internal actual fun Instant.formatFullDateTime(): String? {
+internal actual fun Instant.formatFullDateTime(timeZone: TimeZone): String? {
     val formatter =
-        remember {
+        remember(timeZone) {
             NSDateFormatter().apply {
                 dateStyle = NSDateFormatterLongStyle
                 timeStyle = NSDateFormatterShortStyle
                 locale = NSLocale.currentLocale
+                this.timeZone = timeZone.toNSTimeZone()
             }
         }
 
-    return remember(this) {
+    return remember(this, formatter) {
         formatter.stringFromDate(this.toNSDate())
     }
 }

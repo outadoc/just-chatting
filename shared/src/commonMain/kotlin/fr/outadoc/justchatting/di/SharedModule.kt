@@ -149,7 +149,7 @@ internal val sharedModule: Module
             viewModel { ChannelSearchViewModel(get()) }
             viewModel { FollowedChannelsViewModel(get(), get(), get()) }
             viewModel { RecentChannelsViewModel(get()) }
-            viewModel { LiveTimelineViewModel(get(), get(), get()) }
+            viewModel { LiveTimelineViewModel(get(), get(), get(), get()) }
             viewModel { FutureTimelineViewModel(get(), get(), get(), get(), get()) }
             viewModel { UserInfoViewModel(get()) }
             viewModel {

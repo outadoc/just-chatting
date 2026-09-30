@@ -37,6 +37,7 @@ internal fun FutureTimelineContentDarkScreenshotTest() {
 @Composable
 private fun FutureTimelineContentSample() {
     FutureTimelineContent(
+        timeZone = PreviewFixtures.timeZone,
         days =
             persistentListOf(
                 ScheduleDay(

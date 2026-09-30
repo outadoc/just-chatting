@@ -1,0 +1,67 @@
+---
+layout: default
+---
+{%- comment -%}
+  The home page. Its copy is in the page's front matter (index.md), and its repeated items
+  in _data/features.yml, _data/devices.yml and _data/downloads.yml.
+{%- endcomment -%}
+{%- assign hero = page.hero -%}
+
+<section class="hero container" id="top">
+  <div class="hero-text">
+    <ul class="hero-badges">
+      {%- for badge in hero.badges %}
+      <li class="eyebrow">{% include icon.html name=badge.icon px=16 %}{{ badge.label }}</li>
+      {%- endfor %}
+    </ul>
+    <h1>{{ hero.title }}</h1>
+    <p class="lead">{{ hero.text }}</p>
+    <div class="hero-actions">
+      <a class="button button-accent button-large" href="#download">{% include icon.html name="download" px=20 %}{{ hero.action }}</a>
+    </div>
+  </div>
+
+  <div class="hero-media">
+    {% include screenshot.html name="hero" alt=hero.screenshot_alt class="hero-screenshot" loading="eager" %}
+  </div>
+</section>
+
+<section class="features container" id="features">
+  <div class="section-heading section-heading-split">
+    <h2>{{ page.features.title }}</h2>
+    <p>{{ page.features.text }}</p>
+  </div>
+  <div class="feature-grid">
+    {%- for feature in site.data.features %}
+    {% include feature-card.html feature=feature %}
+    {%- endfor %}
+  </div>
+</section>
+
+<section class="devices" id="devices">
+  <div class="container">
+    <div class="section-heading section-heading-center">
+      <h2>{{ page.devices.title }}</h2>
+      <p>{{ page.devices.text }}</p>
+    </div>
+    <div class="device-row">
+      {%- for device in site.data.devices %}
+      {% include device.html device=device %}
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="download" id="download">
+  <div class="container">
+    <div class="section-heading section-heading-split">
+      <h2>{{ page.download.title }}</h2>
+      <a class="download-all" href="{{ site.links.releases }}">All releases on GitHub →</a>
+    </div>
+    <div class="download-grid">
+      {%- for download in site.data.downloads %}
+      {% include download-card.html download=download %}
+      {%- endfor %}
+    </div>
+  </div>
+</section>

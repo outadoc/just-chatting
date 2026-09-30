@@ -1,0 +1,38 @@
+# The download options shown on the home page. note is HTML.
+
+- name: Android
+  icon: phone
+  description: Phones, tablets and foldables
+  label: Google Play
+  url: https://play.google.com/store/apps/details?id=fr.outadoc.justchatting
+  note: >-
+    Also via <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/outadoc/just-chatting">Obtainium</a>
+    or <a href="https://github.com/outadoc/just-chatting/releases/latest/download/JustChatting-android.apk">APK</a>
+
+- name: iOS
+  icon: phone
+  description: iPhone and iPad
+  label: TestFlight beta
+  url: https://testflight.apple.com/join/4AAnUWVX
+  note: Private beta, request access
+
+- name: Windows
+  icon: monitor
+  description: Windows 10 and later
+  label: Download .msi
+  url: https://github.com/outadoc/just-chatting/releases/latest/download/JustChatting-windows-amd64.msi
+  note: amd64
+
+- name: macOS
+  icon: monitor
+  description: Mac with Apple silicon
+  label: Download .dmg
+  url: https://github.com/outadoc/just-chatting/releases/latest/download/JustChatting-macos-aarch64.dmg
+  note: aarch64
+
+- name: Linux
+  icon: monitor
+  description: Most distributions
+  label: Download .AppImage
+  url: https://github.com/outadoc/just-chatting/releases/latest/download/JustChatting-linux-amd64.AppImage
+  note: amd64

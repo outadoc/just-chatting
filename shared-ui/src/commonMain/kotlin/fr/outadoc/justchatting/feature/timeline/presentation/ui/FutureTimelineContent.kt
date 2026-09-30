@@ -45,6 +45,7 @@ import fr.outadoc.justchatting.shared.internal.timeline_now
 import fr.outadoc.justchatting.utils.presentation.formatShortDay
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,6 +60,7 @@ public fun FutureTimelineContent(
     listState: LazyListState,
     selectedDate: LocalDate? = null,
     onSelectedDateChange: (LocalDate) -> Unit = {},
+    timeZone: TimeZone,
 ) {
     var showUserDetails: User? by remember { mutableStateOf(null) }
 
@@ -104,6 +106,7 @@ public fun FutureTimelineContent(
                     insets = listInsets,
                     day = selectedDay,
                     listState = listState,
+                    timeZone = timeZone,
                     onUserClick = { showUserDetails = it },
                 )
             }
@@ -113,6 +116,7 @@ public fun FutureTimelineContent(
                 insets = listInsets,
                 day = selectedDay,
                 listState = listState,
+                timeZone = timeZone,
                 onUserClick = { showUserDetails = it },
             )
         }
@@ -128,6 +132,7 @@ public fun FutureTimelineContent(
                 ChannelDetailsContent(
                     user = user,
                     stream = null,
+                    timeZone = timeZone,
                 )
             },
         )
@@ -191,6 +196,7 @@ private fun FutureTimelineList(
     insets: PaddingValues = PaddingValues(),
     day: ScheduleDay?,
     listState: LazyListState,
+    timeZone: TimeZone,
     onUserClick: (User) -> Unit,
 ) {
     if (day == null || (day.ongoing.isEmpty() && day.upcoming.isEmpty())) {
@@ -232,6 +238,7 @@ private fun FutureTimelineList(
                         segment = ongoing.segment,
                         shape = SegmentedListDefaults.shape(index = index, count = day.ongoing.size),
                         progress = ongoing.progress,
+                        timeZone = timeZone,
                         onUserClick = {
                             onUserClick(ongoing.segment.user)
                         },
@@ -260,6 +267,7 @@ private fun FutureTimelineList(
                                 .fillMaxWidth(),
                         segment = segment,
                         shape = SegmentedListDefaults.shape(index = index, count = day.upcoming.size),
+                        timeZone = timeZone,
                         onUserClick = {
                             onUserClick(segment.user)
                         },

@@ -22,6 +22,7 @@ import fr.outadoc.justchatting.feature.timeline.presentation.LiveTimelineViewMod
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.timeline_live
 import fr.outadoc.justchatting.shared.internal.timeline_refresh_action_cd
+import fr.outadoc.justchatting.utils.core.TimeZoneProvider
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
 import fr.outadoc.justchatting.utils.presentation.rememberHasPointingDevice
 import org.jetbrains.compose.resources.stringResource
@@ -41,6 +42,7 @@ internal fun LiveTimelineScreen(
     val state by viewModel.state.collectAsState()
 
     val notifier: ChatNotifier = koinInject()
+    val timeZoneProvider: TimeZoneProvider = koinInject()
 
     val hasMouse = rememberHasPointingDevice()
 
@@ -100,6 +102,7 @@ internal fun LiveTimelineScreen(
                 showRefreshIndicator = !hasMouse,
                 listState = listState,
                 selectedChannelId = selectedChannelId,
+                timeZone = timeZoneProvider.currentTimeZone,
                 onChannelClick = { user ->
                     viewModel.onChannelClick(user.id)
                 },

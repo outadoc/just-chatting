@@ -41,6 +41,7 @@ internal fun HomeScreenWideScreenshotTest() {
                     onSelectedTabChange = {},
                 ) { insets ->
                     LiveTimelineContent(
+                        timeZone = PreviewFixtures.timeZone,
                         insets = insets,
                         live =
                             persistentListOf(
@@ -87,6 +88,7 @@ internal fun HomeScreenWideScreenshotTest() {
                 // in a DetailPaneCard whenever the list and detail panes are both visible.
                 DetailPaneCard {
                     ChannelChatScreenContent(
+                        timeZone = PreviewFixtures.timeZone,
                         state =
                             ChatViewModel.State.Chatting(
                                 user = PreviewFixtures.sampleUser,

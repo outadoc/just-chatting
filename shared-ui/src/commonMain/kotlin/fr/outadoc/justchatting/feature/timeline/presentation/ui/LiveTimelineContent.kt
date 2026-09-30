@@ -26,6 +26,7 @@ import fr.outadoc.justchatting.feature.shared.presentation.ui.NoContent
 import fr.outadoc.justchatting.feature.shared.presentation.ui.SegmentedListDefaults
 import fr.outadoc.justchatting.feature.timeline.domain.model.UserStream
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.datetime.TimeZone
 import kotlin.time.Clock
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,6 +41,7 @@ public fun LiveTimelineContent(
     listState: LazyListState,
     selectedChannelId: String? = null,
     clock: Clock = Clock.System,
+    timeZone: TimeZone,
     onChannelClick: (User) -> Unit,
     onOpenInBubble: (User) -> Unit,
 ) {
@@ -100,6 +102,7 @@ public fun LiveTimelineContent(
                 ChannelDetailsContent(
                     user = user,
                     stream = null,
+                    timeZone = timeZone,
                 )
             },
         )

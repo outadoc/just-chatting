@@ -2120,19 +2120,16 @@ final class fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineVi
     final fun syncLiveStreamsPeriodically() // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.syncLiveStreamsPeriodically|syncLiveStreamsPeriodically(){}[0]
 
     final class State { // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State|null[0]
-        constructor <init>(kotlin/Boolean = ..., kotlinx.collections.immutable/ImmutableList<fr.outadoc.justchatting.feature.timeline.domain.model/UserStream> = ..., kotlinx.datetime/TimeZone = ...) // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State.<init>|<init>(kotlin.Boolean;kotlinx.collections.immutable.ImmutableList<fr.outadoc.justchatting.feature.timeline.domain.model.UserStream>;kotlinx.datetime.TimeZone){}[0]
+        constructor <init>(kotlin/Boolean = ..., kotlinx.collections.immutable/ImmutableList<fr.outadoc.justchatting.feature.timeline.domain.model/UserStream> = ...) // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State.<init>|<init>(kotlin.Boolean;kotlinx.collections.immutable.ImmutableList<fr.outadoc.justchatting.feature.timeline.domain.model.UserStream>){}[0]
 
         final val isLoading // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State.isLoading|{}isLoading[0]
             final fun <get-isLoading>(): kotlin/Boolean // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State.isLoading.<get-isLoading>|<get-isLoading>(){}[0]
         final val live // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State.live|{}live[0]
             final fun <get-live>(): kotlinx.collections.immutable/ImmutableList<fr.outadoc.justchatting.feature.timeline.domain.model/UserStream> // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State.live.<get-live>|<get-live>(){}[0]
-        final val timeZone // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State.timeZone|{}timeZone[0]
-            final fun <get-timeZone>(): kotlinx.datetime/TimeZone // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State.timeZone.<get-timeZone>|<get-timeZone>(){}[0]
 
         final fun component1(): kotlin/Boolean // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State.component1|component1(){}[0]
         final fun component2(): kotlinx.collections.immutable/ImmutableList<fr.outadoc.justchatting.feature.timeline.domain.model/UserStream> // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State.component2|component2(){}[0]
-        final fun component3(): kotlinx.datetime/TimeZone // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State.component3|component3(){}[0]
-        final fun copy(kotlin/Boolean = ..., kotlinx.collections.immutable/ImmutableList<fr.outadoc.justchatting.feature.timeline.domain.model/UserStream> = ..., kotlinx.datetime/TimeZone = ...): fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State.copy|copy(kotlin.Boolean;kotlinx.collections.immutable.ImmutableList<fr.outadoc.justchatting.feature.timeline.domain.model.UserStream>;kotlinx.datetime.TimeZone){}[0]
+        final fun copy(kotlin/Boolean = ..., kotlinx.collections.immutable/ImmutableList<fr.outadoc.justchatting.feature.timeline.domain.model/UserStream> = ...): fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State.copy|copy(kotlin.Boolean;kotlinx.collections.immutable.ImmutableList<fr.outadoc.justchatting.feature.timeline.domain.model.UserStream>){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // fr.outadoc.justchatting.feature.timeline.presentation/LiveTimelineViewModel.State.toString|toString(){}[0]

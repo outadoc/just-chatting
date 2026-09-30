@@ -29,8 +29,10 @@ import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.chat_openBubble_action
 import fr.outadoc.justchatting.shared.internal.chat_open_action
 import fr.outadoc.justchatting.shared.internal.watch_live
+import fr.outadoc.justchatting.utils.core.TimeZoneProvider
 import fr.outadoc.justchatting.utils.core.createChannelExternalLink
 import fr.outadoc.justchatting.utils.presentation.areBubblesSupported
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -48,6 +50,7 @@ internal fun LiveDetailsDialog(
 
     val preferencesRepository: PreferenceRepository = koinInject()
     val notifier: ChatNotifier = koinInject()
+    val timeZoneProvider: TimeZoneProvider = koinInject()
 
     val prefs by preferencesRepository.currentPreferences.collectAsState(initial = AppPreferences())
 
@@ -64,6 +67,7 @@ internal fun LiveDetailsDialog(
             ChannelDetailsContent(
                 user = user,
                 stream = stream,
+                timeZone = timeZoneProvider.currentTimeZone,
             )
         },
         actions = {
@@ -161,6 +165,7 @@ public fun ChannelDetailsContent(
     modifier: Modifier = Modifier,
     user: User,
     stream: Stream?,
+    timeZone: TimeZone,
 ) {
     Column(
         modifier = modifier,
@@ -175,6 +180,7 @@ public fun ChannelDetailsContent(
             StreamInfoCard(
                 modifier = Modifier.fillMaxWidth(),
                 stream = stream,
+                timeZone = timeZone,
             )
         }
     }

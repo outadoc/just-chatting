@@ -36,6 +36,7 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.ChannelScheduleSegm
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.stream_info
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -48,6 +49,7 @@ internal fun FutureTimelineSegment(
     segment: ChannelScheduleSegment,
     shape: Shape = SegmentedListDefaults.StandaloneShape,
     progress: Float? = null,
+    timeZone: TimeZone,
     onUserClick: () -> Unit = {},
 ) {
     val haptic = LocalHapticFeedback.current
@@ -80,7 +82,7 @@ internal fun FutureTimelineSegment(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Column(modifier = Modifier.widthIn(min = 48.dp)) {
-                    segment.startTime.formatHourMinute()?.let { startTime ->
+                    segment.startTime.formatHourMinute(timeZone)?.let { startTime ->
                         Text(
                             text = startTime,
                             style = MaterialTheme.typography.titleSmall,
@@ -89,7 +91,7 @@ internal fun FutureTimelineSegment(
                         )
                     }
 
-                    segment.endTime?.formatHourMinute()?.let { endTime ->
+                    segment.endTime?.formatHourMinute(timeZone)?.let { endTime ->
                         Text(
                             text = endTime,
                             style = MaterialTheme.typography.bodySmall,
@@ -152,7 +154,7 @@ internal fun FutureTimelineSegment(
                 ChannelDetailsHeader(user = segment.user)
             },
             content = {
-                TimelineSegmentDetails(segment = segment)
+                TimelineSegmentDetails(segment = segment, timeZone = timeZone)
             },
         )
     }

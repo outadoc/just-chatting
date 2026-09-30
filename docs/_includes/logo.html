@@ -1,0 +1,15 @@
+{%- comment -%}
+  The app icon. Parameters: px (the size, default 40), id (unique on the page, for its gradient).
+{%- endcomment -%}
+{%- assign size = include.px | default: 40 -%}
+{%- assign gradient = include.id | default: "logo" | append: "-gradient" -%}
+<svg class="logo" width="{{ size }}" height="{{ size }}" viewBox="0 0 41.3 41.3" aria-hidden="true">
+  <defs>
+    <linearGradient id="{{ gradient }}" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff00fb"/>
+      <stop offset="1" stop-color="#301aaf"/>
+    </linearGradient>
+  </defs>
+  <rect width="41.3" height="41.3" rx="11" fill="url(#{{ gradient }})"/>
+  <path fill="#fff" d="M20.81 9.14c-1.6 0-3.08.3-4.46.89-1.37.59-2.58 1.4-3.63 2.43-1.05 1.02-1.86 2.22-2.45 3.6-.59 1.37-.88 2.83-.88 4.39 0 .93.09 1.83.28 2.71.19.88.48 1.73.88 2.56l-1.97 6.84 6.91-1.95c.84.4 1.7.68 2.59.87.89.19 1.8.28 2.74.28 1.57 0 3.06-.29 4.44-.87 1.39-.58 2.6-1.39 3.63-2.43 1.04-1.03 1.85-2.23 2.45-3.59.6-1.36.9-2.83.9-4.41 0-1.56-.3-3.02-.9-4.39-.6-1.37-1.42-2.57-2.45-3.6-1.04-1.02-2.25-1.83-3.64-2.42-1.38-.59-2.86-.89-4.44-.89zm.01 6.45 1.45 3.39 3.72.32-2.82 2.41.84 3.59-3.19-1.9-3.19 1.9.84-3.59-2.82-2.41 3.72-.32z"/>
+</svg>

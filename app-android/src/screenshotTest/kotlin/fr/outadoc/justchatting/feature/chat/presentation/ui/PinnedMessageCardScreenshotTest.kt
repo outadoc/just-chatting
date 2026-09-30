@@ -14,6 +14,7 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 internal fun PinnedMessageCardScreenshotTest() {
     AppTheme {
         PinnedMessageCard(
+            timeZone = PreviewFixtures.timeZone,
             message = PreviewFixtures.sampleChatMessage,
             appUser =
                 AppUser.LoggedIn(

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#fbf8fd" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#141218" media="(prefers-color-scheme: dark)">
+    {% seo %}
+    <link rel="icon" href="{{ '/assets/favicon.png' | relative_url }}" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  </head>
+
+  <body>
+    {% include header.html %}
+    <main id="content">
+      {{ content }}
+    </main>
+    {% include footer.html %}
+  </body>
+</html>

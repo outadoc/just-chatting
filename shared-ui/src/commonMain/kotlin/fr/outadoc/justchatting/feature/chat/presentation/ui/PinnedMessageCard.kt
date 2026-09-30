@@ -36,6 +36,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -43,6 +44,7 @@ public fun PinnedMessageCard(
     modifier: Modifier = Modifier,
     message: ChatListItem.Message,
     appUser: AppUser.LoggedIn,
+    timeZone: TimeZone,
     color: Color = MaterialTheme.colorScheme.secondaryContainer,
     inlineContent: ImmutableMap<String, InlineTextContent> = persistentMapOf(),
     emotes: ImmutableMap<String, Emote> = persistentMapOf(),
@@ -80,6 +82,7 @@ public fun PinnedMessageCard(
                 cheerEmotes = cheerEmotes,
                 removedContent = removedContent,
                 showTimestamps = false,
+                timeZone = timeZone,
                 background = color,
                 appUser = appUser,
                 maxLines = maxLines,
@@ -114,6 +117,7 @@ internal fun PinnedMessageCardPreview(
                     userLogin = "",
                     token = ApiToken(""),
                 ),
+            timeZone = TimeZone.UTC,
         )
     }
 }

@@ -32,6 +32,7 @@ import fr.outadoc.justchatting.shared.internal.connectionLost_error
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentMap
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
@@ -50,6 +51,7 @@ internal fun ChatEvents(
     cheerEmotes: ImmutableMap<String, Emote>,
     removedContent: ImmutableList<ChatListItem.RemoveContent>,
     appUser: AppUser.LoggedIn,
+    timeZone: TimeZone,
     badges: ImmutableList<TwitchBadge>,
 ) {
     Column(
@@ -99,6 +101,7 @@ internal fun ChatEvents(
                     modifier = Modifier.fillMaxWidth(),
                     message = pinnedMessage.message,
                     appUser = appUser,
+                    timeZone = timeZone,
                     inlineContent = inlineContent,
                     emotes = emotes,
                     cheerEmotes = cheerEmotes,

@@ -1,0 +1,71 @@
+# The features shown on the home page, in order.
+#
+# media.screenshots: names of the images in assets/screenshots/landing, without the
+#   -light/-dark suffix. They come from the Compose screenshot tests; see
+#   scripts/update-landing-screenshots.sh.
+# media.fit: phone (a phone screen, cut off by the card at the bottom or top, depending on
+#   media.align) or contain (show all of the screenshot, aligned to media.align).
+
+- title: Dynamic colors
+  icon: palette
+  android_only: true
+  wide: true
+  text: Every channel gets its own palette, drawn from the streamer's avatar. Switch streams and the whole interface follows.
+  media:
+    screenshots: [dynamic-colors-yarrow, dynamic-colors-solanum, dynamic-colors-poke]
+    alt: The chat of three channels, each themed with the colors of its streamer's avatar.
+    align: top
+    fit: phone
+
+- title: Quick emote access
+  icon: smile
+  text: Your recently used emotes stay one tap away, right above the keyboard.
+  media:
+    screenshots: [quick-emotes]
+    alt: Recently used emotes, above the message box.
+    align: center
+    fit: contain
+
+- title: Slide to reply
+  icon: reply
+  text: Swipe any message to answer it, and see the conversation it belongs to.
+  media:
+    screenshots: [reply]
+    alt: The message box, replying to a message from Plume.
+    align: bottom
+    fit: contain
+
+- title: Chat bubbles
+  icon: bubbles
+  android_only: true
+  text: Keep several chats open as floating bubbles and hop between them.
+  media:
+    illustration: bubbles
+
+- title: Custom emotes
+  icon: sparkles
+  text: 7TV, BetterTTV and FrankerFaceZ emotes show up right alongside Twitch's own.
+  media:
+    screenshots: [custom-emotes]
+    alt: The emote picker, with the channel's 7TV emotes.
+    align: bottom
+    fit: phone
+
+- title: Pronouns
+  icon: person
+  text: See how chatters would like to be referred to, right next to their name.
+  media:
+    screenshots: [pronouns]
+    alt: Chat messages showing each chatter's pronouns next to their name.
+    align: center
+    fit: contain
+
+- title: Stream schedule
+  icon: calendar
+  wide: true
+  text: See who is live now and when your favorite channels go live next, all in one timeline.
+  media:
+    screenshots: [schedule]
+    alt: The schedule, showing a stream happening now.
+    align: top
+    fit: phone

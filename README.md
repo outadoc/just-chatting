@@ -11,20 +11,29 @@ An app focused on a great Twitch chat experience.
 - **Slide to reply** to any message, and see the context of the conversation.
 - See your favorite channels' **future schedule**.
 
-<table>
-<tr>
-<td>
+<p align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./docs/assets/screenshots/landing/dynamic-colors-yarrow-dark.png">
+  <img src="./docs/assets/screenshots/landing/dynamic-colors-yarrow-light.png" alt="Yarrow's chat, themed with the colors of the channel" width="32%">
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./docs/assets/screenshots/landing/dynamic-colors-solanum-dark.png">
+  <img src="./docs/assets/screenshots/landing/dynamic-colors-solanum-light.png" alt="Solanum's chat, themed with the colors of the channel" width="32%">
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./docs/assets/screenshots/landing/dynamic-colors-poke-dark.png">
+  <img src="./docs/assets/screenshots/landing/dynamic-colors-poke-light.png" alt="Poke's chat, themed with the colors of the channel" width="32%">
+</picture>
+</p>
 
-![](./docs/assets/screenshots/chat-narrow.webp)
+<p align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./docs/assets/screenshots/landing/tablet-dark.png">
+  <img src="./docs/assets/screenshots/landing/tablet-light.png" alt="The list of live channels next to an open chat, on a tablet" width="100%">
+</picture>
+</p>
 
-</td>
-<td>
-
-![](./docs/assets/screenshots/chat-wide.webp)
-
-</td>
-</tr>
-</table>
+The screenshots are generated from the app; see [docs/README.md](./docs/README.md) to update them.
 
 ## Download
 

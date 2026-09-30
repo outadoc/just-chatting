@@ -16,6 +16,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
+import fr.outadoc.justchatting.utils.core.TimeZoneProvider
 import fr.outadoc.justchatting.utils.http.toUri
 import fr.outadoc.justchatting.utils.presentation.OnLifecycleEvent
 import fr.outadoc.justchatting.utils.presentation.areBubblesSupported
@@ -38,6 +39,7 @@ internal fun ChannelChatScreen(
 
     val preferencesRepository: PreferenceRepository = koinInject()
     val notifier: ChatNotifier = koinInject()
+    val timeZoneProvider: TimeZoneProvider = koinInject()
 
     val prefs by preferencesRepository.currentPreferences.collectAsState(initial = AppPreferences())
 
@@ -80,6 +82,7 @@ internal fun ChannelChatScreen(
             showBackButton = !isStandalone && canNavigateUp,
             isEmotePickerOpen = isEmotePickerOpen,
             showTimestamps = prefs.showTimestamps,
+            timeZone = timeZoneProvider.currentTimeZone,
             onMessageChange = { textFieldValue ->
                 viewModel.onMessageInputChanged(
                     message = textFieldValue.text,

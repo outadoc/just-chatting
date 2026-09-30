@@ -23,12 +23,14 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatDate
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
+import kotlinx.datetime.TimeZone
 import kotlin.time.Instant
 
 @Composable
 public fun TimelineSegmentDetails(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
+    timeZone: TimeZone,
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -49,18 +51,18 @@ public fun TimelineSegmentDetails(
 
             StreamInfoRow(
                 icon = Icons.Outlined.CalendarToday,
-                text = segment.startTime.formatDate(),
+                text = segment.startTime.formatDate(tz = timeZone),
             )
 
             StreamInfoRow(
                 icon = Icons.Outlined.Schedule,
                 text =
                     buildString {
-                        append(segment.startTime.formatHourMinute().orEmpty())
+                        append(segment.startTime.formatHourMinute(timeZone).orEmpty())
 
                         segment.endTime?.let { endTime ->
                             append(" – ")
-                            append(endTime.formatHourMinute().orEmpty())
+                            append(endTime.formatHourMinute(timeZone).orEmpty())
                         }
                     },
             )
@@ -81,6 +83,7 @@ private fun TimelineSegmentDetailsPreview() {
     val lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     AppTheme {
         TimelineSegmentDetails(
+            timeZone = TimeZone.UTC,
             segment =
                 ChannelScheduleSegment(
                     id = "1",

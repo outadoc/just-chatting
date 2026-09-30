@@ -51,6 +51,7 @@ private fun ChannelDetailsSample() {
             ChannelDetailsHeader(user = user)
 
             ChannelDetailsContent(
+                timeZone = PreviewFixtures.timeZone,
                 user = user,
                 stream =
                     PreviewFixtures.sampleStream.copy(

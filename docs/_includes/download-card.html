@@ -1,0 +1,11 @@
+{%- comment -%} A download option, from _data/downloads.yml. Parameters: download. {%- endcomment -%}
+{%- assign download = include.download -%}
+<article class="download-card">
+  <span class="download-icon">{% include icon.html name=download.icon px=24 %}</span>
+  <div class="download-text">
+    <h3>{{ download.name }}</h3>
+    <span>{{ download.description }}</span>
+  </div>
+  <a class="button button-accent" href="{{ download.url }}">{{ download.label }}</a>
+  <span class="download-note">{{ download.note }}</span>
+</article>

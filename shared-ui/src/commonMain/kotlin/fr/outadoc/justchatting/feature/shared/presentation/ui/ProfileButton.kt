@@ -31,8 +31,11 @@ internal fun ProfileButton(
     )
 }
 
+/**
+ * The button that leads to the settings, showing the avatar at [profileImageUrl].
+ */
 @Composable
-internal fun ProfileButton(
+public fun ProfileButton(
     modifier: Modifier = Modifier,
     profileImageUrl: String?,
     onClick: () -> Unit,

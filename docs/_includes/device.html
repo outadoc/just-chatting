@@ -1,0 +1,31 @@
+{%- comment -%} A device, from _data/devices.yml. Parameters: device. {%- endcomment -%}
+{%- assign device = include.device -%}
+<figure class="device device-{{ device.frame }}">
+  {%- if device.frame == "desktop" %}
+  {%- comment -%} A display, showing the app's window on a wallpaper. {%- endcomment %}
+  <div class="device-frame">
+    <div class="desktop-wallpaper">
+      <div class="window">
+        <div class="window-title-bar" aria-hidden="true">
+          <span class="window-title">{% include logo.html px=12 id="window-logo" %}{{ site.title }}</span>
+          <span class="window-controls">
+            {% include icon.html name="minimize" px=10 %}
+            {% include icon.html name="maximize" px=10 %}
+            {% include icon.html name="close" px=10 %}
+          </span>
+        </div>
+        {% include screenshot.html name=device.screenshot alt=device.alt %}
+      </div>
+    </div>
+  </div>
+  <div class="desktop-stand" aria-hidden="true"></div>
+  {%- else %}
+  <div class="device-frame">
+    {% include screenshot.html name=device.screenshot alt=device.alt %}
+  </div>
+  {%- endif %}
+  <figcaption>
+    <b>{{ device.name }}</b>
+    <span>{{ device.platforms }}</span>
+  </figcaption>
+</figure>

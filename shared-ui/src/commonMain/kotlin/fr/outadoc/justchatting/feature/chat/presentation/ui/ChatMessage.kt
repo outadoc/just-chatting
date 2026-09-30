@@ -32,6 +32,7 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toPersistentHashMap
+import kotlinx.datetime.TimeZone
 
 @Preview
 @Composable
@@ -48,6 +49,7 @@ internal fun ChatMessagePreview(
             message = message,
             inlineContent = inlineBadges,
             showTimestamps = true,
+            timeZone = TimeZone.UTC,
             appUser =
                 AppUser.LoggedIn(
                     userId = "123",
@@ -69,6 +71,7 @@ public fun ChatMessage(
     pronouns: ImmutableMap<Chatter, Pronoun> = persistentMapOf(),
     richEmbed: ChatListItem.RichEmbed? = null,
     showTimestamps: Boolean,
+    timeZone: TimeZone,
     background: Color = Color.Transparent,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
     appUser: AppUser.LoggedIn,
@@ -89,7 +92,7 @@ public fun ChatMessage(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         message.timestamp
-            .formatHourMinute()
+            .formatHourMinute(timeZone)
             ?.takeIf { showTimestamps }
             ?.let { timestamp ->
                 Text(

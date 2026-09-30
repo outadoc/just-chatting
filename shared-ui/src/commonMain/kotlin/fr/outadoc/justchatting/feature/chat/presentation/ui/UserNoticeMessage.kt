@@ -26,6 +26,7 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.collections.immutable.toPersistentHashMap
+import kotlinx.datetime.TimeZone
 
 @Preview
 @Composable
@@ -42,6 +43,7 @@ internal fun UserNoticeMessagePreview(
             message = message,
             inlineContent = inlineBadges,
             showTimestamps = true,
+            timeZone = TimeZone.UTC,
             appUser =
                 AppUser.LoggedIn(
                     userId = "123",

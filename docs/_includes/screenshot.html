@@ -1,0 +1,9 @@
+{%- comment -%}
+  A screenshot from assets/screenshots/landing, in the light or dark theme to match the page.
+  Parameters: name, alt, class, loading (default lazy).
+{%- endcomment -%}
+{%- assign path = "/assets/screenshots/landing/" | append: include.name -%}
+<picture>
+  <source srcset="{{ path | append: '-dark.png' | relative_url }}" media="(prefers-color-scheme: dark)">
+  <img class="{{ include.class }}" src="{{ path | append: '-light.png' | relative_url }}" alt="{{ include.alt }}" loading="{{ include.loading | default: 'lazy' }}">
+</picture>

@@ -42,6 +42,7 @@ import fr.outadoc.justchatting.shared.internal.timeline_openVod_action
 import fr.outadoc.justchatting.utils.core.createVideoExternalLink
 import fr.outadoc.justchatting.utils.presentation.format
 import fr.outadoc.justchatting.utils.presentation.formatHourMinute
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,6 +50,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun PastTimelineSegment(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
+    timeZone: TimeZone,
     onUserClick: () -> Unit = {},
 ) {
     val haptic = LocalHapticFeedback.current
@@ -114,11 +116,11 @@ internal fun PastTimelineSegment(
                         modifier = Modifier.alignByBaseline(),
                         text =
                             buildAnnotatedString {
-                                append(segment.startTime.formatHourMinute())
+                                append(segment.startTime.formatHourMinute(timeZone))
 
                                 segment.endTime?.let { endTime ->
                                     append(" - ")
-                                    append(endTime.formatHourMinute())
+                                    append(endTime.formatHourMinute(timeZone))
                                 }
                             },
                         style = MaterialTheme.typography.bodyMedium,
@@ -154,7 +156,7 @@ internal fun PastTimelineSegment(
                 BasicUserInfo(user = segment.user)
             },
             content = {
-                TimelineSegmentDetails(segment = segment)
+                TimelineSegmentDetails(segment = segment, timeZone = timeZone)
             },
             actions = {
                 ContextualButton(

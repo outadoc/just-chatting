@@ -23,7 +23,7 @@ nucleus = "2.5.15"
 paging = "3.5.1"
 paging-multiplatform = "3.3.0-alpha02-0.5.1"
 screenshot = "0.0.1-alpha16"
-sqldelight = "2.3.2"
+sqldelight = "2.4.0"
 stately = "2.1.0"
 
 [plugins]

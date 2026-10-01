@@ -120,6 +120,11 @@ public sealed interface ChatListItem {
     ) : ChatListItem
 
     @Immutable
+    public data class StreamStatusUpdate(
+        val isLive: Boolean,
+    ) : ChatListItem
+
+    @Immutable
     public data class PredictionUpdate(
         val prediction: Prediction,
     ) : ChatListItem

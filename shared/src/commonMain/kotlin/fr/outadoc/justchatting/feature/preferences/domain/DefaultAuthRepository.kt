@@ -134,6 +134,7 @@ internal class DefaultAuthRepository internal constructor(
                 "chat:edit",
                 "user:read:follows",
                 "user:write:chat",
+                "user:read:chat",
             )
     }
 }

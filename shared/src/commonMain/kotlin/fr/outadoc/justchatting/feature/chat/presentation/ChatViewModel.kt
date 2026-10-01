@@ -50,6 +50,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asFlow
@@ -66,6 +69,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
@@ -186,7 +190,7 @@ public class ChatViewModel internal constructor(
         ) : Action()
 
         data class UpdateStreamDetails(
-            val stream: Stream,
+            val stream: Stream?,
         ) : Action()
 
         data class ShowMessageActions(
@@ -499,6 +503,11 @@ public class ChatViewModel internal constructor(
         val channelId: String,
         val appUser: AppUser.LoggedIn,
     ) {
+        /**
+         * Emits when EventSub tells us the channel just went live.
+         */
+        private val streamWentLive = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+
         private val scope =
             CoroutineScope(
                 viewModelScope.coroutineContext +
@@ -521,6 +530,20 @@ public class ChatViewModel internal constructor(
                 dispatchInput(action)
             }
         }
+
+        /**
+         * Helix can take a while to list a stream after EventSub reports it as live,
+         * so retry a few times until it shows up.
+         */
+        private fun getStreamAfterGoingLive(userId: String): Flow<Result<Stream>> =
+            flow {
+                repeat(STREAM_REFRESH_ATTEMPTS) {
+                    delay(STREAM_REFRESH_INTERVAL)
+                    val result = twitchRepository.getStreamByUserId(userId = userId).first()
+                    emit(result)
+                    if (result.isSuccess) return@flow
+                }
+            }
 
         fun start() {
             scope.launch {
@@ -557,8 +580,12 @@ public class ChatViewModel internal constructor(
                 .filterIsInstance<State.Chatting>()
                 .map { state -> state.user.id }
                 .distinctUntilChanged()
-                .flatMapLatest { userId -> twitchRepository.getStreamByUserId(userId = userId) }
-                .onEach { result ->
+                .flatMapLatest { userId ->
+                    merge(
+                        twitchRepository.getStreamByUserId(userId = userId),
+                        streamWentLive.flatMapLatest { getStreamAfterGoingLive(userId = userId) },
+                    )
+                }.onEach { result ->
                     result
                         .onSuccess { stream ->
                             dispatchIfCurrent(Action.UpdateStreamDetails(stream))
@@ -616,6 +643,15 @@ public class ChatViewModel internal constructor(
                                         Action.UpdateStreamMetadata(
                                             viewerCount = event.viewerCount,
                                         )
+                                    }
+
+                                    is ChatListItem.StreamStatusUpdate -> {
+                                        if (event.isLive) {
+                                            streamWentLive.tryEmit(Unit)
+                                            null
+                                        } else {
+                                            Action.UpdateStreamDetails(stream = null)
+                                        }
                                     }
 
                                     is ChatListItem.RichEmbed -> {
@@ -823,3 +859,6 @@ private fun buildAllEmotesMap(pickableEmotes: List<EmoteSetItem>): ImmutableMap<
         .distinctBy { emote -> emote.name }
         .associateBy { emote -> emote.name }
         .toImmutableMap()
+
+private const val STREAM_REFRESH_ATTEMPTS = 3
+private val STREAM_REFRESH_INTERVAL = 20.seconds

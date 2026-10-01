@@ -155,6 +155,27 @@ internal sealed interface ChatEvent {
             val viewerCount: Long,
         ) : Message
 
+        data class StreamStatusUpdate(
+            override val timestamp: Instant,
+            val isLive: Boolean,
+            val broadcasterDisplayName: String,
+        ) : Message
+
+        /**
+         * A message sent by the current user, held by AutoMod, has been reviewed.
+         */
+        data class HeldMessageUpdate(
+            override val timestamp: Instant,
+            val status: Status,
+            val messageText: String,
+        ) : Message {
+            enum class Status {
+                Approved,
+                Denied,
+                Expired,
+            }
+        }
+
         data class PredictionUpdate(
             override val timestamp: Instant,
             val prediction: Prediction,

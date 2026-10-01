@@ -17,6 +17,9 @@
     <string name="chat_disconnect">Disconnected from %1$s</string>
     <string name="chat_first">First time chat</string>
     <string name="chat_header_recent">Recent</string>
+    <string name="chat_heldMessage_approved">Moderators approved your message</string>
+    <string name="chat_heldMessage_denied">Moderators denied your message</string>
+    <string name="chat_heldMessage_expired">Your message held by AutoMod expired</string>
     <string name="chat_input_clear_cd">Clear input</string>
     <string name="chat_input_emote_cd">Open emote picker</string>
     <string name="chat_input_hint">Send a message</string>
@@ -41,6 +44,8 @@
     <string name="chat_source_ffz">FrankerFaceZ</string>
     <string name="chat_source_stv">7TV</string>
     <string name="chat_source_twitch">Twitch</string>
+    <string name="chat_stream_offline">%1$s is now offline</string>
+    <string name="chat_stream_online">%1$s is now live!</string>
     <string name="chat_subConversion_header">converted to a %1$s subscription!</string>
     <string name="chat_subGift_header">gifted a %1$s sub to %2$s! They've subscribed for %3$s.</string>
     <string name="chat_subGift_payForward">is paying forward the gift they got from %1$s to the community!</string>

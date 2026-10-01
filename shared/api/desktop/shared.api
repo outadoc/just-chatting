@@ -286,6 +286,18 @@ public final class fr/outadoc/justchatting/feature/chat/domain/model/ChatListIte
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class fr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$StreamStatusUpdate : fr/outadoc/justchatting/feature/chat/domain/model/ChatListItem {
+	public static final field $stable I
+	public fun <init> (Z)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$StreamStatusUpdate;
+	public static synthetic fun copy$default (Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$StreamStatusUpdate;ZILjava/lang/Object;)Lfr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$StreamStatusUpdate;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun isLive ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class fr/outadoc/justchatting/feature/chat/domain/model/ChatListItem$UserState : fr/outadoc/justchatting/feature/chat/domain/model/ChatListItem {
 	public static final field $stable I
 	public fun <init> ()V

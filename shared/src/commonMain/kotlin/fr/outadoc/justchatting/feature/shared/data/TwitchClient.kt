@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.shared.data
 
 import fr.outadoc.justchatting.feature.chat.data.http.CheerEmotesResponse
+import fr.outadoc.justchatting.feature.chat.data.http.EventSubSubscriptionRequest
 import fr.outadoc.justchatting.feature.chat.data.http.SendMessageResponse
 import fr.outadoc.justchatting.feature.chat.data.http.TwitchBadgesResponse
 import fr.outadoc.justchatting.feature.emotes.data.twitch.model.EmoteSetResponse
@@ -16,6 +17,9 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.http.path
 import kotlin.time.Instant
 
@@ -239,5 +243,16 @@ internal class TwitchClient(
                         }
                     }
                 }.body()
+        }
+
+    suspend fun createEventSubSubscription(request: EventSubSubscriptionRequest): Result<Unit> =
+        runCatching {
+            client.post {
+                url {
+                    path("eventsub/subscriptions")
+                }
+                contentType(ContentType.Application.Json)
+                setBody(request)
+            }
         }
 }

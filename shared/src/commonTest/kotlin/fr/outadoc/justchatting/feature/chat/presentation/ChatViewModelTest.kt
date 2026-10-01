@@ -946,6 +946,7 @@ private class FakeAuthApi : AuthApi {
                         "chat:edit",
                         "user:read:follows",
                         "user:write:chat",
+                        "user:read:chat",
                     ),
             ),
         )

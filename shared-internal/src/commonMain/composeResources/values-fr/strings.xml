@@ -17,6 +17,9 @@
     <string name="chat_disconnect">Déconnecté·e de %1$s</string>
     <string name="chat_first">Premier message</string>
     <string name="chat_header_recent">Récentes</string>
+    <string name="chat_heldMessage_approved">La modération a approuvé votre message</string>
+    <string name="chat_heldMessage_denied">La modération a refusé votre message</string>
+    <string name="chat_heldMessage_expired">Votre message retenu par AutoMod a expiré</string>
     <string name="chat_input_clear_cd">Effacer</string>
     <string name="chat_input_emote_cd">Ouvrir le sélecteur d'émote</string>
     <string name="chat_input_hint">Envoyer un message</string>
@@ -41,6 +44,8 @@
     <string name="chat_source_ffz">FrankerFaceZ</string>
     <string name="chat_source_stv">7TV</string>
     <string name="chat_source_twitch">Twitch</string>
+    <string name="chat_stream_offline">%1$s n'est plus en live</string>
+    <string name="chat_stream_online">%1$s est en live&#160;!</string>
     <string name="chat_subConversion_header">a converti son abonnement en abonnement %1$s&#160;!</string>
     <string name="chat_subGift_header">offre un abonnement %1$s à %2$s&#160;! Iel est abonné·e depuis %3$s.</string>
     <string name="chat_subGift_payForward">transmet le cadeau qu'iel a reçu de %1$s à la communauté&#160;!</string>

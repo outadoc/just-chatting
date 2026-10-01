@@ -8,6 +8,11 @@ import fr.outadoc.justchatting.data.db.StreamQueries
 import fr.outadoc.justchatting.data.db.UserQueries
 import fr.outadoc.justchatting.feature.auth.data.TwitchAuthApi
 import fr.outadoc.justchatting.feature.auth.domain.AuthApi
+import fr.outadoc.justchatting.feature.chat.data.eventsub.client.EventSubWebSocket
+import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.channelupdate.EventSubChannelUpdatePlugin
+import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.heldmessage.EventSubHeldMessageUpdatePlugin
+import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.raid.EventSubOutgoingRaidPlugin
+import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.streamstatus.EventSubStreamStatusPlugin
 import fr.outadoc.justchatting.feature.chat.data.irc.LiveChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.irc.LoggedInChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.irc.TwitchIrcCommandParser
@@ -25,6 +30,7 @@ import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.viewercount.PubSu
 import fr.outadoc.justchatting.feature.chat.domain.AggregateChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.feature.chat.domain.DefaultChatRepository
+import fr.outadoc.justchatting.feature.chat.domain.eventsub.EventSubPluginsProvider
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandlersProvider
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPluginsProvider
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEventViewMapper
@@ -175,12 +181,26 @@ internal val sharedModule: Module
 
             single { LiveChatWebSocket(get(), get(), get(), get(), get(), get(), get()) }
             single { LoggedInChatWebSocket(get(), get(), get(), get()) }
+            single { EventSubWebSocket(get(), get(), get(), get(), get(), get()) }
 
             single {
                 ChatEventHandlersProvider {
                     listOf(
                         get<LiveChatWebSocket>(),
                         get<LoggedInChatWebSocket>(),
+                        get<EventSubWebSocket>(),
+                    )
+                }
+            }
+
+            single {
+                EventSubPluginsProvider {
+                    listOf(
+                        EventSubChannelUpdatePlugin(get(), get()),
+                        EventSubStreamStatusPlugin(get(), get(), isLive = true),
+                        EventSubStreamStatusPlugin(get(), get(), isLive = false),
+                        EventSubOutgoingRaidPlugin(get(), get()),
+                        EventSubHeldMessageUpdatePlugin(get(), get()),
                     )
                 }
             }

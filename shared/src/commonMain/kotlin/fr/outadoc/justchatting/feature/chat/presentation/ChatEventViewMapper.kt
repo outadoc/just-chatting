@@ -9,12 +9,17 @@ import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.chat_ban
 import fr.outadoc.justchatting.shared.internal.chat_clear
 import fr.outadoc.justchatting.shared.internal.chat_first
+import fr.outadoc.justchatting.shared.internal.chat_heldMessage_approved
+import fr.outadoc.justchatting.shared.internal.chat_heldMessage_denied
+import fr.outadoc.justchatting.shared.internal.chat_heldMessage_expired
 import fr.outadoc.justchatting.shared.internal.chat_join
 import fr.outadoc.justchatting.shared.internal.chat_massSubGift_header
 import fr.outadoc.justchatting.shared.internal.chat_modAnniversary_header
 import fr.outadoc.justchatting.shared.internal.chat_raid_header
 import fr.outadoc.justchatting.shared.internal.chat_reward
 import fr.outadoc.justchatting.shared.internal.chat_send_msg_error
+import fr.outadoc.justchatting.shared.internal.chat_stream_offline
+import fr.outadoc.justchatting.shared.internal.chat_stream_online
 import fr.outadoc.justchatting.shared.internal.chat_subConversion_header
 import fr.outadoc.justchatting.shared.internal.chat_subGift_header
 import fr.outadoc.justchatting.shared.internal.chat_subGift_payForward
@@ -203,6 +208,13 @@ import kotlinx.collections.immutable.toImmutableList
 internal class ChatEventViewMapper {
     fun map(command: ChatEvent): List<ChatListItem> =
         when (command) {
+            is ChatEvent.Message.StreamStatusUpdate -> {
+                listOf(
+                    mapMessage(command),
+                    ChatListItem.StreamStatusUpdate(isLive = command.isLive),
+                )
+            }
+
             is ChatEvent.Message -> {
                 listOf(mapMessage(command))
             }
@@ -665,6 +677,55 @@ internal class ChatEventViewMapper {
                 is ChatEvent.Message.ViewerCountUpdate -> {
                     ChatListItem.ViewerCountUpdate(
                         viewerCount = viewerCount,
+                    )
+                }
+
+                is ChatEvent.Message.StreamStatusUpdate -> {
+                    ChatListItem.Message.Highlighted(
+                        timestamp = timestamp,
+                        metadata =
+                            ChatListItem.Message.Highlighted.Metadata(
+                                title =
+                                    if (isLive) {
+                                        Res.string.chat_stream_online.desc(broadcasterDisplayName)
+                                    } else {
+                                        Res.string.chat_stream_offline.desc(broadcasterDisplayName)
+                                    },
+                                titleIcon = if (isLive) Icon.Campaign else null,
+                                subtitle = null,
+                            ),
+                        body = null,
+                    )
+                }
+
+                is ChatEvent.Message.HeldMessageUpdate -> {
+                    ChatListItem.Message.Highlighted(
+                        timestamp = timestamp,
+                        metadata =
+                            ChatListItem.Message.Highlighted.Metadata(
+                                title =
+                                    when (status) {
+                                        ChatEvent.Message.HeldMessageUpdate.Status.Approved -> {
+                                            Res.string.chat_heldMessage_approved.desc()
+                                        }
+
+                                        ChatEvent.Message.HeldMessageUpdate.Status.Denied -> {
+                                            Res.string.chat_heldMessage_denied.desc()
+                                        }
+
+                                        ChatEvent.Message.HeldMessageUpdate.Status.Expired -> {
+                                            Res.string.chat_heldMessage_expired.desc()
+                                        }
+                                    },
+                                titleIcon =
+                                    when (status) {
+                                        ChatEvent.Message.HeldMessageUpdate.Status.Approved -> Icon.Shield
+                                        ChatEvent.Message.HeldMessageUpdate.Status.Denied -> Icon.Cancel
+                                        ChatEvent.Message.HeldMessageUpdate.Status.Expired -> Icon.Cancel
+                                    },
+                                subtitle = messageText.desc(),
+                            ),
+                        body = null,
                     )
                 }
             }

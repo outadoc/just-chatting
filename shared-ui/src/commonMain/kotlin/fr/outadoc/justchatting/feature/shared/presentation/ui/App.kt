@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.rememberNavBackStack
 import coil3.SingletonImageLoader
 import com.eygraber.uri.Uri
+import fr.outadoc.justchatting.feature.onboarding.presentation.ui.ConnectionErrorScreen
 import fr.outadoc.justchatting.feature.onboarding.presentation.ui.OnboardingScreen
 import fr.outadoc.justchatting.feature.shared.presentation.DefaultScreen
 import fr.outadoc.justchatting.feature.shared.presentation.DetailScreen
@@ -92,6 +93,17 @@ public fun App(
                         },
                         onDemoModeClick = {
                             viewModel.onDemoModeClick()
+                        },
+                    )
+                }
+
+                is MainRouterViewModel.State.ConnectionError -> {
+                    ConnectionErrorScreen(
+                        onRetryClick = {
+                            viewModel.onRetryClick()
+                        },
+                        onLogoutClick = {
+                            viewModel.onLogoutClick()
                         },
                     )
                 }

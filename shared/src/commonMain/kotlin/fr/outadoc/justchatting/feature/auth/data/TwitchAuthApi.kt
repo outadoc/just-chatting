@@ -4,16 +4,19 @@ import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.auth.data.model.TwitchAuthValidationResponse
 import fr.outadoc.justchatting.feature.auth.domain.AuthApi
 import fr.outadoc.justchatting.feature.auth.domain.model.AuthValidationResponse
+import fr.outadoc.justchatting.feature.auth.domain.model.InvalidTokenException
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.shared.data.ApiEndpoints
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.path
 import kotlinx.collections.immutable.toImmutableSet
 
@@ -29,11 +32,20 @@ internal class TwitchAuthApi(
 
     override suspend fun validateToken(token: ApiToken): Result<AuthValidationResponse> =
         runCatching {
-            client
-                .get {
-                    url { path("validate") }
-                    headers { append("Authorization", "Bearer ${token.value}") }
-                }.body<TwitchAuthValidationResponse>()
+            try {
+                client
+                    .get {
+                        url { path("validate") }
+                        headers { append("Authorization", "Bearer ${token.value}") }
+                    }.body<TwitchAuthValidationResponse>()
+            } catch (e: ClientRequestException) {
+                // Twitch answers 401 when the token is invalid or expired.
+                // Anything else (network failure, timeout, server error) is considered transient.
+                if (e.response.status == HttpStatusCode.Unauthorized) {
+                    throw InvalidTokenException(cause = e)
+                }
+                throw e
+            }
         }.map { response ->
             AuthValidationResponse(
                 clientId = response.clientId,

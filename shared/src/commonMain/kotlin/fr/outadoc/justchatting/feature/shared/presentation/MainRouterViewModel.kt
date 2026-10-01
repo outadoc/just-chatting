@@ -13,11 +13,12 @@ import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logInfo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -34,6 +35,8 @@ public class MainRouterViewModel internal constructor(
         public data object Loading : State()
 
         public data object LoggedOut : State()
+
+        public data object ConnectionError : State()
 
         public data class LoggedIn(
             val appUser: AppUser.LoggedIn,
@@ -54,32 +57,44 @@ public class MainRouterViewModel internal constructor(
         ) : Event()
     }
 
+    // Set while a retry or logout triggered from the connection error screen is in flight,
+    // and cleared as soon as the auth repository emits its next value.
+    private val isRecovering = MutableStateFlow(false)
+
     public val state: StateFlow<State> =
-        authRepository.currentUser
-            .map { appUser ->
+        combine(
+            authRepository.currentUser.onEach { isRecovering.value = false },
+            isRecovering,
+        ) { appUser, recovering ->
+            if (recovering) {
+                State.Loading
+            } else {
                 when (appUser) {
                     is AppUser.LoggedIn -> State.LoggedIn(appUser = appUser)
                     is AppUser.NotLoggedIn -> State.LoggedOut
+                    is AppUser.ValidationFailed -> State.ConnectionError
                 }
-            }.onEach { state ->
-                when (state) {
-                    // Keep the local web server running whenever there's a user-facing screen to
-                    // navigate, so it can also be used to inject deeplinks for local testing.
-                    is State.LoggedOut,
-                    is State.LoggedIn,
-                    -> {
-                        localCallbackWebServer.start()
-                    }
+            }
+        }.onEach { state ->
+            when (state) {
+                // Keep the local web server running whenever there's a user-facing screen to
+                // navigate, so it can also be used to inject deeplinks for local testing.
+                is State.LoggedOut,
+                is State.LoggedIn,
+                is State.ConnectionError,
+                -> {
+                    localCallbackWebServer.start()
+                }
 
-                    is State.Loading -> {
-                        localCallbackWebServer.stop()
-                    }
+                is State.Loading -> {
+                    localCallbackWebServer.stop()
                 }
-            }.stateIn(
-                viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                initialValue = State.Loading,
-            )
+            }
+        }.stateIn(
+            viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = State.Loading,
+        )
 
     private val _events = MutableSharedFlow<Event>()
     public val events: SharedFlow<Event> = _events.asSharedFlow()
@@ -105,6 +120,18 @@ public class MainRouterViewModel internal constructor(
                     uri = authRepository.getExternalAuthorizeUrl(),
                 ),
             )
+        }
+    }
+
+    public fun onRetryClick() {
+        isRecovering.value = true
+        authRepository.retryValidation()
+    }
+
+    public fun onLogoutClick() {
+        isRecovering.value = true
+        viewModelScope.launch {
+            authRepository.logout()
         }
     }
 

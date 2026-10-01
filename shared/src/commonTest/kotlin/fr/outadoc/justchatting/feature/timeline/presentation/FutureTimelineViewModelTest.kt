@@ -411,6 +411,8 @@ private class FakeAuthRepository(
 
     override suspend fun logout() = error("Not used in tests")
 
+    override fun retryValidation() = error("Not used in tests")
+
     override fun getExternalAuthorizeUrl(): Uri = error("Not used in tests")
 }
 

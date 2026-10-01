@@ -57,6 +57,10 @@
     <string name="chat_timeout">has been timed out for %1$s</string>
     <string name="chat_unraid_subtitle">has cancelled the raid</string>
     <string name="chat_watchStreak_header">watched %1$s in a row, sparking a watch streak!</string>
+    <string name="connectionError_logout_action">Log out</string>
+    <string name="connectionError_message">Twitch couldn't be reached. Check your internet connection and try again.</string>
+    <string name="connectionError_retry_action">Retry</string>
+    <string name="connectionError_title">Connection error</string>
     <string name="connectionLost_error">Reconnecting to chat…</string>
     <string name="created_at">Created on %1$s</string>
     <string name="date_today">Today</string>

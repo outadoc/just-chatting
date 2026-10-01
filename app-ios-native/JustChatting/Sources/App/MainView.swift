@@ -23,6 +23,8 @@ struct MainView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             case .loggedOut:
                 OnboardingView(viewModel: viewModel)
+            case .connectionError:
+                ConnectionErrorView(viewModel: viewModel)
             case .loggedIn:
                 HomeTabView(router: router)
             }

@@ -29,6 +29,10 @@ internal class DemoAwareAuthRepository(
         current().logout()
     }
 
+    override fun retryValidation() {
+        current().retryValidation()
+    }
+
     override fun getExternalAuthorizeUrl(): Uri = current().getExternalAuthorizeUrl()
 
     private fun current(): AuthRepository = if (demoModeRepository.isDemoMode.value) demo else real.value

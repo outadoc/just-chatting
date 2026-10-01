@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.preferences.domain
 
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.auth.domain.AuthApi
+import fr.outadoc.justchatting.feature.auth.domain.model.InvalidTokenException
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
@@ -9,10 +10,13 @@ import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logInfo
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 
 internal class DefaultAuthRepository internal constructor(
@@ -21,11 +25,14 @@ internal class DefaultAuthRepository internal constructor(
     private val oAuthAppCredentials: OAuthAppCredentials,
     private val dispatchersProvider: DispatchersProvider,
 ) : AuthRepository {
+    private val validationAttempt = MutableStateFlow(0)
+
     override val currentUser: Flow<AppUser> =
         preferenceRepository
             .currentPreferences
             .map { prefs -> prefs.apiToken }
             .distinctUntilChanged()
+            .combine(validationAttempt) { token, _ -> token }
             .map { token ->
                 when (token) {
                     null -> {
@@ -55,13 +62,19 @@ internal class DefaultAuthRepository internal constructor(
                                 },
                                 onFailure = { exception ->
                                     logError<DefaultAuthRepository>(exception) { "Failed to validate token" }
-                                    AppUser.NotLoggedIn
+                                    when (exception) {
+                                        is InvalidTokenException,
+                                        is InvalidClientIdException,
+                                        is MissingScopesException,
+                                        -> AppUser.NotLoggedIn
+
+                                        else -> AppUser.ValidationFailed
+                                    }
                                 },
                             )
                     }
                 }
-            }.distinctUntilChanged()
-            .onEach { user ->
+            }.onEach { user ->
                 logInfo<DefaultAuthRepository> { "User is now $user" }
             }
 
@@ -94,6 +107,10 @@ internal class DefaultAuthRepository internal constructor(
                 )
             }
         }
+    }
+
+    override fun retryValidation() {
+        validationAttempt.update { it + 1 }
     }
 
     override fun getExternalAuthorizeUrl(): Uri =

@@ -32,6 +32,10 @@ internal class DemoAuthRepository(
         demoModeRepository.setDemoMode(false)
     }
 
+    override fun retryValidation() {
+        // No-op: demo mode never fails to validate.
+    }
+
     override fun getExternalAuthorizeUrl(): Uri {
         error("Demo mode has no external authorize URL")
     }

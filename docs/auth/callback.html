@@ -1,22 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Redirecting…</title>
-    <link rel="stylesheet" href="assets/callback.css">
-    <link rel="icon" href="/assets/favicon.png" type="image/png">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  </head>
+---
+layout: default
+title: Logged in
+description: You're logged in to Twitch. Taking you back to Just Chatting.
+robots: noindex
+---
+<section class="callback container">
+  <div class="callback-card">
+    {% include logo.html px=88 id="callback-logo" %}
+    <span class="eyebrow">{% include icon.html name="check" px=16 %}Logged in to Twitch</span>
+    <h1>You're all set!</h1>
+    <p class="lead">Taking you back to {{ site.title }}…</p>
+    <div class="callback-actions">
+      <a class="button button-accent button-large" id="open-app" href="justchatting://auth/callback">Open {{ site.title }}</a>
+    </div>
+    <p class="callback-note">Nothing happening? Tap the button above. On desktop, you can close this tab and go back to the app.</p>
+  </div>
+</section>
 
-  <body>
-    <main>
-      <div class="redirect">
-        <img src="../assets/logo.png" alt="Just Chatting app logo">
-        <h1>Logged in successfully!</h1>
-        <h2>Redirecting you to the app…</h2>
-        <h3><a href="javascript:redirect()">Nothing is happening?</a></h3>
-      </div>
-    </main>
-
-    <script src="assets/redirect.js"></script>
-  </body>
-</html>
+<script src="{{ '/auth/assets/redirect.js' | relative_url }}"></script>

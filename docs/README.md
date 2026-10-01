@@ -16,7 +16,8 @@ It uses its own theme; there is no external theme to install.
 | `_includes/` | Reusable pieces: cards, device frames, icons, the logo, the header and footer. |
 | `assets/css/main.scss` | The styles, with the light and dark colors at the top. |
 | `assets/screenshots/landing/` | The screenshots of the home page, generated from the app (see below). |
-| `auth/`, `.well-known/` | The Twitch login callback and Android app links. Not part of the theme; leave as is. |
+| `auth/` | The page Twitch redirects to after logging in, which hands the token to the app. Its URL is registered with Twitch and in the app: don't move it. |
+| `.well-known/` | The Android app links. |
 
 `assets/badges/` isn't used by the website, but by the repository's main README, which also shows
 some of the screenshots from `assets/screenshots/landing/`: renaming or removing their tests

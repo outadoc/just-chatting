@@ -7,7 +7,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import kotlin.time.Clock
+import kotlin.time.Instant
 
 /**
  * The channel going live or offline. No authorization required.
@@ -17,7 +17,6 @@ import kotlin.time.Clock
  */
 internal class EventSubStreamStatusPlugin(
     private val json: Json,
-    private val clock: Clock,
     private val isLive: Boolean,
 ) : EventSubPlugin {
     override val subscriptionType = if (isLive) "stream.online" else "stream.offline"
@@ -28,11 +27,14 @@ internal class EventSubStreamStatusPlugin(
         appUser: AppUser.LoggedIn,
     ): Map<String, String> = mapOf("broadcaster_user_id" to channelId)
 
-    override fun parseEvent(event: JsonObject): List<ChatEvent> {
+    override fun parseEvent(
+        event: JsonObject,
+        timestamp: Instant,
+    ): List<ChatEvent> {
         val status = json.decodeFromJsonElement(Event.serializer(), event)
         return listOf(
             ChatEvent.Message.StreamStatusUpdate(
-                timestamp = clock.now(),
+                timestamp = timestamp,
                 isLive = isLive,
                 broadcasterDisplayName = status.broadcasterUserName,
             ),

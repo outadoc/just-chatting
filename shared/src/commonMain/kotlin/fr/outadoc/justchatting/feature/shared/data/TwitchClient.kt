@@ -1,9 +1,11 @@
 package fr.outadoc.justchatting.feature.shared.data
 
+import fr.outadoc.justchatting.feature.chat.data.http.ChatSettingsResponse
 import fr.outadoc.justchatting.feature.chat.data.http.CheerEmotesResponse
 import fr.outadoc.justchatting.feature.chat.data.http.EventSubSubscriptionRequest
 import fr.outadoc.justchatting.feature.chat.data.http.SendMessageResponse
 import fr.outadoc.justchatting.feature.chat.data.http.TwitchBadgesResponse
+import fr.outadoc.justchatting.feature.chat.data.http.UserEmotesResponse
 import fr.outadoc.justchatting.feature.emotes.data.twitch.model.EmoteSetResponse
 import fr.outadoc.justchatting.feature.followed.data.model.FollowResponse
 import fr.outadoc.justchatting.feature.search.data.model.ChannelSearchResponse
@@ -241,6 +243,34 @@ internal class TwitchClient(
                         inReplyToMessageId?.let { id ->
                             parameter("reply_parent_message_id", id)
                         }
+                    }
+                }.body()
+        }
+
+    suspend fun getChatSettings(channelUserId: String): Result<ChatSettingsResponse> =
+        runCatching {
+            client
+                .get {
+                    url {
+                        path("chat/settings")
+                        parameter("broadcaster_id", channelUserId)
+                    }
+                }.body()
+        }
+
+    suspend fun getUserEmotes(
+        userId: String,
+        channelUserId: String,
+        after: String?,
+    ): Result<UserEmotesResponse> =
+        runCatching {
+            client
+                .get {
+                    url {
+                        path("chat/emotes/user")
+                        parameter("user_id", userId)
+                        parameter("broadcaster_id", channelUserId)
+                        after?.let { parameter("after", after) }
                     }
                 }.body()
         }

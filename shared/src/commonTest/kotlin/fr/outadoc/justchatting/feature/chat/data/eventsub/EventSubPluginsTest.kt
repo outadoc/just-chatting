@@ -4,6 +4,7 @@ import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.channelupdate.E
 import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.heldmessage.EventSubHeldMessageUpdatePlugin
 import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.raid.EventSubOutgoingRaidPlugin
 import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.streamstatus.EventSubStreamStatusPlugin
+import fr.outadoc.justchatting.feature.chat.domain.eventsub.EventSubPlugin
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
 import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
@@ -14,21 +15,18 @@ import kotlinx.serialization.json.jsonObject
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import kotlin.time.Clock
 import kotlin.time.Instant
 
 internal class EventSubPluginsTest {
     private val now = Instant.fromEpochMilliseconds(1_000)
-    private val clock =
-        object : Clock {
-            override fun now(): Instant = now
-        }
+
+    private fun EventSubPlugin.parseEvent(event: JsonObject): List<ChatEvent> = parseEvent(event, timestamp = now)
 
     private fun event(json: String): JsonObject = DefaultJson.parseToJsonElement(json).jsonObject
 
     @Test
     fun `channel update is mapped to broadcast settings update`() {
-        val plugin = EventSubChannelUpdatePlugin(DefaultJson, clock)
+        val plugin = EventSubChannelUpdatePlugin(DefaultJson)
 
         val events =
             plugin.parseEvent(
@@ -63,7 +61,7 @@ internal class EventSubPluginsTest {
 
     @Test
     fun `outgoing raid is mapped to raid go`() {
-        val plugin = EventSubOutgoingRaidPlugin(DefaultJson, clock)
+        val plugin = EventSubOutgoingRaidPlugin(DefaultJson)
 
         assertEquals(
             mapOf("from_broadcaster_user_id" to "1234"),
@@ -107,13 +105,13 @@ internal class EventSubPluginsTest {
 
     @Test
     fun `stream status plugins subscribe to the right type`() {
-        assertEquals("stream.online", EventSubStreamStatusPlugin(DefaultJson, clock, isLive = true).subscriptionType)
-        assertEquals("stream.offline", EventSubStreamStatusPlugin(DefaultJson, clock, isLive = false).subscriptionType)
+        assertEquals("stream.online", EventSubStreamStatusPlugin(DefaultJson, isLive = true).subscriptionType)
+        assertEquals("stream.offline", EventSubStreamStatusPlugin(DefaultJson, isLive = false).subscriptionType)
     }
 
     @Test
     fun `stream offline is mapped to stream status update`() {
-        val plugin = EventSubStreamStatusPlugin(DefaultJson, clock, isLive = false)
+        val plugin = EventSubStreamStatusPlugin(DefaultJson, isLive = false)
 
         val events =
             plugin.parseEvent(
@@ -142,7 +140,7 @@ internal class EventSubPluginsTest {
 
     @Test
     fun `held message update is scoped to the current user`() {
-        val plugin = EventSubHeldMessageUpdatePlugin(DefaultJson, clock)
+        val plugin = EventSubHeldMessageUpdatePlugin(DefaultJson)
 
         assertEquals(
             mapOf(
@@ -155,7 +153,7 @@ internal class EventSubPluginsTest {
 
     @Test
     fun `held message statuses are mapped`() {
-        val plugin = EventSubHeldMessageUpdatePlugin(DefaultJson, clock)
+        val plugin = EventSubHeldMessageUpdatePlugin(DefaultJson)
 
         val expected =
             mapOf(
@@ -180,7 +178,7 @@ internal class EventSubPluginsTest {
 
     @Test
     fun `unknown held message status is ignored`() {
-        val plugin = EventSubHeldMessageUpdatePlugin(DefaultJson, clock)
+        val plugin = EventSubHeldMessageUpdatePlugin(DefaultJson)
         assertTrue(plugin.parseEvent(heldMessageUpdate("something_new")).isEmpty())
     }
 

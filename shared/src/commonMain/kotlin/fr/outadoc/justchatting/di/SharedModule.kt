@@ -10,11 +10,15 @@ import fr.outadoc.justchatting.feature.auth.data.TwitchAuthApi
 import fr.outadoc.justchatting.feature.auth.domain.AuthApi
 import fr.outadoc.justchatting.feature.chat.data.eventsub.client.EventSubWebSocket
 import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.channelupdate.EventSubChannelUpdatePlugin
+import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.chat.EventSubChatClearPlugin
+import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.chat.EventSubChatMessagePlugin
+import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.chat.EventSubChatNotificationPlugin
+import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.chat.EventSubChatSettingsPlugin
+import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.chat.EventSubClearUserMessagesPlugin
+import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.chat.EventSubMessageDeletePlugin
 import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.heldmessage.EventSubHeldMessageUpdatePlugin
 import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.raid.EventSubOutgoingRaidPlugin
 import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.streamstatus.EventSubStreamStatusPlugin
-import fr.outadoc.justchatting.feature.chat.data.irc.LiveChatWebSocket
-import fr.outadoc.justchatting.feature.chat.data.irc.LoggedInChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.irc.TwitchIrcCommandParser
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesApi
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesRepository
@@ -179,15 +183,11 @@ internal val sharedModule: Module
             single { LoadEmotesAndBadgesUseCase(get(), get()) }
             factory { SubmitMessageUseCase(get(), get(), get()) }
 
-            single { LiveChatWebSocket(get(), get(), get(), get(), get(), get(), get()) }
-            single { LoggedInChatWebSocket(get(), get(), get(), get()) }
-            single { EventSubWebSocket(get(), get(), get(), get(), get(), get()) }
+            single { EventSubWebSocket(get(), get(), get(), get(), get(), get(), get()) }
 
             single {
                 ChatEventHandlersProvider {
                     listOf(
-                        get<LiveChatWebSocket>(),
-                        get<LoggedInChatWebSocket>(),
                         get<EventSubWebSocket>(),
                     )
                 }
@@ -196,11 +196,17 @@ internal val sharedModule: Module
             single {
                 EventSubPluginsProvider {
                     listOf(
-                        EventSubChannelUpdatePlugin(get(), get()),
-                        EventSubStreamStatusPlugin(get(), get(), isLive = true),
-                        EventSubStreamStatusPlugin(get(), get(), isLive = false),
-                        EventSubOutgoingRaidPlugin(get(), get()),
-                        EventSubHeldMessageUpdatePlugin(get(), get()),
+                        EventSubChatMessagePlugin(get(), get(), get(), get(), get()),
+                        EventSubChatNotificationPlugin(get()),
+                        EventSubMessageDeletePlugin(get()),
+                        EventSubClearUserMessagesPlugin(get()),
+                        EventSubChatClearPlugin(),
+                        EventSubChatSettingsPlugin(get(), get()),
+                        EventSubChannelUpdatePlugin(get()),
+                        EventSubStreamStatusPlugin(get(), isLive = true),
+                        EventSubStreamStatusPlugin(get(), isLive = false),
+                        EventSubOutgoingRaidPlugin(get()),
+                        EventSubHeldMessageUpdatePlugin(get()),
                     )
                 }
             }

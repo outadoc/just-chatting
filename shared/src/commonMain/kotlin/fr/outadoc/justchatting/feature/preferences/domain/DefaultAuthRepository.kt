@@ -130,11 +130,10 @@ internal class DefaultAuthRepository internal constructor(
     private companion object {
         val REQUIRED_SCOPES =
             setOf(
-                "chat:read",
-                "chat:edit",
                 "user:read:follows",
                 "user:write:chat",
                 "user:read:chat",
+                "user:read:emotes",
             )
     }
 }

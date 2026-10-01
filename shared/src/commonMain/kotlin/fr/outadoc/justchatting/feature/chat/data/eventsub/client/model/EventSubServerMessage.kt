@@ -24,6 +24,8 @@ internal data class EventSubServerMessage(
         val messageId: String,
         @SerialName("message_type")
         val messageType: String,
+        @SerialName("message_timestamp")
+        val messageTimestamp: String? = null,
     )
 
     companion object {

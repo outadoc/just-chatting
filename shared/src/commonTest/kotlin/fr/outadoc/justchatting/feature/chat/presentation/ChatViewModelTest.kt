@@ -942,11 +942,10 @@ private class FakeAuthApi : AuthApi {
                 userId = "app-user-id",
                 scopes =
                     persistentSetOf(
-                        "chat:read",
-                        "chat:edit",
                         "user:read:follows",
                         "user:write:chat",
                         "user:read:chat",
+                        "user:read:emotes",
                     ),
             ),
         )

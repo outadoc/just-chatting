@@ -7,14 +7,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import kotlin.time.Clock
+import kotlin.time.Instant
 
 /**
  * Stream title and category changes. No authorization required.
  */
 internal class EventSubChannelUpdatePlugin(
     private val json: Json,
-    private val clock: Clock,
 ) : EventSubPlugin {
     override val subscriptionType = "channel.update"
     override val subscriptionVersion = "2"
@@ -24,11 +23,14 @@ internal class EventSubChannelUpdatePlugin(
         appUser: AppUser.LoggedIn,
     ): Map<String, String> = mapOf("broadcaster_user_id" to channelId)
 
-    override fun parseEvent(event: JsonObject): List<ChatEvent> {
+    override fun parseEvent(
+        event: JsonObject,
+        timestamp: Instant,
+    ): List<ChatEvent> {
         val update = json.decodeFromJsonElement(Event.serializer(), event)
         return listOf(
             ChatEvent.Message.BroadcastSettingsUpdate(
-                timestamp = clock.now(),
+                timestamp = timestamp,
                 streamTitle = update.title,
                 categoryId = update.categoryId,
                 categoryName = update.categoryName,

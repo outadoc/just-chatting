@@ -7,7 +7,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import kotlin.time.Clock
+import kotlin.time.Instant
 
 /**
  * Moderators approving or denying one of the user's messages held by AutoMod.
@@ -18,7 +18,6 @@ import kotlin.time.Clock
  */
 internal class EventSubHeldMessageUpdatePlugin(
     private val json: Json,
-    private val clock: Clock,
 ) : EventSubPlugin {
     override val subscriptionType = "channel.chat.user_message_update"
     override val subscriptionVersion = "1"
@@ -32,7 +31,10 @@ internal class EventSubHeldMessageUpdatePlugin(
             "user_id" to appUser.userId,
         )
 
-    override fun parseEvent(event: JsonObject): List<ChatEvent> {
+    override fun parseEvent(
+        event: JsonObject,
+        timestamp: Instant,
+    ): List<ChatEvent> {
         val update = json.decodeFromJsonElement(Event.serializer(), event)
         val status =
             when (update.status) {
@@ -44,7 +46,7 @@ internal class EventSubHeldMessageUpdatePlugin(
 
         return listOf(
             ChatEvent.Message.HeldMessageUpdate(
-                timestamp = clock.now(),
+                timestamp = timestamp,
                 status = status,
                 messageText = update.message.text,
             ),

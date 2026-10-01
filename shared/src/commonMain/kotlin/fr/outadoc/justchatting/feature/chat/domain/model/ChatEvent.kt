@@ -82,7 +82,10 @@ internal sealed interface ChatEvent {
             val userDisplayName: String,
             val recipientDisplayName: String,
             val months: Int,
-            val cumulativeMonths: Int,
+            /**
+             * How long the recipient has been subscribed, if known.
+             */
+            val cumulativeMonths: Int?,
             val subscriptionPlan: String,
         ) : Message
 
@@ -96,7 +99,10 @@ internal sealed interface ChatEvent {
             override val timestamp: Instant,
             val userDisplayName: String,
             val giftCount: Int,
-            val totalChannelGiftCount: Int,
+            /**
+             * How many subs the user has gifted in the channel, if known.
+             */
+            val totalChannelGiftCount: Int?,
             val subscriptionPlan: String,
         ) : Message
 
@@ -227,6 +233,16 @@ internal sealed interface ChatEvent {
             val targetUserId: String?,
             val targetUserLogin: String?,
             val duration: Duration?,
+        ) : Command
+
+        /**
+         * A user's messages were removed, because they were banned or timed out.
+         * Unlike [ClearChat], we don't know which.
+         */
+        data class ClearUserMessages(
+            val timestamp: Instant,
+            val targetUserId: String,
+            val targetUserLogin: String,
         ) : Command
 
         data class ClearMessage(

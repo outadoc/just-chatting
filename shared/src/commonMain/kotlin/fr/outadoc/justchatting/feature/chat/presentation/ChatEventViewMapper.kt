@@ -14,6 +14,7 @@ import fr.outadoc.justchatting.shared.internal.chat_heldMessage_denied
 import fr.outadoc.justchatting.shared.internal.chat_heldMessage_expired
 import fr.outadoc.justchatting.shared.internal.chat_join
 import fr.outadoc.justchatting.shared.internal.chat_massSubGift_header
+import fr.outadoc.justchatting.shared.internal.chat_massSubGift_header_noTotal
 import fr.outadoc.justchatting.shared.internal.chat_modAnniversary_header
 import fr.outadoc.justchatting.shared.internal.chat_raid_header
 import fr.outadoc.justchatting.shared.internal.chat_reward
@@ -22,6 +23,7 @@ import fr.outadoc.justchatting.shared.internal.chat_stream_offline
 import fr.outadoc.justchatting.shared.internal.chat_stream_online
 import fr.outadoc.justchatting.shared.internal.chat_subConversion_header
 import fr.outadoc.justchatting.shared.internal.chat_subGift_header
+import fr.outadoc.justchatting.shared.internal.chat_subGift_header_noDuration
 import fr.outadoc.justchatting.shared.internal.chat_subGift_payForward
 import fr.outadoc.justchatting.shared.internal.chat_subGift_payForwardAnonymous
 import fr.outadoc.justchatting.shared.internal.chat_subGift_tier1
@@ -35,6 +37,7 @@ import fr.outadoc.justchatting.shared.internal.chat_sub_tier2
 import fr.outadoc.justchatting.shared.internal.chat_sub_tier3
 import fr.outadoc.justchatting.shared.internal.chat_timeout
 import fr.outadoc.justchatting.shared.internal.chat_unraid_subtitle
+import fr.outadoc.justchatting.shared.internal.chat_userMessagesCleared
 import fr.outadoc.justchatting.shared.internal.chat_watchStreak_header
 import fr.outadoc.justchatting.shared.internal.irc_msgid_announcement
 import fr.outadoc.justchatting.shared.internal.irc_msgid_highlighted_message
@@ -278,6 +281,25 @@ internal class ChatEventViewMapper {
                 )
             }
 
+            is ChatEvent.Command.ClearUserMessages -> {
+                listOf(
+                    ChatListItem.RemoveContent(
+                        upUntil = command.timestamp,
+                        matchingUserId = command.targetUserId,
+                    ),
+                    ChatListItem.Message.Highlighted(
+                        timestamp = command.timestamp,
+                        metadata =
+                            ChatListItem.Message.Highlighted.Metadata(
+                                title = command.targetUserLogin.desc(),
+                                titleIcon = Icon.Gavel,
+                                subtitle = Res.string.chat_userMessagesCleared.desc(),
+                            ),
+                        body = null,
+                    ),
+                )
+            }
+
             is ChatEvent.Command.ClearMessage -> {
                 listOf(
                     ChatListItem.RemoveContent(
@@ -436,12 +458,20 @@ internal class ChatEventViewMapper {
                                 title = userDisplayName.desc(),
                                 titleIcon = Icon.VolunteerActivism,
                                 subtitle =
-                                    Res.string.chat_massSubGift_header
-                                        .desc(
-                                            giftCount.formatNumber(),
-                                            parseSubscriptionTierWithArticle(subscriptionPlan),
-                                            totalChannelGiftCount.formatNumber(),
-                                        ),
+                                    if (totalChannelGiftCount != null) {
+                                        Res.string.chat_massSubGift_header
+                                            .desc(
+                                                giftCount.formatNumber(),
+                                                parseSubscriptionTierWithArticle(subscriptionPlan),
+                                                totalChannelGiftCount.formatNumber(),
+                                            )
+                                    } else {
+                                        Res.string.chat_massSubGift_header_noTotal
+                                            .desc(
+                                                giftCount.formatNumber(),
+                                                parseSubscriptionTierWithArticle(subscriptionPlan),
+                                            )
+                                    },
                             ),
                         body = null,
                     )
@@ -456,15 +486,23 @@ internal class ChatEventViewMapper {
                                 title = userDisplayName.desc(),
                                 titleIcon = Icon.Redeem,
                                 subtitle =
-                                    Res.string.chat_subGift_header
-                                        .desc(
-                                            parseSubscriptionTier(subscriptionPlan),
-                                            recipientDisplayName,
-                                            Res.plurals.months.desc(
-                                                number = cumulativeMonths,
-                                                cumulativeMonths.formatNumber(),
-                                            ),
-                                        ),
+                                    if (cumulativeMonths != null) {
+                                        Res.string.chat_subGift_header
+                                            .desc(
+                                                parseSubscriptionTier(subscriptionPlan),
+                                                recipientDisplayName,
+                                                Res.plurals.months.desc(
+                                                    number = cumulativeMonths,
+                                                    cumulativeMonths.formatNumber(),
+                                                ),
+                                            )
+                                    } else {
+                                        Res.string.chat_subGift_header_noDuration
+                                            .desc(
+                                                parseSubscriptionTier(subscriptionPlan),
+                                                recipientDisplayName,
+                                            )
+                                    },
                             ),
                     )
                 }

@@ -29,6 +29,7 @@
     <string name="chat_join">Connecté·e à %1$s</string>
     <string name="chat_loadError">Une erreur est survenue pendant le chargement du tchat.</string>
     <string name="chat_massSubGift_header">offre %1$s abonnements %2$s à la communauté&#160;! Iel a offert un total de %3$s abonnements sur cette chaîne.</string>
+    <string name="chat_massSubGift_header_noTotal">offre %1$s abonnements %2$s à la communauté&#160;!</string>
     <string name="chat_messageActions_emotes">Émotes utilisées</string>
     <string name="chat_message_actionSeparator">&#160;</string>
     <string name="chat_message_standardSeparator">&#160;:&#160;</string>
@@ -48,6 +49,7 @@
     <string name="chat_stream_online">%1$s est en live&#160;!</string>
     <string name="chat_subConversion_header">a converti son abonnement en abonnement %1$s&#160;!</string>
     <string name="chat_subGift_header">offre un abonnement %1$s à %2$s&#160;! Iel est abonné·e depuis %3$s.</string>
+    <string name="chat_subGift_header_noDuration">offre un abonnement %1$s à %2$s&#160;!</string>
     <string name="chat_subGift_payForward">transmet le cadeau qu'iel a reçu de %1$s à la communauté&#160;!</string>
     <string name="chat_subGift_payForwardAnonymous">transmet le cadeau qu'iel a reçu à la communauté&#160;!</string>
     <string name="chat_subGift_tier1">de niveau 1</string>
@@ -60,6 +62,7 @@
     <string name="chat_sub_tier2">de niveau 2</string>
     <string name="chat_sub_tier3">de niveau 3</string>
     <string name="chat_timeout">a été mis·e au silence pendant %1$s</string>
+    <string name="chat_userMessagesCleared">a vu ses messages supprimés par la modération</string>
     <string name="chat_unraid_subtitle">a annulé le raid</string>
     <string name="chat_watchStreak_header">a regardé %1$s d'affilée et a lancé une série de visionnage&#160;!</string>
     <string name="connectionError_logout_action">Se déconnecter</string>

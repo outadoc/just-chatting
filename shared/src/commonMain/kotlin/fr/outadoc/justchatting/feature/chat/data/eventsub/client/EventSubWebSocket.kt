@@ -9,6 +9,7 @@ import fr.outadoc.justchatting.feature.chat.domain.eventsub.EventSubPluginsProvi
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.shared.data.TwitchClient
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
@@ -30,18 +31,22 @@ import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.json.Json
+import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 
 /**
- * Receives channel events from Twitch EventSub over a WebSocket.
+ * Receives chat messages and channel events from Twitch EventSub over a WebSocket.
  *
  * Only subscription types that a regular (non-moderator) user token can create are used.
  * Subscriptions are best-effort: the ones that fail (missing scope, cost limit reached
@@ -54,6 +59,7 @@ internal class EventSubWebSocket(
     private val httpClient: HttpClient,
     private val twitchClient: TwitchClient,
     private val json: Json,
+    private val clock: Clock,
     eventSubPluginsProvider: EventSubPluginsProvider,
     private val dispatchersProvider: DispatchersProvider,
 ) : ChatEventHandler {
@@ -67,7 +73,8 @@ internal class EventSubWebSocket(
          */
         val KEEPALIVE_GRACE_PERIOD = 10.seconds
 
-        const val MAX_REMEMBERED_MESSAGE_IDS = 100
+        const val MAX_REMEMBERED_NOTIFICATION_IDS = 100
+        const val MAX_REMEMBERED_CHAT_MESSAGE_IDS = AppPreferences.Defaults.RecentChatLimit * 2
     }
 
     private sealed interface SessionOutcome {
@@ -89,12 +96,41 @@ internal class EventSubWebSocket(
         data object NoSubscriptions : SessionOutcome
     }
 
+    /**
+     * State shared between reconnections of a single collection of the event flow.
+     */
+    private class CollectionState {
+        /**
+         * Twitch may resend notifications; remember the ones we've already handled.
+         */
+        val seenNotificationIds = ArrayDeque<String>()
+
+        /**
+         * Chat messages may be both backfilled and received live; remember the ones
+         * we've already emitted.
+         */
+        val seenChatMessageIds = ArrayDeque<String>()
+
+        var lastMessageReceivedAt: Instant? = null
+    }
+
     private val plugins: List<EventSubPlugin> = eventSubPluginsProvider.get()
 
-    /**
-     * EventSub only carries auxiliary events, so it never reports the chat as disconnected.
-     */
-    override val connectionStatus: Flow<ConnectionStatus> = flowOf(ConnectionStatus(isAlive = true))
+    private val _connectionStatus: MutableStateFlow<ConnectionStatus> = MutableStateFlow(ConnectionStatus())
+
+    override val connectionStatus: Flow<ConnectionStatus> = _connectionStatus.asStateFlow()
+
+    // This socket is a singleton, but every collector of the event flow holds its own
+    // websocket connection. isAlive is derived from connection counts, so that one
+    // channel's live connection can't mask another channel's dead one.
+    private fun updateConnectionStatus(transform: (ConnectionStatus) -> ConnectionStatus) {
+        _connectionStatus.update { current ->
+            val next = transform(current)
+            next.copy(
+                isAlive = next.aliveConnections > 0 && next.aliveConnections >= next.registeredListeners,
+            )
+        }
+    }
 
     override fun getEventFlow(
         channelId: String,
@@ -102,145 +138,213 @@ internal class EventSubWebSocket(
         appUser: AppUser.LoggedIn,
     ): Flow<ChatEvent> =
         channelFlow {
-            networkStateObserver.state.collectLatest { netState ->
-                if (netState !is NetworkStateObserver.NetworkState.Available) {
-                    logDebug<EventSubWebSocket> { "Network is out, waiting" }
-                    return@collectLatest
-                }
+            val state = CollectionState()
+            updateConnectionStatus { it.copy(registeredListeners = it.registeredListeners + 1) }
+            try {
+                networkStateObserver.state.collectLatest { netState ->
+                    if (netState !is NetworkStateObserver.NetworkState.Available) {
+                        logDebug<EventSubWebSocket> { "Network is out, waiting" }
+                        return@collectLatest
+                    }
 
-                logDebug<EventSubWebSocket> { "Network is available, connecting" }
+                    logDebug<EventSubWebSocket> { "Network is available, connecting" }
 
-                // Twitch may resend messages; remember the ones we've seen across reconnects
-                val seenMessageIds = ArrayDeque<String>()
+                    var url = ENDPOINT
+                    var isNewSession = true
 
-                var url = ENDPOINT
-                var shouldSubscribe = true
+                    while (currentCoroutineContext().isActive) {
+                        val outcome =
+                            try {
+                                listen(
+                                    url = url,
+                                    isNewSession = isNewSession,
+                                    channelId = channelId,
+                                    channelLogin = channelLogin,
+                                    appUser = appUser,
+                                    state = state,
+                                )
+                            } catch (e: CancellationException) {
+                                throw e
+                            } catch (e: Exception) {
+                                logError<EventSubWebSocket>(e) { "Socket was closed" }
+                                SessionOutcome.Disconnected
+                            }
 
-                while (currentCoroutineContext().isActive) {
-                    val outcome =
-                        try {
-                            listen(
-                                url = url,
-                                shouldSubscribe = shouldSubscribe,
-                                channelId = channelId,
-                                appUser = appUser,
-                                seenMessageIds = seenMessageIds,
-                            )
-                        } catch (e: CancellationException) {
-                            throw e
-                        } catch (e: Exception) {
-                            logError<EventSubWebSocket>(e) { "Socket was closed" }
-                            SessionOutcome.Disconnected
-                        }
+                        when (outcome) {
+                            is SessionOutcome.Reconnect -> {
+                                logInfo<EventSubWebSocket> { "Reconnecting to ${outcome.url}" }
+                                url = outcome.url
+                                isNewSession = false
+                            }
 
-                    when (outcome) {
-                        is SessionOutcome.Reconnect -> {
-                            logInfo<EventSubWebSocket> { "Reconnecting to ${outcome.url}" }
-                            url = outcome.url
-                            shouldSubscribe = false
-                        }
+                            SessionOutcome.Disconnected -> {
+                                url = ENDPOINT
+                                isNewSession = true
+                                delayWithJitter(1.seconds, maxJitter = 3.seconds)
+                            }
 
-                        SessionOutcome.Disconnected -> {
-                            url = ENDPOINT
-                            shouldSubscribe = true
-                            delayWithJitter(3.seconds, maxJitter = 5.seconds)
-                        }
-
-                        SessionOutcome.NoSubscriptions -> {
-                            logInfo<EventSubWebSocket> { "No subscriptions were created, giving up" }
-                            awaitCancellation()
+                            SessionOutcome.NoSubscriptions -> {
+                                logInfo<EventSubWebSocket> { "No subscriptions were created, giving up" }
+                                awaitCancellation()
+                            }
                         }
                     }
                 }
+            } finally {
+                updateConnectionStatus { it.copy(registeredListeners = it.registeredListeners - 1) }
             }
         }.flowOn(dispatchersProvider.io)
 
     private suspend fun ProducerScope<ChatEvent>.listen(
         url: String,
-        shouldSubscribe: Boolean,
+        isNewSession: Boolean,
         channelId: String,
+        channelLogin: String,
         appUser: AppUser.LoggedIn,
-        seenMessageIds: ArrayDeque<String>,
+        state: CollectionState,
     ): SessionOutcome {
         var outcome: SessionOutcome = SessionOutcome.Disconnected
+        var isAlive = false
+
+        suspend fun emit(
+            event: ChatEvent,
+            isBackfill: Boolean,
+        ) {
+            if (shouldEmit(event, state, isBackfill)) {
+                send(event)
+            }
+        }
 
         httpClient.webSocket(url) {
-            var keepaliveTimeout: Duration = DEFAULT_KEEPALIVE_TIMEOUT
+            try {
+                var keepaliveTimeout: Duration = DEFAULT_KEEPALIVE_TIMEOUT
 
-            while (isActive) {
-                val message: EventSubServerMessage =
-                    receiveMessage(timeout = keepaliveTimeout + KEEPALIVE_GRACE_PERIOD)
-                        ?: run {
-                            logInfo<EventSubWebSocket> { "No message received before keepalive timeout" }
+                while (isActive) {
+                    val message: EventSubServerMessage =
+                        receiveMessage(timeout = keepaliveTimeout + KEEPALIVE_GRACE_PERIOD)
+                            ?: run {
+                                logInfo<EventSubWebSocket> { "No message received before keepalive timeout" }
+                                return@webSocket
+                            }
+
+                    if (!state.seenNotificationIds.remember(message.metadata.messageId, MAX_REMEMBERED_NOTIFICATION_IDS)) {
+                        logDebug<EventSubWebSocket> { "Ignoring duplicate message ${message.metadata.messageId}" }
+                        continue
+                    }
+
+                    when (message.metadata.messageType) {
+                        EventSubServerMessage.TYPE_WELCOME -> {
+                            val session =
+                                json
+                                    .decodeFromJsonElement(EventSubSessionPayload.serializer(), message.payload)
+                                    .session
+
+                            session.keepaliveTimeoutSeconds?.let { timeout ->
+                                keepaliveTimeout = timeout.seconds
+                            }
+
+                            if (isNewSession) {
+                                val subscribedPlugins =
+                                    subscribe(
+                                        sessionId = session.id,
+                                        channelId = channelId,
+                                        appUser = appUser,
+                                    )
+
+                                if (subscribedPlugins.isEmpty()) {
+                                    outcome = SessionOutcome.NoSubscriptions
+                                    return@webSocket
+                                }
+
+                                isAlive = true
+                                updateConnectionStatus { it.copy(aliveConnections = it.aliveConnections + 1) }
+
+                                // Notifications received meanwhile wait in the socket's buffer
+                                getInitialEvents(subscribedPlugins, channelId, channelLogin, appUser)
+                                    .forEach { event -> emit(event, isBackfill = true) }
+                            } else if (!isAlive) {
+                                isAlive = true
+                                updateConnectionStatus { it.copy(aliveConnections = it.aliveConnections + 1) }
+                            }
+                        }
+
+                        EventSubServerMessage.TYPE_KEEPALIVE -> {}
+
+                        EventSubServerMessage.TYPE_NOTIFICATION -> {
+                            parseNotification(message).forEach { event ->
+                                emit(event, isBackfill = false)
+                            }
+                        }
+
+                        EventSubServerMessage.TYPE_RECONNECT -> {
+                            val reconnectUrl =
+                                json
+                                    .decodeFromJsonElement(EventSubSessionPayload.serializer(), message.payload)
+                                    .session
+                                    .reconnectUrl
+
+                            if (reconnectUrl != null) {
+                                outcome = SessionOutcome.Reconnect(reconnectUrl)
+                            }
+
                             return@webSocket
                         }
 
-                if (!seenMessageIds.remember(message.metadata.messageId)) {
-                    logDebug<EventSubWebSocket> { "Ignoring duplicate message ${message.metadata.messageId}" }
-                    continue
+                        EventSubServerMessage.TYPE_REVOCATION -> {
+                            logInfo<EventSubWebSocket> { "Subscription was revoked: ${message.payload}" }
+                        }
+
+                        else -> {
+                            logDebug<EventSubWebSocket> { "Unknown message type ${message.metadata.messageType}" }
+                        }
+                    }
                 }
-
-                when (message.metadata.messageType) {
-                    EventSubServerMessage.TYPE_WELCOME -> {
-                        val session =
-                            json
-                                .decodeFromJsonElement(EventSubSessionPayload.serializer(), message.payload)
-                                .session
-
-                        session.keepaliveTimeoutSeconds?.let { timeout ->
-                            keepaliveTimeout = timeout.seconds
-                        }
-
-                        if (shouldSubscribe) {
-                            val subscribedCount =
-                                subscribe(
-                                    sessionId = session.id,
-                                    channelId = channelId,
-                                    appUser = appUser,
-                                )
-
-                            if (subscribedCount == 0) {
-                                outcome = SessionOutcome.NoSubscriptions
-                                return@webSocket
-                            }
-                        }
-                    }
-
-                    EventSubServerMessage.TYPE_KEEPALIVE -> {}
-
-                    EventSubServerMessage.TYPE_NOTIFICATION -> {
-                        handleNotification(message) { event ->
-                            this@listen.send(event)
-                        }
-                    }
-
-                    EventSubServerMessage.TYPE_RECONNECT -> {
-                        val reconnectUrl =
-                            json
-                                .decodeFromJsonElement(EventSubSessionPayload.serializer(), message.payload)
-                                .session
-                                .reconnectUrl
-
-                        if (reconnectUrl != null) {
-                            outcome = SessionOutcome.Reconnect(reconnectUrl)
-                        }
-
-                        return@webSocket
-                    }
-
-                    EventSubServerMessage.TYPE_REVOCATION -> {
-                        logInfo<EventSubWebSocket> { "Subscription was revoked: ${message.payload}" }
-                    }
-
-                    else -> {
-                        logDebug<EventSubWebSocket> { "Unknown message type ${message.metadata.messageType}" }
-                    }
+            } finally {
+                if (isAlive) {
+                    updateConnectionStatus { it.copy(aliveConnections = it.aliveConnections - 1) }
                 }
             }
         }
 
         return outcome
     }
+
+    /**
+     * Drops chat messages we've already emitted, and backfilled messages older than
+     * the ones we've already received.
+     */
+    private fun shouldEmit(
+        event: ChatEvent,
+        state: CollectionState,
+        isBackfill: Boolean,
+    ): Boolean {
+        if (event !is ChatEvent.Message) return true
+
+        val lastMessageReceivedAt = state.lastMessageReceivedAt
+        if (isBackfill && lastMessageReceivedAt != null && event.timestamp < lastMessageReceivedAt) {
+            return false
+        }
+
+        val chatMessageId = event.chatMessageId
+        if (chatMessageId != null) {
+            if (!state.seenChatMessageIds.remember(chatMessageId, MAX_REMEMBERED_CHAT_MESSAGE_IDS)) {
+                return false
+            }
+
+            state.lastMessageReceivedAt = event.timestamp
+        }
+
+        return true
+    }
+
+    private val ChatEvent.Message.chatMessageId: String?
+        get() =
+            when (this) {
+                is ChatEvent.Message.ChatMessage -> id
+                is ChatEvent.Message.HighlightedMessage -> userMessage.id
+                is ChatEvent.Message.GigantifiedEmoteMessage -> userMessage.id
+                else -> null
+            }
 
     /**
      * Waits for the next parseable message, or returns null if none arrives before [timeout].
@@ -266,13 +370,13 @@ internal class EventSubWebSocket(
     /**
      * Creates all subscriptions for the given session.
      *
-     * @return the number of subscriptions that were successfully created.
+     * @return the plugins whose subscription was successfully created.
      */
     private suspend fun subscribe(
         sessionId: String,
         channelId: String,
         appUser: AppUser.LoggedIn,
-    ): Int =
+    ): List<EventSubPlugin> =
         coroutineScope {
             plugins
                 .map { plugin ->
@@ -292,51 +396,80 @@ internal class EventSubWebSocket(
                                 logDebug<EventSubWebSocket> { "Subscribed to ${plugin.subscriptionType}" }
                             }.onFailure { e ->
                                 logError<EventSubWebSocket>(e) { "Failed to subscribe to ${plugin.subscriptionType}" }
-                            }.isSuccess
+                            }.map { plugin }
+                            .getOrNull()
                     }
                 }.awaitAll()
-                .count { isSuccess -> isSuccess }
+                .filterNotNull()
         }
 
-    private suspend fun handleNotification(
-        message: EventSubServerMessage,
-        emit: suspend (ChatEvent) -> Unit,
-    ) {
+    /**
+     * Fetches the initial events of all [subscribedPlugins] concurrently, keeping the plugins' order.
+     */
+    private suspend fun getInitialEvents(
+        subscribedPlugins: List<EventSubPlugin>,
+        channelId: String,
+        channelLogin: String,
+        appUser: AppUser.LoggedIn,
+    ): List<ChatEvent> =
+        coroutineScope {
+            subscribedPlugins
+                .map { plugin ->
+                    async {
+                        try {
+                            plugin.getInitialEvents(channelId, channelLogin, appUser)
+                        } catch (e: CancellationException) {
+                            throw e
+                        } catch (e: Exception) {
+                            logError<EventSubWebSocket>(e) { "Failed to get initial events for ${plugin.subscriptionType}" }
+                            emptyList()
+                        }
+                    }
+                }.awaitAll()
+                .flatten()
+        }
+
+    private fun parseNotification(message: EventSubServerMessage): List<ChatEvent> {
         val payload: EventSubNotificationPayload =
             try {
                 json.decodeFromJsonElement(EventSubNotificationPayload.serializer(), message.payload)
             } catch (e: Exception) {
                 logError<EventSubWebSocket>(e) { "Failed to parse notification payload" }
-                return
+                return emptyList()
             }
 
-        val event = payload.event ?: return
+        val event = payload.event ?: return emptyList()
         val plugin = plugins.firstOrNull { plugin -> plugin.subscriptionType == payload.subscription.type }
 
         if (plugin == null) {
             logDebug<EventSubWebSocket> { "No plugin for ${payload.subscription.type}" }
-            return
+            return emptyList()
         }
 
-        val events: List<ChatEvent> =
-            try {
-                plugin.parseEvent(event)
-            } catch (e: Exception) {
-                logError<EventSubWebSocket>(e) { "Failed to parse ${payload.subscription.type} event" }
-                return
-            }
+        val timestamp: Instant =
+            message.metadata.messageTimestamp
+                ?.let { timestamp -> runCatching { Instant.parse(timestamp) }.getOrNull() }
+                ?: clock.now()
 
-        events.forEach { chatEvent -> emit(chatEvent) }
+        return try {
+            plugin.parseEvent(event, timestamp)
+        } catch (e: Exception) {
+            logError<EventSubWebSocket>(e) { "Failed to parse ${payload.subscription.type} event" }
+            emptyList()
+        }
     }
 
     /**
-     * Remembers [id], forgetting the oldest ids when full.
+     * Remembers [id], forgetting the oldest ids past [capacity].
      *
      * @return false if [id] was already known.
      */
-    private fun ArrayDeque<String>.remember(id: String): Boolean {
+    private fun ArrayDeque<String>.remember(
+        id: String,
+        capacity: Int,
+    ): Boolean {
         if (id in this) return false
-        if (size >= MAX_REMEMBERED_MESSAGE_IDS) removeFirst()
+        if (size >= capacity) removeFirst()
         addLast(id)
         return true
     }

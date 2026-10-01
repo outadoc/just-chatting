@@ -8,16 +8,15 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import kotlin.time.Clock
+import kotlin.time.Instant
 
 /**
  * Raids going out of the current channel. No authorization required.
  *
- * Incoming raids are already announced over IRC, so we don't subscribe to them.
+ * Incoming raids are announced as chat notifications, so we don't subscribe to them.
  */
 internal class EventSubOutgoingRaidPlugin(
     private val json: Json,
-    private val clock: Clock,
 ) : EventSubPlugin {
     override val subscriptionType = "channel.raid"
     override val subscriptionVersion = "1"
@@ -27,11 +26,14 @@ internal class EventSubOutgoingRaidPlugin(
         appUser: AppUser.LoggedIn,
     ): Map<String, String> = mapOf("from_broadcaster_user_id" to channelId)
 
-    override fun parseEvent(event: JsonObject): List<ChatEvent> {
+    override fun parseEvent(
+        event: JsonObject,
+        timestamp: Instant,
+    ): List<ChatEvent> {
         val raid = json.decodeFromJsonElement(Event.serializer(), event)
         return listOf(
             ChatEvent.Message.RaidUpdate(
-                timestamp = clock.now(),
+                timestamp = timestamp,
                 raid =
                     Raid.Go(
                         targetId = raid.toBroadcasterUserId,

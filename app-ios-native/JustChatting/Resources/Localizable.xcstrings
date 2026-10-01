@@ -382,6 +382,16 @@
         }
       }
     },
+    "Host" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hôte"
+          }
+        }
+      }
+    },
     "In order to browse your followed channels and post in chat, you will need to link your Twitch account." : {
       "localizations" : {
         "fr" : {
@@ -798,6 +808,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réglages"
+          }
+        }
+      }
+    },
+    "Shared chat" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tchat partagé"
           }
         }
       }

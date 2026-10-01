@@ -14,6 +14,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
+import fr.outadoc.justchatting.feature.chat.domain.model.SharedChatSession
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.emotes.domain.EmoteListSource
 import fr.outadoc.justchatting.feature.emotes.domain.EmoteListSourcesProvider
@@ -804,6 +805,7 @@ private class FakeTwitchRepository : TwitchRepository {
     var globalBadges: List<TwitchBadge> = emptyList()
     var channelBadges: List<TwitchBadge> = emptyList()
     var cheerEmotes: List<Emote> = emptyList()
+    var sharedChatSession: SharedChatSession? = null
 
     /** When set, [getUserById] emits this failure instead of reading from [users]. */
     var userError: Throwable? = null
@@ -845,6 +847,8 @@ private class FakeTwitchRepository : TwitchRepository {
     override suspend fun getGlobalBadges(): Result<List<TwitchBadge>> = Result.success(globalBadges)
 
     override suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>> = Result.success(channelBadges)
+
+    override suspend fun getSharedChatSession(channelId: String): Result<SharedChatSession?> = Result.success(sharedChatSession)
 
     override suspend fun getCheerEmotes(userId: String): Result<List<Emote>> = Result.success(cheerEmotes)
 

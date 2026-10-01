@@ -120,6 +120,11 @@ public sealed interface ChatListItem {
     ) : ChatListItem
 
     @Immutable
+    public data class SharedChatSessionUpdate(
+        val session: SharedChatSession?,
+    ) : ChatListItem
+
+    @Immutable
     public data class StreamStatusUpdate(
         val isLive: Boolean,
     ) : ChatListItem

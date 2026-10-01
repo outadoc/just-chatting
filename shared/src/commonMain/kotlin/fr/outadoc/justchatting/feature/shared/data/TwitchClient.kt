@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.shared.data
 import fr.outadoc.justchatting.feature.chat.data.http.CheerEmotesResponse
 import fr.outadoc.justchatting.feature.chat.data.http.EventSubSubscriptionRequest
 import fr.outadoc.justchatting.feature.chat.data.http.SendMessageResponse
+import fr.outadoc.justchatting.feature.chat.data.http.SharedChatSessionResponse
 import fr.outadoc.justchatting.feature.chat.data.http.TwitchBadgesResponse
 import fr.outadoc.justchatting.feature.emotes.data.twitch.model.EmoteSetResponse
 import fr.outadoc.justchatting.feature.followed.data.model.FollowResponse
@@ -171,6 +172,17 @@ internal class TwitchClient(
                 .get {
                     url {
                         path("chat/badges")
+                        parameter("broadcaster_id", channelId)
+                    }
+                }.body()
+        }
+
+    suspend fun getSharedChatSession(channelId: String): Result<SharedChatSessionResponse> =
+        runCatching {
+            client
+                .get {
+                    url {
+                        path("shared_chat/session")
                         parameter("broadcaster_id", channelId)
                     }
                 }.body()

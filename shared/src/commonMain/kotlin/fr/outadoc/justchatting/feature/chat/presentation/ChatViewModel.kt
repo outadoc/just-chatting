@@ -11,6 +11,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.PinnedMessage
 import fr.outadoc.justchatting.feature.chat.domain.model.Poll
 import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
+import fr.outadoc.justchatting.feature.chat.domain.model.SharedChatSession
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.emotes.domain.GetRecentEmotesUseCase
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
@@ -181,6 +182,10 @@ public class ChatViewModel internal constructor(
             val pronouns: Map<Chatter, Pronoun?>,
         ) : Action()
 
+        data class UpdateSharedChatSession(
+            val session: SharedChatSession?,
+        ) : Action()
+
         data class UpdateSourceChannels(
             val users: List<User>,
         ) : Action()
@@ -233,6 +238,7 @@ public class ChatViewModel internal constructor(
             val chatters: PersistentSet<Chatter> = persistentHashSetOf(),
             val pronouns: PersistentMap<Chatter, Pronoun?> = persistentMapOf(),
             val sourceRoomIds: PersistentSet<String> = persistentHashSetOf(),
+            val sharedChatSession: SharedChatSession? = null,
             val sourceChannels: PersistentMap<String, User> = persistentMapOf(),
             val sourceChannelBadges: PersistentMap<String, PersistentList<TwitchBadge>> = persistentMapOf(),
             val cheerEmotes: PersistentMap<String, Emote> = persistentMapOf(),
@@ -561,6 +567,16 @@ public class ChatViewModel internal constructor(
 
             scope.launch {
                 twitchRepository
+                    .getSharedChatSession(channelId)
+                    .onSuccess { session ->
+                        dispatchIfCurrent(Action.UpdateSharedChatSession(session))
+                    }.onFailure { exception ->
+                        logError<ChatViewModel>(exception) { "Failed to load shared chat session" }
+                    }
+            }
+
+            scope.launch {
+                twitchRepository
                     .getUserById(channelId)
                     .onEach { result ->
                         result
@@ -643,6 +659,10 @@ public class ChatViewModel internal constructor(
                                         Action.UpdateStreamMetadata(
                                             viewerCount = event.viewerCount,
                                         )
+                                    }
+
+                                    is ChatListItem.SharedChatSessionUpdate -> {
+                                        Action.UpdateSharedChatSession(event.session)
                                     }
 
                                     is ChatListItem.StreamStatusUpdate -> {

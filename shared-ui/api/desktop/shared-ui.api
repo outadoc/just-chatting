@@ -587,7 +587,7 @@ public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/Futu
 
 public final class fr/outadoc/justchatting/feature/timeline/presentation/ui/LiveDetailsDialogKt {
 	public static final fun ChannelDetailsActions (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
-	public static final fun ChannelDetailsContent (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/shared/domain/model/User;Lfr/outadoc/justchatting/feature/timeline/domain/model/Stream;Lkotlinx/datetime/TimeZone;Landroidx/compose/runtime/Composer;II)V
+	public static final fun ChannelDetailsContent (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/shared/domain/model/User;Lfr/outadoc/justchatting/feature/timeline/domain/model/Stream;Lkotlinx/datetime/TimeZone;Lkotlinx/collections/immutable/ImmutableList;Landroidx/compose/runtime/Composer;II)V
 	public static final fun ChannelDetailsHeader (Landroidx/compose/ui/Modifier;Lfr/outadoc/justchatting/feature/shared/domain/model/User;Landroidx/compose/runtime/Composer;II)V
 }
 

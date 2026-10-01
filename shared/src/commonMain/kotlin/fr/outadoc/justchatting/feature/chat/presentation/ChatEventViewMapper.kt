@@ -287,6 +287,12 @@ internal class ChatEventViewMapper {
                 )
             }
 
+            is ChatEvent.Command.SharedChatSessionUpdate -> {
+                listOf(
+                    ChatListItem.SharedChatSessionUpdate(session = command.session),
+                )
+            }
+
             ChatEvent.Command.Ping -> {
                 emptyList()
             }

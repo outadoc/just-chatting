@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.shared.domain
 
 import androidx.paging.PagingData
+import fr.outadoc.justchatting.feature.chat.domain.model.SharedChatSession
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
@@ -28,6 +29,11 @@ internal interface TwitchApi {
     suspend fun getGlobalBadges(): Result<List<TwitchBadge>>
 
     suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>>
+
+    /**
+     * @return the channel's active shared chat session, or null if it isn't in one.
+     */
+    suspend fun getSharedChatSession(channelId: String): Result<SharedChatSession?>
 
     suspend fun getChannelVideos(
         channelId: String,

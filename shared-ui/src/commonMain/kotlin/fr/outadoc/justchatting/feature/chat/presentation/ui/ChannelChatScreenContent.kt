@@ -50,6 +50,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.MessagePostConstraint
+import fr.outadoc.justchatting.feature.chat.presentation.sharedChatChannels
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.timeline.presentation.ui.LiveDetailsDialog
 import fr.outadoc.justchatting.shared.internal.Res
@@ -263,6 +264,7 @@ public fun ChannelChatScreenContent(
                 LiveDetailsDialog(
                     user = state.user,
                     stream = state.stream,
+                    sharedChatChannels = state.sharedChatChannels,
                     onDismissRequest = onDismissStreamInfo,
                     onOpenChat = null,
                     onOpenInBubble = onOpenBubbleClicked,

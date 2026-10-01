@@ -29,6 +29,7 @@ internal class ChatStateReducer {
             is ChatViewModel.Action.UpdatePrediction -> action.reduce(state)
             is ChatViewModel.Action.UpdateStreamMetadata -> action.reduce(state)
             is ChatViewModel.Action.UpdateChatterPronouns -> action.reduce(state)
+            is ChatViewModel.Action.UpdateSharedChatSession -> action.reduce(state)
             is ChatViewModel.Action.UpdateSourceChannels -> action.reduce(state)
             is ChatViewModel.Action.UpdateSourceChannelBadges -> action.reduce(state)
             is ChatViewModel.Action.AddRichEmbed -> action.reduce(state)
@@ -222,6 +223,19 @@ internal class ChatStateReducer {
         if (state !is ChatViewModel.State.Chatting) return state
         return state.copy(
             pronouns = state.pronouns.putAll(pronouns),
+        )
+    }
+
+    private fun ChatViewModel.Action.UpdateSharedChatSession.reduce(state: ChatViewModel.State): ChatViewModel.State {
+        if (state !is ChatViewModel.State.Chatting) return state
+        return state.copy(
+            sharedChatSession = session,
+            // Load the other channels' details and badges right away, so they're ready
+            // when their first messages come in.
+            sourceRoomIds =
+                state.sourceRoomIds.addAll(
+                    session?.participantChannelIds.orEmpty() - state.user.id,
+                ),
         )
     }
 

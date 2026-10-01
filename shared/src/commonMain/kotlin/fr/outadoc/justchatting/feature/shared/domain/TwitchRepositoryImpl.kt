@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.shared.domain
 
 import androidx.paging.PagingData
 import androidx.paging.flatMap
+import fr.outadoc.justchatting.feature.chat.domain.model.SharedChatSession
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
@@ -290,6 +291,11 @@ internal class TwitchRepositoryImpl(
     override suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>> =
         withContext(dispatchersProvider.io) {
             twitchApi.getChannelBadges(channelId)
+        }
+
+    override suspend fun getSharedChatSession(channelId: String): Result<SharedChatSession?> =
+        withContext(dispatchersProvider.io) {
+            twitchApi.getSharedChatSession(channelId)
         }
 
     private suspend fun syncLocalFollows(appUserId: String): Result<Unit> =

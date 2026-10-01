@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import fr.outadoc.justchatting.feature.chat.data.http.map
+import fr.outadoc.justchatting.feature.chat.domain.model.SharedChatSession
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.emotes.data.twitch.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
@@ -20,6 +21,7 @@ import fr.outadoc.justchatting.feature.timeline.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.timeline.domain.model.Video
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
@@ -279,6 +281,21 @@ internal class TwitchApiImpl(
                     emote.tiers.map { tier ->
                         tier.map(prefix = emote.prefix)
                     }
+                }
+            }
+
+    override suspend fun getSharedChatSession(channelId: String): Result<SharedChatSession?> =
+        twitchClient
+            .getSharedChatSession(channelId)
+            .map { response ->
+                response.data.firstOrNull()?.let { session ->
+                    SharedChatSession(
+                        hostChannelId = session.hostBroadcasterId,
+                        participantChannelIds =
+                            session.participants
+                                .map { participant -> participant.broadcasterId }
+                                .toImmutableList(),
+                    )
                 }
             }
 

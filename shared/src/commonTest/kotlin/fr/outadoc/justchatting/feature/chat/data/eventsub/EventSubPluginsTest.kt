@@ -3,12 +3,15 @@ package fr.outadoc.justchatting.feature.chat.data.eventsub
 import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.channelupdate.EventSubChannelUpdatePlugin
 import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.heldmessage.EventSubHeldMessageUpdatePlugin
 import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.raid.EventSubOutgoingRaidPlugin
+import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.sharedchat.EventSubSharedChatPlugin
 import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.streamstatus.EventSubStreamStatusPlugin
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
+import fr.outadoc.justchatting.feature.chat.domain.model.SharedChatSession
 import fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.core.DefaultJson
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlin.test.Test
@@ -210,4 +213,77 @@ internal class EventSubPluginsTest {
             userLogin = "viewer",
             token = ApiToken("token"),
         )
+
+    @Test
+    fun `shared chat begin is mapped to a session`() {
+        val plugin = EventSubSharedChatPlugin(DefaultJson, EventSubSharedChatPlugin.Kind.Begin)
+        assertEquals("channel.shared_chat.begin", plugin.subscriptionType)
+
+        val events =
+            plugin.parseEvent(
+                event(
+                    """
+                    {
+                        "session_id": "2b64a92a-dbb8-424e-b1c3-304423ba1b6f",
+                        "broadcaster_user_id": "1971641",
+                        "broadcaster_user_login": "streamer",
+                        "broadcaster_user_name": "streamer",
+                        "host_broadcaster_user_id": "1971641",
+                        "host_broadcaster_user_login": "streamer",
+                        "host_broadcaster_user_name": "streamer",
+                        "participants": [
+                            {
+                                "broadcaster_user_id": "1971641",
+                                "broadcaster_user_name": "streamer",
+                                "broadcaster_user_login": "streamer"
+                            },
+                            {
+                                "broadcaster_user_id": "112233",
+                                "broadcaster_user_name": "streamer33",
+                                "broadcaster_user_login": "streamer33"
+                            }
+                        ]
+                    }
+                    """,
+                ),
+            )
+
+        assertEquals(
+            listOf(
+                ChatEvent.Command.SharedChatSessionUpdate(
+                    session =
+                        SharedChatSession(
+                            hostChannelId = "1971641",
+                            participantChannelIds = persistentListOf("1971641", "112233"),
+                        ),
+                ),
+            ),
+            events,
+        )
+    }
+
+    @Test
+    fun `shared chat end clears the session`() {
+        val plugin = EventSubSharedChatPlugin(DefaultJson, EventSubSharedChatPlugin.Kind.End)
+        assertEquals("channel.shared_chat.end", plugin.subscriptionType)
+
+        val events =
+            plugin.parseEvent(
+                event(
+                    """
+                    {
+                        "session_id": "2b64a92a-dbb8-424e-b1c3-304423ba1b6f",
+                        "broadcaster_user_id": "1971641",
+                        "broadcaster_user_login": "streamer",
+                        "broadcaster_user_name": "streamer",
+                        "host_broadcaster_user_id": "1971641",
+                        "host_broadcaster_user_login": "streamer",
+                        "host_broadcaster_user_name": "streamer"
+                    }
+                    """,
+                ),
+            )
+
+        assertEquals(listOf(ChatEvent.Command.SharedChatSessionUpdate(session = null)), events)
+    }
 }

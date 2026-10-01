@@ -10,6 +10,7 @@ import SwiftUI
 struct StreamInfoSheet: View {
     let user: User
     let stream: JCShared.Stream?
+    var sharedChatChannels: [SharedChatChannel] = []
 
     var body: some View {
         List {
@@ -58,6 +59,23 @@ struct StreamInfoSheet: View {
                     if !stream.tags.isEmpty {
                         TagList(tags: stream.tags)
                             .font(.footnote)
+                    }
+                }
+            }
+
+            if !sharedChatChannels.isEmpty {
+                Section("Shared chat") {
+                    ForEach(sharedChatChannels, id: \.user.id) { channel in
+                        HStack(spacing: 12) {
+                            AvatarView(url: channel.user.profileImageUrl, size: 24)
+                            Text(channel.user.displayName)
+                            Spacer(minLength: 0)
+                            if channel.isHost {
+                                Text("Host")
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
                     }
                 }
             }

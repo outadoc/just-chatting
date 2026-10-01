@@ -222,6 +222,13 @@ internal sealed interface ChatEvent {
             val emoteSets: List<String> = emptyList(),
         ) : Command
 
+        /**
+         * @property session the new session, or null if the channel left it.
+         */
+        data class SharedChatSessionUpdate(
+            val session: SharedChatSession?,
+        ) : Command
+
         data class ClearChat(
             val timestamp: Instant,
             val targetUserId: String?,

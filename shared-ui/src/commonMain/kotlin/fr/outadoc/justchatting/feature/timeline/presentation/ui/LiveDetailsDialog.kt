@@ -16,8 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
+import fr.outadoc.justchatting.feature.chat.presentation.SharedChatChannel
 import fr.outadoc.justchatting.feature.chat.presentation.ui.BasicUserInfo
 import fr.outadoc.justchatting.feature.chat.presentation.ui.ExtraUserInfo
+import fr.outadoc.justchatting.feature.chat.presentation.ui.SharedChatCard
 import fr.outadoc.justchatting.feature.chat.presentation.ui.StreamInfoCard
 import fr.outadoc.justchatting.feature.chat.presentation.ui.UserCreatedAt
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
@@ -32,6 +34,8 @@ import fr.outadoc.justchatting.shared.internal.watch_live
 import fr.outadoc.justchatting.utils.core.TimeZoneProvider
 import fr.outadoc.justchatting.utils.core.createChannelExternalLink
 import fr.outadoc.justchatting.utils.presentation.areBubblesSupported
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -42,6 +46,7 @@ internal fun LiveDetailsDialog(
     modifier: Modifier = Modifier,
     user: User,
     stream: Stream?,
+    sharedChatChannels: ImmutableList<SharedChatChannel> = persistentListOf(),
     onDismissRequest: () -> Unit = {},
     onOpenChat: (() -> Unit)? = {},
     onOpenInBubble: () -> Unit = {},
@@ -67,6 +72,7 @@ internal fun LiveDetailsDialog(
             ChannelDetailsContent(
                 user = user,
                 stream = stream,
+                sharedChatChannels = sharedChatChannels,
                 timeZone = timeZoneProvider.currentTimeZone,
             )
         },
@@ -166,6 +172,7 @@ public fun ChannelDetailsContent(
     user: User,
     stream: Stream?,
     timeZone: TimeZone,
+    sharedChatChannels: ImmutableList<SharedChatChannel> = persistentListOf(),
 ) {
     Column(
         modifier = modifier,
@@ -181,6 +188,13 @@ public fun ChannelDetailsContent(
                 modifier = Modifier.fillMaxWidth(),
                 stream = stream,
                 timeZone = timeZone,
+            )
+        }
+
+        if (sharedChatChannels.isNotEmpty()) {
+            SharedChatCard(
+                modifier = Modifier.fillMaxWidth(),
+                channels = sharedChatChannels,
             )
         }
     }

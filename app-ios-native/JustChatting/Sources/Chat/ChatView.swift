@@ -98,7 +98,11 @@ struct ChatView: View {
                 }
             )
         ) {
-            StreamInfoSheet(user: chatting.user, stream: chatting.stream)
+            StreamInfoSheet(
+                user: chatting.user,
+                stream: chatting.stream,
+                sharedChatChannels: chatting.sharedChatChannels
+            )
                 .presentationDetents([.medium, .large])
         }
         .sheet(

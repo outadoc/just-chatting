@@ -12,6 +12,7 @@ import fr.outadoc.justchatting.feature.chat.data.eventsub.client.EventSubWebSock
 import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.channelupdate.EventSubChannelUpdatePlugin
 import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.heldmessage.EventSubHeldMessageUpdatePlugin
 import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.raid.EventSubOutgoingRaidPlugin
+import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.sharedchat.EventSubSharedChatPlugin
 import fr.outadoc.justchatting.feature.chat.data.eventsub.plugin.streamstatus.EventSubStreamStatusPlugin
 import fr.outadoc.justchatting.feature.chat.data.irc.LiveChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.irc.LoggedInChatWebSocket
@@ -192,6 +193,9 @@ internal val sharedModule: Module
                         EventSubStreamStatusPlugin(get(), get(), isLive = false),
                         EventSubOutgoingRaidPlugin(get(), get()),
                         EventSubHeldMessageUpdatePlugin(get(), get()),
+                        EventSubSharedChatPlugin(get(), EventSubSharedChatPlugin.Kind.Begin),
+                        EventSubSharedChatPlugin(get(), EventSubSharedChatPlugin.Kind.Update),
+                        EventSubSharedChatPlugin(get(), EventSubSharedChatPlugin.Kind.End),
                     )
                 }
             }

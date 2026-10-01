@@ -7,6 +7,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.PinnedMessage
 import fr.outadoc.justchatting.feature.chat.domain.model.Poll
 import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
+import fr.outadoc.justchatting.feature.chat.domain.model.SharedChatSession
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
@@ -1193,4 +1194,72 @@ internal class ChatStateReducerTest {
     }
 
     // endregion
+
+    @Test
+    fun `shared chat session seeds the other participants as source rooms`() {
+        val session =
+            SharedChatSession(
+                hostChannelId = "host-id",
+                participantChannelIds = persistentListOf("host-id", testUser.id, "guest-id"),
+            )
+
+        val result =
+            reducer.reduce(
+                ChatViewModel.Action.UpdateSharedChatSession(session),
+                testChattingState,
+            )
+
+        assertIs<ChatViewModel.State.Chatting>(result)
+        assertEquals(session, result.sharedChatSession)
+        assertEquals(setOf("host-id", "guest-id"), result.sourceRoomIds)
+    }
+
+    @Test
+    fun `ending a shared chat session clears it but keeps known source rooms`() {
+        val session =
+            SharedChatSession(
+                hostChannelId = "host-id",
+                participantChannelIds = persistentListOf("host-id", testUser.id),
+            )
+
+        val inSession =
+            reducer.reduce(
+                ChatViewModel.Action.UpdateSharedChatSession(session),
+                testChattingState,
+            )
+
+        val result =
+            reducer.reduce(
+                ChatViewModel.Action.UpdateSharedChatSession(null),
+                inSession,
+            )
+
+        assertIs<ChatViewModel.State.Chatting>(result)
+        assertNull(result.sharedChatSession)
+        // Messages relayed during the session are still shown, and still need their badges.
+        assertEquals(setOf("host-id"), result.sourceRoomIds)
+    }
+
+    @Test
+    fun `shared chat channels exclude the current channel and flag the host`() {
+        val host = testUser.copy(id = "host-id", login = "host", displayName = "Host")
+        val guest = testUser.copy(id = "guest-id", login = "guest", displayName = "Guest")
+        val state =
+            testChattingState.copy(
+                sharedChatSession =
+                    SharedChatSession(
+                        hostChannelId = host.id,
+                        participantChannelIds = persistentListOf(host.id, testUser.id, guest.id, "not-loaded-id"),
+                    ),
+                sourceChannels = persistentMapOf(host.id to host, guest.id to guest),
+            )
+
+        assertEquals(
+            listOf(
+                SharedChatChannel(user = host, isHost = true),
+                SharedChatChannel(user = guest, isHost = false),
+            ),
+            state.sharedChatChannels,
+        )
+    }
 }

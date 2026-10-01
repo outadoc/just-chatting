@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.demo.data
 
 import androidx.paging.PagingData
+import fr.outadoc.justchatting.feature.chat.domain.model.SharedChatSession
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.demo.domain.DemoModeRepository
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
@@ -67,6 +68,8 @@ internal class DemoAwareTwitchRepository(
     override suspend fun getGlobalBadges(): Result<List<TwitchBadge>> = current().getGlobalBadges()
 
     override suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>> = current().getChannelBadges(channelId)
+
+    override suspend fun getSharedChatSession(channelId: String): Result<SharedChatSession?> = current().getSharedChatSession(channelId)
 
     override suspend fun sendChatMessage(
         channelUserId: String,

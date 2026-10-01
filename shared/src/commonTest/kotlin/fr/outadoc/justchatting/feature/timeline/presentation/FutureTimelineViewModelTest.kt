@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.paging.PagingData
 import com.eygraber.uri.Uri
+import fr.outadoc.justchatting.feature.chat.domain.model.SharedChatSession
 import fr.outadoc.justchatting.feature.chat.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.followed.domain.model.ChannelFollow
@@ -391,6 +392,8 @@ private class FakeTwitchRepository : TwitchRepository {
     override suspend fun getGlobalBadges(): Result<List<TwitchBadge>> = error("Not used in tests")
 
     override suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>> = error("Not used in tests")
+
+    override suspend fun getSharedChatSession(channelId: String): Result<SharedChatSession?> = error("Not used in tests")
 
     override suspend fun sendChatMessage(
         channelUserId: String,

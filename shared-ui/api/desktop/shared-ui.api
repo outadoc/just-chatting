@@ -225,6 +225,14 @@ public final class fr/outadoc/justchatting/feature/followed/presentation/ui/Comp
 	public final fun getLambda$1089636977$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function4;
 }
 
+public final class fr/outadoc/justchatting/feature/onboarding/presentation/ui/ComposableSingletons$ConnectionErrorScreenKt {
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/onboarding/presentation/ui/ComposableSingletons$ConnectionErrorScreenKt;
+	public fun <init> ()V
+	public final fun getLambda$-170900734$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1154760947$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$44584358$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function3;
+}
+
 public final class fr/outadoc/justchatting/feature/onboarding/presentation/ui/ComposableSingletons$OnboardingScreenKt {
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/onboarding/presentation/ui/ComposableSingletons$OnboardingScreenKt;
 	public fun <init> ()V
@@ -236,6 +244,10 @@ public final class fr/outadoc/justchatting/feature/onboarding/presentation/ui/Co
 	public static final field INSTANCE Lfr/outadoc/justchatting/feature/onboarding/presentation/ui/ComposableSingletons$SignInWithTwitchButtonKt;
 	public fun <init> ()V
 	public final fun getLambda$-134583705$just_chatting_shared_ui ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class fr/outadoc/justchatting/feature/onboarding/presentation/ui/ConnectionErrorScreenKt {
+	public static final fun ConnectionErrorScreen (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class fr/outadoc/justchatting/feature/onboarding/presentation/ui/OnboardingScreenKt {

@@ -21,23 +21,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.connectionError_logout_action
 import fr.outadoc.justchatting.shared.internal.connectionError_message
 import fr.outadoc.justchatting.shared.internal.connectionError_retry_action
 import fr.outadoc.justchatting.shared.internal.connectionError_title
+import fr.outadoc.justchatting.utils.presentation.AppTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun ConnectionErrorScreen(
+public fun ConnectionErrorScreen(
     modifier: Modifier = Modifier,
     onRetryClick: () -> Unit,
     onLogoutClick: () -> Unit,
 ) {
-    val retryLabel = stringResource(Res.string.connectionError_retry_action)
-    val logoutLabel = stringResource(Res.string.connectionError_logout_action)
-
     Scaffold(modifier = modifier) { insets ->
         Box(
             modifier =
@@ -79,15 +78,26 @@ internal fun ConnectionErrorScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Button(onClick = onRetryClick) {
-                        Text(text = retryLabel)
+                        Text(text = stringResource(Res.string.connectionError_retry_action))
                     }
 
                     TextButton(onClick = onLogoutClick) {
-                        Text(text = logoutLabel)
+                        Text(text = stringResource(Res.string.connectionError_logout_action))
                     }
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+internal fun ConnectionErrorScreenPreview() {
+    AppTheme {
+        ConnectionErrorScreen(
+            onRetryClick = {},
+            onLogoutClick = {},
+        )
     }
 }
 

@@ -19,20 +19,11 @@ import fr.outadoc.justchatting.feature.chat.data.irc.TwitchIrcCommandParser
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesApi
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesRepository
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesServer
-import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.broadcastsettingsupdate.PubSubBroadcastSettingsPlugin
-import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.channelpoints.PubSubChannelPointsPlugin
-import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.pinnedmessage.PubSubPinnedMessagePlugin
-import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.poll.PubSubPollPlugin
-import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.prediction.PubSubPredictionPlugin
-import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.raid.PubSubRaidPlugin
-import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.richembed.PubSubRichEmbedPlugin
-import fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.viewercount.PubSubViewerCountPlugin
 import fr.outadoc.justchatting.feature.chat.domain.AggregateChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.feature.chat.domain.DefaultChatRepository
 import fr.outadoc.justchatting.feature.chat.domain.eventsub.EventSubPluginsProvider
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandlersProvider
-import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPluginsProvider
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEventViewMapper
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.FilterAutocompleteItemsUseCase
@@ -201,30 +192,6 @@ internal val sharedModule: Module
                         EventSubStreamStatusPlugin(get(), get(), isLive = false),
                         EventSubOutgoingRaidPlugin(get(), get()),
                         EventSubHeldMessageUpdatePlugin(get(), get()),
-                    )
-                }
-            }
-
-            single { PubSubBroadcastSettingsPlugin(get(), get()) }
-            single { PubSubChannelPointsPlugin(get(), get()) }
-            single { PubSubPinnedMessagePlugin(get(), get()) }
-            single { PubSubPollPlugin(get(), get()) }
-            single { PubSubPredictionPlugin(get()) }
-            single { PubSubRaidPlugin(get(), get()) }
-            single { PubSubRichEmbedPlugin(get(), get()) }
-            single { PubSubViewerCountPlugin(get(), get()) }
-
-            single {
-                PubSubPluginsProvider {
-                    listOf(
-                        get<PubSubChannelPointsPlugin>(),
-                        get<PubSubPollPlugin>(),
-                        get<PubSubPredictionPlugin>(),
-                        get<PubSubBroadcastSettingsPlugin>(),
-                        get<PubSubViewerCountPlugin>(),
-                        get<PubSubRichEmbedPlugin>(),
-                        get<PubSubPinnedMessagePlugin>(),
-                        get<PubSubRaidPlugin>(),
                     )
                 }
             }

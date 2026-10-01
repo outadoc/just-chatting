@@ -81,7 +81,9 @@ public class SettingsViewModel internal constructor(
                                 }
                         }
 
-                        AppUser.NotLoggedIn -> {
+                        AppUser.NotLoggedIn,
+                        AppUser.ValidationFailed,
+                        -> {
                             flowOf(null)
                         }
                     }

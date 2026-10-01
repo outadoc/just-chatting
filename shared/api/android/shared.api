@@ -1191,6 +1191,14 @@ public final class fr/outadoc/justchatting/feature/preferences/domain/model/AppU
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class fr/outadoc/justchatting/feature/preferences/domain/model/AppUser$ValidationFailed : fr/outadoc/justchatting/feature/preferences/domain/model/AppUser {
+	public static final field $stable I
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/preferences/domain/model/AppUser$ValidationFailed;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public abstract interface class fr/outadoc/justchatting/feature/preferences/presentation/AppUpdateChecker {
 	public abstract fun checkForUpdate (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getState ()Lkotlinx/coroutines/flow/StateFlow;
@@ -1581,6 +1589,8 @@ public final class fr/outadoc/justchatting/feature/shared/presentation/MainRoute
 	public fun onDeeplinkReceived (Lcom/eygraber/uri/Uri;)V
 	public fun onDeeplinkReceived (Ljava/lang/String;)V
 	public final fun onLoginClick ()V
+	public final fun onLogoutClick ()V
+	public final fun onRetryClick ()V
 	public final fun onStart ()V
 	public final fun onTabSelected (Lfr/outadoc/justchatting/feature/shared/presentation/Screen;)V
 }
@@ -1627,6 +1637,14 @@ public final class fr/outadoc/justchatting/feature/shared/presentation/MainRoute
 
 public abstract class fr/outadoc/justchatting/feature/shared/presentation/MainRouterViewModel$State {
 	public static final field $stable I
+}
+
+public final class fr/outadoc/justchatting/feature/shared/presentation/MainRouterViewModel$State$ConnectionError : fr/outadoc/justchatting/feature/shared/presentation/MainRouterViewModel$State {
+	public static final field $stable I
+	public static final field INSTANCE Lfr/outadoc/justchatting/feature/shared/presentation/MainRouterViewModel$State$ConnectionError;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class fr/outadoc/justchatting/feature/shared/presentation/MainRouterViewModel$State$Loading : fr/outadoc/justchatting/feature/shared/presentation/MainRouterViewModel$State {

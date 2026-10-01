@@ -12,5 +12,10 @@ internal interface AuthRepository {
 
     suspend fun logout()
 
+    /**
+     * Re-validates the current token, e.g. after [AppUser.ValidationFailed] was emitted.
+     */
+    fun retryValidation()
+
     fun getExternalAuthorizeUrl(): Uri
 }

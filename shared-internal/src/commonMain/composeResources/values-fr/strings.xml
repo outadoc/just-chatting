@@ -57,6 +57,10 @@
     <string name="chat_timeout">a été mis·e au silence pendant %1$s</string>
     <string name="chat_unraid_subtitle">a annulé le raid</string>
     <string name="chat_watchStreak_header">a regardé %1$s d'affilée et a lancé une série de visionnage&#160;!</string>
+    <string name="connectionError_logout_action">Se déconnecter</string>
+    <string name="connectionError_message">Impossible de joindre Twitch. Vérifiez votre connexion internet et réessayez.</string>
+    <string name="connectionError_retry_action">Réessayer</string>
+    <string name="connectionError_title">Erreur de connexion</string>
     <string name="connectionLost_error">Reconnexion au tchat…</string>
     <string name="created_at">Créé le %1$s</string>
     <string name="date_today">Aujourd'hui</string>

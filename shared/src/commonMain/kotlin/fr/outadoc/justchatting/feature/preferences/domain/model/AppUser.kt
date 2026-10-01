@@ -8,4 +8,10 @@ public sealed class AppUser {
     ) : AppUser()
 
     public data object NotLoggedIn : AppUser()
+
+    /**
+     * A token is saved, but we couldn't check whether it's still valid
+     * (e.g. Twitch is unreachable because of a network outage).
+     */
+    public data object ValidationFailed : AppUser()
 }

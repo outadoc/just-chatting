@@ -275,6 +275,16 @@
         }
       }
     },
+    "Everybody join @%@!" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout le monde chez @%@ !"
+          }
+        }
+      }
+    },
     "Export logs" : {
       "localizations" : {
         "fr" : {
@@ -378,6 +388,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pour parcourir vos chaînes suivies et poster dans le tchat, vous devez lier votre compte Twitch."
+          }
+        }
+      }
+    },
+    "Join the raid" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rejoindre le raid"
           }
         }
       }
@@ -602,6 +622,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pronoms"
+          }
+        }
+      }
+    },
+    "Raid has begun" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le raid a commencé"
           }
         }
       }

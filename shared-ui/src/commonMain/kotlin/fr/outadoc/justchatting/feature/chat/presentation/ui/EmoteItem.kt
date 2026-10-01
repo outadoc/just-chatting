@@ -28,6 +28,7 @@ internal fun EmoteItem(
                     screenDensity = density,
                     isDarkTheme = MaterialTheme.colorScheme.isDark,
                 ),
+                animate = LocalImageAnimationPreferences.current.animateEmotes,
             ),
     )
 }

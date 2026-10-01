@@ -44,7 +44,7 @@ jobs:
         run: ./gradlew lint
 
       - name: Run unit tests
-        run: ./gradlew testDebugUnitTest
+        run: ./gradlew testDebugUnitTest testAndroidHostTest
 
       - name: Upload app bundle to GitHub
         uses: actions/upload-artifact@v7.0.1

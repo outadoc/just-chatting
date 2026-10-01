@@ -45,7 +45,6 @@ internal fun MainRouter(
     backStack: NavBackStack<NavKey> = rememberNavBackStack(ScreenNavBackStackConfig, DefaultScreen),
     onOpenNotificationPreferences: () -> Unit = {},
     onOpenBubblePreferences: () -> Unit = {},
-    onOpenAccessibilityPreferences: () -> Unit = {},
     onShareLogs: (Uri) -> Unit = {},
     onChannelClick: (String) -> Unit = {},
 ) {
@@ -184,7 +183,6 @@ internal fun MainRouter(
                         SettingsSectionAppearance(
                             canNavigateUp = !isTwoPane,
                             onNavigateUp = { backStack.removeLastOrNull() },
-                            onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
                         )
                     }
                 }

@@ -299,9 +299,8 @@
     <string name="settings_about_xtra_subtitle">%1$s is based on the Xtra for Twitch project.</string>
     <string name="settings_about_xtra_title">Based on Xtra for Twitch</string>
     <string name="settings_account_logout_action">Log out…</string>
-    <string name="settings_appearance_animations_action">Open system accessibility settings</string>
-    <string name="settings_appearance_animations_subtitle">You can disable animated emotes by enabling "Reduce motion" in your device's accessibility settings.</string>
-    <string name="settings_appearance_animations_title">Show animated emotes</string>
+    <string name="settings_appearance_animatedEmotes_title">Show animated emotes</string>
+    <string name="settings_appearance_animatedGifs_title">Show animated GIFs</string>
     <string name="settings_appearance_header">Appearance</string>
     <string name="settings_appearance_timestamps_title">Show message timestamps</string>
     <string name="settings_dependencies_cd">Show website</string>

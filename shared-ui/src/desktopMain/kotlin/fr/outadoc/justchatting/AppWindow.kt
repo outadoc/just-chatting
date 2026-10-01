@@ -113,7 +113,6 @@ internal fun ApplicationScope.AppWindow(
             App(
                 onOpenNotificationPreferences = {},
                 onOpenBubblePreferences = {},
-                onOpenAccessibilityPreferences = {},
                 onShareLogs = {},
                 onShowAuthPage = { uri ->
                     uriHandler.openUri(uri.toString())

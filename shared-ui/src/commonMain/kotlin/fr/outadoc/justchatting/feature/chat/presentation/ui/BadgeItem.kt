@@ -26,6 +26,7 @@ internal fun BadgeItem(
                     screenDensity = density,
                     isDarkTheme = MaterialTheme.colorScheme.isDark,
                 ),
+                animate = LocalImageAnimationPreferences.current.animateEmotes,
             ),
         contentDescription = badge.title,
     )

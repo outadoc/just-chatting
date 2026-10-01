@@ -151,7 +151,11 @@ internal fun ChatMessageBody(
                         .padding(top = 4.dp)
                         .heightIn(max = 200.dp)
                         .clip(RoundedCornerShape(8.dp)),
-                model = remoteImageModel(gif.url),
+                model =
+                    remoteImageModel(
+                        url = gif.url,
+                        animate = LocalImageAnimationPreferences.current.animateGifs,
+                    ),
                 contentDescription = gif.description,
                 contentScale = ContentScale.Fit,
             )

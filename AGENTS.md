@@ -17,13 +17,13 @@ This file provides guidance to AI agents when working with code in this reposito
 # iOS: cd app-ios && tuist generate, then build in Xcode
 
 # Test
-./gradlew :shared:testDebugUnitTest                          # All shared unit tests
-./gradlew :shared:testDebugUnitTest --tests "fr.outadoc.justchatting.feature.chat.presentation.ChatStateReducerTest"  # Single class
+./gradlew :shared:testAndroidHostTest                        # All shared unit tests
+./gradlew :shared:testAndroidHostTest --tests "fr.outadoc.justchatting.feature.chat.presentation.ChatStateReducerTest"  # Single class
 ./gradlew :konsist-checks:test                               # Architecture layer checks
 ./gradlew :shared-internal:verifySqlDelightMigration         # Validate DB migrations
 
 # Formatting — always run before committing, CI enforces it
-./gradlew ktlintApply    # Auto-format (ktlint)
+./gradlew ktlintFormat   # Auto-format (ktlint)
 ./gradlew ktlintCheck    # Check only
 
 # ABI — run after any public API change in shared modules
@@ -96,7 +96,7 @@ after schema changes.
 
 ### ABI files
 
-Shared modules expose ABI dump files in their `abi/` directories. Run `./gradlew updateKotlinAbi`
+Shared modules expose ABI dump files in their `api/` directories. Run `./gradlew updateKotlinAbi`
 after any public API change and commit the updated dumps alongside the code change.
 
 ### Demo mode

@@ -637,17 +637,6 @@
         }
       }
     },
-    "Reduce motion in chat using iOS accessibility settings." : {
-      "comment" : "Footer explaining how to reduce motion/animated emotes via iOS system settings",
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vous pouvez désactiver l'animation des émotes en activant l'option « Suppression des animations » dans les réglages de votre appareil."
-          }
-        }
-      }
-    },
     "Remove" : {
       "localizations" : {
         "fr" : {
@@ -783,6 +772,28 @@
         }
       }
     },
+    "Show animated emotes" : {
+      "comment" : "Toggle label to play emote animations in chat",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Émotes animées"
+          }
+        }
+      }
+    },
+    "Show animated GIFs" : {
+      "comment" : "Toggle label to play GIF animations in chat",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GIF animés"
+          }
+        }
+      }
+    },
     "Show emotes" : {
       "localizations" : {
         "fr" : {
@@ -871,17 +882,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Abonné·e·s"
-          }
-        }
-      }
-    },
-    "System animations" : {
-      "comment" : "Button label that links to iOS accessibility settings to control animations (Reduce Motion)",
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Animations système"
           }
         }
       }

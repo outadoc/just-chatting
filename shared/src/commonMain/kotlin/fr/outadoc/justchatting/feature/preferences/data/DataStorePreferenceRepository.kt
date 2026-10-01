@@ -37,6 +37,12 @@ internal class DataStorePreferenceRepository(
             showTimestamps =
                 this[CHAT_ACCESSIBILITY_TIMESTAMPS]
                     ?: defaultPreferences.showTimestamps,
+            showAnimatedEmotes =
+                this[CHAT_ANIMATED_EMOTES]
+                    ?: defaultPreferences.showAnimatedEmotes,
+            showAnimatedGifs =
+                this[CHAT_ANIMATED_GIFS]
+                    ?: defaultPreferences.showAnimatedGifs,
             enableRecentMessages =
                 this[THIRDPARTY_ENABLE_RECENT]
                     ?: defaultPreferences.enableRecentMessages,
@@ -65,6 +71,8 @@ internal class DataStorePreferenceRepository(
         prefs[USER_TOKEN] = apiToken?.value.orEmpty()
 
         prefs[CHAT_ACCESSIBILITY_TIMESTAMPS] = showTimestamps
+        prefs[CHAT_ANIMATED_EMOTES] = showAnimatedEmotes
+        prefs[CHAT_ANIMATED_GIFS] = showAnimatedGifs
 
         prefs[ENABLE_NOTIFICATIONS] = enableNotifications
 
@@ -79,6 +87,8 @@ internal class DataStorePreferenceRepository(
         val USER_TOKEN = stringPreferencesKey("token")
 
         val CHAT_ACCESSIBILITY_TIMESTAMPS = booleanPreferencesKey("chat_timestamps")
+        val CHAT_ANIMATED_EMOTES = booleanPreferencesKey("chat_animated_emotes")
+        val CHAT_ANIMATED_GIFS = booleanPreferencesKey("chat_animated_gifs")
 
         val ENABLE_NOTIFICATIONS = booleanPreferencesKey("notifications_enable")
 

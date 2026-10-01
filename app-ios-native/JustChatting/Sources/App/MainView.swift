@@ -13,7 +13,10 @@ import SwiftUI
 struct MainView: View {
     @Environment(\.webAuthenticationSession) private var webAuthenticationSession
     private let viewModel = KoinHelper().getMainRouterViewModel()
+    private let preferenceRepository = KoinHelper().getPreferenceRepository()
     @State private var router = AppRouter()
+    @State private var animateEmotes = true
+    @State private var animateGifs = true
 
     var body: some View {
         Observing(viewModel.state) { state in
@@ -29,8 +32,14 @@ struct MainView: View {
                 HomeTabView(router: router)
             }
         }
+        .environment(\.animateEmotes, animateEmotes)
+        .environment(\.animateGifs, animateGifs)
         .onAppear {
             viewModel.onStart()
+        }
+        .collect(flow: preferenceRepository.currentPreferences) { prefs in
+            animateEmotes = prefs.showAnimatedEmotes
+            animateGifs = prefs.showAnimatedGifs
         }
         .collect(flow: viewModel.events) { event in
             handleEvent(event)

@@ -1469,7 +1469,7 @@ final class fr.outadoc.justchatting.feature.followed.presentation/FollowedChanne
 }
 
 final class fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences { // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences|null[0]
-    constructor <init>(fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken? = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...) // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.<init>|<init>(fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken?;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
+    constructor <init>(fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken? = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...) // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.<init>|<init>(fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken?;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
 
     final val apiToken // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.apiToken|{}apiToken[0]
         final fun <get-apiToken>(): fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken? // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.apiToken.<get-apiToken>|<get-apiToken>(){}[0]
@@ -1485,10 +1485,15 @@ final class fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferen
         final fun <get-enableRecentMessages>(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.enableRecentMessages.<get-enableRecentMessages>|<get-enableRecentMessages>(){}[0]
     final val enableStvEmotes // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.enableStvEmotes|{}enableStvEmotes[0]
         final fun <get-enableStvEmotes>(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.enableStvEmotes.<get-enableStvEmotes>|<get-enableStvEmotes>(){}[0]
+    final val showAnimatedEmotes // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.showAnimatedEmotes|{}showAnimatedEmotes[0]
+        final fun <get-showAnimatedEmotes>(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.showAnimatedEmotes.<get-showAnimatedEmotes>|<get-showAnimatedEmotes>(){}[0]
+    final val showAnimatedGifs // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.showAnimatedGifs|{}showAnimatedGifs[0]
+        final fun <get-showAnimatedGifs>(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.showAnimatedGifs.<get-showAnimatedGifs>|<get-showAnimatedGifs>(){}[0]
     final val showTimestamps // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.showTimestamps|{}showTimestamps[0]
         final fun <get-showTimestamps>(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.showTimestamps.<get-showTimestamps>|<get-showTimestamps>(){}[0]
 
     final fun component1(): fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken? // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component1|component1(){}[0]
+    final fun component10(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component10|component10(){}[0]
     final fun component2(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component2|component2(){}[0]
     final fun component3(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component3|component3(){}[0]
     final fun component4(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component4|component4(){}[0]
@@ -1496,7 +1501,8 @@ final class fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferen
     final fun component6(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component6|component6(){}[0]
     final fun component7(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component7|component7(){}[0]
     final fun component8(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component8|component8(){}[0]
-    final fun copy(fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken? = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...): fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.copy|copy(fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken?;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
+    final fun component9(): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.component9|component9(){}[0]
+    final fun copy(fr.outadoc.justchatting.feature.preferences.domain.model/ApiToken? = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...): fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.copy|copy(fr.outadoc.justchatting.feature.preferences.domain.model.ApiToken?;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // fr.outadoc.justchatting.feature.preferences.domain.model/AppPreferences.toString|toString(){}[0]

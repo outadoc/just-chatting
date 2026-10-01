@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -19,9 +18,8 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import fr.outadoc.justchatting.shared.internal.Res
 import fr.outadoc.justchatting.shared.internal.all_goBack
-import fr.outadoc.justchatting.shared.internal.settings_appearance_animations_action
-import fr.outadoc.justchatting.shared.internal.settings_appearance_animations_subtitle
-import fr.outadoc.justchatting.shared.internal.settings_appearance_animations_title
+import fr.outadoc.justchatting.shared.internal.settings_appearance_animatedEmotes_title
+import fr.outadoc.justchatting.shared.internal.settings_appearance_animatedGifs_title
 import fr.outadoc.justchatting.shared.internal.settings_appearance_header
 import fr.outadoc.justchatting.shared.internal.settings_appearance_timestamps_title
 import fr.outadoc.justchatting.utils.presentation.AccessibleIconButton
@@ -34,7 +32,6 @@ internal fun SettingsSectionAppearance(
     modifier: Modifier = Modifier,
     canNavigateUp: Boolean = true,
     onNavigateUp: () -> Unit = {},
-    onOpenAccessibilityPreferences: () -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier,
@@ -61,7 +58,6 @@ internal fun SettingsSectionAppearance(
             modifier = modifier,
             insets = insets,
             itemInsets = PaddingValues(horizontal = 16.dp),
-            onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
         )
     }
 }
@@ -71,7 +67,6 @@ private fun SettingsSectionAppearanceContent(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
     itemInsets: PaddingValues = SettingsConstants.ItemInsets,
-    onOpenAccessibilityPreferences: () -> Unit,
 ) {
     val viewModel: SettingsViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
@@ -95,21 +90,27 @@ private fun SettingsSectionAppearanceContent(
         }
 
         item {
-            SettingsText(
+            SettingsSwitch(
                 modifier = Modifier.padding(itemInsets),
-                onClick = onOpenAccessibilityPreferences,
-                onClickLabel = stringResource(Res.string.settings_appearance_animations_action),
+                checked = appPreferences.showAnimatedEmotes,
+                onCheckedChange = { checked ->
+                    viewModel.updatePreferences(appPreferences.copy(showAnimatedEmotes = checked))
+                },
                 title = {
-                    Text(stringResource(Res.string.settings_appearance_animations_title))
+                    Text(stringResource(Res.string.settings_appearance_animatedEmotes_title))
                 },
-                subtitle = {
-                    Text(stringResource(Res.string.settings_appearance_animations_subtitle))
+            )
+        }
+
+        item {
+            SettingsSwitch(
+                modifier = Modifier.padding(itemInsets),
+                checked = appPreferences.showAnimatedGifs,
+                onCheckedChange = { checked ->
+                    viewModel.updatePreferences(appPreferences.copy(showAnimatedGifs = checked))
                 },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-                        contentDescription = null,
-                    )
+                title = {
+                    Text(stringResource(Res.string.settings_appearance_animatedGifs_title))
                 },
             )
         }

@@ -75,7 +75,7 @@ cd app-ios && tuist generate               # Generate Xcode project, then build 
 ## ABI
 
 Shared modules contain ABI files to precisely control what's exposed publicly to their consumers.
-They can be found in the modules' `abi/` directory.
+They can be found in the modules' `api/` directory.
 
 ```bash
 ./gradlew updateKotlinAbi        # Generate ABI files
@@ -85,12 +85,12 @@ They can be found in the modules' `abi/` directory.
 ## Testing
 
 ```bash
-./gradlew :shared:testDebugUnitTest                  # Run shared module unit tests (Android)
+./gradlew :shared:testAndroidHostTest                # Run shared module unit tests (Android)
 ./gradlew :konsist-checks:test                       # Run architecture validation tests
 ./gradlew :shared-internal:verifySqlDelightMigration # Validate SQLDelight migrations
 ```
 
-Unit tests are located in `shared/src/androidUnitTest/kotlin/`.
+Unit tests are located in `shared/src/commonTest/kotlin/` and `shared/src/desktopTest/kotlin/`.
 
 ## Code Formatting
 
@@ -98,10 +98,10 @@ Use ktlint:
 
 ```bash
 ./gradlew ktlintCheck    # Check formatting
-./gradlew ktlintApply    # Auto-format
+./gradlew ktlintFormat   # Auto-format
 ```
 
-Always run `ktlintApply` before committing. CI enforces formatting on PRs.
+Always run `ktlintFormat` before committing. CI enforces formatting on PRs.
 
 ## Architecture
 

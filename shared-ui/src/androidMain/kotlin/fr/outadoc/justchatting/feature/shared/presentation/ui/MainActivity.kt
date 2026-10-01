@@ -89,9 +89,6 @@ internal class MainActivity : AppCompatActivity() {
                         openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_BUBBLE_SETTINGS)
                     }
                 },
-                onOpenAccessibilityPreferences = {
-                    openSettingsIntent(action = "android.settings.ACCESSIBILITY_SETTINGS")
-                },
                 onShareLogs = ::shareLogs,
                 onShowAuthPage = { uri ->
                     val intent = CustomTabsIntent.Builder().build()

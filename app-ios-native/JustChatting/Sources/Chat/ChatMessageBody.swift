@@ -13,6 +13,8 @@ struct ChatMessageBody: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.displayScale) private var displayScale
     @Environment(\.openURL) private var openURL
+    @Environment(\.animateEmotes) private var animateEmotes
+    @Environment(\.animateGifs) private var animateGifs
     @ScaledMetric(relativeTo: .callout) private var emoteHeight: CGFloat = 29
     @ScaledMetric(relativeTo: .callout) private var badgeHeight: CGFloat = 18
 
@@ -44,7 +46,10 @@ struct ChatMessageBody: View {
                 }
 
                 ForEach(resolvedBadges, id: \.self) { badge in
-                    AnimatedImageView(url: badge.urls.url(colorScheme: colorScheme, displayScale: displayScale))
+                    AnimatedImageView(
+                        url: badge.urls.url(colorScheme: colorScheme, displayScale: displayScale),
+                        animated: animateEmotes
+                    )
                         .frame(width: badgeHeight, height: badgeHeight)
                         .accessibilityLabel(badge.title ?? badge.setId)
                 }
@@ -71,7 +76,7 @@ struct ChatMessageBody: View {
             }
 
             ForEach(Array(messageBody.gifs), id: \.id) { gif in
-                AnimatedImageView(url: URL(string: gif.url))
+                AnimatedImageView(url: URL(string: gif.url), animated: animateGifs)
                     .frame(maxWidth: .infinity, maxHeight: 200, alignment: .leading)
                     .frame(height: 200)
                     .clipShape(RoundedRectangle(cornerRadius: 8))

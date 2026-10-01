@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -14,8 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.rememberNavBackStack
 import coil3.SingletonImageLoader
 import com.eygraber.uri.Uri
+import fr.outadoc.justchatting.feature.chat.presentation.ui.ImageAnimationPreferences
+import fr.outadoc.justchatting.feature.chat.presentation.ui.LocalImageAnimationPreferences
 import fr.outadoc.justchatting.feature.onboarding.presentation.ui.ConnectionErrorScreen
 import fr.outadoc.justchatting.feature.onboarding.presentation.ui.OnboardingScreen
+import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.shared.presentation.DefaultScreen
 import fr.outadoc.justchatting.feature.shared.presentation.DetailScreen
 import fr.outadoc.justchatting.feature.shared.presentation.MainRouterViewModel
@@ -29,12 +34,19 @@ import org.koin.compose.koinInject
 public fun App(
     onOpenNotificationPreferences: () -> Unit = {},
     onOpenBubblePreferences: () -> Unit = {},
-    onOpenAccessibilityPreferences: () -> Unit = {},
     onShareLogs: (Uri) -> Unit = {},
     onShowAuthPage: (Uri) -> Unit = {},
 ) {
     val viewModel: MainRouterViewModel = koinInject()
     val state by viewModel.state.collectAsState()
+
+    val preferenceRepository: PreferenceRepository = koinInject()
+    val prefs by preferenceRepository.currentPreferences.collectAsState(initial = AppPreferences())
+    val imageAnimationPreferences =
+        ImageAnimationPreferences(
+            animateEmotes = prefs.showAnimatedEmotes,
+            animateGifs = prefs.showAnimatedGifs,
+        )
 
     val backStack = rememberNavBackStack(ScreenNavBackStackConfig, DefaultScreen)
 
@@ -71,52 +83,53 @@ public fun App(
     )
 
     AppTheme {
-        Crossfade(
-            targetState = state,
-            label = "Login state animation",
-        ) { currentState ->
-            when (currentState) {
-                is MainRouterViewModel.State.Loading -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        CircularProgressIndicator()
+        CompositionLocalProvider(LocalImageAnimationPreferences provides imageAnimationPreferences) {
+            Crossfade(
+                targetState = state,
+                label = "Login state animation",
+            ) { currentState ->
+                when (currentState) {
+                    is MainRouterViewModel.State.Loading -> {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
-                }
 
-                is MainRouterViewModel.State.LoggedOut -> {
-                    OnboardingScreen(
-                        onLoginClick = {
-                            viewModel.onLoginClick()
-                        },
-                        onDemoModeClick = {
-                            viewModel.onDemoModeClick()
-                        },
-                    )
-                }
+                    is MainRouterViewModel.State.LoggedOut -> {
+                        OnboardingScreen(
+                            onLoginClick = {
+                                viewModel.onLoginClick()
+                            },
+                            onDemoModeClick = {
+                                viewModel.onDemoModeClick()
+                            },
+                        )
+                    }
 
-                is MainRouterViewModel.State.ConnectionError -> {
-                    ConnectionErrorScreen(
-                        onRetryClick = {
-                            viewModel.onRetryClick()
-                        },
-                        onLogoutClick = {
-                            viewModel.onLogoutClick()
-                        },
-                    )
-                }
+                    is MainRouterViewModel.State.ConnectionError -> {
+                        ConnectionErrorScreen(
+                            onRetryClick = {
+                                viewModel.onRetryClick()
+                            },
+                            onLogoutClick = {
+                                viewModel.onLogoutClick()
+                            },
+                        )
+                    }
 
-                is MainRouterViewModel.State.LoggedIn -> {
-                    MainRouter(
-                        backStack = backStack,
-                        onOpenNotificationPreferences = onOpenNotificationPreferences,
-                        onOpenBubblePreferences = onOpenBubblePreferences,
-                        onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
-                        onShareLogs = onShareLogs,
-                        onChannelClick = onChannelClick,
-                    )
+                    is MainRouterViewModel.State.LoggedIn -> {
+                        MainRouter(
+                            backStack = backStack,
+                            onOpenNotificationPreferences = onOpenNotificationPreferences,
+                            onOpenBubblePreferences = onOpenBubblePreferences,
+                            onShareLogs = onShareLogs,
+                            onChannelClick = onChannelClick,
+                        )
+                    }
                 }
             }
         }

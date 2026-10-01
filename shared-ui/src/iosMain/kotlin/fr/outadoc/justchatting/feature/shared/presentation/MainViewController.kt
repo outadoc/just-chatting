@@ -11,9 +11,6 @@ public fun getMainViewController(onShowAuthPage: (NSURL) -> Unit): UIViewControl
     ComposeUIViewController {
         val uriHandler = LocalUriHandler.current
         App(
-            onOpenAccessibilityPreferences = {
-                uriHandler.openUri("app-settings:")
-            },
             onOpenNotificationPreferences = {},
             onOpenBubblePreferences = {},
             onShareLogs = {},

@@ -10,6 +10,8 @@ extension AppPreferences {
     /// argument from Swift, so this is the single place that lists them all.
     func with(
         showTimestamps: Bool? = nil,
+        showAnimatedEmotes: Bool? = nil,
+        showAnimatedGifs: Bool? = nil,
         enableRecentMessages: Bool? = nil,
         enableFfzEmotes: Bool? = nil,
         enableStvEmotes: Bool? = nil,
@@ -20,6 +22,8 @@ extension AppPreferences {
         AppPreferences(
             apiToken: apiToken,
             showTimestamps: showTimestamps ?? self.showTimestamps,
+            showAnimatedEmotes: showAnimatedEmotes ?? self.showAnimatedEmotes,
+            showAnimatedGifs: showAnimatedGifs ?? self.showAnimatedGifs,
             enableRecentMessages: enableRecentMessages ?? self.enableRecentMessages,
             enableFfzEmotes: enableFfzEmotes ?? self.enableFfzEmotes,
             enableStvEmotes: enableStvEmotes ?? self.enableStvEmotes,

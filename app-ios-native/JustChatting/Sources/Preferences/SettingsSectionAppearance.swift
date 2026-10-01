@@ -9,8 +9,6 @@ import SwiftUI
 struct SettingsSectionAppearance: View {
     let viewModel: SettingsViewModel
 
-    private static let appSettingsUrl = URL(string: UIApplication.openSettingsURLString)!
-
     var body: some View {
         Observing(viewModel.state) { state in
             let prefs = state.appPreferences
@@ -20,12 +18,14 @@ struct SettingsSectionAppearance: View {
                         "Show timestamps",
                         isOn: viewModel.binding(prefs, \.showTimestamps) { $0.with(showTimestamps: $1) }
                     )
-                }
-
-                Section {
-                    ExternalLink("System animations", destination: Self.appSettingsUrl)
-                } footer: {
-                    Text("Reduce motion in chat using iOS accessibility settings.")
+                    Toggle(
+                        "Show animated emotes",
+                        isOn: viewModel.binding(prefs, \.showAnimatedEmotes) { $0.with(showAnimatedEmotes: $1) }
+                    )
+                    Toggle(
+                        "Show animated GIFs",
+                        isOn: viewModel.binding(prefs, \.showAnimatedGifs) { $0.with(showAnimatedGifs: $1) }
+                    )
                 }
             }
             .navigationTitle("Appearance")

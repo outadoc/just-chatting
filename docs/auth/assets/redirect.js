@@ -1,10 +1,14 @@
+function appCallbackUrl() {
+  const url = new URL("justchatting://auth/callback");
+
+  url.hash = window.location.hash;
+  url.search = window.location.search;
+
+  return url;
+}
+
 function redirect() {
-  let redirect = new URL("justchatting://auth/callback");
-
-  redirect.hash = window.location.hash;
-  redirect.search = window.location.search;
-
-  window.location = redirect;
+  window.location = appCallbackUrl();
 }
 
 function callLocalServer() {
@@ -27,6 +31,9 @@ function callLocalServer() {
       console.error("Error:", error);
     });
 }
+
+// If the automatic redirect doesn't go through, the button opens the app with the same token.
+document.getElementById("open-app").href = appCallbackUrl().toString();
 
 callLocalServer();
 redirect();

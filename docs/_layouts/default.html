@@ -7,6 +7,9 @@
     <meta name="theme-color" content="#fbf8fd" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#141218" media="(prefers-color-scheme: dark)">
     {% seo %}
+    {%- if page.robots %}
+    <meta name="robots" content="{{ page.robots }}">
+    {%- endif %}
     <link rel="icon" href="{{ '/assets/favicon.png' | relative_url }}" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

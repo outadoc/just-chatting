@@ -7,7 +7,8 @@ import JCShared
 import NukeUI
 import SwiftUI
 
-/// Grid of every emote usable in the current chat, grouped by emote set (recent emotes first).
+/// Grid of every emote usable in the current chat, grouped by emote set (recent emotes first),
+/// on a glass panel.
 struct EmotePicker: View {
     let items: [EmoteSetItem]
     let onEmoteClick: (Emote) -> Void
@@ -33,8 +34,7 @@ struct EmotePicker: View {
         ScrollView {
             LazyVGrid(
                 columns: [GridItem(.adaptive(minimum: emoteHeight + 16), spacing: 4)],
-                spacing: 4,
-                pinnedViews: [.sectionHeaders]
+                spacing: 4
             ) {
                 ForEach(sections) { section in
                     Section {
@@ -55,8 +55,11 @@ struct EmotePicker: View {
                     }
                 }
             }
-            .padding(.horizontal, 8)
+            .padding(12)
         }
+        // A floating glass panel, like the keyboard it stands in for.
+        .clipShape(.rect(cornerRadius: 28))
+        .glassEffect(.regular, in: .rect(cornerRadius: 28))
     }
 
     private func sectionHeader(_ header: EmoteSetItem.Header) -> some View {
@@ -83,8 +86,8 @@ struct EmotePicker: View {
             }
             Spacer()
         }
+        .padding(.horizontal, 4)
         .padding(.vertical, 6)
-        .background(.bar)
         .accessibilityAddTraits(.isHeader)
     }
 

@@ -65,11 +65,13 @@ struct ChatView: View {
         .safeAreaInset(edge: .top) {
             ChatEvents(chatting: chatting)
         }
-        // A bar rather than an inset, so that messages fade out behind the composer.
-        .safeAreaBar(edge: .bottom) {
+        // An inset rather than a bar: the composer is made of floating glass elements, and a bar
+        // would add a scroll edge effect behind them.
+        .safeAreaInset(edge: .bottom, spacing: 0) {
             VStack(spacing: 0) {
                 if let constraint = chatting.messagePostConstraint {
                     ChatSlowModeProgress(constraint: constraint)
+                        .padding(.horizontal, 24)
                 }
                 Observing(viewModel.inputState) { inputState in
                     ChatInput(
@@ -85,7 +87,9 @@ struct ChatView: View {
                         viewModel.appendEmote(emote: emote, autocomplete: true)
                     }
                     .frame(height: 300)
-                    .transition(.move(edge: .bottom))
+                    .padding(.horizontal, 12)
+                    .padding(.bottom, 8)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
             .animation(.snappy, value: isEmotePickerOpen)

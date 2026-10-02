@@ -34,7 +34,7 @@ struct ChatEvents: View {
     }
 
     /// Raids being prepared aren't reported by EventSub, so only started raids are shown.
-    private var outgoingRaid: RaidGo? {
+    private var outgoingRaid: Raid.Go? {
         guard let raid = chatting.ongoingEvents.outgoingRaid else { return nil }
         switch onEnum(of: raid) {
         case .go(let go): return go

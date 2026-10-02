@@ -8,7 +8,7 @@ import SwiftUI
 
 /// Shown when the channel raids another one; tapping it opens the raided channel's chat.
 struct RaidGoCard: View {
-    let raid: RaidGo
+    let raid: Raid.Go
 
     /// Absent outside of the logged-in UI, e.g. in previews.
     @Environment(AppRouter.self) private var router: AppRouter?

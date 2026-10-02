@@ -1,15 +1,8 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%@ viewers" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ spectateurs"
-          }
-        }
-      }
+    "" : {
+
     },
     "%@ · since %@" : {
       "localizations" : {
@@ -17,6 +10,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@ · depuis %2$@"
+          }
+        }
+      }
+    },
+    "%@ viewers" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ spectateurs"
           }
         }
       }
@@ -172,6 +175,9 @@
           }
         }
       }
+    },
+    "Connection error" : {
+
     },
     "Continue with Twitch" : {
       "localizations" : {
@@ -697,6 +703,9 @@
         }
       }
     },
+    "Retry" : {
+
+    },
     "Reuse last message" : {
       "localizations" : {
         "fr" : {
@@ -966,6 +975,9 @@
           }
         }
       }
+    },
+    "Twitch couldn't be reached. Check your internet connection and try again." : {
+
     },
     "Unique" : {
       "localizations" : {

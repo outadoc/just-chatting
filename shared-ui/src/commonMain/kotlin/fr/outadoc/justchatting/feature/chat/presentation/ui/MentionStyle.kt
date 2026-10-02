@@ -11,8 +11,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 import kotlin.math.max
 import kotlin.math.min
@@ -24,8 +22,14 @@ import kotlin.math.min
 private const val AppUserMentionTag = "app_user_mention"
 
 /**
- * Appends a mention to the string. Mentions of the app user are annotated so that
- * [drawMentionPills] can draw a rounded background behind them.
+ * Non-breaking space added on each side of a highlighted mention, to reserve room for
+ * the pill's horizontal padding without letting the line wrap inside of it.
+ */
+private const val MentionPillPadding = '\u00A0'
+
+/**
+ * Appends a mention to the string. Mentions of the app user are padded and annotated
+ * so that [drawMentionPills] can draw a rounded background behind them.
  */
 internal fun AnnotatedString.Builder.appendMention(
     text: String,
@@ -34,6 +38,7 @@ internal fun AnnotatedString.Builder.appendMention(
 ) {
     if (mentioned) {
         pushStringAnnotation(tag = AppUserMentionTag, annotation = text)
+        append(MentionPillPadding)
     }
 
     withStyle(
@@ -46,6 +51,7 @@ internal fun AnnotatedString.Builder.appendMention(
     }
 
     if (mentioned) {
+        append(MentionPillPadding)
         pop()
     }
 }
@@ -58,7 +64,6 @@ internal fun AnnotatedString.Builder.appendMention(
 internal fun Modifier.drawMentionPills(
     layoutResult: () -> TextLayoutResult?,
     pillColor: Color,
-    horizontalPadding: Dp = 4.dp,
 ): Modifier =
     drawBehind {
         val layout = layoutResult() ?: return@drawBehind
@@ -68,7 +73,6 @@ internal fun Modifier.drawMentionPills(
 
         // Don't draw pills for text cut off by maxLines
         val visibleEnd = layout.getLineEnd(layout.lineCount - 1, visibleEnd = true)
-        val paddingPx = horizontalPadding.toPx()
         val fontSize = layout.layoutInput.style.fontSize
         val fontSizePx = if (fontSize.isSpecified) fontSize.toPx() else null
 
@@ -86,8 +90,8 @@ internal fun Modifier.drawMentionPills(
 
             drawRoundRect(
                 color = pillColor,
-                topLeft = Offset(x = left - paddingPx, y = top),
-                size = Size(width = right - left + paddingPx * 2, height = height),
+                topLeft = Offset(x = left, y = top),
+                size = Size(width = right - left, height = height),
                 cornerRadius = CornerRadius(height / 2),
             )
         }

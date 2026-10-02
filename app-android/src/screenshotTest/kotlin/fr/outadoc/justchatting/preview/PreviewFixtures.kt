@@ -107,6 +107,25 @@ internal object PreviewFixtures {
             timestamp = Instant.fromEpochMilliseconds(1664396374382),
         )
 
+    // A message mentioning a chatter other than the sample logged-in user,
+    // so the mention is only emboldened, without any highlight.
+    val sampleOtherUserMentionMessage: ChatListItem.Message.Simple =
+        ChatListItem.Message.Simple(
+            body =
+                ChatListItem.Message.Body(
+                    chatter =
+                        Chatter(
+                            displayName = "Hiccoz",
+                            id = "68552712",
+                            login = "hiccoz",
+                        ),
+                    message = "@marion_11 tu peux mod @hiccoz stp ?",
+                    messageId = "3e7a1c94-2b6f-4d0e-a8c5-6f9b2d4e1a73",
+                    color = "#FF69B4",
+                ),
+            timestamp = Instant.fromEpochMilliseconds(1664396374382),
+        )
+
     // A reply to a message sent by the sample logged-in user.
     val sampleReplyToAppUserMessage: ChatListItem.Message.Simple =
         ChatListItem.Message.Simple(

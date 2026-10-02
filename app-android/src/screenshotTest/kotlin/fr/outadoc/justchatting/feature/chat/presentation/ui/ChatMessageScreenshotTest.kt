@@ -42,6 +42,20 @@ internal fun ChatMessageMentionScreenshotTest() {
 @PreviewTest
 @Preview
 @Composable
+internal fun ChatMessageOtherUserMentionScreenshotTest() {
+    AppTheme {
+        ChatMessage(
+            timeZone = PreviewFixtures.timeZone,
+            message = PreviewFixtures.sampleOtherUserMentionMessage,
+            showTimestamps = true,
+            appUser = PreviewFixtures.sampleLoggedInUser,
+        )
+    }
+}
+
+@PreviewTest
+@Preview
+@Composable
 internal fun ChatMessageReplyMentionScreenshotTest() {
     AppTheme {
         ChatMessage(

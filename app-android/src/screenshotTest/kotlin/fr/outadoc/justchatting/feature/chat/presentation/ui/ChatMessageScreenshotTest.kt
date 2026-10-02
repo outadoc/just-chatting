@@ -54,6 +54,20 @@ internal fun ChatMessageOtherUserMentionScreenshotTest() {
 }
 
 @PreviewTest
+@Preview(widthDp = 220)
+@Composable
+internal fun ChatMessageWrappedMentionScreenshotTest() {
+    AppTheme {
+        ChatMessage(
+            timeZone = PreviewFixtures.timeZone,
+            message = PreviewFixtures.sampleLongMentionMessage,
+            showTimestamps = true,
+            appUser = PreviewFixtures.sampleLoggedInUserWithLongLogin,
+        )
+    }
+}
+
+@PreviewTest
 @Preview
 @Composable
 internal fun ChatMessageReplyMentionScreenshotTest() {
@@ -61,6 +75,20 @@ internal fun ChatMessageReplyMentionScreenshotTest() {
         ChatMessage(
             timeZone = PreviewFixtures.timeZone,
             message = PreviewFixtures.sampleReplyToAppUserMessage,
+            showTimestamps = true,
+            appUser = PreviewFixtures.sampleLoggedInUser,
+        )
+    }
+}
+
+@PreviewTest
+@Preview
+@Composable
+internal fun ChatMessageReplyMentionLongMessageScreenshotTest() {
+    AppTheme {
+        ChatMessage(
+            timeZone = PreviewFixtures.timeZone,
+            message = PreviewFixtures.sampleReplyToLongAppUserMessage,
             showTimestamps = true,
             appUser = PreviewFixtures.sampleLoggedInUser,
         )

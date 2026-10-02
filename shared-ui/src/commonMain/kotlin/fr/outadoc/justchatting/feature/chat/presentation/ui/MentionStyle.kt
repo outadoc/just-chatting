@@ -97,25 +97,43 @@ internal fun Modifier.drawMentionPills(
         }
 
         mentions.forEach { range ->
-            var currentLine = -1
-            var left = 0f
-            var right = 0f
+            val end = min(range.end, visibleEnd)
+            if (range.start >= end) return@forEach
 
-            for (offset in range.start until min(range.end, visibleEnd)) {
+            // Split the mention into one segment per line it spans
+            val segments = mutableListOf<MentionSegment>()
+            for (offset in range.start until end) {
                 val line = layout.getLineForOffset(offset)
                 val box = layout.getBoundingBox(offset)
+                val last = segments.lastOrNull()
 
-                if (line != currentLine) {
-                    if (currentLine != -1) drawPill(currentLine, left, right)
-                    currentLine = line
-                    left = box.left
-                    right = box.right
+                if (last?.line == line) {
+                    segments[segments.lastIndex] =
+                        last.copy(
+                            left = min(last.left, box.left),
+                            right = max(last.right, box.right),
+                        )
                 } else {
-                    left = min(left, box.left)
-                    right = max(right, box.right)
+                    segments += MentionSegment(line = line, left = box.left, right = box.right)
                 }
             }
 
-            if (currentLine != -1) drawPill(currentLine, left, right)
+            // Where the mention wraps, there's no padding character left to reserve
+            // space for the pill, so extend it outwards by the same amount instead.
+            val paddingPx = layout.getBoundingBox(range.start).width
+
+            segments.forEachIndexed { index, segment ->
+                drawPill(
+                    line = segment.line,
+                    left = if (index > 0) segment.left - paddingPx else segment.left,
+                    right = if (index < segments.lastIndex) segment.right + paddingPx else segment.right,
+                )
+            }
         }
     }
+
+private data class MentionSegment(
+    val line: Int,
+    val left: Float,
+    val right: Float,
+)

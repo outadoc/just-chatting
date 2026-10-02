@@ -65,6 +65,14 @@ internal object PreviewFixtures {
             token = ApiToken(""),
         )
 
+    // A logged-in user whose login is as long as Twitch allows (25 characters).
+    val sampleLoggedInUserWithLongLogin: AppUser.LoggedIn =
+        AppUser.LoggedIn(
+            userId = "456",
+            userLogin = "outadoc_has_a_long_login1",
+            token = ApiToken(""),
+        )
+
     val sampleChatMessage: ChatListItem.Message.Simple =
         ChatListItem.Message.Simple(
             body =
@@ -126,6 +134,25 @@ internal object PreviewFixtures {
             timestamp = Instant.fromEpochMilliseconds(1664396374382),
         )
 
+    // A message mentioning the logged-in user with a long login, so that
+    // the mention wraps over two lines in a narrow layout.
+    val sampleLongMentionMessage: ChatListItem.Message.Simple =
+        ChatListItem.Message.Simple(
+            body =
+                ChatListItem.Message.Body(
+                    chatter =
+                        Chatter(
+                            displayName = "Hiccoz",
+                            id = "68552712",
+                            login = "hiccoz",
+                        ),
+                    message = "salut @outadoc_has_a_long_login1 tu peux mod stp ?",
+                    messageId = "c41d8e27-6a3b-4f95-b0e2-7d9a1f6c3b58",
+                    color = "#FF69B4",
+                ),
+            timestamp = Instant.fromEpochMilliseconds(1664396374382),
+        )
+
     // A reply to a message sent by the sample logged-in user.
     val sampleReplyToAppUserMessage: ChatListItem.Message.Simple =
         ChatListItem.Message.Simple(
@@ -143,6 +170,33 @@ internal object PreviewFixtures {
                     inReplyTo =
                         ChatListItem.Message.Body.InReplyTo(
                             message = "test de test",
+                            mentions = persistentListOf("outadoc"),
+                        ),
+                ),
+            timestamp = Instant.fromEpochMilliseconds(1664396674382),
+        )
+
+    // A reply to a long message sent by the sample logged-in user, so that the
+    // reply header wraps under the mention and gets cut off at its max lines.
+    val sampleReplyToLongAppUserMessage: ChatListItem.Message.Simple =
+        ChatListItem.Message.Simple(
+            body =
+                ChatListItem.Message.Body(
+                    chatter =
+                        Chatter(
+                            displayName = "marion_11",
+                            id = "280065659",
+                            login = "marion_11",
+                        ),
+                    message = "oui bien sûr",
+                    messageId = "7f4e2a9c-1b6d-4c3e-8a5f-2e9d7b1c6a38",
+                    color = "#1E90FF",
+                    inReplyTo =
+                        ChatListItem.Message.Body.InReplyTo(
+                            message =
+                                "est-ce que quelqu'un pourrait me dire à quelle heure commence " +
+                                    "le stream demain ? je voudrais pas rater le début, " +
+                                    "surtout s'il y a des annonces importantes",
                             mentions = persistentListOf("outadoc"),
                         ),
                 ),

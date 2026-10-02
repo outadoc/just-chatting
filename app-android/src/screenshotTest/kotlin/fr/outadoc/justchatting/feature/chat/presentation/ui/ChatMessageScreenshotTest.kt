@@ -25,6 +25,34 @@ internal fun ChatMessageScreenshotTest() {
     }
 }
 
+@PreviewTest
+@Preview
+@Composable
+internal fun ChatMessageMentionScreenshotTest() {
+    AppTheme {
+        ChatMessage(
+            timeZone = PreviewFixtures.timeZone,
+            message = PreviewFixtures.sampleMentionMessage,
+            showTimestamps = true,
+            appUser = PreviewFixtures.sampleLoggedInUser,
+        )
+    }
+}
+
+@PreviewTest
+@Preview
+@Composable
+internal fun ChatMessageReplyMentionScreenshotTest() {
+    AppTheme {
+        ChatMessage(
+            timeZone = PreviewFixtures.timeZone,
+            message = PreviewFixtures.sampleReplyToAppUserMessage,
+            showTimestamps = true,
+            appUser = PreviewFixtures.sampleLoggedInUser,
+        )
+    }
+}
+
 @OptIn(ExperimentalCoilApi::class)
 @PreviewTest
 @Preview

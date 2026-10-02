@@ -88,6 +88,48 @@ internal object PreviewFixtures {
             timestamp = Instant.fromEpochMilliseconds(1664396374382),
         )
 
+    // A message mentioning both the sample logged-in user and another chatter,
+    // so only the first mention gets highlighted.
+    val sampleMentionMessage: ChatListItem.Message.Simple =
+        ChatListItem.Message.Simple(
+            body =
+                ChatListItem.Message.Body(
+                    chatter =
+                        Chatter(
+                            displayName = "Hiccoz",
+                            id = "68552712",
+                            login = "hiccoz",
+                        ),
+                    message = "@outadoc tu peux mod @marion_11 stp ?",
+                    messageId = "5d0f3a3e-7b8e-4c55-9a43-2f1a4d6c7e10",
+                    color = "#FF69B4",
+                ),
+            timestamp = Instant.fromEpochMilliseconds(1664396374382),
+        )
+
+    // A reply to a message sent by the sample logged-in user.
+    val sampleReplyToAppUserMessage: ChatListItem.Message.Simple =
+        ChatListItem.Message.Simple(
+            body =
+                ChatListItem.Message.Body(
+                    chatter =
+                        Chatter(
+                            displayName = "marion_11",
+                            id = "280065659",
+                            login = "marion_11",
+                        ),
+                    message = "bonjour",
+                    messageId = "9b2c6e1f-4d8a-4f3b-8e6d-1c7a5b3f2e90",
+                    color = "#1E90FF",
+                    inReplyTo =
+                        ChatListItem.Message.Body.InReplyTo(
+                            message = "test de test",
+                            mentions = persistentListOf("outadoc"),
+                        ),
+                ),
+            timestamp = Instant.fromEpochMilliseconds(1664396674382),
+        )
+
     // A message whose last emote is enlarged, and drawn on its own line.
     val sampleGigantifiedEmoteMessage: ChatListItem.Message.Simple =
         ChatListItem.Message.Simple(

@@ -144,7 +144,7 @@ struct ChatInput: View {
                 )
             } label: {
                 Image(systemName: "xmark.circle.fill")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.primary)
                     .frame(width: 28, height: 32)
             }
             .accessibilityLabel("Clear message")
@@ -153,7 +153,7 @@ struct ChatInput: View {
                 viewModel.onReuseLastMessageClicked()
             } label: {
                 Image(systemName: "arrow.uturn.backward")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.primary)
                     .frame(width: 28, height: 32)
             }
             .accessibilityLabel("Reuse last message")
@@ -171,7 +171,7 @@ struct ChatInput: View {
                 viewModel.onReplyToMessage(entry: nil)
             } label: {
                 Image(systemName: "xmark")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.primary)
             }
             .accessibilityLabel("Cancel reply")
         }

@@ -11,12 +11,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
@@ -32,9 +34,11 @@ internal fun InReplyToMessage(
     mentions: ImmutableList<String>,
     message: String?,
     appUser: AppUser.LoggedIn? = null,
-    mentionBackground: Color = MaterialTheme.colorScheme.onBackground,
-    mentionColor: Color = MaterialTheme.colorScheme.background,
+    mentionPillColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    mentionColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
 ) {
+    val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
+
     CompositionLocalProvider(
         LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f),
     ) {
@@ -53,25 +57,21 @@ internal fun InReplyToMessage(
             )
 
             Text(
+                modifier =
+                    Modifier.drawMentionPills(
+                        layoutResult = { layoutResult.value },
+                        pillColor = mentionPillColor,
+                    ),
+                onTextLayout = { layoutResult.value = it },
                 text =
                     buildAnnotatedString {
-                        withStyle(
-                            getMentionStyle(
-                                mentioned =
-                                    mentions.any { mention ->
-                                        mention.equals(appUser?.userLogin, ignoreCase = true)
-                                    },
-                                mentionBackground = mentionBackground,
+                        mentions.forEachIndexed { index, mention ->
+                            if (index > 0) append(' ')
+
+                            appendMention(
+                                text = "${ChatPrefixConstants.ChatterPrefix}$mention",
+                                mentioned = mention.equals(appUser?.userLogin, ignoreCase = true),
                                 mentionColor = mentionColor,
-                            ),
-                        ) {
-                            append(
-                                mentions.joinToString(
-                                    separator = " ",
-                                    transform = { mention ->
-                                        "${ChatPrefixConstants.ChatterPrefix}$mention"
-                                    },
-                                ),
                             )
                         }
 

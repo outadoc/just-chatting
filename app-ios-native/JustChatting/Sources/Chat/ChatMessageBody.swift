@@ -29,7 +29,8 @@ struct ChatMessageBody: View {
             if let inReplyTo = messageBody.inReplyTo {
                 InReplyToMessage(
                     mentions: Array(inReplyTo.mentions),
-                    message: inReplyTo.message
+                    message: inReplyTo.message,
+                    appUserLogin: context.appUserLogin
                 )
             }
 
@@ -123,13 +124,8 @@ struct ChatMessageBody: View {
             )
 
         case .mention(let mention):
-            let isMentioningMe = mention.isMentionOfAppUser
-            Text(mention.text)
+            MentionText(text: mention.text, isMentionOfAppUser: mention.isMentionOfAppUser)
                 .font(.callout)
-                .fontWeight(.bold)
-                .foregroundStyle(isMentioningMe ? Color(.systemBackground) : .primary)
-                .padding(.horizontal, isMentioningMe ? 3 : 0)
-                .background(isMentioningMe ? Color.primary : .clear, in: RoundedRectangle(cornerRadius: 3))
 
         case .link(let link):
             Text(link.text)

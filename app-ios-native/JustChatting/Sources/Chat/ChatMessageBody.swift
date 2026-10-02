@@ -127,9 +127,10 @@ struct ChatMessageBody: View {
             Text(mention.text)
                 .font(.callout)
                 .fontWeight(.bold)
-                .foregroundStyle(isMentioningMe ? Color(.systemBackground) : .primary)
-                .padding(.horizontal, isMentioningMe ? 3 : 0)
-                .background(isMentioningMe ? Color.primary : .clear, in: RoundedRectangle(cornerRadius: 3))
+                .foregroundStyle(isMentioningMe ? Color.accentColor : .primary)
+                .padding(.horizontal, isMentioningMe ? 6 : 0)
+                .padding(.vertical, isMentioningMe ? 1 : 0)
+                .background(isMentioningMe ? Color.accentColor.opacity(0.2) : .clear, in: Capsule())
 
         case .link(let link):
             Text(link.text)

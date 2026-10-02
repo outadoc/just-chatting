@@ -116,6 +116,11 @@ internal fun ChatMessageBody(
         }
 
         Text(
+            modifier =
+                Modifier.drawMentionPills(
+                    layoutResult = { layoutResult.value },
+                    pillColor = MaterialTheme.colorScheme.primaryContainer,
+                ),
             onTextLayout = { layoutResult.value = it },
             text = annotatedMessage.text,
             inlineContent = finalInlineContent,
@@ -186,8 +191,7 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
     pronouns: ImmutableMap<Chatter, Pronoun>,
     urlColor: Color = MaterialTheme.colorScheme.primary,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
-    mentionBackground: Color = MaterialTheme.colorScheme.onBackground,
-    mentionColor: Color = MaterialTheme.colorScheme.background,
+    mentionColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
 ): AnnotatedChatMessage {
     val accessibleChatterColor: Color? =
         ChatterColors
@@ -304,15 +308,11 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
                     }
 
                     is MessageToken.Mention -> {
-                        withStyle(
-                            getMentionStyle(
-                                mentioned = token.isMentionOfAppUser,
-                                mentionBackground = mentionBackground,
-                                mentionColor = mentionColor,
-                            ),
-                        ) {
-                            append(token.text)
-                        }
+                        appendMention(
+                            text = token.text,
+                            mentioned = token.isMentionOfAppUser,
+                            mentionColor = mentionColor,
+                        )
                     }
 
                     is MessageToken.Word -> {

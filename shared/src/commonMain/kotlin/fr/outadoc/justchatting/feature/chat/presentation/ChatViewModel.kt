@@ -567,16 +567,6 @@ public class ChatViewModel internal constructor(
 
             scope.launch {
                 twitchRepository
-                    .getSharedChatSession(channelId)
-                    .onSuccess { session ->
-                        dispatchIfCurrent(Action.UpdateSharedChatSession(session))
-                    }.onFailure { exception ->
-                        logError<ChatViewModel>(exception) { "Failed to load shared chat session" }
-                    }
-            }
-
-            scope.launch {
-                twitchRepository
                     .getUserById(channelId)
                     .onEach { result ->
                         result
@@ -609,6 +599,23 @@ public class ChatViewModel internal constructor(
                             logError<ChatViewModel>(exception) { "Failed to load stream details for user" }
                         }
                 }.catch { e -> logError<ChatViewModel>(e) { "Stream details pipeline failed" } }
+                .launchIn(scope)
+
+            // Wait until we're chatting, otherwise the reducer would drop the session.
+            state
+                .filterIsInstance<State.Chatting>()
+                .map { state -> state.user.id }
+                .filter { userId -> userId == channelId }
+                .distinctUntilChanged()
+                .onEach { userId ->
+                    twitchRepository
+                        .getSharedChatSession(userId)
+                        .onSuccess { session ->
+                            dispatchIfCurrent(Action.UpdateSharedChatSession(session))
+                        }.onFailure { exception ->
+                            logError<ChatViewModel>(exception) { "Failed to load shared chat session" }
+                        }
+                }.catch { e -> logError<ChatViewModel>(e) { "Shared chat session pipeline failed" } }
                 .launchIn(scope)
 
             state

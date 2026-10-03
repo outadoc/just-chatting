@@ -7,7 +7,7 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
-internal fun EmoteList(
+public fun EmoteList(
     modifier: Modifier = Modifier,
     emotes: ImmutableList<Emote>,
     onEmoteClick: (Emote) -> Unit = {},

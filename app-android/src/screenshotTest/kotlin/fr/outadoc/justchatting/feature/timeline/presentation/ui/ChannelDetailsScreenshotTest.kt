@@ -10,8 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.tools.screenshot.PreviewTest
+import fr.outadoc.justchatting.feature.chat.presentation.SharedChatChannel
+import fr.outadoc.justchatting.feature.chat.presentation.ui.sampleSharedChatChannels
 import fr.outadoc.justchatting.preview.PreviewFixtures
 import fr.outadoc.justchatting.utils.presentation.AppTheme
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @PreviewTest
@@ -32,8 +35,26 @@ internal fun ChannelDetailsDarkScreenshotTest() {
     }
 }
 
+@PreviewTest
+@Preview(heightDp = 1000)
 @Composable
-private fun ChannelDetailsSample() {
+internal fun ChannelDetailsSharedChatScreenshotTest() {
+    AppTheme {
+        ChannelDetailsSample(sharedChatChannels = sampleSharedChatChannels)
+    }
+}
+
+@PreviewTest
+@Preview(heightDp = 1000, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+internal fun ChannelDetailsSharedChatDarkScreenshotTest() {
+    AppTheme(isDarkTheme = true) {
+        ChannelDetailsSample(sharedChatChannels = sampleSharedChatChannels)
+    }
+}
+
+@Composable
+private fun ChannelDetailsSample(sharedChatChannels: ImmutableList<SharedChatChannel> = persistentListOf()) {
     val user =
         PreviewFixtures.user(
             id = "1",
@@ -57,6 +78,7 @@ private fun ChannelDetailsSample() {
                     PreviewFixtures.sampleStream.copy(
                         tags = persistentListOf("Français", "DropsActivés"),
                     ),
+                sharedChatChannels = sharedChatChannels,
             )
 
             Column(

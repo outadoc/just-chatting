@@ -44,6 +44,7 @@ import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -483,6 +484,46 @@ internal class ChatViewModelTest {
                 } as ChatViewModel.State.Chatting
 
             assertEquals("they", state.pronouns[channelChatter]?.nominative)
+        }
+
+    @Test
+    fun `an ongoing shared chat session is loaded into the state`() =
+        runTest(testDispatcher) {
+            val session =
+                SharedChatSession(
+                    hostChannelId = otherChannelUser.id,
+                    participantChannelIds = persistentListOf(otherChannelUser.id, channelUser.id),
+                )
+            twitchRepository.sharedChatSession = session
+
+            viewModel.loadChat(channelUser.id)
+
+            val state = awaitChatting { state -> state.sharedChatSession != null }
+
+            assertEquals(session, state.sharedChatSession)
+            assertTrue(otherChannelUser.id in state.sourceRoomIds)
+        }
+
+    @Test
+    fun `an ongoing shared chat session is kept when the channel user loads after it`() =
+        runTest(testDispatcher) {
+            val session =
+                SharedChatSession(
+                    hostChannelId = channelUser.id,
+                    participantChannelIds = persistentListOf(channelUser.id, otherChannelUser.id),
+                )
+            twitchRepository.sharedChatSession = session
+            twitchRepository.users.value = emptyMap()
+
+            viewModel.loadChat(channelUser.id)
+            advanceUntilIdle()
+            assertIs<ChatViewModel.State.Loading>(viewModel.state.value)
+
+            twitchRepository.users.value = mapOf(channelUser.id to channelUser)
+
+            val state = awaitChatting { state -> state.sharedChatSession != null }
+
+            assertEquals(session, state.sharedChatSession)
         }
 
     @Test

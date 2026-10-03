@@ -13,7 +13,7 @@ struct DetailsListRow<Icon: View, Trailing: View>: View {
     @ViewBuilder let icon: (_ height: CGFloat) -> Icon
     @ViewBuilder let trailing: Trailing
 
-    @ScaledMetric(relativeTo: .body) private var iconHeight: CGFloat = 40
+    @ScaledMetric(relativeTo: .body) private var iconHeight: CGFloat = 32
 
     var body: some View {
         LabeledContent {

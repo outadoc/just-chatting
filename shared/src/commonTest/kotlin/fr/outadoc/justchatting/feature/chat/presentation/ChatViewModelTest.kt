@@ -44,6 +44,7 @@ import fr.outadoc.justchatting.feature.shared.domain.model.User
 import fr.outadoc.justchatting.feature.timeline.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.timeline.domain.model.Stream
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -486,6 +487,103 @@ internal class ChatViewModelTest {
         }
 
     @Test
+    fun `an ongoing shared chat session is loaded into the state`() =
+        runTest(testDispatcher) {
+            val session =
+                SharedChatSession(
+                    hostChannelId = otherChannelUser.id,
+                    participantChannelIds = persistentListOf(otherChannelUser.id, channelUser.id),
+                )
+            twitchRepository.sharedChatSession = session
+
+            viewModel.loadChat(channelUser.id)
+
+            val state = awaitChatting { state -> state.sharedChatSession != null }
+
+            assertEquals(session, state.sharedChatSession)
+            assertTrue(otherChannelUser.id in state.sourceRoomIds)
+        }
+
+    @Test
+    fun `an ongoing shared chat session is kept when the channel user loads after it`() =
+        runTest(testDispatcher) {
+            val session =
+                SharedChatSession(
+                    hostChannelId = channelUser.id,
+                    participantChannelIds = persistentListOf(channelUser.id, otherChannelUser.id),
+                )
+            twitchRepository.sharedChatSession = session
+            twitchRepository.users.value = emptyMap()
+
+            viewModel.loadChat(channelUser.id)
+            advanceUntilIdle()
+            assertIs<ChatViewModel.State.Loading>(viewModel.state.value)
+
+            twitchRepository.users.value = mapOf(channelUser.id to channelUser)
+
+            val state = awaitChatting { state -> state.sharedChatSession != null }
+
+            assertEquals(session, state.sharedChatSession)
+        }
+
+    @Test
+    fun `a message relayed from another channel reloads an unknown shared chat session`() =
+        runTest(testDispatcher) {
+            viewModel.loadChat(channelUser.id)
+            awaitChatting()
+            advanceUntilIdle()
+            assertEquals(1, twitchRepository.sharedChatSessionRequests)
+
+            val session =
+                SharedChatSession(
+                    hostChannelId = otherChannelUser.id,
+                    participantChannelIds = persistentListOf(otherChannelUser.id, channelUser.id),
+                )
+            twitchRepository.sharedChatSession = session
+
+            pushChatEvent(
+                chatMessageEvent(
+                    id = "shared-message",
+                    sourceRoomId = otherChannelUser.id,
+                ),
+            )
+
+            val state = awaitChatting { state -> state.sharedChatSession != null }
+
+            assertEquals(session, state.sharedChatSession)
+            assertEquals(2, twitchRepository.sharedChatSessionRequests)
+        }
+
+    @Test
+    fun `messages relayed during a known shared chat session don't reload it`() =
+        runTest(testDispatcher) {
+            twitchRepository.sharedChatSession =
+                SharedChatSession(
+                    hostChannelId = otherChannelUser.id,
+                    participantChannelIds = persistentListOf(otherChannelUser.id, channelUser.id),
+                )
+
+            viewModel.loadChat(channelUser.id)
+            awaitChatting { state -> state.sharedChatSession != null }
+
+            pushChatEvent(
+                chatMessageEvent(
+                    id = "shared-message",
+                    sourceRoomId = otherChannelUser.id,
+                ),
+            )
+            pushChatEvent(
+                chatMessageEvent(
+                    id = "own-message",
+                    sourceRoomId = channelUser.id,
+                ),
+            )
+            advanceUntilIdle()
+
+            assertEquals(1, twitchRepository.sharedChatSessionRequests)
+        }
+
+    @Test
     fun `source channels are fetched for shared chat messages`() =
         runTest(testDispatcher) {
             viewModel.loadChat(channelUser.id)
@@ -806,6 +904,7 @@ private class FakeTwitchRepository : TwitchRepository {
     var channelBadges: List<TwitchBadge> = emptyList()
     var cheerEmotes: List<Emote> = emptyList()
     var sharedChatSession: SharedChatSession? = null
+    var sharedChatSessionRequests: Int = 0
 
     /** When set, [getUserById] emits this failure instead of reading from [users]. */
     var userError: Throwable? = null
@@ -848,7 +947,10 @@ private class FakeTwitchRepository : TwitchRepository {
 
     override suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>> = Result.success(channelBadges)
 
-    override suspend fun getSharedChatSession(channelId: String): Result<SharedChatSession?> = Result.success(sharedChatSession)
+    override suspend fun getSharedChatSession(channelId: String): Result<SharedChatSession?> {
+        sharedChatSessionRequests++
+        return Result.success(sharedChatSession)
+    }
 
     override suspend fun getCheerEmotes(userId: String): Result<List<Emote>> = Result.success(cheerEmotes)
 

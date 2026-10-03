@@ -22,6 +22,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.ui.ExtraUserInfo
 import fr.outadoc.justchatting.feature.chat.presentation.ui.SharedChatCard
 import fr.outadoc.justchatting.feature.chat.presentation.ui.StreamInfoCard
 import fr.outadoc.justchatting.feature.chat.presentation.ui.UserCreatedAt
+import fr.outadoc.justchatting.feature.chat.presentation.ui.createChannelDeeplink
 import fr.outadoc.justchatting.feature.details.presentation.ActionBottomSheet
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
@@ -74,6 +75,12 @@ internal fun LiveDetailsDialog(
                 stream = stream,
                 sharedChatChannels = sharedChatChannels,
                 timeZone = timeZoneProvider.currentTimeZone,
+                onSharedChatChannelClick = { channel ->
+                    uriHandler.openUri(
+                        createChannelDeeplink(channel.user.id).toString(),
+                    )
+                    onDismissRequest()
+                },
             )
         },
         actions = {
@@ -173,6 +180,7 @@ public fun ChannelDetailsContent(
     stream: Stream?,
     timeZone: TimeZone,
     sharedChatChannels: ImmutableList<SharedChatChannel> = persistentListOf(),
+    onSharedChatChannelClick: ((SharedChatChannel) -> Unit)? = null,
 ) {
     Column(
         modifier = modifier,
@@ -195,6 +203,7 @@ public fun ChannelDetailsContent(
             SharedChatCard(
                 modifier = Modifier.fillMaxWidth(),
                 channels = sharedChatChannels,
+                onChannelClick = onSharedChatChannelClick,
             )
         }
     }

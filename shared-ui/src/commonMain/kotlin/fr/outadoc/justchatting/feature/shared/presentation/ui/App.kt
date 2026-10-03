@@ -10,8 +10,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.navigation3.runtime.rememberNavBackStack
 import coil3.SingletonImageLoader
 import com.eygraber.uri.Uri
@@ -82,8 +84,21 @@ public fun App(
         onStart = { viewModel.onStart() },
     )
 
+    // Open our own channel links in-app, since not every platform routes them back to us.
+    val platformUriHandler = LocalUriHandler.current
+    val uriHandler =
+        remember(platformUriHandler, viewModel) {
+            AppUriHandler(
+                platformUriHandler = platformUriHandler,
+                onDeeplinkReceived = viewModel::onDeeplinkReceived,
+            )
+        }
+
     AppTheme {
-        CompositionLocalProvider(LocalImageAnimationPreferences provides imageAnimationPreferences) {
+        CompositionLocalProvider(
+            LocalImageAnimationPreferences provides imageAnimationPreferences,
+            LocalUriHandler provides uriHandler,
+        ) {
             Crossfade(
                 targetState = state,
                 label = "Login state animation",

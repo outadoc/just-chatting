@@ -567,16 +567,6 @@ public class ChatViewModel internal constructor(
 
             scope.launch {
                 twitchRepository
-                    .getSharedChatSession(channelId)
-                    .onSuccess { session ->
-                        dispatchIfCurrent(Action.UpdateSharedChatSession(session))
-                    }.onFailure { exception ->
-                        logError<ChatViewModel>(exception) { "Failed to load shared chat session" }
-                    }
-            }
-
-            scope.launch {
-                twitchRepository
                     .getUserById(channelId)
                     .onEach { result ->
                         result
@@ -609,6 +599,31 @@ public class ChatViewModel internal constructor(
                             logError<ChatViewModel>(exception) { "Failed to load stream details for user" }
                         }
                 }.catch { e -> logError<ChatViewModel>(e) { "Stream details pipeline failed" } }
+                .launchIn(scope)
+
+            // Load the shared chat session once we're chatting (the reducer would drop it
+            // before that). While we don't know of any session, a message relayed from a channel
+            // we haven't seen yet hints that we missed one starting, so load it again then.
+            state
+                .filterIsInstance<State.Chatting>()
+                .filter { state -> state.user.id == channelId }
+                .map { state ->
+                    if (state.sharedChatSession == null) {
+                        state.sourceRoomIds - state.user.id
+                    } else {
+                        null
+                    }
+                }.filterNotNull()
+                .distinctUntilChanged()
+                .mapLatest {
+                    twitchRepository
+                        .getSharedChatSession(channelId)
+                        .onSuccess { session ->
+                            dispatchIfCurrent(Action.UpdateSharedChatSession(session))
+                        }.onFailure { exception ->
+                            logError<ChatViewModel>(exception) { "Failed to load shared chat session" }
+                        }
+                }.catch { e -> logError<ChatViewModel>(e) { "Shared chat session pipeline failed" } }
                 .launchIn(scope)
 
             state

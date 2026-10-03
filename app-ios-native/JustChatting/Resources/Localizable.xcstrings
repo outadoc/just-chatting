@@ -617,6 +617,16 @@
         }
       }
     },
+    "Opens this channel's chat" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvre le tchat de cette chaîne"
+          }
+        }
+      }
+    },
     "outadoc/just-chatting" : {
       "comment" : "GitHub repository name, do not translate",
       "shouldTranslate" : false

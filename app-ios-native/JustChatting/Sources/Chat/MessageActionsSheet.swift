@@ -16,7 +16,6 @@ struct MessageActionsSheet: View {
 
     @SharedViewModel(\.userInfoViewModel) private var userInfoViewModel
     @Environment(\.dismiss) private var dismiss
-    @ScaledMetric(relativeTo: .body) private var emoteHeight: CGFloat = 32
 
     var body: some View {
         if let messageBody = message.body {
@@ -36,23 +35,15 @@ struct MessageActionsSheet: View {
                 let emotes = messageBody.usedEmotes(emotes: context.emotes)
                 if !emotes.isEmpty {
                     Section {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 12) {
-                                ForEach(emotes, id: \.name) { emote in
-                                    Button {
-                                        UIPasteboard.general.string = emote.name
-                                    } label: {
-                                        VStack(spacing: 4) {
-                                            EmoteView(emote: emote, height: emoteHeight)
-                                            Text(emote.name)
-                                                .font(.caption2)
-                                                .lineLimit(1)
-                                        }
-                                    }
-                                    .buttonStyle(.plain)
-                                    .accessibilityHint("Copies the emote name")
+                        ForEach(emotes, id: \.name) { emote in
+                            Button {
+                                UIPasteboard.general.string = emote.name
+                            } label: {
+                                DetailsListRow(title: emote.name) { height in
+                                    EmoteView(emote: emote, height: height)
                                 }
                             }
+                            .accessibilityHint("Copies the emote name")
                         }
                     } header: {
                         Text("Emotes in this message")

@@ -12,6 +12,10 @@ struct StreamInfoSheet: View {
     let stream: JCShared.Stream?
     var sharedChatChannels: [SharedChatChannel] = []
 
+    /// Absent outside of the logged-in UI, e.g. in previews.
+    @Environment(AppRouter.self) private var router: AppRouter?
+    @Environment(\.dismiss) private var dismiss
+
     var body: some View {
         List {
             Section {
@@ -69,16 +73,19 @@ struct StreamInfoSheet: View {
             if !sharedChatChannels.isEmpty {
                 Section("Shared chat") {
                     ForEach(sharedChatChannels, id: \.user.id) { channel in
-                        HStack(spacing: 12) {
-                            AvatarView(url: channel.user.profileImageUrl, size: 24)
-                            Text(channel.user.displayName)
-                            Spacer(minLength: 0)
-                            if channel.isHost {
-                                Text("Host")
-                                    .font(.footnote.weight(.semibold))
-                                    .foregroundStyle(.secondary)
+                        Button {
+                            dismiss()
+                            router?.openChannel(userId: channel.user.id)
+                        } label: {
+                            DetailsListRow(title: channel.user.displayName) { height in
+                                AvatarView(url: channel.user.profileImageUrl, size: height)
+                            } trailing: {
+                                if channel.isHost {
+                                    Text("Host")
+                                }
                             }
                         }
+                        .accessibilityHint("Opens this channel's chat")
                     }
                 }
             }

@@ -25,7 +25,10 @@ struct StreamInfoSheet: View {
             if let url = user.channelUrl {
                 Section {
                     Link(destination: url) {
+                        // Lists tint label icons with the accent color, which is also this
+                        // button's background: draw the whole label in the on-tint color instead.
                         Label("Watch live", systemImage: "play.fill")
+                            .foregroundStyle(Color.onTint)
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.glassProminent)

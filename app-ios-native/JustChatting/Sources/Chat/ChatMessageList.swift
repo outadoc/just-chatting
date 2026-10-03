@@ -45,6 +45,7 @@ struct ChatMessageList: View {
                     } label: {
                         Image(systemName: "arrow.down")
                             .fontWeight(.semibold)
+                            .foregroundStyle(Color.primary)
                             .frame(width: 40, height: 40)
                     }
                     .buttonStyle(.glass)

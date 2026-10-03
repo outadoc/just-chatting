@@ -83,6 +83,7 @@ struct ChatInput: View {
             } label: {
                 Image(systemName: isEmotePickerOpen ? "keyboard" : "face.smiling")
                     .font(.title3)
+                    .foregroundStyle(Color.primary)
                     .frame(width: 36, height: 36)
             }
             .buttonStyle(.glass)
@@ -122,8 +123,10 @@ struct ChatInput: View {
             .glassEffect(.regular.interactive(), in: RoundedRectangle(cornerRadius: 24))
 
             Button(action: submit) {
+                // Set explicitly, otherwise the icon can be drawn in the tint color, on the tint.
                 Image(systemName: "arrow.up")
                     .fontWeight(.semibold)
+                    .foregroundStyle(text.isEmpty ? AnyShapeStyle(.secondary) : AnyShapeStyle(Color.onTint))
                     .frame(width: 36, height: 36)
             }
             .buttonStyle(.glassProminent)

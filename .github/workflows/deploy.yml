@@ -11,7 +11,7 @@ jobs:
     # Replaced by deploy-ios-native.
     if: false
     environment: deploy
-    runs-on: macos-26
+    runs-on: xcode-27
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
@@ -84,7 +84,8 @@ jobs:
   deploy-ios-native:
     name: Deploy native iOS app
     environment: deploy
-    runs-on: macos-26
+    # Xcode 27 is only available on this (preview) image.
+    runs-on: xcode-27
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-native
@@ -94,6 +95,9 @@ jobs:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
+
+      - name: Select Xcode version
+        run: sudo xcode-select -s '/Applications/Xcode_27.app/Contents/Developer'
 
       - name: Set up JDK
         uses: actions/setup-java@v5
@@ -168,7 +172,7 @@ jobs:
             gradle-task: packageMsi
             dist-dir: app-desktop/build/compose/binaries/main/msi
             ext: msi
-          - os: macos-26
+          - os: xcode-27
             label: macos-aarch64
             gradle-task: packageDmg
             dist-dir: app-desktop/build/compose/binaries/main/dmg

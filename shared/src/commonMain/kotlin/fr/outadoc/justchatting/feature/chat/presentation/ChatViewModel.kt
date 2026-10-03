@@ -601,15 +601,23 @@ public class ChatViewModel internal constructor(
                 }.catch { e -> logError<ChatViewModel>(e) { "Stream details pipeline failed" } }
                 .launchIn(scope)
 
-            // Wait until we're chatting, otherwise the reducer would drop the session.
+            // Load the shared chat session once we're chatting (the reducer would drop it
+            // before that). While we don't know of any session, a message relayed from a channel
+            // we haven't seen yet hints that we missed one starting, so load it again then.
             state
                 .filterIsInstance<State.Chatting>()
-                .map { state -> state.user.id }
-                .filter { userId -> userId == channelId }
+                .filter { state -> state.user.id == channelId }
+                .map { state ->
+                    if (state.sharedChatSession == null) {
+                        state.sourceRoomIds - state.user.id
+                    } else {
+                        null
+                    }
+                }.filterNotNull()
                 .distinctUntilChanged()
-                .onEach { userId ->
+                .mapLatest {
                     twitchRepository
-                        .getSharedChatSession(userId)
+                        .getSharedChatSession(channelId)
                         .onSuccess { session ->
                             dispatchIfCurrent(Action.UpdateSharedChatSession(session))
                         }.onFailure { exception ->

@@ -93,6 +93,7 @@ nucleus.application {
         modules(
             "java.net.http",
             "java.sql",
+            "jdk.localedata",
             "jdk.unsupported",
         )
     }

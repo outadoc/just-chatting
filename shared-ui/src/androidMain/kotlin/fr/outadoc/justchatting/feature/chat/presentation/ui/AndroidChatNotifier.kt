@@ -164,6 +164,17 @@ internal class AndroidChatNotifier(
             // and silently strips the bubble metadata when it finds nothing. Publish first.
             publishConversationShortcut(context = context, user = user)
 
+            // Reposting an identical notification is not "visually interruptive", and SystemUI
+            // leaves a bubble that sits in the overflow (dismissed by the user, or evicted once the
+            // stack is full) where it is, while still reporting FLAG_BUBBLE. Only a fresh post
+            // brings it back, so drop the previous one first.
+            if (readBackOutcome(user) != PostOutcome.Missing) {
+                logInfo<AndroidChatNotifier> {
+                    "Replacing existing notification for ${user.displayName} (${user.id})"
+                }
+                NotificationManagerCompat.from(context).cancel(notificationIdFor(user.id))
+            }
+
             // noinspection MissingPermission
             createNotificationForUser(context, user)
 
@@ -242,6 +253,7 @@ internal class AndroidChatNotifier(
                 .addPerson(person)
                 .setAutoCancel(false)
                 .setOnlyAlertOnce(true)
+                .setLocalOnly(true)
                 .addAction(
                     NotificationCompat.Action
                         .Builder(

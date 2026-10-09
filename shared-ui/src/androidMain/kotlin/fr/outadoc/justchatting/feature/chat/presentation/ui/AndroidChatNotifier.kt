@@ -253,6 +253,7 @@ internal class AndroidChatNotifier(
                 .addPerson(person)
                 .setAutoCancel(false)
                 .setOnlyAlertOnce(true)
+                .setLocalOnly(true)
                 .addAction(
                     NotificationCompat.Action
                         .Builder(

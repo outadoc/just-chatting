@@ -65,7 +65,7 @@ struct SearchView: View {
                         NavigationLink(value: user.id) {
                             UserRow(user: user)
                         }
-                        .selectedRowBackground(isSelected: user.id == selectedChannelId)
+                        .selectedRowBackground(id: user.id, selection: selectedChannelId)
                         .swipeActions {
                             Button(role: .destructive) {
                                 viewModel.onRemoveRecentChannel(user: user)
@@ -97,7 +97,7 @@ struct SearchView: View {
                     NavigationLink(value: result.user.id) {
                         UserRow(user: result.user)
                     }
-                    .selectedRowBackground(isSelected: result.user.id == selectedChannelId)
+                    .selectedRowBackground(id: result.user.id, selection: selectedChannelId)
                     .onAppear {
                         if index >= items.count - 5 {
                             _ = pager.getItem(index: Int32(index))

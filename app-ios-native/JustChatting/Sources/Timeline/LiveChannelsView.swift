@@ -17,6 +17,7 @@ struct LiveChannelsView: View {
                     NavigationLink(value: userStream.user.id) {
                         LiveStreamRowView(userStream: userStream)
                     }
+                    .selectedRowBackground(isSelected: userStream.user.id == selectedChannelId)
                 }
                 .listStyle(.plain)
                 .refreshable {

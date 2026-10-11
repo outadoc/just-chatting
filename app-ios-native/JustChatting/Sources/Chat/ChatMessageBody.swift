@@ -77,10 +77,7 @@ struct ChatMessageBody: View {
             }
 
             ForEach(Array(messageBody.gifs), id: \.id) { gif in
-                AnimatedImageView(url: URL(string: gif.url), animated: animateGifs)
-                    .frame(maxWidth: .infinity, maxHeight: 200, alignment: .leading)
-                    .frame(height: 200)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                ChatGifView(url: URL(string: gif.url), animated: animateGifs)
                     .accessibilityLabel(gif.description_)
             }
 
@@ -139,5 +136,35 @@ struct ChatMessageBody: View {
                 }
                 .accessibilityAddTraits(.isLink)
         }
+    }
+}
+
+/// A GIF posted in chat, drawn at its own aspect ratio and aligned to the leading edge.
+private struct ChatGifView: View {
+    let url: URL?
+    let animated: Bool
+
+    @State private var loadedRatio: LoadedRatio?
+
+    /// Aspect ratio of the image loaded from `url`, kept with its URL so that a view reused for
+    /// another GIF doesn't keep the previous one's ratio.
+    private struct LoadedRatio: Equatable {
+        let url: URL?
+        let ratio: CGFloat
+    }
+
+    var body: some View {
+        // The image view fills whatever frame it's given and centers the image inside it, so it
+        // is sized to the image's ratio to keep the GIF at the leading edge.
+        let ratio = loadedRatio.flatMap { $0.url == url ? $0.ratio : nil } ?? 1
+        AnimatedImageView(url: url, animated: animated) { size in
+            guard size.height > 0 else { return }
+            loadedRatio = LoadedRatio(url: url, ratio: size.width / size.height)
+        }
+        .id(url)
+        .aspectRatio(ratio, contentMode: .fit)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .frame(maxWidth: .infinity, maxHeight: 200, alignment: .leading)
+        .frame(height: 200)
     }
 }

@@ -20,6 +20,7 @@ struct FollowedChannelsView: View {
                                 NavigationLink(value: follow.user.id) {
                                     ChannelRowView(channelFollow: follow)
                                 }
+                                .selectedRowBackground(id: follow.user.id, selection: selectedChannelId)
                             }
                         }
                         .sectionIndexLabel(Text(verbatim: section.title))

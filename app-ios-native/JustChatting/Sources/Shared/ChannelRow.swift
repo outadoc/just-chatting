@@ -62,12 +62,18 @@ struct ChannelRowCategoryLine: View {
     let category: String?
     var detail: Text?
 
+    /// Increased when the row is selected and drawn on the accent color, like in a focused
+    /// sidebar. Hierarchical styles adapt to it on their own, but the tint doesn't.
+    @Environment(\.backgroundProminence) private var backgroundProminence
+
     var body: some View {
         HStack(spacing: 4) {
             if let category {
                 Text(category)
                     .fontWeight(.medium)
-                    .foregroundStyle(.tint)
+                    .foregroundStyle(
+                        backgroundProminence == .increased ? AnyShapeStyle(.primary) : AnyShapeStyle(.tint)
+                    )
                     .lineLimit(1)
             }
 
